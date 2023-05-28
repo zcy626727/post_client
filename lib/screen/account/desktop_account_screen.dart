@@ -25,16 +25,16 @@ class _DesktopAccountScreenState extends State<DesktopAccountScreen> {
       shouldRebuild: (pre, next) => pre.token != next.token,
       builder: (context, user, child) {
         //未登录，显示登录注册界面
-        if(user.token==null){
+        if (user.token == null) {
           return const SignInOrUpScreen();
-        }else{
+        } else {
           return buildAccountInfo();
         }
       },
     );
   }
 
-  Widget buildAccountInfo(){
+  Widget buildAccountInfo() {
     var colorScheme = Theme.of(context).colorScheme;
     return Selector<UserState, UserState>(
       selector: (context, userState) => userState,
@@ -77,10 +77,10 @@ class _DesktopAccountScreenState extends State<DesktopAccountScreen> {
                                   onPressed: () async {
                                     //打开file picker
                                     FilePickerResult? result =
-                                    await FilePicker.platform.pickFiles();
+                                        await FilePicker.platform.pickFiles();
                                     if (result != null) {
                                       File file =
-                                      File(result.files.single.path!);
+                                          File(result.files.single.path!);
                                     } else {
                                       // User canceled the picker
                                     }
@@ -155,6 +155,4 @@ class _DesktopAccountScreenState extends State<DesktopAccountScreen> {
       },
     );
   }
-
-
 }
