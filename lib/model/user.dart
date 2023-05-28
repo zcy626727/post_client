@@ -46,7 +46,10 @@ class User {
       lastLoginTime text not null,
       phoneNumber text not null,
       avatarUrl text,
-      themeMode integer not null
+      themeMode integer not null,
+      followerNumber integer,
+      followNumber integer,
+      blacklistNumber integer
     )
   ''';
 
@@ -95,6 +98,9 @@ class UserProvider {
         "avatarUrl",
         "lastLoginTime",
         "themeMode",
+        "followerNumber",
+        "followNumber",
+        "blacklistNumber",
       ],
       where: 'phoneNumber = ?',
       whereArgs: [phoneNumber],
@@ -116,6 +122,9 @@ class UserProvider {
         "avatarUrl",
         "lastLoginTime",
         "themeMode",
+        "followerNumber",
+        "followNumber",
+        "blacklistNumber",
       ],
       orderBy: "lastLoginTime desc",
       limit: 1,
@@ -131,6 +140,7 @@ class UserProvider {
   }
 
   Future<int> update(User user) async {
-    return await db.update("user", user.toJson(), where: 'id = ?', whereArgs: [user.id]);
+    return await db
+        .update("user", user.toJson(), where: 'id = ?', whereArgs: [user.id]);
   }
 }
