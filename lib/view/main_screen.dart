@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/screen/follow/follow_screen.dart';
-import 'package:post_client/screen/home/home_screen.dart';
 import 'package:post_client/screen/notion/notion_screen.dart';
 import 'package:post_client/screen/own/own_screen.dart';
+import 'package:post_client/view/screen/home/home_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../state/screen_state.dart';
 import '../util/responsive.dart';
-import 'account/mobile_account_drawer.dart';
 import 'component/navigation/desktop_side_navigation_bar.dart';
 import 'component/navigation/mobile_bottom_navigation_bar.dart';
+import 'page/account/mobile_account_page.dart';
 
 //主界面，负责处理布局、加载配置
 class MainScreen extends StatefulWidget {

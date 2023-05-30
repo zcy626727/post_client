@@ -5,10 +5,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../config/global.dart';
-import '../../model/user.dart';
-import '../../state/user_state.dart';
-import '../widget/light_dark_switch.dart';
+import '../../../config/global.dart';
+import '../../../model/user.dart';
+import '../../../state/user_state.dart';
+import '../../widget/light_dark_switch.dart';
 
 class MobileAccountDrawer extends StatelessWidget {
   const MobileAccountDrawer({super.key});

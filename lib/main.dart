@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:post_client/screen/account/sign_in_or_up/sign_in_or_up_page.dart';
-import 'package:post_client/screen/main_screen.dart';
 import 'package:post_client/state/screen_state.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/theme/color_schemes.g.dart';
+import 'package:post_client/view/main_screen.dart';
+import 'package:post_client/view/screen/account/sign_in_or_up_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'config/global.dart';

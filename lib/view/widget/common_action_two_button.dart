@@ -73,7 +73,7 @@ class _CommonActionTwoButtonState extends State<CommonActionTwoButton> {
 
                       if (isPop == true) {
                         //表示调用pop
-                        Navigator.pop(context);
+                        if (mounted) Navigator.pop(context);
                       }
 
                       setState(() {
@@ -114,7 +114,7 @@ class _CommonActionTwoButtonState extends State<CommonActionTwoButton> {
 
                       if (isPop == true) {
                         //表示调用pop
-                        Navigator.pop(context);
+                        if (mounted) Navigator.pop(context);
                       }
 
                       setState(() {

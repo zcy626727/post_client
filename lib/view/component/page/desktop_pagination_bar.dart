@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class DesktopPaginationBar extends StatefulWidget {
@@ -61,7 +62,7 @@ class _DesktopPaginationBarState extends State<DesktopPaginationBar> {
       left = max(widget.minPage, left - temp);
     }
 
-    return Container(
+    return SizedBox(
       width: _width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

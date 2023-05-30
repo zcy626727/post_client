@@ -20,7 +20,8 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
 
-  RegExp phoneExp = RegExp(r'^((13\d)|(14\d)|(15\d)|(16\d)|(17\d)|(18\d)|(19\d))\d{8}$');
+  RegExp phoneExp =
+      RegExp(r'^((13\d)|(14\d)|(15\d)|(16\d)|(17\d)|(18\d)|(19\d))\d{8}$');
 
   String _phoneNumber = "18348542622";
   String _password = "18348542622";
@@ -73,9 +74,11 @@ class _SignInPageState extends State<SignInPage> {
       style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
       decoration: InputDecoration(
         labelText: "账号",
-        labelStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+        labelStyle:
+            TextStyle(color: Theme.of(context).colorScheme.onBackground),
         hintText: "手机号",
-        hintStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground.withAlpha(150)),
+        hintStyle: TextStyle(
+            color: Theme.of(context).colorScheme.onBackground.withAlpha(150)),
         border: OutlineInputBorder(
           //添加边框
           borderRadius: BorderRadius.circular(30.0),
@@ -106,9 +109,11 @@ class _SignInPageState extends State<SignInPage> {
       style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
       decoration: InputDecoration(
         labelText: "密码",
-        labelStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+        labelStyle:
+            TextStyle(color: Theme.of(context).colorScheme.onBackground),
         hintText: "密码",
-        hintStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground.withAlpha(150)),
+        hintStyle: TextStyle(
+            color: Theme.of(context).colorScheme.onBackground.withAlpha(150)),
         border: OutlineInputBorder(
           //添加边框
           borderRadius: BorderRadius.circular(30.0),
@@ -138,7 +143,8 @@ class _SignInPageState extends State<SignInPage> {
                   borderRadius: BorderRadius.circular(20),
                 )),
                 //登录中为灰色
-                backgroundColor: MaterialStateProperty.all(_signInIng ? Colors.blue.withAlpha(150) : Colors.blue)),
+                backgroundColor: MaterialStateProperty.all(
+                    _signInIng ? Colors.blue.withAlpha(150) : Colors.blue)),
             //登录中不可点击
             onPressed: _signInIng
                 ? null

@@ -8,11 +8,9 @@ import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../api/client/post_api.dart';
+import '../api/client/user_api.dart';
 import '../api/net_cache_interceptor.dart';
 import '../api/net_common_interceptor.dart';
-import '../api/client/user_api.dart';
-import '../domain/task/download_task.dart';
-import '../domain/task/upload_task.dart';
 import '../model/user.dart';
 import '../service/user_service.dart';
 import 'database_config.dart';
@@ -36,8 +34,6 @@ class Global {
 
   //user sqlite查询提供者
   static UserProvider userProvider = UserProvider();
-  static UploadTaskProvider uploadTaskProvider = UploadTaskProvider();
-  static DownloadTaskProvider downloadTaskProvider = DownloadTaskProvider();
 
   // 是否为release版
   static bool get isRelease => const bool.fromEnvironment("dart.vm.product");
@@ -88,8 +84,6 @@ class Global {
           //创建数据库
           log("创建表");
           await db.execute(User.createSql);
-          await db.execute(UploadTask.createSql);
-          await db.execute(DownloadTask.createSql);
         },
       );
 
@@ -99,8 +93,6 @@ class Global {
 
       //赋值给各个 xxxProvider
       userProvider.db = database!;
-      uploadTaskProvider.db = database!;
-      downloadTaskProvider.db = database!;
 
       //获取初始化数据
       recentUser = await userProvider.getRecentUser();
@@ -138,8 +130,6 @@ class Global {
   static void close() async {
     if (!kIsWeb) {
       userProvider.db.close();
-      uploadTaskProvider.db.close();
-      downloadTaskProvider.db.close();
     }
   }
 
@@ -155,8 +145,6 @@ class Global {
       //todo 浏览器读取用户信息
     } else {
       userProvider.db = db;
-      uploadTaskProvider.db = db;
-      downloadTaskProvider.db = db;
     }
   }
 }

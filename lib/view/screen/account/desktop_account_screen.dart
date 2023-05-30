@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/screen/account/sign_in_or_up/sign_in_or_up_page.dart';
+import 'package:post_client/view/screen/account/sign_in_or_up_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/user.dart';
-import '../../service/user_service.dart';
-import '../../state/user_state.dart';
+import '../../../model/user.dart';
+import '../../../service/user_service.dart';
+import '../../../state/user_state.dart';
 
 class DesktopAccountScreen extends StatefulWidget {
   const DesktopAccountScreen({Key? key}) : super(key: key);

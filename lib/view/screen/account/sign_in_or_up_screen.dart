@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/screen/account/sign_in_or_up/sign_in_page.dart';
-import 'package:post_client/screen/account/sign_in_or_up/sign_up_page.dart';
+import 'package:post_client/view/account/sign_in_or_up/sign_in_page.dart';
 
 import '../../../util/responsive.dart';
+import '../../page/account/sign_up_page.dart';
 
 class SignInOrUpScreen extends StatefulWidget {
   const SignInOrUpScreen({Key? key}) : super(key: key);
@@ -12,7 +12,8 @@ class SignInOrUpScreen extends StatefulWidget {
   State<SignInOrUpScreen> createState() => _SignInOrUpScreenState();
 }
 
-class _SignInOrUpScreenState extends State<SignInOrUpScreen> with SingleTickerProviderStateMixin {
+class _SignInOrUpScreenState extends State<SignInOrUpScreen>
+    with SingleTickerProviderStateMixin {
   TabController? _tabController;
 
   @override
@@ -43,7 +44,10 @@ class _SignInOrUpScreenState extends State<SignInOrUpScreen> with SingleTickerPr
               ),
               middle: Text(
                 "登录/注册",
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16, color: colorScheme.onSurface),
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                    color: colorScheme.onSurface),
               ),
               backgroundColor: colorScheme.surface,
             )
@@ -57,7 +61,8 @@ class _SignInOrUpScreenState extends State<SignInOrUpScreen> with SingleTickerPr
               child: Center(
                 child: Container(
                   color: Colors.transparent,
-                  margin: const EdgeInsets.only(top: 5, bottom: 5, left: 5, right: 5),
+                  margin: const EdgeInsets.only(
+                      top: 5, bottom: 5, left: 5, right: 5),
                   child: Column(
                     children: [
                       Container(
@@ -91,7 +96,8 @@ class _SignInOrUpScreenState extends State<SignInOrUpScreen> with SingleTickerPr
                       ),
                       Expanded(
                         child: ScrollConfiguration(
-                          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                          behavior: ScrollConfiguration.of(context)
+                              .copyWith(scrollbars: false),
                           child: TabBarView(
                             controller: _tabController,
                             physics: const NeverScrollableScrollPhysics(),

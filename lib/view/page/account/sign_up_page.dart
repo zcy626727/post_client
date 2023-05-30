@@ -25,7 +25,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   String _phoneNumber = "";
   String _password = "";
-  String _confirmPassword = "";
   String _alias = "";
   bool _signUpIng = false;
 
@@ -43,7 +42,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     const SizedBox(height: 30.0),
                     SizedBox(
                       width: loginInputWidth,
-                      child: aliasBuild(),
+                      child: nameBuild(),
                     ),
                     const SizedBox(height: 30),
                     SizedBox(
@@ -70,7 +69,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  TextFormField aliasBuild() {
+  TextFormField nameBuild() {
     return TextFormField(
       onSaved: (newValue) => _alias = newValue!,
       validator: (value) {
@@ -173,7 +172,6 @@ class _SignUpPageState extends State<SignUpPage> {
   TextFormField confirmPasswordBuild() {
     return TextFormField(
       obscureText: true,
-      onSaved: (newValue) => _confirmPassword = newValue!,
       validator: (value) {
         if (_password != value) {
           return "两次输入的密码不一致";
