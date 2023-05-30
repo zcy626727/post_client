@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:post_client/model/media.dart';
+import 'package:post_client/model/user.dart';
 
 @JsonSerializable()
 class Post {
   int? id;
-  //类型，图片、影音、动态、合集
   int? contentType;
   //文字内容，只包含文字 @ #
   String? text;
@@ -13,27 +13,33 @@ class Post {
   //点赞数
   int? likeNumber;
   //图片布局，九宫格或大图
-  int? pictrueLayout;
   List<String>? pictrueUrlList;
-  //媒体类型
+  //媒体
   Media? media;
+  //post所有者
+  User? user;
 
   Post.one() {
     id = 1;
-    text = "内容";
+    text = "这是一条动态";
+    contentType = PostContentType.article;
+    likeNumber = 1;
+    commentNumber = 4;
   }
 }
 
-enum PostContentType {
-  //一般
-  picture,
+class PostContentType {
   //媒体
-  image,
-  article,
-  audio,
-  video,
+  static const image = 1;
+  static const article = 2;
+  static const audio = 3;
+  static const video = 4;
   //合集
-  collection,
+  static const collection = 5;
   //动态
-  post,
+  static const post = 6;
+  //纯quill文本
+  static const text = 7;
+  //带配图
+  static const picture = 8;
 }

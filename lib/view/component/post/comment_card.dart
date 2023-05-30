@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class CommentCard extends StatelessWidget {
-  final snap;
-  const CommentCard({Key? key, required this.snap}) : super(key: key);
+  const CommentCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       child: Row(
         children: [
           CircleAvatar(
             backgroundImage: NetworkImage(
-              snap.data()['profilePic'],
+              "https://pic1.zhimg.com/80/v2-64803cb7928272745eb2bb0203e03648_1440w.webp",
             ),
             radius: 18,
           ),
@@ -29,11 +26,12 @@ class CommentCard extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: snap.data()['name'],
-                          style: const TextStyle(fontWeight: FontWeight.bold,)
-                        ),
+                            text: "111",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            )),
                         TextSpan(
-                          text: ' ${snap.data()['text']}',
+                          text: '222',
                         ),
                       ],
                     ),
@@ -41,11 +39,11 @@ class CommentCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      DateFormat.yMMMd().format(
-                        snap.data()['datePublished'].toDate(),
-                      ),
+                      "11112324",
                       style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.w400,),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   )
                 ],

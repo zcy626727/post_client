@@ -31,35 +31,44 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget buildMobile(User user) {
     var colorScheme = Theme.of(context).colorScheme;
-    return Scaffold(
-      backgroundColor: colorScheme.background,
-      body: NestedScrollView(
+    return Container(
+      color: colorScheme.background,
+      child: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             //app bar
             SliverToBoxAdapter(
               child: Container(
-                width: 50.0,
-                height: 50.0,
-                margin: const EdgeInsets.only(left: 5),
-                child: TextButton(
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                  child: CircleAvatar(
-                    //头像半径
-                    radius: 16.0,
-                    backgroundImage: user.avatarUrl == null
-                        ? null
-                        : NetworkImage(user.avatarUrl!),
-                  ),
+                color: colorScheme.surface,
+                margin: const EdgeInsets.only(bottom: 2),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(),
+                    Container(
+                      width: 50.0,
+                      height: 50.0,
+                      margin: const EdgeInsets.only(left: 5),
+                      child: TextButton(
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                        child: CircleAvatar(
+                          radius: 16.0,
+                          backgroundImage: user.avatarUrl == null
+                              ? null
+                              : NetworkImage(user.avatarUrl!),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             )
           ];
         },
         body: DefaultTabController(
-          length: 2,
+          length: 1,
           child: Column(
             children: [
               //tab bar
@@ -73,14 +82,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       onLoad: (int page) async {
                         var postList = <Post>[];
                         postList.add(Post.one());
-                        postList.add(Post.one());
                         return postList;
                       },
-                      enableUp: false,
-                      itemName: "文章",
-                      itemHeight: 80,
-                      itemBuilder: (ctx, article) {
-                        return PostCard();
+                      enableUp: true,
+                      itemName: "动态",
+                      itemHeight: null,
+                      isGrip: false,
+                      enableScrollbar: true,
+                      itemBuilder: (ctx, post) {
+                        return PostCard(
+                          post: post,
+                        );
                       },
                     ),
                   ],
@@ -141,8 +153,8 @@ class _HomeScreenTabBarState extends State<HomeScreenTabBar> {
           ),
           splashBorderRadius: BorderRadius.circular(50),
           tabs: [
-            tabBuild(0, Icons.topic, "POST"),
-            tabBuild(1, Icons.article_outlined, "视频"),
+            tabBuild(0, Icons.topic, "动态"),
+            // tabBuild(1, Icons.article_outlined, "视频"),
             // tabBuild(2,Icons.subject_outlined, "话题"),
             // tabBuild(3,Icons.insert_drive_file, "文件"),
           ]),

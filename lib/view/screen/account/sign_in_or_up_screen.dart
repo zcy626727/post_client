@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/view/account/sign_in_or_up/sign_in_page.dart';
 
 import '../../../util/responsive.dart';
+import '../../page/account/sign_in_page.dart';
 import '../../page/account/sign_up_page.dart';
 
 class SignInOrUpScreen extends StatefulWidget {

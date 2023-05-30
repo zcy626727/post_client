@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:post_client/model/post.dart';
 
 class PostCard extends StatefulWidget {
+  final Post post;
   const PostCard({
     Key? key,
+    required this.post,
   }) : super(key: key);
 
   @override
@@ -20,20 +23,14 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     return Container(
       // boundary needed for web
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.red,
-        ),
-        color: Colors.blue,
-      ),
-      padding: const EdgeInsets.symmetric(
-        vertical: 10,
-      ),
+      color: colorScheme.surface,
+      margin: const EdgeInsets.only(bottom: 2, left: 3.0, right: 3.0),
       child: Column(
         children: [
-          // HEADER SECTION OF THE POST
+          // 用户信息
           Container(
             padding: const EdgeInsets.symmetric(
               vertical: 4,
@@ -106,24 +103,25 @@ class _PostCardState extends State<PostCard> {
               ],
             ),
           ),
-          // IMAGE SECTION OF THE POST
+          // 媒体
           GestureDetector(
             onDoubleTap: () {},
             child: Stack(
               alignment: Alignment.center,
               children: [
-                SizedBox(
+                Container(
                   height: MediaQuery.of(context).size.height * 0.35,
+                  margin: EdgeInsets.symmetric(horizontal: 5.0),
                   width: double.infinity,
                   child: Image.network(
                     "https://pic1.zhimg.com/80/v2-64803cb7928272745eb2bb0203e03648_1440w.webp",
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
               ],
             ),
           ),
-          // LIKE, COMMENT SECTION OF THE POST
+          // 点赞、收藏等
           Row(
             children: <Widget>[
               IconButton(
@@ -145,7 +143,7 @@ class _PostCardState extends State<PostCard> {
               ))
             ],
           ),
-          //DESCRIPTION AND NUMBER OF COMMENTS
+          // 描述信息
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(

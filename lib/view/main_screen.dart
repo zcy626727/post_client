@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:post_client/screen/follow/follow_screen.dart';
-import 'package:post_client/screen/notion/notion_screen.dart';
-import 'package:post_client/screen/own/own_screen.dart';
+import 'package:post_client/view/screen/follow/follow_screen.dart';
 import 'package:post_client/view/screen/home/home_screen.dart';
+import 'package:post_client/view/screen/notion/notion_screen.dart';
+import 'package:post_client/view/screen/own/own_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../state/screen_state.dart';

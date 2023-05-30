@@ -16,7 +16,8 @@ class CommonItemList<T> extends StatefulWidget {
       required this.itemName,
       this.itemHeight,
       this.enableUp = true,
-      this.isGrip = true})
+      this.isGrip = true,
+      this.enableScrollbar = false})
       : super(key: key);
 
   final Future<List<T>> Function(int) onLoad;
@@ -25,6 +26,7 @@ class CommonItemList<T> extends StatefulWidget {
   final String itemName;
   final double? itemHeight;
   final Widget Function(BuildContext context, T item) itemBuilder;
+  final bool enableScrollbar;
 
   @override
   State<CommonItemList> createState() => _CommonItemListState<T>();
@@ -181,13 +183,22 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
       controller: _refreshController,
       onRefresh: _onRefresh,
       onLoading: _onLoading,
-      child: ListView.builder(
-        controller: ScrollController(),
-        itemCount: _itemList!.length,
-        itemBuilder: (context, index) {
-          return widget.itemBuilder(context, _itemList![index]);
-        },
-      ),
+      child: widget.enableScrollbar
+          ? Scrollbar(
+              child: ListView.builder(
+              controller: ScrollController(),
+              itemCount: _itemList!.length,
+              itemBuilder: (context, index) {
+                return widget.itemBuilder(context, _itemList![index]);
+              },
+            ))
+          : ListView.builder(
+              controller: ScrollController(),
+              itemCount: _itemList!.length,
+              itemBuilder: (context, index) {
+                return widget.itemBuilder(context, _itemList![index]);
+              },
+            ),
     );
   }
 }
