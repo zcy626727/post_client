@@ -1,0 +1,162 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' hide Text;
+
+import 'media_quill_qmbeds.dart';
+
+class PostQuillToolBar extends StatelessWidget {
+  const PostQuillToolBar({Key? key, required this.controller})
+      : super(key: key);
+
+  final QuillController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+    return QuillToolbar.basic(
+      showColorButton: false,
+      controller: controller,
+      showFontFamily: false,
+      showFontSize: false,
+      showSearchButton: false,
+      iconTheme: QuillIconTheme(
+        //选中字体颜色
+        iconSelectedColor: colorScheme.onPrimary,
+        //选中容器颜色
+        iconSelectedFillColor: colorScheme.primary,
+        //选中字体颜色
+        iconUnselectedColor: colorScheme.onPrimaryContainer,
+        //未选中容器颜色
+        iconUnselectedFillColor: colorScheme.primaryContainer,
+        //不可用字体颜色
+        disabledIconColor: Colors.grey,
+        //不可用容器颜色
+        disabledIconFillColor: colorScheme.primaryContainer,
+      ),
+      dialogTheme: QuillDialogTheme(
+        labelTextStyle: TextStyle(color: colorScheme.onSurface),
+        dialogBackgroundColor: colorScheme.surface,
+        inputTextStyle: TextStyle(color: colorScheme.onSurface),
+      ),
+      toolbarSectionSpacing: 6,
+      // embedButtons: FlutterQuillEmbeds.buttons(),
+      embedButtons: MyMediaQuillEmbeds.buttons(),
+    );
+  }
+}
+
+class ArticleQuillToolBar extends StatelessWidget {
+  const ArticleQuillToolBar({Key? key, required this.controller})
+      : super(key: key);
+
+  final QuillController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+    return QuillToolbar.basic(
+      showColorButton: false,
+      controller: controller,
+      showFontFamily: false,
+      showFontSize: false,
+      showSearchButton: false,
+      iconTheme: QuillIconTheme(
+        //选中字体颜色
+        iconSelectedColor: colorScheme.onPrimary,
+        //选中容器颜色
+        iconSelectedFillColor: colorScheme.primary,
+        //选中字体颜色
+        iconUnselectedColor: colorScheme.onPrimaryContainer,
+        //未选中容器颜色
+        iconUnselectedFillColor: colorScheme.primaryContainer,
+        //不可用字体颜色
+        disabledIconColor: Colors.grey,
+        //不可用容器颜色
+        disabledIconFillColor: colorScheme.primaryContainer,
+      ),
+      dialogTheme: QuillDialogTheme(
+        labelTextStyle: TextStyle(color: colorScheme.onSurface),
+        dialogBackgroundColor: colorScheme.surface,
+        inputTextStyle: TextStyle(color: colorScheme.onSurface),
+      ),
+      toolbarSectionSpacing: 6,
+      // embedButtons: FlutterQuillEmbeds.buttons(),
+      embedButtons: MyMediaQuillEmbeds.buttons(),
+    );
+  }
+}
+
+class CommentQuillToolBar extends StatelessWidget {
+  const CommentQuillToolBar({Key? key, required this.controller})
+      : super(key: key);
+
+  final QuillController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+    return QuillToolbar.basic(
+      showColorButton: false,
+      controller: controller,
+      showFontFamily: false,
+      showFontSize: false,
+      showSearchButton: false,
+      showIndent: false,
+      showBackgroundColorButton: false,
+      showClearFormat: false,
+      showHeaderStyle: false,
+      showDividers: false,
+      iconTheme: QuillIconTheme(
+        //选中字体颜色
+        iconSelectedColor: colorScheme.onPrimary,
+        //选中容器颜色
+        iconSelectedFillColor: colorScheme.primary,
+        //选中字体颜色
+        iconUnselectedColor: colorScheme.onPrimaryContainer,
+        //未选中容器颜色
+        iconUnselectedFillColor: colorScheme.primaryContainer,
+        //不可用字体颜色
+        disabledIconColor: Colors.grey,
+        //不可用容器颜色
+        disabledIconFillColor: colorScheme.primaryContainer,
+      ),
+      dialogTheme: QuillDialogTheme(
+        labelTextStyle: TextStyle(color: colorScheme.onSurface),
+        dialogBackgroundColor: colorScheme.surface,
+        inputTextStyle: TextStyle(color: colorScheme.onSurface),
+      ),
+      toolbarSectionSpacing: 6,
+      // embedButtons: FlutterQuillEmbeds.buttons(),
+      embedButtons: MyMediaQuillEmbeds.buttons(),
+    );
+  }
+}
+
+class CommonQuillEditor extends StatelessWidget {
+  const CommonQuillEditor(
+      {Key? key, required this.controller, this.placeholder})
+      : super(key: key);
+
+  final QuillController controller;
+
+  final String? placeholder;
+
+  @override
+  Widget build(BuildContext context) {
+    return QuillEditor(
+      controller: controller,
+      focusNode: FocusNode(),
+      scrollController: ScrollController(),
+      scrollable: true,
+      padding: EdgeInsets.zero,
+      showCursor: true,
+      autoFocus: false,
+      readOnly: false,
+      expands: false,
+      placeholder: placeholder,
+      // customStyles: DefaultStyles(
+      //     small: const TextStyle(color: Colors.red)),
+      // embedBuilders: FlutterQuillEmbeds.builders(),
+      embedBuilders: MyMediaQuillEmbeds.builders(),
+    );
+  }
+}

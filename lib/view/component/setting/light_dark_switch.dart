@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../config/constants.dart';
-import '../../config/global.dart';
-import '../../state/user_state.dart';
+import '../../../config/constants.dart';
+import '../../../config/global.dart';
+import '../../../state/user_state.dart';
 
 class LightDarkSwitch extends StatefulWidget {
   const LightDarkSwitch({Key? key, required this.isLarge, required this.width}) : super(key: key);

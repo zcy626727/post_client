@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:post_client/view/component/load/mobile_refersh_footer.dart';
+import 'package:post_client/view/component/load/mobile_refresh_header.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 import '../../../util/responsive.dart';
-import '../load/mobile_refersh_footer.dart';
-import '../load/mobile_refresh_header.dart';
 
 class CommonItemList<T> extends StatefulWidget {
   const CommonItemList(

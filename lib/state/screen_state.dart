@@ -19,6 +19,6 @@ class FirstNav {
   static const int home = 0;
   static const int follow = 1;
   static const int notice = 3;
-  static const int own = 4;
+  static const int media = 4;
   static const int account = 5;
 }

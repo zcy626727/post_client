@@ -8,10 +8,10 @@ import 'package:provider/provider.dart';
 import '../../../config/global.dart';
 import '../../../model/user.dart';
 import '../../../state/user_state.dart';
-import '../../widget/light_dark_switch.dart';
+import '../../component/setting/light_dark_switch.dart';
 
-class MobileAccountDrawer extends StatelessWidget {
-  const MobileAccountDrawer({super.key});
+class MobileAccountDrawerPage extends StatelessWidget {
+  const MobileAccountDrawerPage({super.key});
 
   @override
   Widget build(BuildContext context) {

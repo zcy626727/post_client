@@ -3,6 +3,7 @@ import 'package:post_client/model/post.dart';
 
 class PostCard extends StatefulWidget {
   final Post post;
+
   const PostCard({
     Key? key,
     required this.post,
@@ -27,188 +28,206 @@ class _PostCardState extends State<PostCard> {
     return Container(
       // boundary needed for web
       color: colorScheme.surface,
-      margin: const EdgeInsets.only(bottom: 2, left: 3.0, right: 3.0),
+      margin: const EdgeInsets.only(bottom: 2),
+      padding: const EdgeInsets.only(left: 3.0, right: 3.0),
       child: Column(
         children: [
           // 用户信息
-          Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 4,
-              horizontal: 16,
-            ).copyWith(right: 0),
-            child: Row(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 16,
-                  backgroundImage: NetworkImage(
-                    'https://pic1.zhimg.com/80/v2-64803cb7928272745eb2bb0203e03648_1440w.webp',
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 8,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          'jjjjjj',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                true
-                    ? IconButton(
-                        onPressed: () {
-                          showDialog(
-                            useRootNavigator: false,
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                child: ListView(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
-                                    shrinkWrap: true,
-                                    children: [
-                                      'Delete',
-                                    ]
-                                        .map(
-                                          (e) => InkWell(
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 12,
-                                                        horizontal: 16),
-                                                child: Text(e),
-                                              ),
-                                              onTap: () {
-                                                // remove the dialog box
-                                                Navigator.of(context).pop();
-                                              }),
-                                        )
-                                        .toList()),
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.more_vert),
-                      )
-                    : Container(),
-              ],
-            ),
-          ),
+          buildUserInfo(),
+          //文本
+          if (!widget.post.isInnerMode()) buildText(),
+          //图片列表
+          if (!widget.post.isInnerMode() && widget.post.pictureUrlList != null && widget.post.pictureUrlList!.isNotEmpty) buildPictureList(),
           // 媒体
-          GestureDetector(
-            onDoubleTap: () {},
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  margin: EdgeInsets.symmetric(horizontal: 5.0),
-                  width: double.infinity,
-                  child: Image.network(
-                    "https://pic1.zhimg.com/80/v2-64803cb7928272745eb2bb0203e03648_1440w.webp",
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          if (widget.post.isInnerMode()) buildMediaCard(),
           // 点赞、收藏等
-          Row(
-            children: <Widget>[
-              IconButton(
-                icon: const Icon(
-                  Icons.comment_outlined,
-                ),
-                onPressed: () {},
-              ),
-              IconButton(
-                  icon: const Icon(
-                    Icons.send,
-                  ),
-                  onPressed: () {}),
-              Expanded(
-                  child: Align(
-                alignment: Alignment.bottomRight,
-                child: IconButton(
-                    icon: const Icon(Icons.bookmark_border), onPressed: () {}),
-              ))
-            ],
-          ),
+          buildOperation(),
           // 描述信息
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                DefaultTextStyle(
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle2!
-                        .copyWith(fontWeight: FontWeight.w800),
-                    child: Text(
-                      '3 likes',
-                      style: Theme.of(context).textTheme.bodyText2,
-                    )),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(
-                    top: 8,
-                  ),
-                  child: RichText(
-                    text: TextSpan(
-                      style: const TextStyle(color: Colors.green),
-                      children: [
-                        TextSpan(
-                          text: 'username',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        TextSpan(
-                          text: 'description',
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                InkWell(
-                  child: Container(
-                    child: Text(
-                      'View all $commentLen comments',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.red,
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                  ),
-                  // onTap: () => Navigator.of(context).push(
-                  //   // 弹出评论页面
-                  //   MaterialPageRoute(
-                  //     builder: (context) => CommentsScreen(
-                  //       postId: widget.snap['postId'].toString(),
-                  //     ),
-                  //   ),
-                  // ),
-                ),
-                Container(
-                  child: Text("时间"),
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                ),
-              ],
-            ),
-          )
+          if (widget.post.isInnerMode()) builddescribe()
         ],
+      ),
+    );
+  }
+
+  Widget buildUserInfo() {
+    var colorScheme = Theme.of(context).colorScheme;
+
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      visualDensity: const VisualDensity(horizontal: -2, vertical: -2),
+      leading: const CircleAvatar(
+        radius: 18,
+        backgroundImage: NetworkImage(
+          'https://pic1.zhimg.com/80/v2-64803cb7928272745eb2bb0203e03648_1440w.webp',
+        ),
+      ),
+      title: const Text(
+        '路由器',
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      subtitle: const Text("2022-7-3"),
+      trailing: Container(
+        margin: const EdgeInsets.only(right: 3),
+        width: 35,
+        child: IconButton(
+          splashColor: colorScheme.onSurface,
+          splashRadius: 30,
+          onPressed: () {},
+          icon: const Icon(Icons.more_horiz),
+        ),
+      ),
+    );
+  }
+
+  Widget buildText() {
+    var colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      margin: const EdgeInsets.only(left: 5.0, right: 5.0,bottom: 5.0),
+      width: double.infinity,
+      child: Text(
+        "全村母猪为何深夜惨叫，80岁老太为何起死回生，究竟是道德的沦丧还是人性的扭曲，欢迎收看今日说法",
+        style: TextStyle(
+          color: colorScheme.onSurface,
+          fontSize: 16,
+        ),
+      ),
+    );
+  }
+
+  Widget buildPictureList() {
+    var colorScheme = Theme.of(context).colorScheme;
+
+    var picList = widget.post.pictureUrlList!;
+    if (picList.length == 1) {
+      return Image(image: NetworkImage(picList[0]));
+    } else {
+      int itemCount = picList.length <= 9 ? picList.length : 9;
+      return GridView.builder(
+        itemCount: itemCount,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: 1.0,
+          crossAxisSpacing: 2.0,
+          mainAxisSpacing: 2.0,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          if (index == 8 && picList.length > 9) {
+            return Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+                color: colorScheme.background,
+              ),
+              child: Center(
+                child: Text(
+                  '+${picList.length - 8}',
+                  style: TextStyle(fontSize: 16.0, color: colorScheme.onBackground),
+                ),
+              ),
+            );
+          } else {
+            return GestureDetector(
+              onTap: () {
+                // 点击图片的操作
+                print('点击图片');
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  image: DecorationImage(
+                    image: NetworkImage(picList[index]),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            );
+          }
+        },
+      );
+    }
+  }
+
+  Widget buildMediaCard() {
+    return GestureDetector(
+      onDoubleTap: () {},
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height * 0.35,
+            margin: const EdgeInsets.symmetric(horizontal: 5.0),
+            width: double.infinity,
+            child: Image.network(
+              "https://pic1.zhimg.com/80/v2-64803cb7928272745eb2bb0203e03648_1440w.webp",
+              fit: BoxFit.fill,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildOperation() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Row(
+          children: [
+            //评论
+            IconButton(
+              icon: const Icon(
+                Icons.comment,
+              ),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            //点赞
+            IconButton(
+              icon: const Icon(
+                Icons.thumb_up_alt_outlined,
+              ),
+              onPressed: () {},
+            ),
+            //收藏
+            IconButton(
+              icon: const Icon(
+                Icons.bookmark_border,
+                size: 27,
+              ),
+              onPressed: () {},
+            )
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget builddescribe() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.only(top: 5, bottom: 8),
+      width: double.infinity,
+      child: RichText(
+        text: const TextSpan(
+          style: TextStyle(color: Colors.green),
+          children: [
+            TextSpan(
+              text: "路由器：",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextSpan(
+              text: '这小娘子真好看',
+            ),
+          ],
+        ),
       ),
     );
   }

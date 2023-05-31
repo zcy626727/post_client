@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../state/screen_state.dart';
-import '../../widget/light_dark_switch.dart';
+import '../setting/light_dark_switch.dart';
 
 class DesktopSideNavigationBar extends StatefulWidget {
   const DesktopSideNavigationBar({Key? key}) : super(key: key);
 
   @override
-  State<DesktopSideNavigationBar> createState() => _DesktopSideNavigationBarState();
+  State<DesktopSideNavigationBar> createState() =>
+      _DesktopSideNavigationBarState();
 }
 
 class _DesktopSideNavigationBarState extends State<DesktopSideNavigationBar> {
@@ -81,7 +82,7 @@ class _DesktopSideNavigationBarState extends State<DesktopSideNavigationBar> {
                           ),
                           const SizedBox(height: 5.0),
                           DesktopSideNavigationItem(
-                            iconData: Icons.person,
+                            iconData: Icons.view_stream,
                             index: FirstNav.account,
                             selectedIndex: navState.firstNavIndex,
                             press: (index) {
@@ -98,7 +99,8 @@ class _DesktopSideNavigationBarState extends State<DesktopSideNavigationBar> {
               Column(
                 children: [
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 10.0),
                     child: Column(
                       children: [
                         //设置界面
@@ -109,7 +111,10 @@ class _DesktopSideNavigationBarState extends State<DesktopSideNavigationBar> {
                           icon: const Icon(Icons.settings),
                         ),
                         //亮暗模式
-                        const LightDarkSwitch(isLarge: false, width: 120,),
+                        const LightDarkSwitch(
+                          isLarge: false,
+                          width: 120,
+                        ),
                       ],
                     ),
                   ),
@@ -147,7 +152,8 @@ class DesktopSideNavigationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isSelected = index == selectedIndex;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    Color currentColor = isSelected ? colorScheme.onPrimary : colorScheme.onSurface;
+    Color currentColor =
+        isSelected ? colorScheme.onPrimary : colorScheme.onSurface;
 
     return Container(
       margin: const EdgeInsets.only(top: 3, bottom: 3),
@@ -162,8 +168,11 @@ class DesktopSideNavigationItem extends StatelessWidget {
               shape: MaterialStateProperty.all(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               )),
-              padding: MaterialStateProperty.all(const EdgeInsets.only(top: 17.0, bottom: 20.0)),
-              backgroundColor: isSelected ? MaterialStateProperty.all(colorScheme.primary) : null,
+              padding: MaterialStateProperty.all(
+                  const EdgeInsets.only(top: 17.0, bottom: 20.0)),
+              backgroundColor: isSelected
+                  ? MaterialStateProperty.all(colorScheme.primary)
+                  : null,
             ),
             child: Icon(
               iconData,

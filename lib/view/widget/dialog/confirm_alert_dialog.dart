@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:post_client/view/widget/button/common_action_two_button.dart';
 
-import 'common_action_two_button.dart';
+
 
 class ConfirmAlertDialog extends StatelessWidget {
   const ConfirmAlertDialog({Key? key, required this.text, required this.onConfirm, required this.onCancel}) : super(key: key);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:post_client/view/widget/button/common_action_two_button.dart';
 
-import 'common_action_two_button.dart';
 
 class InputAlertDialog extends StatelessWidget {
   const InputAlertDialog({

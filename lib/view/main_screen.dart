@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/view/screen/follow/follow_screen.dart';
 import 'package:post_client/view/screen/home/home_screen.dart';
+import 'package:post_client/view/screen/media/media_screen.dart';
 import 'package:post_client/view/screen/notion/notion_screen.dart';
-import 'package:post_client/view/screen/own/own_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../state/screen_state.dart';
 import '../util/responsive.dart';
 import 'component/navigation/desktop_side_navigation_bar.dart';
 import 'component/navigation/mobile_bottom_navigation_bar.dart';
-import 'page/account/mobile_account_page.dart';
+import 'page/account/mobile_account_drawer_page.dart';
 
 //主界面，负责处理布局、加载配置
 class MainScreen extends StatefulWidget {
@@ -28,7 +28,7 @@ class MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      drawer: const MobileAccountDrawer(),
+      drawer: const MobileAccountDrawerPage(),
       drawerEnableOpenDragGesture: false,
       body: Container(
         color: colorScheme.surface,
@@ -75,8 +75,8 @@ class MainScreenState extends State<MainScreen> {
         return const FollowScreen();
       case FirstNav.notice:
         return const NotionScreen();
-      case FirstNav.own:
-        return const OwnScreen();
+      case FirstNav.media:
+        return const MediaScreen();
       default:
         return Container();
     }

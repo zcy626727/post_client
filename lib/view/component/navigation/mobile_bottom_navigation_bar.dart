@@ -17,6 +17,7 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     var navState = Provider.of<ScreenNavigatorState>(context);
     return BottomAppBar(
+      color: colorScheme.surface,
       child: SizedBox(
         height: 50,
         child: Row(
@@ -32,7 +33,7 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
               },
             ),
             MobileBottomNavigationItem(
-              iconData: Icons.podcasts,
+              iconData: Icons.rss_feed,
               selectedIndex: navState.firstNavIndex,
               index: FirstNav.follow,
               label: "关注",
@@ -69,12 +70,12 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
               },
             ),
             MobileBottomNavigationItem(
-              iconData: Icons.person,
+              iconData: Icons.view_stream,
               selectedIndex: navState.firstNavIndex,
-              index: FirstNav.own,
-              label: "我的",
+              index: FirstNav.media,
+              label: "媒体",
               press: () {
-                navState.firstNavIndex = FirstNav.own;
+                navState.firstNavIndex = FirstNav.media;
               },
             ),
           ],

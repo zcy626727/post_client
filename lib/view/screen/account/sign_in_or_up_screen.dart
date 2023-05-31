@@ -14,7 +14,7 @@ class SignInOrUpScreen extends StatefulWidget {
 
 class _SignInOrUpScreenState extends State<SignInOrUpScreen>
     with SingleTickerProviderStateMixin {
-  TabController? _tabController;
+  late TabController _tabController;
 
   @override
   void initState() {

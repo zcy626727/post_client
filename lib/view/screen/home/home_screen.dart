@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/model/post.dart';
 import 'package:post_client/util/responsive.dart';
-import 'package:post_client/view/component/list/common_item_list.dart';
 import 'package:post_client/view/component/post/post_card.dart';
+import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/user.dart';
