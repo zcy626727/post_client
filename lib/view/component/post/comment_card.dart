@@ -5,10 +5,14 @@ class CommentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          //头像
           CircleAvatar(
             backgroundImage: NetworkImage(
               "https://pic1.zhimg.com/80/v2-64803cb7928272745eb2bb0203e03648_1440w.webp",
@@ -22,26 +26,17 @@ class CommentCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                            text: "111",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            )),
-                        TextSpan(
-                          text: '222',
-                        ),
-                      ],
-                    ),
+                  Container(
+                    height: 20,
+                    child: Text("你滴名字",style: TextStyle(color: colorScheme.onSurface.withAlpha(150)),),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      "11112324",
-                      style: const TextStyle(
-                        fontSize: 12,
+                      "为什么我",
+                      style:  TextStyle(
+                        fontSize: 14,
+                        color: colorScheme.onSurface,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -50,11 +45,10 @@ class CommentCard extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            child: const Icon(
+          IconButton(onPressed: (){}, icon: Icon(
               Icons.favorite,
-              size: 16,
+              size: 20,
+              color: colorScheme.onSurface,
             ),
           )
         ],

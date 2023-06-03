@@ -28,7 +28,7 @@ class Post {
   Post.one() {
     id = 1;
     text = "这是一条动态";
-    contentType = PostContentType.text;
+    contentType = PostContentType.teletext;
     likeNumber = 1;
     commentNumber = 4;
     pictureUrlList = <String>[
@@ -68,6 +68,8 @@ class PostContentType {
   //动态
   static const post = 6;
 
-  //quill文本，可能带图
-  static const text = 7;
+  //图文模式
+  static const teletext = 7;
+  //问题
+  static const question = 8;
 }

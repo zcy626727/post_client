@@ -17,68 +17,70 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     var navState = Provider.of<ScreenNavigatorState>(context);
     return BottomAppBar(
-      color: colorScheme.surface,
-      child: SizedBox(
-        height: 50,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            MobileBottomNavigationItem(
-              iconData: Icons.home,
-              selectedIndex: navState.firstNavIndex,
-              index: FirstNav.home,
-              label: "首页",
-              press: () {
-                navState.firstNavIndex = FirstNav.home;
-              },
-            ),
-            MobileBottomNavigationItem(
-              iconData: Icons.rss_feed,
-              selectedIndex: navState.firstNavIndex,
-              index: FirstNav.follow,
-              label: "关注",
-              press: () {
-                navState.firstNavIndex = FirstNav.follow;
-              },
-            ),
-            Container(
-              width: 45,
-              height: 40,
-              margin: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: TextButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(colorScheme.secondary),
-                  splashFactory: NoSplash.splashFactory,
-                ),
-                onPressed: () {
-                  //todo 弹出上传界面（全屏）
+      child: Material(
+        color: colorScheme.surface,
+        child: SizedBox(
+          height: 50,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              MobileBottomNavigationItem(
+                iconData: Icons.home,
+                selectedIndex: navState.firstNavIndex,
+                index: FirstNav.home,
+                label: "首页",
+                press: () {
+                  navState.firstNavIndex = FirstNav.home;
                 },
-                child: Icon(
-                  Icons.add,
-                  color: colorScheme.onSecondary,
+              ),
+              MobileBottomNavigationItem(
+                iconData: Icons.rss_feed,
+                selectedIndex: navState.firstNavIndex,
+                index: FirstNav.follow,
+                label: "关注",
+                press: () {
+                  navState.firstNavIndex = FirstNav.follow;
+                },
+              ),
+              Container(
+                width: 45,
+                height: 40,
+                margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                    MaterialStateProperty.all(colorScheme.secondary),
+                    splashFactory: NoSplash.splashFactory,
+                  ),
+                  onPressed: () {
+                    //todo 弹出上传界面（全屏）
+                  },
+                  child: Icon(
+                    Icons.add,
+                    color: colorScheme.onSecondary,
+                  ),
                 ),
               ),
-            ),
-            MobileBottomNavigationItem(
-              iconData: Icons.notifications_on,
-              selectedIndex: navState.firstNavIndex,
-              index: FirstNav.notice,
-              label: "通知",
-              press: () {
-                navState.firstNavIndex = FirstNav.notice;
-              },
-            ),
-            MobileBottomNavigationItem(
-              iconData: Icons.view_stream,
-              selectedIndex: navState.firstNavIndex,
-              index: FirstNav.media,
-              label: "媒体",
-              press: () {
-                navState.firstNavIndex = FirstNav.media;
-              },
-            ),
-          ],
+              MobileBottomNavigationItem(
+                iconData: Icons.notifications_on,
+                selectedIndex: navState.firstNavIndex,
+                index: FirstNav.notice,
+                label: "通知",
+                press: () {
+                  navState.firstNavIndex = FirstNav.notice;
+                },
+              ),
+              MobileBottomNavigationItem(
+                iconData: Icons.view_stream,
+                selectedIndex: navState.firstNavIndex,
+                index: FirstNav.media,
+                label: "媒体",
+                press: () {
+                  navState.firstNavIndex = FirstNav.media;
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -118,13 +120,12 @@ class MobileBottomNavigationItem extends StatelessWidget {
 
     return Expanded(
       flex: 1,
-      child: GestureDetector(
+      child: InkWell(
         onTap: press,
         child: Container(
           width: double.infinity,
           height: double.infinity,
-          //不加颜色无法
-          color: colorScheme.surface,
+          color: isSelected?colorScheme.primaryContainer:null,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

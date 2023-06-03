@@ -1,4 +1,3 @@
-import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:video_player/video_player.dart';
 
@@ -12,32 +11,36 @@ class CommonVideoPlayer extends StatefulWidget {
 
 class _CommonVideoPlayerState extends State<CommonVideoPlayer> {
   late VideoPlayerController videoPlayerController;
-  late ChewieController chewieController;
+  // late ChewieController chewieController;
 
   @override
   void initState() {
     super.initState();
     videoPlayerController = VideoPlayerController.network(widget.videoUrl);
-    chewieController = ChewieController(
-      videoPlayerController: videoPlayerController,
-      aspectRatio: 3 / 2,
-      autoPlay: false,
-      looping: false,
-    );
+    // chewieController = ChewieController(
+    //   videoPlayerController: videoPlayerController,
+    //   aspectRatio: 3 / 2,
+    //   autoPlay: false,
+    //   looping: false,
+    // );
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     videoPlayerController.dispose();
-    chewieController.dispose();
+    // chewieController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Chewie(
-      controller: chewieController,
+    return AspectRatio(
+      aspectRatio: videoPlayerController.value.aspectRatio,
+      child: VideoPlayer(videoPlayerController),
     );
+    // return Chewie(
+    //   controller: chewieController,
+    // );
   }
 }

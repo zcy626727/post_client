@@ -51,13 +51,14 @@ dependencies:
   #sqlite(支持windows，linux)
   sqflite_common_ffi:
   #列表刷新
-  pull_to_refresh_flutter3:
+  easy_refresh:
   #文件选择
   file_picker:
   # 文本编辑
   flutter_quill:
   audioplayers:
-  chewie:
+  # 暂时会有kotlin版本冲突
+#  chewie:
   video_player:
   flutter_quill_extensions:
   intl:

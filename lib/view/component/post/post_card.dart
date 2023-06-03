@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/model/post.dart';
+import 'package:post_client/view/page/post/post_comment_page.dart';
 
 class PostCard extends StatefulWidget {
   final Post post;
@@ -181,7 +182,12 @@ class _PostCardState extends State<PostCard> {
               icon: const Icon(
                 Icons.comment,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PostCommentPage()),
+                );
+              },
             ),
           ],
         ),

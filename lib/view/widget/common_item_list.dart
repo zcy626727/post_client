@@ -1,23 +1,13 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/view/component/load/mobile_refersh_footer.dart';
-import 'package:post_client/view/component/load/mobile_refresh_header.dart';
-import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 import '../../../util/responsive.dart';
 
 class CommonItemList<T> extends StatefulWidget {
-  const CommonItemList(
-      {Key? key,
-      required this.onLoad,
-      required this.itemBuilder,
-      required this.itemName,
-      this.itemHeight,
-      this.enableUp = true,
-      this.isGrip = true,
-      this.enableScrollbar = false})
+  const CommonItemList({Key? key, required this.onLoad, required this.itemBuilder, required this.itemName, this.itemHeight, this.enableUp = true, this.isGrip = true, this.enableScrollbar = false})
       : super(key: key);
 
   final Future<List<T>> Function(int) onLoad;
@@ -33,9 +23,13 @@ class CommonItemList<T> extends StatefulWidget {
 }
 
 class _CommonItemListState<T> extends State<CommonItemList<T>> {
-  final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  final EasyRefreshController _refreshController = EasyRefreshController(
+    controlFinishRefresh: true,
+    controlFinishLoad: true,
+  );
+
   List<T>? _itemList;
+
   //当前页数
   int _page = 0;
 
@@ -70,15 +64,17 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
   //刷新
   void _onRefresh() async {
     try {
+      await Future.delayed(const Duration(seconds: 1));
+
       _itemList = await widget.onLoad(0);
       _page = 1;
       //获取成功
-      _refreshController.refreshCompleted();
-      _refreshController.resetNoData();
+      _refreshController.finishRefresh();
+      // _refreshController.resetNoData();
       setState(() {});
     } catch (e) {
       //获取失败
-      _refreshController.refreshFailed();
+      // _refreshController.refreshFailed();
     }
   }
 
@@ -86,19 +82,21 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
   void _onLoading() async {
     try {
       var list = await widget.onLoad(_page);
+      await Future.delayed(const Duration(seconds: 1));
       if (list.isEmpty) {
-        _refreshController.loadNoData();
+        //获取
+        _refreshController.finishLoad();
       } else {
         _itemList!.addAll(list);
         _page++;
         //获取成功
-        _refreshController.loadComplete();
+        _refreshController.finishLoad();
         if (mounted) setState(() {});
       }
     } catch (e) {
       //获取失败
       log(e.toString());
-      _refreshController.loadFailed();
+      // _refreshController.loadFailed();
     }
   }
 
@@ -129,18 +127,13 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
     }
     if (_itemList!.isEmpty) {
       return Center(
-        child: Text("${widget.itemName}列表为空",
-            style: TextStyle(color: colorScheme.onSurface)),
+        child: Text("${widget.itemName}列表为空", style: TextStyle(color: colorScheme.onSurface)),
       );
     }
-    return SmartRefresher(
-      enablePullDown: true,
-      enablePullUp: widget.enableUp,
-      header: const MobileRefreshHeader(),
-      footer: const MobileRefreshFooter(),
+    return EasyRefresh(
       controller: _refreshController,
       onRefresh: _onRefresh,
-      onLoading: _onLoading,
+      onLoad: _onLoading,
       child: GridView.builder(
         controller: ScrollController(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -171,18 +164,15 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
     }
     if (_itemList!.isEmpty) {
       return Center(
-        child: Text("${widget.itemName}列表为空",
-            style: TextStyle(color: colorScheme.onSurface)),
+        child: Text("${widget.itemName}列表为空", style: TextStyle(color: colorScheme.onSurface)),
       );
     }
-    return SmartRefresher(
-      enablePullDown: true,
-      enablePullUp: widget.enableUp,
-      header: const MobileRefreshHeader(),
-      footer: const MobileRefreshFooter(),
+    return EasyRefresh(
+      header: MaterialHeader(backgroundColor:colorScheme.primaryContainer,color: colorScheme.onPrimaryContainer),
+      footer: CupertinoFooter(backgroundColor: colorScheme.primaryContainer,foregroundColor: colorScheme.onPrimaryContainer),
       controller: _refreshController,
       onRefresh: _onRefresh,
-      onLoading: _onLoading,
+      onLoad: _onLoading,
       child: widget.enableScrollbar
           ? Scrollbar(
               child: ListView.builder(
