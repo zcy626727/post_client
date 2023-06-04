@@ -22,9 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
       selector: (context, data) => data.user,
       shouldRebuild: (pre, next) => pre.token != next.token,
       builder: (context, user, child) {
-        return Responsive.isSmallWithDevice(context)
-            ? buildMobile(user)
-            : buildDesktop();
+        return Responsive.isSmallWithDevice(context) ? buildMobile(user) : buildDesktop();
       },
     );
   }
@@ -37,40 +35,38 @@ class _HomeScreenState extends State<HomeScreen> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             //app bar
-            SliverToBoxAdapter(
-              child: Container(
-                color: colorScheme.surface,
-                margin: const EdgeInsets.only(bottom: 2),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(),
-                    Container(
-                      width: 50.0,
-                      height: 50.0,
-                      margin: const EdgeInsets.only(left: 5),
-                      child: TextButton(
-                        onPressed: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                        child: CircleAvatar(
-                          radius: 16.0,
-                          backgroundImage: user.avatarUrl == null
-                              ? null
-                              : NetworkImage(user.avatarUrl!),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
+            SliverAppBar(
+              // floating: true,
+              // snap: true,
+              backgroundColor: colorScheme.surface,
+              leading: Container(),
+              actions: [
+                Container(
+                  width: 50.0,
+                  height: 50.0,
+                  margin: const EdgeInsets.only(left: 5),
+                  child: TextButton(
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    child: CircleAvatar(
+                      radius: 16.0,
+                      backgroundImage: user.avatarUrl == null ? null : NetworkImage(user.avatarUrl!),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ];
         },
         body: DefaultTabController(
           length: 1,
           child: Column(
             children: [
+              Divider(
+                height: 2,
+                color: colorScheme.background,
+              ),
               //tab bar
               const HomeScreenTabBar(),
               //tab bar view list
@@ -121,15 +117,16 @@ class _HomeScreenTabBarState extends State<HomeScreenTabBar> {
   static const double iconSize = 28;
 
   int _currentPage = 0;
+
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Container(
-      height: 65,
+      height: 50,
       width: double.infinity,
       color: colorScheme.surface,
       margin: const EdgeInsets.only(bottom: 2),
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15.0),
       child: TabBar(
           onTap: (index) {
             setState(() {

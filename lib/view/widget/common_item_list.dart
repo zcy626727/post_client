@@ -176,14 +176,12 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
       child: widget.enableScrollbar
           ? Scrollbar(
               child: ListView.builder(
-              controller: ScrollController(),
               itemCount: _itemList!.length,
               itemBuilder: (context, index) {
                 return widget.itemBuilder(context, _itemList![index]);
               },
             ))
           : ListView.builder(
-              controller: ScrollController(),
               itemCount: _itemList!.length,
               itemBuilder: (context, index) {
                 return widget.itemBuilder(context, _itemList![index]);

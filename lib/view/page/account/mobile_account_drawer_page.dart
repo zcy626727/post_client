@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:post_client/view/page/account/user_details_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../config/global.dart';
@@ -137,18 +138,22 @@ class MobileAccountDrawerPage extends StatelessWidget {
                   user.avatarUrl == null ? null : NetworkImage(user.avatarUrl!),
             ),
             onPressed: () async {
-              if (user.token != "") {
+              if (!((user.token!=null&&user.token!=""))) {
                 //已登录
-                //打开file picker
-                FilePickerResult? result = await FilePicker.platform.pickFiles(
-                  type: FileType.image,
-                );
-
-                if (result != null) {
-                  File file = File(result.files.single.path!);
-                } else {
-                  // User canceled the picker
-                }
+                //进入用户详情页面
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  UserDetailPage()),
+                );// //打开file picker
+                // FilePickerResult? result = await FilePicker.platform.pickFiles(
+                //   type: FileType.image,
+                // );
+                //
+                // if (result != null) {
+                //   File file = File(result.files.single.path!);
+                // } else {
+                //   // User canceled the picker
+                // }
               } else {
                 //未登录
                 Navigator.pop(context);

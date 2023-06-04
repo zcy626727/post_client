@@ -62,13 +62,16 @@ class _PostCardState extends State<PostCard> {
           'https://pic1.zhimg.com/80/v2-64803cb7928272745eb2bb0203e03648_1440w.webp',
         ),
       ),
-      title: const Text(
+      title:  Text(
         '路由器',
         style: TextStyle(
           fontWeight: FontWeight.w600,
+          color: colorScheme.onSurface,
         ),
       ),
-      subtitle: const Text("2022-7-3"),
+      subtitle:  Text("2022-7-3",style: TextStyle(
+        color: colorScheme.onSurface,
+      ),),
       trailing: Container(
         margin: const EdgeInsets.only(right: 3),
         width: 35,
@@ -152,6 +155,8 @@ class _PostCardState extends State<PostCard> {
   }
 
   Widget buildMediaCard() {
+    var colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onDoubleTap: () {},
       child: Stack(
@@ -172,6 +177,8 @@ class _PostCardState extends State<PostCard> {
   }
 
   Widget buildOperation() {
+    var colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -179,9 +186,10 @@ class _PostCardState extends State<PostCard> {
           children: [
             //评论
             IconButton(
-              icon: const Icon(
+              icon:  const Icon(
                 Icons.comment,
               ),
+              color: colorScheme.onSurface,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -198,6 +206,7 @@ class _PostCardState extends State<PostCard> {
               icon: const Icon(
                 Icons.thumb_up_alt_outlined,
               ),
+              color: colorScheme.onSurface,
               onPressed: () {},
             ),
             //收藏
@@ -206,6 +215,7 @@ class _PostCardState extends State<PostCard> {
                 Icons.bookmark_border,
                 size: 27,
               ),
+              color: colorScheme.onSurface,
               onPressed: () {},
             )
           ],

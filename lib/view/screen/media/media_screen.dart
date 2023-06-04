@@ -134,7 +134,7 @@ class _MediaScreenState extends State<MediaScreen> {
                 ),
                 Divider(
                   height: 1,
-                  color: colorScheme.onSurface,
+                  color: colorScheme.background,
                 ),
                 TextButton(
                   onPressed: () {},

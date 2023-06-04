@@ -39,7 +39,7 @@ class _PostCommentPageState extends State<PostCommentPage> {
       backgroundColor: colorScheme.background,
       body: Container(
         color: colorScheme.surface,
-        margin: EdgeInsets.only(top: 2),
+        margin: const EdgeInsets.only(top: 2),
         child: CommonItemList<Comment>(
           onLoad: (int page) async {
             var commentList = <Comment>[];
