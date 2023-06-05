@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
-
-import 'media_quill_qmbeds.dart';
+import 'package:post_client/state/user_state.dart';
+import 'package:provider/provider.dart';
 
 class PostQuillToolBar extends StatelessWidget {
-  const PostQuillToolBar({Key? key, required this.controller})
-      : super(key: key);
+  const PostQuillToolBar({Key? key, required this.controller}) : super(key: key);
 
   final QuillController controller;
 
@@ -39,14 +38,13 @@ class PostQuillToolBar extends StatelessWidget {
       ),
       toolbarSectionSpacing: 6,
       // embedButtons: FlutterQuillEmbeds.buttons(),
-      embedButtons: MyMediaQuillEmbeds.buttons(),
+      // embedButtons: MyMediaQuillEmbeds.buttons(showImageButton: false),
     );
   }
 }
 
 class ArticleQuillToolBar extends StatelessWidget {
-  const ArticleQuillToolBar({Key? key, required this.controller})
-      : super(key: key);
+  const ArticleQuillToolBar({Key? key, required this.controller}) : super(key: key);
 
   final QuillController controller;
 
@@ -80,14 +78,13 @@ class ArticleQuillToolBar extends StatelessWidget {
       ),
       toolbarSectionSpacing: 6,
       // embedButtons: FlutterQuillEmbeds.buttons(),
-      embedButtons: MyMediaQuillEmbeds.buttons(),
+      // embedButtons: MyMediaQuillEmbeds.buttons(),
     );
   }
 }
 
 class CommentQuillToolBar extends StatelessWidget {
-  const CommentQuillToolBar({Key? key, required this.controller})
-      : super(key: key);
+  const CommentQuillToolBar({Key? key, required this.controller}) : super(key: key);
 
   final QuillController controller;
 
@@ -126,15 +123,13 @@ class CommentQuillToolBar extends StatelessWidget {
       ),
       toolbarSectionSpacing: 6,
       // embedButtons: FlutterQuillEmbeds.buttons(),
-      embedButtons: MyMediaQuillEmbeds.buttons(),
+      // embedButtons: MyMediaQuillEmbeds.buttons(),
     );
   }
 }
 
 class CommonQuillEditor extends StatelessWidget {
-  const CommonQuillEditor(
-      {Key? key, required this.controller, this.placeholder})
-      : super(key: key);
+  const CommonQuillEditor({Key? key, required this.controller, this.placeholder}) : super(key: key);
 
   final QuillController controller;
 
@@ -142,6 +137,7 @@ class CommonQuillEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return QuillEditor(
       controller: controller,
       focusNode: FocusNode(),
@@ -151,12 +147,10 @@ class CommonQuillEditor extends StatelessWidget {
       showCursor: true,
       autoFocus: false,
       readOnly: false,
-      expands: false,
+      expands: true,
       placeholder: placeholder,
-      // customStyles: DefaultStyles(
-      //     small: const TextStyle(color: Colors.red)),
       // embedBuilders: FlutterQuillEmbeds.builders(),
-      embedBuilders: MyMediaQuillEmbeds.builders(),
+      // embedBuilders: MyMediaQuillEmbeds.builders(),
     );
   }
 }

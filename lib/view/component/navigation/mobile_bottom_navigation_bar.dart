@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:post_client/view/page/article/article_edit_page.dart';
 import 'package:post_client/view/page/post/post_edit_page.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
 import 'package:post_client/view/widget/button/common_action_two_button.dart';
@@ -77,7 +78,13 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                                   }),//推文
                                   buildUploadItem(title: "投票", iconData: Icons.how_to_vote_outlined, onTap: () {}),//动态投票
                                   buildUploadItem(title: "问答", iconData: Icons.question_answer_outlined, onTap: () {}),//帖子
-                                  buildUploadItem(title: "文章", iconData: Icons.article_outlined, onTap: () {}),//文章
+                                  buildUploadItem(title: "文章", iconData: Icons.article_outlined, onTap: () {
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) =>  const ArticleEditPage()),
+                                    );
+                                  }),//文章
                                 ],
                               ),
                               Row(
