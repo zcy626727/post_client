@@ -29,10 +29,10 @@ class _UserDetailPageState extends State<UserDetailPage> {
                 sliver: SliverAppBar(
                   backgroundColor: colorScheme.surface,
                   pinned: true,
-                  floating: false,
                   //划到上面时标题栏是否隐藏
-                  snap: false,
+                  floating: false,
                   //向下滑动一点就显示全部
+                  snap: false,
                   primary: true,
                   expandedHeight: 300,
                   toolbarHeight: 50,

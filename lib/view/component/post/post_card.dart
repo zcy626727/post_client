@@ -44,7 +44,7 @@ class _PostCardState extends State<PostCard> {
           // 点赞、收藏等
           buildOperation(),
           // 描述信息
-          if (widget.post.isInnerMode()) builddescribe()
+          if (widget.post.isInnerMode()) buildDescribe()
         ],
       ),
     );
@@ -224,7 +224,7 @@ class _PostCardState extends State<PostCard> {
     );
   }
 
-  Widget builddescribe() {
+  Widget buildDescribe() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
       padding: const EdgeInsets.only(top: 5, bottom: 8),

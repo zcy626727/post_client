@@ -144,16 +144,7 @@ class MobileAccountDrawerPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) =>  UserDetailPage()),
-                );// //打开file picker
-                // FilePickerResult? result = await FilePicker.platform.pickFiles(
-                //   type: FileType.image,
-                // );
-                //
-                // if (result != null) {
-                //   File file = File(result.files.single.path!);
-                // } else {
-                //   // User canceled the picker
-                // }
+                );
               } else {
                 //未登录
                 Navigator.pop(context);

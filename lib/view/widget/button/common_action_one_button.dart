@@ -8,7 +8,7 @@ class CommonActionOneButton extends StatefulWidget {
     this.title = "取消",
     this.backgroundColor,
     this.textColor,
-    this.height = 50,
+    this.height = 40,
   }) : super(key: key);
 
   //返回值代表是否调用pop
@@ -34,7 +34,7 @@ class _CommonActionOneButtonState extends State<CommonActionOneButton> {
     var colorScheme = Theme.of(context).colorScheme;
 
     return SizedBox(
-      height: 40,
+      height: widget.height,
       width: double.infinity,
       child: OutlinedButton(
         style: ButtonStyle(

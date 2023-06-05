@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:post_client/view/page/post/post_edit_page.dart';
+import 'package:post_client/view/widget/button/common_action_one_button.dart';
+import 'package:post_client/view/widget/button/common_action_two_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../../state/screen_state.dart';
@@ -7,8 +10,7 @@ class MobileBottomNavigationBar extends StatefulWidget {
   const MobileBottomNavigationBar({Key? key}) : super(key: key);
 
   @override
-  State<MobileBottomNavigationBar> createState() =>
-      _MobileBottomNavigationBarState();
+  State<MobileBottomNavigationBar> createState() => _MobileBottomNavigationBarState();
 }
 
 class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
@@ -48,12 +50,60 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                 margin: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextButton(
                   style: ButtonStyle(
-                    backgroundColor:
-                    MaterialStateProperty.all(colorScheme.secondary),
+                    backgroundColor: MaterialStateProperty.all(colorScheme.secondary),
                     splashFactory: NoSplash.splashFactory,
                   ),
-                  onPressed: () {
-                    //todo 弹出上传界面（全屏）
+                  onPressed: () async {
+                    //弹出底部栏
+                    await showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                          color: colorScheme.surface,
+                          height: 200,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  buildUploadItem(title: "动态", iconData: Icons.post_add, onTap: () {
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) =>  const PostEditPage()),
+                                    );
+                                  }),//推文
+                                  buildUploadItem(title: "投票", iconData: Icons.how_to_vote_outlined, onTap: () {}),//动态投票
+                                  buildUploadItem(title: "问答", iconData: Icons.question_answer_outlined, onTap: () {}),//帖子
+                                  buildUploadItem(title: "文章", iconData: Icons.article_outlined, onTap: () {}),//文章
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  buildUploadItem(title: "图片", iconData: Icons.image_outlined, onTap: () {}),
+                                  buildUploadItem(title: "视频", iconData: Icons.video_file_outlined, onTap: () {}),
+                                  buildUploadItem(title: "音频", iconData: Icons.audio_file_outlined, onTap: () {}),
+                                  const Expanded(child: SizedBox())
+                                ],
+                              ),
+                              SizedBox(
+                                height: 40,
+                                child: Center(
+                                  child: CommonActionOneButton(
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    );
                   },
                   child: Icon(
                     Icons.add,
@@ -85,17 +135,31 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
       ),
     );
   }
+
+  Widget buildUploadItem({required String title, required IconData iconData, required VoidCallback onTap}) {
+    var colorScheme = Theme.of(context).colorScheme;
+    return Expanded(
+      child: SizedBox(
+        height: 60,
+        child: TextButton(
+          onPressed: onTap,
+          child: Column(
+            children: [
+              Icon(iconData),
+              Text(
+                title,
+                style: TextStyle(color: colorScheme.onSurface),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class MobileBottomNavigationItem extends StatelessWidget {
-  const MobileBottomNavigationItem(
-      {Key? key,
-      required this.selectedIndex,
-      required this.index,
-      this.label,
-      required this.iconData,
-      this.press})
-      : super(key: key);
+  const MobileBottomNavigationItem({Key? key, required this.selectedIndex, required this.index, this.label, required this.iconData, this.press}) : super(key: key);
 
   //当前选中索引
   final int selectedIndex;
@@ -115,8 +179,7 @@ class MobileBottomNavigationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isSelected = index == selectedIndex;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    Color currentColor =
-        isSelected ? colorScheme.primary : colorScheme.onSurface;
+    Color currentColor = isSelected ? colorScheme.primary : colorScheme.onSurface;
 
     return Expanded(
       flex: 1,
@@ -125,7 +188,7 @@ class MobileBottomNavigationItem extends StatelessWidget {
         child: Container(
           width: double.infinity,
           height: double.infinity,
-          color: isSelected?colorScheme.primaryContainer:null,
+          color: isSelected ? colorScheme.primaryContainer : null,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -133,8 +196,7 @@ class MobileBottomNavigationItem extends StatelessWidget {
               if (label != null)
                 Text(
                   label!,
-                  style: TextStyle(
-                      color: currentColor, fontSize: isSelected ? 13 : 12),
+                  style: TextStyle(color: currentColor, fontSize: isSelected ? 13 : 12),
                 )
             ],
           ),
