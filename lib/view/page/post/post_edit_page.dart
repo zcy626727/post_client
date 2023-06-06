@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -8,9 +7,6 @@ import 'package:post_client/config/post_config.dart';
 import 'package:post_client/view/component/quill/quill_widget.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
-
-import '../../../config/component.dart';
-import '../../../util/responsive.dart';
 
 class PostEditPage extends StatefulWidget {
   const PostEditPage({Key? key}) : super(key: key);
@@ -30,6 +26,8 @@ class _PostEditPageState extends State<PostEditPage> {
 
     return Scaffold(
       backgroundColor: colorScheme.background,
+      bottomSheet: PostQuillToolBar(controller: _controller),
+      bottomNavigationBar: buildImageList(),
       appBar: AppBar(
         toolbarHeight: 50,
         centerTitle: true,
@@ -69,43 +67,20 @@ class _PostEditPageState extends State<PostEditPage> {
         child: Column(
           children: [
             Expanded(
-              child: Stack(
-                children: [
-                  //输入框
+              child: //输入框
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    padding: const EdgeInsets.only(bottom: 110),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 5),
-                            // decoration: BoxDecoration(
-                            //   color: colorScheme.surface,
-                            //   border: Border.all(width: 1, color: colorScheme.onSurface.withAlpha(100)),
-                            //   borderRadius: BorderRadius.circular(5),
-                            // ),
-                            child: CommonQuillEditor(controller: _controller),
-                          ),
-                        ),
-                        buildImageList(),
-                      ],
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.only(bottom: 110),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5),
+                        child: CommonQuillEditor(controller: _controller),
+                      ),
                     ),
-                  ),
-                  //输入bar
-
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: PostQuillToolBar(controller: _controller),
-                  ),
-
-                  //图片上传
-                  //选项
-                  // buildOptionList(),
-                  //按钮
-                ],
+                  ],
+                ),
               ),
             ),
           ],
@@ -117,147 +92,73 @@ class _PostEditPageState extends State<PostEditPage> {
   Widget buildImageList() {
     var colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      height: 110,
-      margin: const EdgeInsets.only(bottom: 2),
-      child: GridView.builder(
-        itemCount: imageList.length + 1,
-        shrinkWrap: true,
-        // physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          childAspectRatio: 1.0,
-          crossAxisSpacing: 5.0,
-          mainAxisSpacing: 5.0,
+    return SafeArea(
+      child: Container(
+        height: 135,
+        color: colorScheme.surface,
+        padding: const EdgeInsets.all(5),
+        child: GridView.builder(
+          itemCount: imageList.length + 1,
+          shrinkWrap: true,
+          // physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            childAspectRatio: 1.0,
+            crossAxisSpacing: 5.0,
+            mainAxisSpacing: 5.0,
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            if (index == imageList.length) {
+              return GestureDetector(
+                onTap: () async {
+                  if (index >= PostConfig.maxUploadImageNum) {
+                    ShowSnackBar.error(context: context, message: "图片最多上传${PostConfig.maxUploadImageNum}个");
+                    return;
+                  }
+                  //打开file picker
+                  FilePickerResult? result = await FilePicker.platform.pickFiles(
+                    type: FileType.image,
+                  );
+
+                  if (result != null) {
+                    File file = File(result.files.single.path!);
+                    imageList.add(file);
+                    setState(() {});
+                  } else {
+                    // User canceled the picker
+                  }
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    color: colorScheme.background,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.add,
+                      color: colorScheme.onBackground,
+                    ),
+                  ),
+                ),
+              );
+            } else {
+              return GestureDetector(
+                onTap: () {
+                  // 点击图片的操作（预览、删除）
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    image: DecorationImage(
+                      image: FileImage(imageList[index]),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              );
+            }
+          },
         ),
-        itemBuilder: (BuildContext context, int index) {
-          if (index == imageList.length) {
-            return GestureDetector(
-              onTap: () async {
-                if (index >= PostConfig.maxUploadImageNum) {
-                  ShowSnackBar.error(context: context, message: "图片最多上传${PostConfig.maxUploadImageNum}个");
-                  return;
-                }
-                //打开file picker
-                FilePickerResult? result = await FilePicker.platform.pickFiles(
-                  type: FileType.image,
-                );
-
-                if (result != null) {
-                  File file = File(result.files.single.path!);
-                  imageList.add(file);
-                  setState(() {});
-                } else {
-                  // User canceled the picker
-                }
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  color: colorScheme.background,
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.add,
-                    color: colorScheme.onBackground,
-                  ),
-                ),
-              ),
-            );
-          } else {
-            return GestureDetector(
-              onTap: () {
-                // 点击图片的操作（预览、删除）
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  image: DecorationImage(
-                    image: FileImage(imageList[index]),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            );
-          }
-        },
-      ),
-    );
-  }
-
-  Widget buildOptionList() {
-    var colorScheme = Theme.of(context).colorScheme;
-    double fontSize = Responsive.isSmall(context) ? 16 : 15;
-    return Container(
-      height: 50,
-      color: colorScheme.surface,
-      margin: const EdgeInsets.only(bottom: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      // child: Column(
-      //   children: [
-      //     //年龄限制，可见
-      //     Container(
-      //       height: 50,
-      //       color: colorScheme.surface,
-      //       margin: EdgeInsets.zero,
-      //       child: ListTile(
-      //         title: Text(
-      //           "吧啦吧啦",
-      //           style: TextStyle(color: colorScheme.onSurface, fontSize: fontSize),
-      //         ),
-      //         trailing: SizedBox(
-      //           width: 150,
-      //           child: Row(
-      //             mainAxisAlignment: MainAxisAlignment.end,
-      //             children: [
-      //               Flexible(
-      //                 child: Text("name", overflow: TextOverflow.ellipsis, style: TextStyle(color: colorScheme.onSurface, fontSize: fontSize)),
-      //               ),
-      //               Container(
-      //                 margin: const EdgeInsets.only(left: 10.0),
-      //                 width: 30,
-      //                 child: Icon(Icons.hive, color: colorScheme.onSurface),
-      //               ),
-      //             ],
-      //           ),
-      //         ),
-      //       ),
-      //     )
-      //   ],
-      // ),
-    );
-  }
-}
-
-class PostInputField extends StatelessWidget {
-  const PostInputField({Key? key, required this.controller}) : super(key: key);
-
-  final QuillController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    var colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      height: 300,
-      color: colorScheme.surface,
-      margin: const EdgeInsets.only(bottom: 2),
-      padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
-      // child: TextField(
-      //   maxLines: 4,
-      //   decoration: InputDecoration(
-      //       border: OutlineInputBorder(
-      //         //添加边框
-      //         borderRadius: BorderRadius.circular(5.0),
-      //       ),
-      //       counterStyle: TextStyle(color: colorScheme.onSurface),),
-      //   style: TextStyle(color: colorScheme.onSurface),
-      //   maxLength: 200,
-      //   onChanged: (value) {
-      //     log(value);
-      //   },
-      // ),
-      child: Column(
-        children: [],
       ),
     );
   }
