@@ -20,13 +20,18 @@ class _PostEditPageState extends State<PostEditPage> {
 
   final QuillController _controller = QuillController.basic();
 
+
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       backgroundColor: colorScheme.background,
-      bottomSheet: PostQuillToolBar(controller: _controller),
+      bottomSheet: Container(
+        padding: const EdgeInsets.only(top: 10),
+        width: double.infinity,
+        color: colorScheme.surface,
+        child: PostQuillToolBar(controller: _controller),
+      ),
       bottomNavigationBar: buildImageList(),
       appBar: AppBar(
         toolbarHeight: 50,
@@ -67,8 +72,7 @@ class _PostEditPageState extends State<PostEditPage> {
         child: Column(
           children: [
             Expanded(
-              child: //输入框
-                  Container(
+              child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
                 padding: const EdgeInsets.only(bottom: 110),
                 child: Column(
@@ -162,4 +166,5 @@ class _PostEditPageState extends State<PostEditPage> {
       ),
     );
   }
+
 }

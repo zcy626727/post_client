@@ -10,6 +10,7 @@ class PostQuillToolBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    controller.formatText(0, 10000, ColorAttribute("white"));
     var colorScheme = Theme.of(context).colorScheme;
     return QuillToolbar.basic(
       showColorButton: false,
@@ -138,7 +139,10 @@ class CommonQuillEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return QuillEditor(
+    var colorScheme = Theme.of(context).colorScheme;
+
+    // 设置DefaultTextStyle，调整亮暗模式
+    return DefaultTextStyle(style: TextStyle(color: colorScheme.onSurface), child: QuillEditor(
       controller: controller,
       focusNode: FocusNode(),
       scrollController: ScrollController(),
@@ -149,8 +153,9 @@ class CommonQuillEditor extends StatelessWidget {
       readOnly: false,
       expands: true,
       placeholder: placeholder,
+      customStyles: DefaultStyles(),
       // embedBuilders: FlutterQuillEmbeds.builders(),
       // embedBuilders: MyMediaQuillEmbeds.builders(),
-    );
+    ));
   }
 }
