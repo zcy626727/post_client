@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
 import 'package:post_client/view/widget/button/common_action_two_button.dart';
 
+//媒体选择器
 class MyMediaSelector extends StatefulWidget {
   const MyMediaSelector({Key? key, required this.mediaType}) : super(key: key);
 

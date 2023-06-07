@@ -2,7 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:post_client/util/responsive.dart';
-import 'package:post_client/view/component/quill/media_bottom_selector.dart';
+import 'package:post_client/view/component/media/media_selector.dart';
 
 //暂时使用提供的imageBlock，有需要再自定义
 // class ImageEmbedBuilder implements EmbedBuilder {

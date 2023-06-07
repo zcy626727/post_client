@@ -55,12 +55,15 @@ dependencies:
   #文件选择
   file_picker:
   # 文本编辑
-  flutter_quill:
+  flutter_quill: ^7.2.2
   audioplayers:
   # 暂时会有kotlin版本冲突
 #  chewie:
   video_player:
   flutter_quill_extensions:
+    git:
+      url: https://github.com/singerdmx/flutter-quill.git
+      path: flutter_quill_extensions
   intl:
   #网格
   flutter_staggered_grid_view:

@@ -1,12 +1,15 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:post_client/config/post_config.dart';
-import 'package:post_client/view/component/quill/quill_widget.dart';
+import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
+
+import '../../component/quill/quill_editor.dart';
 
 class PostEditPage extends StatefulWidget {
   const PostEditPage({Key? key}) : super(key: key);
@@ -20,19 +23,11 @@ class _PostEditPageState extends State<PostEditPage> {
 
   final QuillController _controller = QuillController.basic();
 
-
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: colorScheme.background,
-      bottomSheet: Container(
-        padding: const EdgeInsets.only(top: 10),
-        width: double.infinity,
-        color: colorScheme.surface,
-        child: PostQuillToolBar(controller: _controller),
-      ),
-      bottomNavigationBar: buildImageList(),
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
         toolbarHeight: 50,
         centerTitle: true,
@@ -57,8 +52,18 @@ class _PostEditPageState extends State<PostEditPage> {
               child: CommonActionOneButton(
                 title: "发布",
                 height: 30,
-                onTap: () async {
-                  await Future.delayed(const Duration(seconds: 1));
+                onTap: ()  {
+                  print('1');
+                  var delta = _controller.document.toDelta().toList();
+                  for(var d in delta){
+                    var data = d.data;
+                    if(data is Map<String,dynamic>){
+                      var data2 = data['at'];
+                      if(data2!=null){
+                        print("找到一个：$data2");
+                      }
+                    }
+                  }
                 },
                 backgroundColor: colorScheme.primary,
                 textColor: colorScheme.onPrimary,
@@ -67,52 +72,42 @@ class _PostEditPageState extends State<PostEditPage> {
           )
         ],
       ),
-      body: Container(
-        color: colorScheme.surface,
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                padding: const EdgeInsets.only(bottom: 110),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 5),
-                        child: CommonQuillEditor(controller: _controller),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+      body: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 5),
+            child: buildImageList(),
+          ),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),
+              child: PostQuillEditor(controller: _controller),
             ),
-          ],
-        ),
+          ),
+          PostQuillToolBar(controller: _controller),
+          const SizedBox(height: 5),
+        ],
       ),
     );
   }
 
+  final double imagePadding = 5.0;
+  final double imageWidth = 100;
+
   Widget buildImageList() {
     var colorScheme = Theme.of(context).colorScheme;
-
     return SafeArea(
       child: Container(
-        height: 135,
-        color: colorScheme.surface,
-        padding: const EdgeInsets.all(5),
-        child: GridView.builder(
+        height: imageWidth,
+        width: double.infinity,
+        margin: EdgeInsets.all(imagePadding),
+        child: ListView.builder(
           itemCount: imageList.length + 1,
+          scrollDirection: Axis.horizontal,
           shrinkWrap: true,
           // physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            childAspectRatio: 1.0,
-            crossAxisSpacing: 5.0,
-            mainAxisSpacing: 5.0,
-          ),
           itemBuilder: (BuildContext context, int index) {
-            if (index == imageList.length) {
+            if (index >= imageList.length) {
               return GestureDetector(
                 onTap: () async {
                   if (index >= PostConfig.maxUploadImageNum) {
@@ -133,6 +128,8 @@ class _PostEditPageState extends State<PostEditPage> {
                   }
                 },
                 child: Container(
+                  width: imageWidth,
+                  height: imageWidth,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
                     color: colorScheme.background,
@@ -151,6 +148,9 @@ class _PostEditPageState extends State<PostEditPage> {
                   // 点击图片的操作（预览、删除）
                 },
                 child: Container(
+                  margin: EdgeInsets.only(right: imagePadding),
+                  width: imageWidth,
+                  height: imageWidth,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
                     image: DecorationImage(

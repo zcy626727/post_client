@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:provider/provider.dart';
+
+import 'media_quill_embeds.dart';
 
 class PostQuillToolBar extends StatelessWidget {
   const PostQuillToolBar({Key? key, required this.controller}) : super(key: key);
@@ -10,14 +13,15 @@ class PostQuillToolBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.formatText(0, 10000, ColorAttribute("white"));
     var colorScheme = Theme.of(context).colorScheme;
     return QuillToolbar.basic(
-      showColorButton: false,
+      color: colorScheme.surface,
       controller: controller,
       showFontFamily: false,
       showFontSize: false,
       showSearchButton: false,
+      showLink: false,
+      showHeaderStyle: false,
       iconTheme: QuillIconTheme(
         //选中字体颜色
         iconSelectedColor: colorScheme.onPrimary,
@@ -37,7 +41,11 @@ class PostQuillToolBar extends StatelessWidget {
         dialogBackgroundColor: colorScheme.surface,
         inputTextStyle: TextStyle(color: colorScheme.onSurface),
       ),
-      toolbarSectionSpacing: 6,
+      multiRowsDisplay: false,
+      embedButtons: PostQuillEmbeds.buttons(),
+      // toolbarSectionSpacing: 5,
+      // toolbarIconAlignment: WrapAlignment.start,
+      // toolbarIconCrossAlignment: WrapCrossAlignment.center,
       // embedButtons: FlutterQuillEmbeds.buttons(),
       // embedButtons: MyMediaQuillEmbeds.buttons(showImageButton: false),
     );
@@ -126,36 +134,5 @@ class CommentQuillToolBar extends StatelessWidget {
       // embedButtons: FlutterQuillEmbeds.buttons(),
       // embedButtons: MyMediaQuillEmbeds.buttons(),
     );
-  }
-}
-
-class CommonQuillEditor extends StatelessWidget {
-  const CommonQuillEditor({Key? key, required this.controller, this.placeholder}) : super(key: key);
-
-  final QuillController controller;
-
-  final String? placeholder;
-
-  @override
-  Widget build(BuildContext context) {
-
-    var colorScheme = Theme.of(context).colorScheme;
-
-    // 设置DefaultTextStyle，调整亮暗模式
-    return DefaultTextStyle(style: TextStyle(color: colorScheme.onSurface), child: QuillEditor(
-      controller: controller,
-      focusNode: FocusNode(),
-      scrollController: ScrollController(),
-      scrollable: true,
-      padding: EdgeInsets.zero,
-      showCursor: true,
-      autoFocus: false,
-      readOnly: false,
-      expands: true,
-      placeholder: placeholder,
-      customStyles: DefaultStyles(),
-      // embedBuilders: FlutterQuillEmbeds.builders(),
-      // embedBuilders: MyMediaQuillEmbeds.builders(),
-    ));
   }
 }

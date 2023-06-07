@@ -4,9 +4,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:post_client/util/responsive.dart';
-import 'package:post_client/view/component/quill/media_bottom_selector.dart';
+import 'package:post_client/view/component/media/media_selector.dart';
 import 'package:post_client/view/widget/player/common_audio_player.dart';
 
+
+//嵌入块样式
 class MyAudioEmbedBuilder implements EmbedBuilder {
   MyAudioEmbedBuilder();
 
@@ -36,6 +38,7 @@ class MyAudioEmbedBuilder implements EmbedBuilder {
   bool get expanded => true;
 }
 
+//连接嵌入块和按钮
 class MyAudioBlockEmbed extends CustomBlockEmbed {
   MyAudioBlockEmbed(String value) : super(embedType, value);
 
@@ -48,6 +51,7 @@ class MyAudioBlockEmbed extends CustomBlockEmbed {
   Document get document => Document.fromJson(jsonDecode(data));
 }
 
+//嵌入块触发按钮
 class MyAudioEmbedButton extends StatelessWidget {
   const MyAudioEmbedButton({
     required this.controller,

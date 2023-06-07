@@ -2,6 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:post_client/model/media.dart';
 import 'package:post_client/model/user.dart';
 
+part 'post.g.dart';
+
 @JsonSerializable()
 class Post {
   int? id;
@@ -20,9 +22,11 @@ class Post {
   List<String>? pictureUrlList;
 
   //媒体
+  @JsonKey(includeFromJson: false, includeToJson: false)
   Media? media;
 
   //post所有者
+  @JsonKey(includeFromJson: false, includeToJson: false)
   User? user;
 
   Post.one() {
@@ -53,6 +57,12 @@ class Post {
         contentType == PostContentType.collection ||
         contentType == PostContentType.post;
   }
+
+  Post();
+
+  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PostToJson(this);
 }
 
 class PostContentType {

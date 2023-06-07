@@ -79,11 +79,11 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                                   buildUploadItem(title: "投票", iconData: Icons.how_to_vote_outlined, onTap: () {}),//动态投票
                                   buildUploadItem(title: "问答", iconData: Icons.question_answer_outlined, onTap: () {}),//帖子
                                   buildUploadItem(title: "文章", iconData: Icons.article_outlined, onTap: () {
-                                    Navigator.pop(context);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) =>  const ArticleEditPage()),
-                                    );
+                                    // Navigator.pop(context);
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(builder: (context) =>  const ArticleEditPage()),
+                                    // );
                                   }),//文章
                                 ],
                               ),
