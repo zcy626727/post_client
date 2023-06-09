@@ -103,7 +103,6 @@ class _FollowScreenState extends State<FollowScreen> {
                 postList.add(Post.one());
                 return postList;
               },
-              enableUp: true,
               itemName: "动态",
               itemHeight: null,
               isGrip: false,

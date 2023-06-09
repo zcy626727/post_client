@@ -22,10 +22,13 @@ class _PostEditPageState extends State<PostEditPage> {
   var imageList = <File>[];
 
   final QuillController _controller = QuillController.basic();
+  final FocusNode focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
+    if (MediaQuery.of(context).viewInsets.bottom == 0) focusNode.unfocus();
+
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
@@ -52,14 +55,14 @@ class _PostEditPageState extends State<PostEditPage> {
               child: CommonActionOneButton(
                 title: "发布",
                 height: 30,
-                onTap: ()  {
+                onTap: () {
                   print('1');
                   var delta = _controller.document.toDelta().toList();
-                  for(var d in delta){
+                  for (var d in delta) {
                     var data = d.data;
-                    if(data is Map<String,dynamic>){
+                    if (data is Map<String, dynamic>) {
                       var data2 = data['at'];
-                      if(data2!=null){
+                      if (data2 != null) {
                         print("找到一个：$data2");
                       }
                     }
@@ -80,8 +83,11 @@ class _PostEditPageState extends State<PostEditPage> {
           ),
           Expanded(
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),
-              child: PostQuillEditor(controller: _controller),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+              child: PostQuillEditor(
+                controller: _controller,
+                focusNode: focusNode,
+              ),
             ),
           ),
           PostQuillToolBar(controller: _controller),
@@ -166,5 +172,4 @@ class _PostEditPageState extends State<PostEditPage> {
       ),
     );
   }
-
 }

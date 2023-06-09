@@ -7,11 +7,12 @@ import 'package:flutter/material.dart';
 import '../../../util/responsive.dart';
 
 class CommonItemList<T> extends StatefulWidget {
-  const CommonItemList({Key? key, required this.onLoad, required this.itemBuilder, required this.itemName, this.itemHeight, this.enableUp = true, this.isGrip = true, this.enableScrollbar = false})
+  const CommonItemList({Key? key, required this.onLoad, required this.itemBuilder, required this.itemName, this.itemHeight, this.enableRefresh = true, this.isGrip = true, this.enableScrollbar = false,  this.enableLoad = true})
       : super(key: key);
 
   final Future<List<T>> Function(int) onLoad;
-  final bool enableUp;
+  final bool enableRefresh;
+  final bool enableLoad;
   final bool isGrip;
   final String itemName;
   final double? itemHeight;
@@ -171,8 +172,8 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
       header: MaterialHeader(backgroundColor:colorScheme.primaryContainer,color: colorScheme.onPrimaryContainer),
       footer: CupertinoFooter(backgroundColor: colorScheme.primaryContainer,foregroundColor: colorScheme.onPrimaryContainer),
       controller: _refreshController,
-      onRefresh: _onRefresh,
-      onLoad: _onLoading,
+      onRefresh: widget.enableRefresh?_onRefresh:null,
+      onLoad: widget.enableLoad?_onLoading:null,
       child: widget.enableScrollbar
           ? Scrollbar(
               child: ListView.builder(

@@ -38,6 +38,12 @@ class User {
   //0：跟随系统，1：亮，2：暗
   int? themeMode = 0;
 
+  User.one(){
+    id = 1;
+    name = "aaa";
+    avatarUrl = "https://pic1.zhimg.com/80/v2-64803cb7928272745eb2bb0203e03648_1440w.webp";
+  }
+
   static String createSql = '''
     create table user ( 
       id integer primary key autoincrement, 

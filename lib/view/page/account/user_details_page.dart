@@ -92,7 +92,6 @@ class _UserDetailPageState extends State<UserDetailPage> {
                       postList.add(Post.one());
                       return postList;
                     },
-                    enableUp: true,
                     itemName: "动态",
                     itemHeight: null,
                     isGrip: false,
