@@ -28,9 +28,7 @@ class _FollowScreenState extends State<FollowScreen> {
       selector: (context, data) => data.user,
       shouldRebuild: (pre, next) => pre.token != next.token,
       builder: (context, user, child) {
-        return Responsive.isSmallWithDevice(context)
-            ? buildMobile(user)
-            : buildDesktop();
+        return Responsive.isSmallWithDevice(context) ? buildMobile(user) : buildDesktop();
       },
     );
   }
@@ -81,13 +79,34 @@ class _FollowScreenState extends State<FollowScreen> {
                       onPressed: () {},
                       style: ButtonStyle(
                         elevation: const MaterialStatePropertyAll(0),
-                        backgroundColor: MaterialStatePropertyAll(
-                            colorScheme.outline.withAlpha(100)),
+                        backgroundColor: MaterialStatePropertyAll(colorScheme.inverseSurface),
                       ),
                       child: Text(
                         "全部",
                         style: TextStyle(
-                          color: colorScheme.onSurface,
+                          color: colorScheme.onInverseSurface,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 5),
+                Center(
+                  child: Container(
+                    height: 25,
+                    margin: const EdgeInsets.symmetric(vertical: 5),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ButtonStyle(
+                        elevation: const MaterialStatePropertyAll(0),
+                        backgroundColor: MaterialStatePropertyAll(
+                          colorScheme.background,
+                        ),
+                      ),
+                      child: Text(
+                        "动态",
+                        style: TextStyle(
+                          color: colorScheme.onBackground,
                         ),
                       ),
                     ),

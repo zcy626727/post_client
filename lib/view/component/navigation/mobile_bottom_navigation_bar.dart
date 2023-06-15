@@ -20,6 +20,7 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     var navState = Provider.of<ScreenNavigatorState>(context);
     return BottomAppBar(
+      color: colorScheme.surface,
       child: Material(
         color: colorScheme.surface,
         child: SizedBox(
@@ -60,53 +61,64 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                       context: context,
                       builder: (BuildContext context) {
                         return Container(
-                          padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                           color: colorScheme.surface,
-                          height: 200,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Row(
+                          child: SafeArea(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                              color: colorScheme.surface,
+                              height: 200,
+                              child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
-                                  buildUploadItem(title: "动态", iconData: Icons.post_add, onTap: () {
-                                    Navigator.pop(context);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) =>  const PostEditPage()),
-                                    );
-                                  }),//推文
-                                  buildUploadItem(title: "投票", iconData: Icons.how_to_vote_outlined, onTap: () {}),//动态投票
-                                  buildUploadItem(title: "问答", iconData: Icons.question_answer_outlined, onTap: () {}),//帖子
-                                  buildUploadItem(title: "文章", iconData: Icons.article_outlined, onTap: () {
-                                    // Navigator.pop(context);
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(builder: (context) =>  const ArticleEditPage()),
-                                    // );
-                                  }),//文章
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  buildUploadItem(title: "图片", iconData: Icons.image_outlined, onTap: () {}),
-                                  buildUploadItem(title: "视频", iconData: Icons.video_file_outlined, onTap: () {}),
-                                  buildUploadItem(title: "音频", iconData: Icons.audio_file_outlined, onTap: () {}),
-                                  const Expanded(child: SizedBox())
-                                ],
-                              ),
-                              SizedBox(
-                                height: 40,
-                                child: Center(
-                                  child: CommonActionOneButton(
-                                    onTap: () {
-                                      Navigator.of(context).pop();
-                                    },
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      buildUploadItem(
+                                          title: "动态",
+                                          iconData: Icons.post_add,
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => const PostEditPage()),
+                                            );
+                                          }), //推文
+                                      buildUploadItem(title: "投票", iconData: Icons.how_to_vote_outlined, onTap: () {}), //动态投票
+                                      buildUploadItem(title: "问答", iconData: Icons.question_answer_outlined, onTap: () {}), //帖子
+                                      buildUploadItem(
+                                          title: "文章",
+                                          iconData: Icons.article_outlined,
+                                          onTap: () {
+                                            // Navigator.pop(context);
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(builder: (context) =>  const ArticleEditPage()),
+                                            // );
+                                          }), //文章
+                                    ],
                                   ),
-                                ),
-                              )
-                            ],
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      buildUploadItem(title: "图片", iconData: Icons.image_outlined, onTap: () {}),
+                                      buildUploadItem(title: "视频", iconData: Icons.video_file_outlined, onTap: () {}),
+                                      buildUploadItem(title: "音频", iconData: Icons.audio_file_outlined, onTap: () {}),
+                                      const Expanded(child: SizedBox())
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 40,
+                                    child: Center(
+                                      child: CommonActionOneButton(
+                                        onTap: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
                         );
                       },

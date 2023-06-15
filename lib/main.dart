@@ -49,60 +49,61 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _futureBuilderFuture,
-        builder: (BuildContext context, AsyncSnapshot snapShot) {
-          if (snapShot.connectionState == ConnectionState.done) {
-            //有错误信息
-            if (snapShot.hasData) {
-              log("错误信息：${snapShot.data.toString()}");
-            }
-            return Selector<UserState, ThemeMode>(
-              selector: (context, userState) => userState.currentMode,
-              //主题改变时才需要更新所有ui
-              //只是用户信息改变了的话只需要更改用户信息相关的ui
-              shouldRebuild: (pre, next) => pre != next,
-              builder: (context, currentThemeMode, child) {
-                log("更新全局ui");
-                return MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  title: "file",
-                  //正常模式主题
-                  theme: Theme.of(context).copyWith(
-                    brightness: Brightness.light,
-                    colorScheme: lightColorScheme,
-                  ),
-                  //暗模式主题
-                  darkTheme: Theme.of(context).copyWith(
-                    brightness: Brightness.light,
-                    colorScheme: darkColorScheme,
-                  ),
-                  routes: {
-                    "login": (context) => const SignInOrUpScreen(),
-                  },
-                  //全局状态获取主题模式
-                  themeMode: currentThemeMode,
-                  //国际化
-                  localizationsDelegates: const [
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                  ],
-                  supportedLocales: const [
-                    Locale('zh', 'CH'),
-                    Locale('en', 'US'),
-                  ],
-                  locale: const Locale('zh'),
-                  home: const MainScreen(),
-                );
-              },
-            );
-          } else {
-            // 请求未结束，显示loading
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+      future: _futureBuilderFuture,
+      builder: (BuildContext context, AsyncSnapshot snapShot) {
+        if (snapShot.connectionState == ConnectionState.done) {
+          //有错误信息
+          if (snapShot.hasData) {
+            log("错误信息：${snapShot.data.toString()}");
           }
-        });
+          return Selector<UserState, ThemeMode>(
+            selector: (context, userState) => userState.currentMode,
+            //主题改变时才需要更新所有ui
+            //只是用户信息改变了的话只需要更改用户信息相关的ui
+            shouldRebuild: (pre, next) => pre != next,
+            builder: (context, currentThemeMode, child) {
+              log("更新全局ui");
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: "file",
+                //正常模式主题
+                theme: Theme.of(context).copyWith(
+                  brightness: Brightness.light,
+                  colorScheme: lightColorScheme,
+                ),
+                //暗模式主题
+                darkTheme: Theme.of(context).copyWith(
+                  brightness: Brightness.light,
+                  colorScheme: darkColorScheme,
+                ),
+                routes: {
+                  "login": (context) => const SignInOrUpScreen(),
+                },
+                //全局状态获取主题模式
+                themeMode: currentThemeMode,
+                //国际化
+                localizationsDelegates: const [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                ],
+                supportedLocales: const [
+                  Locale('zh', 'CH'),
+                  Locale('en', 'US'),
+                ],
+                locale: const Locale('zh'),
+                home: const MainScreen(),
+              );
+            },
+          );
+        } else {
+          // 请求未结束，显示loading
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
   }
 
   @override

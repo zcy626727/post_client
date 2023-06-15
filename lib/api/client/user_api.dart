@@ -6,8 +6,6 @@ import '../../../model/user.dart';
 import '../../config/net_config.dart';
 
 class UserHttpConfig {
-  // 在网络请求过程中可能会需要使用当前的context信息，比如在请求失败时
-  // 打开一个新路由，而打开新路由需要context信息。
 
   //当前接口的选项
   static Options options = Options();

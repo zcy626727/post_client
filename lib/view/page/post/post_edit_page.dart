@@ -75,7 +75,7 @@ class _PostEditPageState extends State<PostEditPage> {
           )
         ],
       ),
-      body: Column(
+      body: SafeArea(child: Column(
         children: [
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -93,7 +93,7 @@ class _PostEditPageState extends State<PostEditPage> {
           PostQuillToolBar(controller: _controller),
           const SizedBox(height: 5),
         ],
-      ),
+      ),),
     );
   }
 
