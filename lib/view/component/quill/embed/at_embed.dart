@@ -26,14 +26,6 @@ class MyAtEmbedBuilder implements EmbedBuilder {
     User user = User.fromJson(json.decode(node.value.data));
 
     var colorScheme = Theme.of(context).colorScheme;
-    // return Container(
-    //   color: colorScheme.primaryContainer,
-    //   padding: const EdgeInsets.only(left: 10),
-    //   child: Text(
-    //     user.name ?? "dog",
-    //     style: TextStyle(color: colorScheme.onPrimaryContainer),
-    //   ),
-    // );
     return Card(
       elevation: 1,
       margin: const EdgeInsets.only(bottom: 1,right: 3,left: 3),

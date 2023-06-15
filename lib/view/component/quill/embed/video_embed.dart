@@ -16,23 +16,27 @@ class MyVideoEmbedBuilder implements EmbedBuilder {
 
   @override
   Widget build(
-      BuildContext context,
-      QuillController controller,
-      node,
-      bool readOnly,
-      bool inline,
-      TextStyle textStyle,
+    BuildContext context,
+    QuillController controller,
+    node,
+    bool readOnly,
+    bool inline,
+    TextStyle textStyle,
   ) {
     final videoUrl = node.value.data;
-    return AspectRatio(
-      aspectRatio: 3 / 2,
-      child: CommonVideoPlayer(videoUrl: videoUrl),
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 3,vertical: 3),
+      elevation: 0,
+      child: AspectRatio(
+        aspectRatio: 3 / 2,
+        child: CommonVideoPlayer(videoUrl: videoUrl),
+      ),
     );
   }
 
   @override
   WidgetSpan buildWidgetSpan(Widget widget) {
-    return WidgetSpan(child: widget);
+    return WidgetSpan(child: widget,alignment: PlaceholderAlignment.middle);
   }
 
   @override
@@ -45,8 +49,7 @@ class MyVideoBlockEmbed extends CustomBlockEmbed {
   static const String embedType = "video";
 
   //根据document生成VideoBlockEmbed
-  static MyVideoBlockEmbed fromDocument(Document document) =>
-      MyVideoBlockEmbed(jsonEncode(document.toDelta().toJson()));
+  static MyVideoBlockEmbed fromDocument(Document document) => MyVideoBlockEmbed(jsonEncode(document.toDelta().toJson()));
 
   Document get document => Document.fromJson(jsonDecode(data));
 }
@@ -72,8 +75,7 @@ class MyVideoEmbedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final iconColor = iconTheme?.iconUnselectedColor ?? theme.iconTheme.color;
-    final iconFillColor =
-        iconTheme?.iconUnselectedFillColor ?? theme.canvasColor;
+    final iconFillColor = iconTheme?.iconUnselectedFillColor ?? theme.canvasColor;
     return QuillIconButton(
       icon: Icon(Icons.movie_creation, size: iconSize, color: iconColor),
       highlightElevation: 0,
@@ -120,12 +122,12 @@ class MyVideoEmbedButton extends StatelessWidget {
   void _submitted(String? link) {
     if (link != null) {
       final index = controller.selection.baseOffset;
-      final length = controller.selection.extentOffset - index;
 
-      //自定义的
-      // controller.replaceText(index, length, ImageBlockEmbed(link), null);
-
-      controller.replaceText(index, length, MyVideoBlockEmbed(link), null);
+      var block = MyVideoBlockEmbed(link);
+      //添加at
+      controller.replaceText(index, 0, block, null);
+      //移动光标
+      controller.moveCursorToPosition(index + 1);
     }
   }
 }

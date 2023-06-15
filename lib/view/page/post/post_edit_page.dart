@@ -75,25 +75,27 @@ class _PostEditPageState extends State<PostEditPage> {
           )
         ],
       ),
-      body: SafeArea(child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 5),
-            child: buildImageList(),
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-              child: PostQuillEditor(
-                controller: _controller,
-                focusNode: focusNode,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 5),
+              child: buildImageList(),
+            ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                child: PostQuillEditor(
+                  controller: _controller,
+                  focusNode: focusNode,
+                ),
               ),
             ),
-          ),
-          PostQuillToolBar(controller: _controller),
-          const SizedBox(height: 5),
-        ],
-      ),),
+            PostQuillToolBar(controller: _controller),
+            const SizedBox(height: 5),
+          ],
+        ),
+      ),
     );
   }
 

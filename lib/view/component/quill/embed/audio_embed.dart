@@ -26,12 +26,16 @@ class MyAudioEmbedBuilder implements EmbedBuilder {
   ) {
     final audioUrl = node.value.data;
 
-    return CommonAudioPlayerMini(audioUrl: audioUrl);
+    return Card(
+      elevation: 0,
+      margin: const EdgeInsets.symmetric(horizontal: 3,vertical: 3),
+      child: CommonAudioPlayerMini(audioUrl: audioUrl),
+    );
   }
 
   @override
   WidgetSpan buildWidgetSpan(Widget widget) {
-    return WidgetSpan(child: widget);
+    return WidgetSpan(child: widget,alignment: PlaceholderAlignment.middle);
   }
 
   @override
@@ -122,9 +126,12 @@ class MyAudioEmbedButton extends StatelessWidget {
   void _submitted(String? link) {
     if (link != null) {
       final index = controller.selection.baseOffset;
-      final length = controller.selection.extentOffset - index;
 
-      controller.replaceText(index, length, MyAudioBlockEmbed(link), null);
+      var block = MyAudioBlockEmbed(link);
+      //添加at
+      controller.replaceText(index, 0, block, null);
+      //移动光标
+      controller.moveCursorToPosition(index + 1);
     }
   }
 }

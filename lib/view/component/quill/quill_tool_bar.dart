@@ -15,6 +15,7 @@ class PostQuillToolBar extends StatelessWidget {
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
     return QuillToolbar.basic(
+      locale: const Locale('en'),
       color: colorScheme.surface,
       controller: controller,
       showFontFamily: false,
@@ -61,6 +62,7 @@ class ArticleQuillToolBar extends StatelessWidget {
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
     return QuillToolbar.basic(
+      locale: const Locale('en'),
       showColorButton: false,
       controller: controller,
       showFontFamily: false,
@@ -85,8 +87,9 @@ class ArticleQuillToolBar extends StatelessWidget {
         dialogBackgroundColor: colorScheme.surface,
         inputTextStyle: TextStyle(color: colorScheme.onSurface),
       ),
+      multiRowsDisplay: false,
       toolbarSectionSpacing: 6,
-      // embedButtons: FlutterQuillEmbeds.buttons(),
+      embedButtons: ArticleQuillEmbeds.buttons(),
       // embedButtons: MyMediaQuillEmbeds.buttons(),
     );
   }

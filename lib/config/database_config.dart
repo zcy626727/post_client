@@ -2,5 +2,5 @@ class DatabaseConfig {
   final String databaseName;
   final int version;
 
-  DatabaseConfig({this.databaseName = "netdisk.db", this.version = 6});
+  DatabaseConfig({this.databaseName = "post.db", this.version = 1});
 }

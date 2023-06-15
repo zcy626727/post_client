@@ -12,14 +12,12 @@ class ArticleQuillEmbeds {
         ImageEmbedBuilder(),
         MyVideoEmbedBuilder(),
         MyAudioEmbedBuilder(),
-        MyAtEmbedBuilder(),
       ];
 
   static List<EmbedButtonBuilder> buttons({
     bool showImageButton = true,
     bool showVideoButton = true,
     bool showAudioButton = true,
-    bool showAtButton = true,
   }) {
     return [
       (controller, toolbarIconSize, iconTheme, dialogTheme) => VerticalDivider(

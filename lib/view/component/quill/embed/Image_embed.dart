@@ -60,8 +60,7 @@ class MyImageEmbedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final iconColor = iconTheme?.iconUnselectedColor ?? theme.iconTheme.color;
-    final iconFillColor =
-        iconTheme?.iconUnselectedFillColor ?? theme.canvasColor;
+    final iconFillColor = iconTheme?.iconUnselectedFillColor ?? theme.canvasColor;
     return QuillIconButton(
       icon: Icon(Icons.image, size: iconSize, color: iconColor),
       highlightElevation: 0,
@@ -86,20 +85,20 @@ class MyImageEmbedButton extends StatelessWidget {
             return const MyMediaSelector(mediaType: FileType.image);
           });
     } else {
-      link = await showDialog<String>(
+      link = await showDialog<String?>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             backgroundColor: Theme.of(context).colorScheme.background,
             contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
-            content: const SizedBox(
-              height: 150,
-              child: MyMediaSelector(mediaType: FileType.image),
-            ),
+            content: const MyMediaSelector(mediaType: FileType.image),
           );
         },
       );
+    }
+    if(link==null||link.isEmpty){
+      return;
     }
     _submitted(link);
   }
@@ -108,12 +107,12 @@ class MyImageEmbedButton extends StatelessWidget {
   void _submitted(String? link) {
     if (link != null) {
       final index = controller.selection.baseOffset;
-      final length = controller.selection.extentOffset - index;
 
-      //自定义的
-      // controller.replaceText(index, length, ImageBlockEmbed(link), null);
-
-      controller.replaceText(index, length, BlockEmbed.image(link), null);
+      var block = BlockEmbed.image(link);
+      //添加at
+      controller.replaceText(index, 0, block, null);
+      //移动光标
+      controller.moveCursorToPosition(index + 1);
     }
   }
 }

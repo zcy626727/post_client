@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/model/post.dart';
+import 'package:post_client/model/video.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/component/post/post_card.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
+import 'package:post_client/view/widget/player/common_video_player.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/user.dart';
@@ -60,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ];
         },
         body: DefaultTabController(
-          length: 1,
+          length: 2,
           child: Column(
             children: [
               Divider(
@@ -90,6 +92,23 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
+                    CommonItemList<Video>(
+                      onLoad: (int page) async {
+                        var videoList = <Video>[];
+                        videoList.add(Video());
+                        return videoList;
+                      },
+                      itemName: "视频",
+                      itemHeight: null,
+                      isGrip: false,
+                      enableScrollbar: true,
+                      itemBuilder: (ctx, post) {
+                        return Container(
+                          color: colorScheme.surface,
+                          child: CommonVideoPlayer(videoUrl: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"),
+                        );
+                      },
+                    )
                   ],
                 ),
               ),
@@ -150,7 +169,7 @@ class _HomeScreenTabBarState extends State<HomeScreenTabBar> {
           splashBorderRadius: BorderRadius.circular(50),
           tabs: [
             tabBuild(0, Icons.topic, "动态"),
-            // tabBuild(1, Icons.article_outlined, "视频"),
+            tabBuild(1, Icons.video_file, "视频"),
             // tabBuild(2,Icons.subject_outlined, "话题"),
             // tabBuild(3,Icons.insert_drive_file, "文件"),
           ]),

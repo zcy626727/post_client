@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class CommonVideoPlayer extends StatefulWidget {
@@ -10,37 +11,52 @@ class CommonVideoPlayer extends StatefulWidget {
 }
 
 class _CommonVideoPlayerState extends State<CommonVideoPlayer> {
-  late VideoPlayerController videoPlayerController;
-  // late ChewieController chewieController;
+  late VideoPlayerController _controller;
+  late Future<void> _initializeVideoPlayerFuture;
 
   @override
   void initState() {
     super.initState();
-    videoPlayerController = VideoPlayerController.network(widget.videoUrl);
-    // chewieController = ChewieController(
-    //   videoPlayerController: videoPlayerController,
-    //   aspectRatio: 3 / 2,
-    //   autoPlay: false,
-    //   looping: false,
-    // );
+    _controller = VideoPlayerController.network(widget.videoUrl);
+    _initializeVideoPlayerFuture = _controller.initialize();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    videoPlayerController.dispose();
-    // chewieController.dispose();
     super.dispose();
+    _controller.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: videoPlayerController.value.aspectRatio,
-      child: VideoPlayer(videoPlayerController),
+    var colorScheme = Theme.of(context).colorScheme;
+    return FutureBuilder(
+      future: _initializeVideoPlayerFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Container(
+            color: colorScheme.background,
+            child:  GestureDetector(
+              onTap: (){
+                if(_controller.value.isPlaying){
+                  _controller.pause();
+                }else{
+                  _controller.play();
+                }
+
+              },
+              child: AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller),
+              ),
+            ),
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
-    // return Chewie(
-    //   controller: chewieController,
-    // );
   }
 }

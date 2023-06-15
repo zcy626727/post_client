@@ -138,7 +138,7 @@ class MobileAccountDrawerPage extends StatelessWidget {
                   user.avatarUrl == null ? null : NetworkImage(user.avatarUrl!),
             ),
             onPressed: () async {
-              if (!((user.token!=null&&user.token!=""))) {
+              if ((user.token!=null&&user.token!="")) {
                 //已登录
                 //进入用户详情页面
                 Navigator.push(
