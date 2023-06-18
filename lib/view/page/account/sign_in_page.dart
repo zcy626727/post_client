@@ -158,6 +158,7 @@ class _SignInPageState extends State<SignInPage> {
                       });
                       //
                       await signIn(userState);
+                      if(mounted) Navigator.of(context).pop();
                     }
                   },
             child: _signInIng

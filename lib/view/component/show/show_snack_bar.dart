@@ -11,7 +11,7 @@ class ShowSnackBar {
     String msg = defaultValue;
     if (e is FormatException) {
       msg = e.message;
-    } else if (e is DioError) {
+    } else if (e is DioException) {
       var err = e.error;
       if (err is FormatException) {
         msg = err.source.toString();

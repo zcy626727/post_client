@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:post_client/config/global.dart';
 import 'package:post_client/model/post.dart';
+import 'package:post_client/service/post_service.dart';
+import 'package:post_client/state/user_state.dart';
 import 'package:post_client/view/component/post/post_card.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
+import 'package:provider/provider.dart';
 
-import '../../../config/component.dart';
 import '../../../config/constants.dart';
-import '../../widget/button/common_action_two_button.dart';
+import '../../../model/user.dart';
 
 class UserDetailPage extends StatefulWidget {
   const UserDetailPage({Key? key}) : super(key: key);
@@ -17,6 +20,8 @@ class UserDetailPage extends StatefulWidget {
 class _UserDetailPageState extends State<UserDetailPage> {
   @override
   Widget build(BuildContext context) {
+    var userState = Provider.of<UserState>(context);
+
     var colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: DefaultTabController(
@@ -58,7 +63,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                     ),
                   ),
                   flexibleSpace: FlexibleSpaceBar(
-                    background: buildProfileCard(),
+                    background: buildProfileCard(userState.user),
                   ),
                   bottom: PreferredSize(
                     //如果高度有问题就改这里的值
@@ -88,10 +93,10 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   color: colorScheme.background,
                   child: CommonItemList<Post>(
                     onLoad: (int page) async {
-                      var postList = <Post>[];
-                      postList.add(Post.one());
+                      var postList = await PostService.getPostListByUserId(Global.user.id!, page, 20);
                       return postList;
                     },
+                    enableRefresh: false,
                     itemName: "动态",
                     itemHeight: null,
                     isGrip: false,
@@ -117,16 +122,15 @@ class _UserDetailPageState extends State<UserDetailPage> {
   final double backgroundImageHeight = 150;
 
   //用户资料
-  Widget buildProfileCard() {
+  Widget buildProfileCard(User user) {
     var colorScheme = Theme.of(context).colorScheme;
-
     return Container(
       child: Stack(
         alignment: Alignment.topLeft,
         children: [
           //背景图
           Image(
-            image: NetworkImage(testImageUrl),
+            image: NetworkImage(user.avatarUrl!),
             height: backgroundImageHeight,
             width: double.infinity,
             fit: BoxFit.cover,
@@ -145,7 +149,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                 Container(
                   margin: const EdgeInsets.only(top: 50),
                   child: Text(
-                    "路由器",
+                    Global.user.name ?? "未知",
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20, color: colorScheme.onSurface),
                   ),
                 ),
@@ -159,12 +163,12 @@ class _UserDetailPageState extends State<UserDetailPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 35,
-                  backgroundImage: NetworkImage(testImageUrl),
+                  backgroundImage: NetworkImage(user.avatarUrl!),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 40),
+                  margin: const EdgeInsets.only(top: 40),
                   height: 30,
                   child: OutlinedButton(onPressed: () {}, child: const Text("编辑资料")),
                 )

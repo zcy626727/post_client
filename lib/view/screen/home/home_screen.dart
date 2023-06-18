@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/model/post.dart';
 import 'package:post_client/model/video.dart';
+import 'package:post_client/service/post_service.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/component/post/post_card.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
@@ -22,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Selector<UserState, User>(
       selector: (context, data) => data.user,
-      shouldRebuild: (pre, next) => pre.token != next.token,
+      shouldRebuild: (pre, next) => true,
       builder: (context, user, child) {
         return Responsive.isSmallWithDevice(context) ? buildMobile(user) : buildDesktop();
       },
@@ -78,11 +79,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     CommonItemList<Post>(
                       onLoad: (int page) async {
-                        var postList = <Post>[];
-                        postList.add(Post.one());
+                        var postList = await PostService.getPostListRandom(20);
                         return postList;
                       },
                       itemName: "动态",
+                      enableRefresh: false,
                       itemHeight: null,
                       isGrip: false,
                       enableScrollbar: true,

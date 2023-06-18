@@ -59,6 +59,7 @@ class MobileAccountDrawerPage extends StatelessWidget {
                           onPress: () {
                             //清空token
                             user.clearUserInfo();
+                            userState.user = user;
                             //不能在updateUserOfDB后面
                             Navigator.pop(context);
                             //持久化用户信息
@@ -143,7 +144,7 @@ class MobileAccountDrawerPage extends StatelessWidget {
                 //进入用户详情页面
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) =>  UserDetailPage()),
+                  MaterialPageRoute(builder: (context) =>  const UserDetailPage()),
                 );
               } else {
                 //未登录

@@ -123,7 +123,7 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
     var colorScheme = Theme.of(context).colorScheme;
     if (_itemList == null) {
       return Center(
-        child: Text("访问服务器失败", style: TextStyle(color: colorScheme.onSurface)),
+        child: Text("数据为空", style: TextStyle(color: colorScheme.onSurface)),
       );
     }
     if (_itemList!.isEmpty) {
@@ -160,7 +160,7 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
     var colorScheme = Theme.of(context).colorScheme;
     if (_itemList == null) {
       return Center(
-        child: Text("访问服务器失败", style: TextStyle(color: colorScheme.onSurface)),
+        child: Text("数据为空", style: TextStyle(color: colorScheme.onSurface)),
       );
     }
     if (_itemList!.isEmpty) {

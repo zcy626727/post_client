@@ -25,7 +25,7 @@ class UserApi {
   static Future<User> signIn(String phoneNumber, String password) async {
     var r = await UserHttpConfig.dio.post(
       "/user/signIn",
-      queryParameters: {
+      data: {
         "phoneNumber": phoneNumber,
         "password": password,
       },
@@ -41,7 +41,7 @@ class UserApi {
   static Future<User> signInByToken(String phoneNumber) async {
     var r = await UserHttpConfig.dio.post(
       "/user/signInByToken",
-      queryParameters: {
+      data: {
         "phoneNumber": phoneNumber,
       },
       options: UserHttpConfig.options.copyWith(extra: {
@@ -60,7 +60,7 @@ class UserApi {
       String phoneNumber, String password, String name) async {
     var r = await UserHttpConfig.dio.post(
       "/user/signUp",
-      queryParameters: {
+      data: {
         "phoneNumber": phoneNumber,
         "password": password,
         "name": name,

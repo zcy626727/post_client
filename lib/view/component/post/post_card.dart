@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:intl/intl.dart';
 import 'package:post_client/model/post.dart';
+import 'package:post_client/util/time.dart';
+import 'package:post_client/view/component/quill/quill_editor.dart';
 import 'package:post_client/view/page/post/post_comment_page.dart';
 
 class PostCard extends StatefulWidget {
@@ -17,10 +23,13 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   int commentLen = 0;
   bool isLikeAnimating = false;
+  final QuillController controller = QuillController.basic();
+
 
   @override
   void initState() {
     super.initState();
+    controller.document = Document.fromJson(json.decode(widget.post.content??""));
   }
 
   @override
@@ -69,7 +78,7 @@ class _PostCardState extends State<PostCard> {
           color: colorScheme.onSurface,
         ),
       ),
-      subtitle:  Text("2022-7-3",style: TextStyle(
+      subtitle:  Text(DateFormat("yyyy-MM-dd").format(widget.post.createTime!),style: TextStyle(
         color: colorScheme.onSurface,
       ),),
       trailing: Container(
@@ -90,12 +99,10 @@ class _PostCardState extends State<PostCard> {
     return Container(
       margin: const EdgeInsets.only(left: 5.0, right: 5.0,bottom: 5.0),
       width: double.infinity,
-      child: Text(
-        "全村母猪为何深夜惨叫，80岁老太为何起死回生，究竟是道德的沦丧还是人性的扭曲，欢迎收看今日说法",
-        style: TextStyle(
-          color: colorScheme.onSurface,
-          fontSize: 16,
-        ),
+      child: PostQuillEditor(
+        controller: controller,
+        focusNode: FocusNode(),
+        readMode: true,
       ),
     );
   }

@@ -6,18 +6,19 @@ part 'post.g.dart';
 
 @JsonSerializable()
 class Post {
-  int? id;
-  int? contentType;
-
+  String? id;
+  int? userId;
+  String? sourceId;
+  int? sourceType;
+  DateTime? createTime;
   //文字内容，只包含文字 @ #
-  String? text;
-
+  String? content;
+  int? contentType;
   //评论数
   int? commentNumber;
-
   //点赞数
   int? likeNumber;
-
+  int? unlikeNumber;
   //图片布局，九宫格或大图
   List<String>? pictureUrlList;
 
@@ -30,9 +31,9 @@ class Post {
   User? user;
 
   Post.one() {
-    id = 1;
-    text = "这是一条动态";
-    contentType = PostContentType.teletext;
+    // id = 1;
+    content = "这是一条动态";
+    contentType = PostSourceType.teletext;
     likeNumber = 1;
     commentNumber = 4;
     pictureUrlList = <String>[
@@ -50,12 +51,13 @@ class Post {
   }
 
   bool isInnerMode() {
-    return contentType == PostContentType.article ||
-        contentType == PostContentType.image ||
-        contentType == PostContentType.audio ||
-        contentType == PostContentType.video ||
-        contentType == PostContentType.collection ||
-        contentType == PostContentType.post;
+    //如果
+    return contentType == PostSourceType.article ||
+        contentType == PostSourceType.image ||
+        contentType == PostSourceType.audio ||
+        contentType == PostSourceType.video ||
+        contentType == PostSourceType.collection ||
+        contentType == PostSourceType.post;
   }
 
   Post();
@@ -65,7 +67,7 @@ class Post {
   Map<String, dynamic> toJson() => _$PostToJson(this);
 }
 
-class PostContentType {
+class PostSourceType {
   //媒体
   static const image = 1;
   static const article = 2;

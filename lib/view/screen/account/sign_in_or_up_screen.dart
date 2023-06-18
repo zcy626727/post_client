@@ -28,7 +28,7 @@ class _SignInOrUpScreenState extends State<SignInOrUpScreen>
     return Scaffold(
       backgroundColor: Colors.transparent,
       //防止键盘越界
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: Responsive.isSmallWithDevice(context)
           ? CupertinoNavigationBar(
               border: null,

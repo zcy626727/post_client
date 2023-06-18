@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/model/post.dart';
 import 'package:post_client/model/user.dart';
+import 'package:post_client/service/post_service.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/component/post/post_card.dart';
@@ -118,8 +119,7 @@ class _FollowScreenState extends State<FollowScreen> {
           Expanded(
             child: CommonItemList<Post>(
               onLoad: (int page) async {
-                var postList = <Post>[];
-                postList.add(Post.one());
+                var postList = await PostService.getPostListRandom(20);
                 return postList;
               },
               itemName: "动态",
