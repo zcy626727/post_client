@@ -65,14 +65,14 @@ class _PostCardState extends State<PostCard> {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       visualDensity: const VisualDensity(horizontal: -2, vertical: -2),
-      leading: const CircleAvatar(
+      leading:  CircleAvatar(
         radius: 18,
         backgroundImage: NetworkImage(
-          'https://pic1.zhimg.com/80/v2-64803cb7928272745eb2bb0203e03648_1440w.webp',
+          widget.post.user!.avatarUrl!,
         ),
       ),
       title:  Text(
-        '路由器',
+        widget.post.user!.name!,
         style: TextStyle(
           fontWeight: FontWeight.w600,
           color: colorScheme.onSurface,

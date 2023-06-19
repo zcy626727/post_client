@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:post_client/model/post.dart';
+import 'package:post_client/model/user.dart';
 
 import '../../config/global.dart';
 import '../../config/net_config.dart';
@@ -92,16 +93,13 @@ class PostApi {
         "withToken": false,
       }),
     );
-    List<Post> postList = [];
-    for (var postJson in r.data['postList']) {
-      postList.add(Post.fromJson(postJson));
-    }
+    var postList = _parsePostWithUser(r);
     return postList;
   }
 
   static Future<List<Post>> getPostListRandom(
-      int pageSize,
-      ) async {
+    int pageSize,
+  ) async {
     var r = await PostHttpConfig.dio.get(
       "/post/getPostListRandom",
       queryParameters: {
@@ -112,10 +110,24 @@ class PostApi {
         "withToken": false,
       }),
     );
+
+    var postList = _parsePostWithUser(r);
+    return postList;
+  }
+
+  static List<Post> _parsePostWithUser(Response<dynamic> r){
+    Map<int, User> userMap = {};
+    for (var userJson in r.data['userList']) {
+      var user = User.fromJson(userJson);
+      userMap[user.id ?? 0] = user;
+    }
     List<Post> postList = [];
     for (var postJson in r.data['postList']) {
-      postList.add(Post.fromJson(postJson));
+      var post = Post.fromJson(postJson);
+      post.user = userMap[post.userId];
+      postList.add(post);
     }
     return postList;
+
   }
 }
