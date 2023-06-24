@@ -1,22 +1,55 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:post_client/config/global.dart';
 import 'package:post_client/model/comment.dart';
 
-//评论或回复
-class CommentCard extends StatelessWidget {
-  const CommentCard({Key? key, required this.comment, this.onReply, this.onTap, this.onUp, this.onDown}) : super(key: key);
+import '../../../service/comment_service.dart';
+import '../../widget/dialog/confirm_alert_dialog.dart';
+import '../quill/quill_editor.dart';
+import '../show/show_snack_bar.dart';
+
+class CommentCard extends StatefulWidget {
+  const CommentCard({
+    Key? key,
+    required this.comment,
+    this.onReply,
+    this.onTap,
+    this.onUp,
+    this.onDown,
+    this.isTop = false,
+    required this.onDeleteComment,
+  }) : super(key: key);
 
   final Comment comment;
+  final Function(Comment) onDeleteComment;
 
   //回复内容
   final VoidCallback? onReply;
   final VoidCallback? onTap;
   final VoidCallback? onUp;
   final VoidCallback? onDown;
+  final bool isTop;
 
   @override
-  Widget build(BuildContext context) {
+  State<CommentCard> createState() => _CommentCardState();
+}
+
+class _CommentCardState extends State<CommentCard> {
+  final QuillController controller = QuillController.basic();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.document = Document.fromJson(json.decode(widget.comment.content ?? ""));
+  }
+
+  @override
+  build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
-    var isTop = comment.parentId == null || comment.parentId!<= 0;
+    var isTop = widget.comment.parentId == null;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
@@ -28,7 +61,7 @@ class CommentCard extends StatelessWidget {
             //头像
             CircleAvatar(
               backgroundImage: NetworkImage(
-                comment.user!.avatarUrl!,
+                widget.comment.user!.avatarUrl!,
               ),
               radius: 18,
             ),
@@ -41,31 +74,17 @@ class CommentCard extends StatelessWidget {
                     margin: const EdgeInsets.only(left: 13),
                     height: 20,
                     child: Text(
-                      comment.user!.name!,
+                      widget.comment.user!.name!,
                       style: TextStyle(color: colorScheme.onSurface.withAlpha(150), fontSize: 13),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: onTap,
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 13,bottom: 8),
-                      width: double.infinity,
-                      child: Text(
-                        comment.text ?? "",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
+                  buildText(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
                         visualDensity: const VisualDensity(horizontal: -1, vertical: 0),
-                        onPressed: onUp,
+                        onPressed: widget.onUp,
                         splashRadius: 20,
                         icon: Icon(
                           Icons.thumb_up_alt_outlined,
@@ -75,7 +94,7 @@ class CommentCard extends StatelessWidget {
                       ),
                       IconButton(
                         visualDensity: const VisualDensity(horizontal: -1, vertical: 0),
-                        onPressed: onDown,
+                        onPressed: widget.onDown,
                         splashRadius: 20,
                         icon: Icon(
                           Icons.thumb_down_alt_outlined,
@@ -86,7 +105,7 @@ class CommentCard extends StatelessWidget {
                       if (isTop)
                         IconButton(
                           visualDensity: const VisualDensity(horizontal: -1, vertical: 0),
-                          onPressed: onReply,
+                          onPressed: widget.onReply,
                           splashRadius: 20,
                           icon: Icon(
                             Icons.comment,
@@ -97,21 +116,78 @@ class CommentCard extends StatelessWidget {
                     ],
                   ),
                 ],
-              )
+              ),
             ),
             //更多：举报、删除等
-            IconButton(
-              padding: EdgeInsets.zero,
-              visualDensity: const VisualDensity(vertical: -4),
-              onPressed: () {},
-              icon: Icon(
-                Icons.more_vert,
-                color: colorScheme.onSurface,
+            PopupMenuButton<String>(
+              itemBuilder: (BuildContext context) {
+                return [
+                  if (widget.comment.user!.id! == Global.user.id!)
+                    PopupMenuItem(
+                      height: 35,
+                      value: 'delete',
+                      child: Text(
+                        '删除',
+                        style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
+                      ),
+                    ),
+                ];
+              },
+              icon: Icon(Icons.more_horiz, color: colorScheme.onSurface),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: BorderSide(
+                  width: 1,
+                  color: colorScheme.onSurface.withAlpha(30),
+                  style: BorderStyle.solid,
+                ),
               ),
-              splashRadius: 16,
+              color: colorScheme.surface,
+              onSelected: (value) async {
+                switch (value) {
+                  case "delete":
+                    await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ConfirmAlertDialog(
+                          text: "是否确定删除？",
+                          onConfirm: () async {
+                            try {
+                              await CommentService.deleteComment(widget.comment.id!);
+                              setState(() {});
+                            } on DioException catch (e) {
+                              ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
+                            } finally {
+                              Navigator.pop(context);
+                            }
+                          },
+                          onCancel: () {
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    );
+                    widget.onDeleteComment(widget.comment);
+                    break;
+                }
+              },
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildText() {
+    return Container(
+      margin: const EdgeInsets.only(left: 13),
+      padding: const EdgeInsets.only(top: 2.0, right: 5.0),
+      width: double.infinity,
+      child: CommentQuillEditor(
+        controller: controller,
+        focusNode: FocusNode(),
+        readMode: true,
+        onTap: widget.onTap,
       ),
     );
   }

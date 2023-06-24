@@ -1,0 +1,209 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
+import 'package:easy_refresh/easy_refresh.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:post_client/config/global.dart';
+import 'package:post_client/model/comment.dart';
+import 'package:post_client/service/comment_service.dart';
+import 'package:post_client/view/component/input/comment_text_field.dart';
+import 'package:post_client/view/component/quill/quill_tool_bar.dart';
+import 'package:post_client/view/page/comment/reply_page.dart';
+
+import '../../widget/dialog/confirm_alert_dialog.dart';
+import '../show/show_snack_bar.dart';
+import 'comment_card.dart';
+
+class CommentList extends StatefulWidget {
+  const CommentList({
+    Key? key,
+    this.enableRefresh = true,
+    this.enableScrollbar = false,
+    this.enableLoad = true,
+    required this.onLoad,
+    required this.parentId,
+    required this.parentType,
+  }) : super(key: key);
+
+  final Future<List<Comment>> Function(int) onLoad;
+  final bool enableRefresh;
+  final bool enableLoad;
+  final bool enableScrollbar;
+  final String parentId;
+  final int parentType;
+
+  @override
+  State<CommentList> createState() => _CommentListState();
+}
+
+class _CommentListState extends State<CommentList> {
+  final EasyRefreshController _refreshController = EasyRefreshController(
+    controlFinishRefresh: true,
+    controlFinishLoad: true,
+  );
+
+  final QuillController _controller = QuillController.basic();
+
+  final FocusNode focusNode = FocusNode();
+
+  List<Comment> _commentList = <Comment>[];
+
+  //当前页数
+  int _page = 0;
+
+  late Future _futureBuilderFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _futureBuilderFuture = getData();
+  }
+
+  Future getData() async {
+    return Future.wait([getDataList()]);
+  }
+
+  Future<void> getDataList() async {
+    try {
+      var list = await widget.onLoad(_page);
+      _commentList.addAll(list);
+      _page++;
+    } on DioException catch (e) {
+      log(e.toString());
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  //刷新
+  void _onRefresh() async {
+    try {
+      _commentList = await widget.onLoad(0);
+      _page = 1;
+      //获取成功
+      _refreshController.finishRefresh();
+      setState(() {});
+    } catch (e) {
+      //获取失败
+      // _refreshController.refreshFailed();
+    }
+  }
+
+  //加载更多
+  void _onLoading() async {
+    try {
+      var list = await widget.onLoad(_page);
+      if (list.isEmpty) {
+        //获取
+        _refreshController.finishLoad();
+      } else {
+        _commentList.addAll(list);
+        _page++;
+        //获取成功
+        _refreshController.finishLoad();
+        if (mounted) setState(() {});
+      }
+    } catch (e) {
+      //获取失败
+      log(e.toString());
+      // _refreshController.loadFailed();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+    if (MediaQuery.of(context).viewInsets.bottom == 0) focusNode.unfocus();
+
+    return FutureBuilder(
+      future: _futureBuilderFuture,
+      builder: (BuildContext context, AsyncSnapshot snapShot) {
+        if (snapShot.connectionState == ConnectionState.done) {
+          return Column(
+            children: [
+              Expanded(
+                child: Container(
+                  color: colorScheme.surface,
+                  margin: const EdgeInsets.only(top: 2),
+                  child: listBuild(),
+                ),
+              ),
+              if (MediaQuery.of(context).viewInsets.bottom > 0) PostQuillToolBar(controller: _controller),
+              CommentTextField(
+                controller: _controller,
+                focusNode: focusNode,
+                onSubmit: () async {
+                  var content = jsonEncode(_controller.document.toDelta().toJson());
+                  var comment = await CommentService.createComment(widget.parentId, widget.parentType, content);
+                  comment.user = Global.user;
+                  _commentList.insert(0, comment);
+                  _controller.clear();
+                  setState(() {});
+                },
+              ),
+            ],
+          );
+        } else {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget listBuild() {
+    var colorScheme = Theme.of(context).colorScheme;
+    if (_commentList.isEmpty) {
+      return Center(
+        child: Text("没有评论", style: TextStyle(color: colorScheme.onSurface)),
+      );
+    }
+    var card = ListView.builder(
+      itemCount: _commentList.length,
+      itemBuilder: (context, index) {
+        var comment = _commentList[index];
+        return CommentCard(
+          key: ValueKey(comment.id),
+          comment: comment,
+          onDeleteComment: (comment) {
+            _commentList.remove(comment);
+            setState(() {});
+          },
+          onTap: () {
+            //展开评论
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ReplyPage(
+                  comment: comment,
+                  onDeleteComment: (comment) {
+                    _commentList.remove(comment);
+                    setState(() {});
+                  },
+                ),
+              ),
+            );
+            focusNode.unfocus();
+          },
+        );
+      },
+    );
+    return EasyRefresh(
+      header: MaterialHeader(backgroundColor: colorScheme.primaryContainer, color: colorScheme.onPrimaryContainer),
+      footer: CupertinoFooter(backgroundColor: colorScheme.primaryContainer, foregroundColor: colorScheme.onPrimaryContainer),
+      controller: _refreshController,
+      onRefresh: widget.enableRefresh ? _onRefresh : null,
+      onLoad: widget.enableLoad ? _onLoading : null,
+      child: widget.enableScrollbar
+          ? Scrollbar(
+              child: card,
+            )
+          : card,
+    );
+  }
+}

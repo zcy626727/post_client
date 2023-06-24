@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -52,8 +51,11 @@ class _CommonVideoPlayerState extends State<CommonVideoPlayer> {
             ),
           );
         } else {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: AspectRatio(
+              aspectRatio: _controller.value.aspectRatio,
+              child: const CircularProgressIndicator(),
+            ),
           );
         }
       },

@@ -90,3 +90,59 @@ class ArticleQuillEditor extends StatelessWidget {
     );
   }
 }
+
+class CommentQuillEditor extends StatelessWidget {
+  const CommentQuillEditor({
+    Key? key,
+    required this.controller,
+    this.placeholder,
+    this.maxHeight,
+    this.minHeight,
+    required this.focusNode,
+    this.readMode = false,
+    this.onTap,
+  }) : super(key: key);
+
+  final Function? onTap;
+  final QuillController controller;
+  final double? maxHeight;
+  final double? minHeight;
+
+  final String? placeholder;
+
+  final FocusNode focusNode;
+  final bool readMode;
+
+  @override
+  Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+    // 设置DefaultTextStyle，调整亮暗模式
+    return DefaultTextStyle(
+      style: TextStyle(color: colorScheme.onSurface),
+      child: QuillEditor(
+        locale: const Locale('en'),
+        maxHeight: maxHeight,
+        minHeight: minHeight,
+        enableUnfocusOnTapOutside: false,
+        detectWordBoundary: false,
+        controller: controller,
+        focusNode: focusNode,
+        scrollController: ScrollController(),
+        scrollable: !readMode,
+        padding: EdgeInsets.zero,
+        showCursor: !readMode,
+        autoFocus: !readMode,
+        readOnly: readMode,
+        expands: false,
+        onTapDown: (TapDownDetails details, position) {
+          if(onTap!=null){
+            onTap!();
+          }
+          return false;
+        },
+        placeholder: placeholder,
+        embedBuilders: PostQuillEmbeds.builders(),
+      ),
+    );
+  }
+}

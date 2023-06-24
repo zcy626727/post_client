@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:post_client/config/post_config.dart';
-import 'package:post_client/model/post.dart';
+import 'package:post_client/domain/task/upload_media_task.dart';
 import 'package:post_client/service/post_service.dart';
+import 'package:post_client/view/component/media/image_upload_card.dart';
 import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
@@ -22,20 +25,17 @@ class PostEditPage extends StatefulWidget {
 }
 
 class _PostEditPageState extends State<PostEditPage> {
-  var imageList = <File>[];
-
   final QuillController _controller = QuillController.basic();
   final FocusNode focusNode = FocusNode();
+  var imageUploadTaskList = <UploadMediaTask>[];
+
+  final double imagePadding = 5.0;
+  final double imageWidth = 100;
 
   @override
   Widget build(BuildContext context) {
-    var colorScheme = Theme
-        .of(context)
-        .colorScheme;
-    if (MediaQuery
-        .of(context)
-        .viewInsets
-        .bottom == 0) focusNode.unfocus();
+    var colorScheme = Theme.of(context).colorScheme;
+    if (MediaQuery.of(context).viewInsets.bottom == 0) focusNode.unfocus();
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -63,28 +63,52 @@ class _PostEditPageState extends State<PostEditPage> {
               child: CommonActionOneButton(
                 title: "发布",
                 height: 30,
-                onTap: () async{
+                onTap: () async {
                   var content = jsonEncode(_controller.document.toDelta().toJson());
-                  //获取@的人
+                  var pictureUrlList = <String>[];
+                  bool enablePush = false;
                   var delta = _controller.document.toDelta().toList();
                   for (var d in delta) {
                     var data = d.data;
                     if (data is Map<String, dynamic>) {
+                      //只要有map类型的就应该不是空的
+                      enablePush = true;
+                      //获取@的人
                       var data2 = data['at'];
                       if (data2 != null) {
                         print("找到一个：$data2");
                       }
+                    } else if (data is String) {
+                      //检查是否可以发布
+                      if (!enablePush) {
+                        var newString = data.replaceAll(RegExp(r'[ \r\n\t]+'), "");
+                        if (newString.isNotEmpty) {
+                          enablePush = true;
+                        }
+                      }
                     }
                   }
-                  //todo 上传图片，返回url列表
-                  try{
-                    var post = await PostService.createPost(null, null, content, null);
-                  }on Exception catch (e) {
+                  for (var task in imageUploadTaskList) {
+                    if(!enablePush){
+                      enablePush = true;
+                    }
+                    pictureUrlList.add(task.link!);
+                    if (task.status != UploadTaskStatus.finished.index) {
+                      ShowSnackBar.error(context: context, message: "图片没有上传完毕");
+                      return;
+                    }
+                  }
+                  if (!enablePush) {
+                    ShowSnackBar.error(context: context, message: "没有内容啊");
+                    return;
+                  }
+                  try {
+                    var post = await PostService.createPost(null, null, content, pictureUrlList);
+                  } on Exception catch (e) {
                     ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
                   } finally {
                     Navigator.pop(context);
                   }
-
                 },
                 backgroundColor: colorScheme.primary,
                 textColor: colorScheme.onPrimary,
@@ -117,25 +141,21 @@ class _PostEditPageState extends State<PostEditPage> {
     );
   }
 
-  final double imagePadding = 5.0;
-  final double imageWidth = 100;
-
   Widget buildImageList() {
-    var colorScheme = Theme
-        .of(context)
-        .colorScheme;
+    var colorScheme = Theme.of(context).colorScheme;
+
     return SafeArea(
       child: Container(
         height: imageWidth,
         width: double.infinity,
         margin: EdgeInsets.all(imagePadding),
         child: ListView.builder(
-          itemCount: imageList.length + 1,
+          itemCount: imageUploadTaskList.length + 1,
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
           // physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
-            if (index >= imageList.length) {
+            if (index >= imageUploadTaskList.length) {
               return GestureDetector(
                 onTap: () async {
                   if (index >= PostConfig.maxUploadImageNum) {
@@ -148,8 +168,10 @@ class _PostEditPageState extends State<PostEditPage> {
                   );
 
                   if (result != null) {
-                    File file = File(result.files.single.path!);
-                    imageList.add(file);
+                    var file = result.files.single;
+                    //消息接收器
+                    var task = UploadMediaTask.all(fileName: file.name, srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.uploading.index, mediaType: MediaType.image.index);
+                    imageUploadTaskList.add(task);
                     setState(() {});
                   } else {
                     // User canceled the picker
@@ -171,23 +193,7 @@ class _PostEditPageState extends State<PostEditPage> {
                 ),
               );
             } else {
-              return GestureDetector(
-                onTap: () {
-                  // 点击图片的操作（预览、删除）
-                },
-                child: Container(
-                  margin: EdgeInsets.only(right: imagePadding),
-                  width: imageWidth,
-                  height: imageWidth,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    image: DecorationImage(
-                      image: FileImage(imageList[index]),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              );
+              return ImageUploadCard(key: ValueKey(imageUploadTaskList[index].srcPath), task: imageUploadTaskList[index]);
             }
           },
         ),

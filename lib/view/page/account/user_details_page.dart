@@ -4,6 +4,7 @@ import 'package:post_client/model/post.dart';
 import 'package:post_client/service/post_service.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/view/component/post/post_card.dart';
+import 'package:post_client/view/component/post/post_list.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:provider/provider.dart';
 
@@ -91,7 +92,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
               children: [
                 Container(
                   color: colorScheme.background,
-                  child: CommonItemList<Post>(
+                  child: PostList(
                     onLoad: (int page) async {
                       var postList = await PostService.getPostListByUserId(Global.user.id!, page, 20);
                       return postList;
@@ -99,13 +100,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                     enableRefresh: false,
                     itemName: "动态",
                     itemHeight: null,
-                    isGrip: false,
                     enableScrollbar: true,
-                    itemBuilder: (ctx, post) {
-                      return PostCard(
-                        post: post,
-                      );
-                    },
                   ),
                 ),
                 Container(

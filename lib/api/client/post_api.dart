@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:post_client/model/comment.dart';
 import 'package:post_client/model/post.dart';
 import 'package:post_client/model/user.dart';
 
@@ -48,7 +49,7 @@ class PostApi {
     String postId,
   ) async {
     await PostHttpConfig.dio.post(
-      "/post/deletePost",
+      "/post/deletePostById",
       data: {
         "postId": postId,
       },
@@ -115,7 +116,7 @@ class PostApi {
     return postList;
   }
 
-  static List<Post> _parsePostWithUser(Response<dynamic> r){
+  static List<Post> _parsePostWithUser(Response<dynamic> r) {
     Map<int, User> userMap = {};
     for (var userJson in r.data['userList']) {
       var user = User.fromJson(userJson);
@@ -128,6 +129,82 @@ class PostApi {
       postList.add(post);
     }
     return postList;
+  }
+}
 
+class CommentApi {
+  static Future<Comment> createComment(
+    String parentId,
+    int parentType,
+    String content,
+  ) async {
+    var r = await PostHttpConfig.dio.post(
+      "/comment/createComment",
+      data: {
+        "parentId": parentId,
+        "parentType": parentType,
+        "content": content,
+      },
+      options: PostHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
+
+    //获取数据
+    return Comment.fromJson(r.data['comment']);
+  }
+
+  static Future<void> deleteComment(
+    String commentId,
+  ) async {
+    await PostHttpConfig.dio.post(
+      "/comment/deleteCommentById",
+      data: {
+        "commentId": commentId,
+      },
+      options: PostHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
+  }
+
+  static Future<List<Comment>> getCommentListByParent(
+    String parentId,
+    int parentType,
+    int pageIndex,
+    int pageSize,
+  ) async {
+    var r = await PostHttpConfig.dio.get(
+      "/comment/getCommentListByParent",
+      queryParameters: {
+        "parentId": parentId,
+        "parentType": parentType,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
+      },
+      options: PostHttpConfig.options.copyWith(extra: {
+        "noCache": false,
+        "withToken": false,
+      }),
+    );
+    var commentList = _parseCommentWithUser(r);
+    return commentList;
+  }
+
+  static List<Comment> _parseCommentWithUser(Response<dynamic> r) {
+    Map<int, User> userMap = {};
+    for (var userJson in r.data['userList']) {
+      var user = User.fromJson(userJson);
+      userMap[user.id ?? 0] = user;
+    }
+    List<Comment> commentList = [];
+    for (var postJson in r.data['commentList']) {
+      var comment = Comment.fromJson(postJson);
+      comment.user = userMap[comment.userId];
+      commentList.add(comment);
+    }
+    return commentList;
   }
 }

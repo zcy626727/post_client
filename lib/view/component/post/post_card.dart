@@ -3,17 +3,19 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:intl/intl.dart';
+import 'package:post_client/config/global.dart';
 import 'package:post_client/model/post.dart';
-import 'package:post_client/util/time.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
 import 'package:post_client/view/page/post/post_comment_page.dart';
 
 class PostCard extends StatefulWidget {
   final Post post;
+  final Function onDeletePost;
 
   const PostCard({
     Key? key,
     required this.post,
+    required this.onDeletePost,
   }) : super(key: key);
 
   @override
@@ -25,11 +27,10 @@ class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
   final QuillController controller = QuillController.basic();
 
-
   @override
   void initState() {
     super.initState();
-    controller.document = Document.fromJson(json.decode(widget.post.content??""));
+    controller.document = Document.fromJson(json.decode(widget.post.content ?? ""));
   }
 
   @override
@@ -65,39 +66,67 @@ class _PostCardState extends State<PostCard> {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       visualDensity: const VisualDensity(horizontal: -2, vertical: -2),
-      leading:  CircleAvatar(
+      leading: CircleAvatar(
         radius: 18,
         backgroundImage: NetworkImage(
           widget.post.user!.avatarUrl!,
         ),
       ),
-      title:  Text(
+      title: Text(
         widget.post.user!.name!,
         style: TextStyle(
           fontWeight: FontWeight.w600,
           color: colorScheme.onSurface,
         ),
       ),
-      subtitle:  Text(DateFormat("yyyy-MM-dd").format(widget.post.createTime!),style: TextStyle(
-        color: colorScheme.onSurface,
-      ),),
+      subtitle: Text(
+        DateFormat("yyyy-MM-dd").format(widget.post.createTime!),
+        style: TextStyle(
+          color: colorScheme.onSurface,
+        ),
+      ),
       trailing: Container(
         margin: const EdgeInsets.only(right: 3),
         width: 35,
-        child: IconButton(
-          splashColor: colorScheme.onSurface,
-          splashRadius: 30,
-          onPressed: () {},
-          icon: const Icon(Icons.more_horiz),
+        child: PopupMenuButton<String>(
+          itemBuilder: (BuildContext context) {
+            return [
+              if (widget.post.user!.id! == Global.user.id!)
+                PopupMenuItem(
+                  height: 35,
+                  value: 'delete',
+                  child: Text(
+                    '删除',
+                    style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
+                  ),
+                ),
+            ];
+          },
+          icon: Icon(Icons.more_horiz, color: colorScheme.onSurface),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(
+              width: 1,
+              color: colorScheme.onSurface.withAlpha(30),
+              style: BorderStyle.solid,
+            ),
+          ),
+          color: colorScheme.surface,
+          onSelected: (value) {
+            switch (value) {
+              case "delete":
+                widget.onDeletePost();
+                break;
+            }
+          },
         ),
       ),
     );
   }
 
   Widget buildText() {
-    var colorScheme = Theme.of(context).colorScheme;
     return Container(
-      margin: const EdgeInsets.only(left: 5.0, right: 5.0,bottom: 5.0),
+      margin: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
       width: double.infinity,
       child: PostQuillEditor(
         controller: controller,
@@ -193,14 +222,18 @@ class _PostCardState extends State<PostCard> {
           children: [
             //评论
             IconButton(
-              icon:  const Icon(
+              icon: const Icon(
                 Icons.comment,
               ),
               color: colorScheme.onSurface,
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const PostCommentPage()),
+                  MaterialPageRoute(
+                    builder: (context) => PostCommentPage(
+                      post: widget.post,
+                    ),
+                  ),
                 );
               },
             ),

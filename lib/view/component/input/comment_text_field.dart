@@ -4,9 +4,10 @@ import 'package:post_client/view/component/quill/quill_editor.dart';
 import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 
 class CommentTextField extends StatefulWidget {
-  const CommentTextField({Key? key, required this.controller, required this.focusNode}) : super(key: key);
+  const CommentTextField({Key? key, required this.controller, required this.focusNode, required this.onSubmit}) : super(key: key);
   final QuillController controller;
   final FocusNode focusNode;
+  final Function onSubmit;
   @override
   State<CommentTextField> createState() => _CommentTextFieldState();
 }
@@ -41,7 +42,9 @@ class _CommentTextFieldState extends State<CommentTextField> {
             width: 70,
             height: 30,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                widget.onSubmit();
+              },
               style: const ButtonStyle(elevation: MaterialStatePropertyAll(0)),
               child: const Text("发布"),
             ),

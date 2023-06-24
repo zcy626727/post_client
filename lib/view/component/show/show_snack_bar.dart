@@ -12,10 +12,7 @@ class ShowSnackBar {
     if (e is FormatException) {
       msg = e.message;
     } else if (e is DioException) {
-      var err = e.error;
-      if (err is FormatException) {
-        msg = err.source.toString();
-      }
+      msg = e.response?.data;
     }
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

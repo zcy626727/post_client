@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
+import 'package:post_client/api/client/media_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../api/client/post_api.dart';
@@ -63,6 +64,7 @@ class Global {
     //初始化api
     UserHttpConfig.init();
     PostHttpConfig.init();
+    MediaHttpConfig.init();
   }
 
   //初始化相关数据数据（应用启动后调用）

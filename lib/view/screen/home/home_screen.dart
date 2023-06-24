@@ -4,6 +4,7 @@ import 'package:post_client/model/video.dart';
 import 'package:post_client/service/post_service.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/component/post/post_card.dart';
+import 'package:post_client/view/component/post/post_list.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:post_client/view/widget/player/common_video_player.dart';
 import 'package:provider/provider.dart';
@@ -77,21 +78,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: TabBarView(
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    CommonItemList<Post>(
+                    PostList(
                       onLoad: (int page) async {
                         var postList = await PostService.getPostListRandom(20);
                         return postList;
                       },
+                      enableRefresh: true,
                       itemName: "动态",
-                      enableRefresh: false,
                       itemHeight: null,
-                      isGrip: false,
                       enableScrollbar: true,
-                      itemBuilder: (ctx, post) {
-                        return PostCard(
-                          post: post,
-                        );
-                      },
                     ),
                     CommonItemList<Video>(
                       onLoad: (int page) async {

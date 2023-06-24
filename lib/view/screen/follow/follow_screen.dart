@@ -5,6 +5,7 @@ import 'package:post_client/service/post_service.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/component/post/post_card.dart';
+import 'package:post_client/view/component/post/post_list.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:provider/provider.dart';
 
@@ -117,22 +118,17 @@ class _FollowScreenState extends State<FollowScreen> {
             ),
           ),
           Expanded(
-            child: CommonItemList<Post>(
+            child: PostList(
               onLoad: (int page) async {
                 var postList = await PostService.getPostListRandom(20);
                 return postList;
               },
+              enableRefresh: true,
               itemName: "动态",
               itemHeight: null,
-              isGrip: false,
               enableScrollbar: true,
-              itemBuilder: (ctx, post) {
-                return PostCard(
-                  post: post,
-                );
-              },
             ),
-          )
+          ),
         ],
       ),
     );
