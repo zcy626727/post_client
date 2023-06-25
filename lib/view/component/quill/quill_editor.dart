@@ -99,8 +99,8 @@ class CommentQuillEditor extends StatelessWidget {
     this.maxHeight,
     this.minHeight,
     required this.focusNode,
-    this.readMode = false,
-    this.onTap,
+    this.readOnly = false,
+    this.onTap, required this.autoFocus,
   }) : super(key: key);
 
   final Function? onTap;
@@ -111,7 +111,8 @@ class CommentQuillEditor extends StatelessWidget {
   final String? placeholder;
 
   final FocusNode focusNode;
-  final bool readMode;
+  final bool readOnly;
+  final bool autoFocus;
 
   @override
   Widget build(BuildContext context) {
@@ -128,11 +129,11 @@ class CommentQuillEditor extends StatelessWidget {
         controller: controller,
         focusNode: focusNode,
         scrollController: ScrollController(),
-        scrollable: !readMode,
+        scrollable: !readOnly,
         padding: EdgeInsets.zero,
-        showCursor: !readMode,
-        autoFocus: !readMode,
-        readOnly: readMode,
+        showCursor: !readOnly,
+        autoFocus: autoFocus,
+        readOnly: readOnly,
         expands: false,
         onTapDown: (TapDownDetails details, position) {
           if(onTap!=null){

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:intl/intl.dart';
@@ -8,9 +9,13 @@ import 'package:post_client/model/post.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
 import 'package:post_client/view/page/post/post_comment_page.dart';
 
+import '../../../service/post_service.dart';
+import '../../widget/dialog/confirm_alert_dialog.dart';
+import '../show/show_snack_bar.dart';
+
 class PostCard extends StatefulWidget {
   final Post post;
-  final Function onDeletePost;
+  final Function(Post) onDeletePost;
 
   const PostCard({
     Key? key,
@@ -112,10 +117,30 @@ class _PostCardState extends State<PostCard> {
             ),
           ),
           color: colorScheme.surface,
-          onSelected: (value) {
+          onSelected: (value) async {
             switch (value) {
               case "delete":
-                widget.onDeletePost();
+                await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmAlertDialog(
+                      text: "是否确定删除？",
+                      onConfirm: () async {
+                        try {
+                          await PostService.deletePost(widget.post.id!);
+                          widget.onDeletePost(widget.post);
+                        } on DioException catch (e) {
+                          ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
+                        } finally {
+                          Navigator.pop(context);
+                        }
+                      },
+                      onCancel: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
                 break;
             }
           },

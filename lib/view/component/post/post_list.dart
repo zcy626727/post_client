@@ -59,11 +59,7 @@ class _PostListState extends State<PostList> {
   Future<void> getDataList() async {
     try {
       var list = await widget.onLoad(_page);
-      if (_postList == null) {
-        _postList = list;
-      } else {
-        _postList!.addAll(list);
-      }
+      _postList.addAll(list);
       _page++;
     } on DioError catch (e) {
       log(e.toString());
@@ -75,8 +71,6 @@ class _PostListState extends State<PostList> {
   //刷新
   void _onRefresh() async {
     try {
-      await Future.delayed(const Duration(seconds: 1));
-
       _postList = await widget.onLoad(0);
       _page = 1;
       //获取成功
@@ -93,7 +87,6 @@ class _PostListState extends State<PostList> {
   void _onLoading() async {
     try {
       var list = await widget.onLoad(_page);
-      await Future.delayed(const Duration(seconds: 1));
       if (list.isEmpty) {
         //获取
         _refreshController.finishLoad();
@@ -141,9 +134,11 @@ class _PostListState extends State<PostList> {
       itemBuilder: (context, index) {
         var post = _postList[index];
         return PostCard(
+          key: ValueKey(post.id),
           post: post,
-          onDeletePost: () {
-            _deletePost(post);
+          onDeletePost: (deletedPost) {
+            _postList.remove(deletedPost);
+            setState(() {});
           },
         );
       },
@@ -162,28 +157,4 @@ class _PostListState extends State<PostList> {
     );
   }
 
-  void _deletePost(Post post) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return ConfirmAlertDialog(
-          text: "是否确定删除？",
-          onConfirm: () async {
-            try {
-              await PostService.deletePost(post.id!);
-              _postList.remove(post);
-              setState(() {});
-            } on DioException catch (e) {
-              ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
-            } finally {
-              Navigator.pop(context);
-            }
-          },
-          onCancel: () {
-            Navigator.pop(context);
-          },
-        );
-      },
-    );
-  }
 }

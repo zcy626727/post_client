@@ -17,13 +17,11 @@ class ReplyPage extends StatefulWidget {
 
 class _ReplyPageState extends State<ReplyPage> {
 
-  final FocusNode focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
     //关闭聚焦
-    if (MediaQuery.of(context).viewInsets.bottom == 0) focusNode.unfocus();
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 50,
@@ -60,11 +58,9 @@ class _ReplyPageState extends State<ReplyPage> {
                       comment: widget.comment,
                       onTap: () {
                         //回复评论
-                        focusNode.requestFocus();
                       },
                       onReply: () {
                         //回复评论
-                        focusNode.requestFocus();
                       },
                       onDeleteComment: (comment) {
                         widget.onDeleteComment(comment);

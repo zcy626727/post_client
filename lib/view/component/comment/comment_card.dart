@@ -20,10 +20,11 @@ class CommentCard extends StatefulWidget {
     this.onUp,
     this.onDown,
     this.isTop = false,
-    required this.onDeleteComment,
+    required this.onDeleteComment, this.focusNode,
   }) : super(key: key);
 
   final Comment comment;
+  final FocusNode? focusNode;
   final Function(Comment) onDeleteComment;
 
   //回复内容
@@ -143,6 +144,11 @@ class _CommentCardState extends State<CommentCard> {
                 ),
               ),
               color: colorScheme.surface,
+              onOpened: (){
+                if(widget.focusNode!=null){
+                  widget.focusNode!.unfocus();
+                }
+              },
               onSelected: (value) async {
                 switch (value) {
                   case "delete":
@@ -184,9 +190,10 @@ class _CommentCardState extends State<CommentCard> {
       padding: const EdgeInsets.only(top: 2.0, right: 5.0),
       width: double.infinity,
       child: CommentQuillEditor(
+        autoFocus: false,
         controller: controller,
         focusNode: FocusNode(),
-        readMode: true,
+        readOnly: true,
         onTap: widget.onTap,
       ),
     );

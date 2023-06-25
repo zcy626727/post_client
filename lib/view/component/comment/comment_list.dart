@@ -12,8 +12,6 @@ import 'package:post_client/view/component/input/comment_text_field.dart';
 import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 import 'package:post_client/view/page/comment/reply_page.dart';
 
-import '../../widget/dialog/confirm_alert_dialog.dart';
-import '../show/show_snack_bar.dart';
 import 'comment_card.dart';
 
 class CommentList extends StatefulWidget {
@@ -46,7 +44,7 @@ class _CommentListState extends State<CommentList> {
 
   final QuillController _controller = QuillController.basic();
 
-  final FocusNode focusNode = FocusNode();
+  final FocusNode _focusNode = FocusNode();
 
   List<Comment> _commentList = <Comment>[];
 
@@ -59,6 +57,9 @@ class _CommentListState extends State<CommentList> {
   void initState() {
     super.initState();
     _futureBuilderFuture = getData();
+    _focusNode.addListener(() {
+      setState(() {});
+    });
   }
 
   Future getData() async {
@@ -115,8 +116,8 @@ class _CommentListState extends State<CommentList> {
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
-    if (MediaQuery.of(context).viewInsets.bottom == 0) focusNode.unfocus();
 
+    print('${MediaQuery.of(context).viewInsets.bottom}');
     return FutureBuilder(
       future: _futureBuilderFuture,
       builder: (BuildContext context, AsyncSnapshot snapShot) {
@@ -124,22 +125,28 @@ class _CommentListState extends State<CommentList> {
           return Column(
             children: [
               Expanded(
-                child: Container(
-                  color: colorScheme.surface,
-                  margin: const EdgeInsets.only(top: 2),
-                  child: listBuild(),
+                child: GestureDetector(
+                  onTap: (){
+                    _focusNode.unfocus();
+                  },
+                  child: Container(
+                    color: colorScheme.surface,
+                    margin: const EdgeInsets.only(top: 2),
+                    child: listBuild(),
+                  ),
                 ),
               ),
-              if (MediaQuery.of(context).viewInsets.bottom > 0) PostQuillToolBar(controller: _controller),
+              if (_focusNode.hasFocus) PostQuillToolBar(controller: _controller),
               CommentTextField(
                 controller: _controller,
-                focusNode: focusNode,
+                focusNode: _focusNode,
                 onSubmit: () async {
                   var content = jsonEncode(_controller.document.toDelta().toJson());
                   var comment = await CommentService.createComment(widget.parentId, widget.parentType, content);
                   comment.user = Global.user;
                   _commentList.insert(0, comment);
                   _controller.clear();
+                  _focusNode.unfocus();
                   setState(() {});
                 },
               ),
@@ -169,8 +176,10 @@ class _CommentListState extends State<CommentList> {
         var comment = _commentList[index];
         return CommentCard(
           key: ValueKey(comment.id),
+          focusNode: _focusNode,
           comment: comment,
           onDeleteComment: (comment) {
+            _focusNode.unfocus();
             _commentList.remove(comment);
             setState(() {});
           },
@@ -183,12 +192,12 @@ class _CommentListState extends State<CommentList> {
                   comment: comment,
                   onDeleteComment: (comment) {
                     _commentList.remove(comment);
-                    setState(() {});
+                    _focusNode.unfocus();
                   },
                 ),
               ),
             );
-            focusNode.unfocus();
+            _focusNode.unfocus();
           },
         );
       },

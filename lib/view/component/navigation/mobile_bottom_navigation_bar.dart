@@ -70,22 +70,13 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
+
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
-                                      buildUploadItem(
-                                        title: "动态",
-                                        iconData: Icons.post_add,
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => const PostEditPage()),
-                                          );
-                                        },
-                                      ), //推文
-                                      buildUploadItem(title: "投票", iconData: Icons.how_to_vote_outlined, onTap: () {}), //动态投票
-                                      buildUploadItem(title: "问答", iconData: Icons.question_answer_outlined, onTap: () {}), //帖子
+                                      buildUploadItem(title: "图片", iconData: Icons.image_outlined, onTap: () {}),
+                                      buildUploadItem(title: "视频", iconData: Icons.video_file_outlined, onTap: () {}),
+                                      buildUploadItem(title: "音频", iconData: Icons.audio_file_outlined, onTap: () {}),
                                       buildUploadItem(
                                           title: "文章",
                                           iconData: Icons.article_outlined,
@@ -101,10 +92,22 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
-                                      buildUploadItem(title: "图片", iconData: Icons.image_outlined, onTap: () {}),
-                                      buildUploadItem(title: "视频", iconData: Icons.video_file_outlined, onTap: () {}),
-                                      buildUploadItem(title: "音频", iconData: Icons.audio_file_outlined, onTap: () {}),
-                                      const Expanded(child: SizedBox())
+                                      buildUploadItem(
+                                        title: "动态",
+                                        iconData: Icons.post_add,
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => const PostEditPage()),
+                                          );
+                                        },
+                                      ), //推文
+                                      // buildUploadItem(title: "投票", iconData: Icons.how_to_vote_outlined, onTap: () {}), //动态投票
+                                      // buildUploadItem(title: "问答", iconData: Icons.question_answer_outlined, onTap: () {}), //帖子
+                                      const Expanded(child: SizedBox()),
+                                      const Expanded(child: SizedBox()),
+                                      const Expanded(child: SizedBox()),
                                     ],
                                   ),
                                   SizedBox(
