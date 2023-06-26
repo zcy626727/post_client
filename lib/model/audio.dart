@@ -2,24 +2,23 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:post_client/model/media.dart';
 import 'package:post_client/model/user.dart';
 
-part 'image.g.dart';
+part 'audio.g.dart';
 
 @JsonSerializable()
-class Image extends Media{
+class Audio extends Media{
   String? id;
   int? userId;
   String? md5;
   String? title;
   String? introduction;
   DateTime? createTime;
-  String? thumbnailUrl;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   User? user;
 
-  Image();
+  Audio();
 
-  factory Image.fromJson(Map<String, dynamic> json) => _$ImageFromJson(json);
+  factory Audio.fromJson(Map<String, dynamic> json) => _$AudioFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ImageToJson(this);
+  Map<String, dynamic> toJson() => _$AudioToJson(this);
 }

@@ -94,7 +94,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   color: colorScheme.background,
                   child: PostList(
                     onLoad: (int page) async {
-                      var postList = await PostService.getPostListByUserId(Global.user.id!, page, 20);
+                      var postList = await PostService.getPostListByUserId(Global.user, page, 20);
                       return postList;
                     },
                     enableRefresh: false,

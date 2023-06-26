@@ -11,7 +11,7 @@ class NetConfig{
   //用户服务
   static String userApiUrl = 'http://192.168.239.148:26101';
 
-  static String postApiUrl = 'http://192.168.239.148:26111';
+  static String messageApiUrl = 'http://192.168.239.148:26111';
 
   static String mediaApiUrl = 'http://192.168.239.148:26121';
 

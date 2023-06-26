@@ -5,11 +5,11 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
-import 'package:post_client/api/client/media_api.dart';
+import 'package:post_client/api/client/media_http_config.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import '../api/client/post_api.dart';
-import '../api/client/user_api.dart';
+import '../api/client/message_http_config.dart';
+import '../api/client/user_http_config.dart';
 import '../api/net_cache_interceptor.dart';
 import '../api/net_common_interceptor.dart';
 import '../model/user.dart';
@@ -63,7 +63,7 @@ class Global {
   static initApi() async {
     //初始化api
     UserHttpConfig.init();
-    PostHttpConfig.init();
+    MessageHttpConfig.init();
     MediaHttpConfig.init();
   }
 

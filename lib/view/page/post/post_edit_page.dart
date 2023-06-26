@@ -170,7 +170,7 @@ class _PostEditPageState extends State<PostEditPage> {
                   if (result != null) {
                     var file = result.files.single;
                     //消息接收器
-                    var task = UploadMediaTask.all(fileName: file.name, srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.uploading.index, mediaType: MediaType.image.index);
+                    var task = UploadMediaTask.all(fileName: file.name, srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.uploading.index, mediaType: MediaType.image);
                     imageUploadTaskList.add(task);
                     setState(() {});
                   } else {

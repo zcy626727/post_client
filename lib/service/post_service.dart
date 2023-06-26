@@ -1,5 +1,8 @@
-import 'package:post_client/api/client/post_api.dart';
+import 'package:post_client/api/client/message_http_config.dart';
 import 'package:post_client/model/post.dart';
+
+import '../api/client/message/post_api.dart';
+import '../model/user.dart';
 
 class PostService {
   static Future<Post> createPost(
@@ -26,11 +29,14 @@ class PostService {
   }
 
   static Future<List<Post>> getPostListByUserId(
-    int userId,
+    User user,
     int pageIndex,
     int pageSize,
   ) async {
-    var postList = await PostApi.getPostListByUserId(userId, pageIndex, pageSize);
+    var postList = await PostApi.getPostListByUserId(user.id!, pageIndex, pageSize);
+    for (var post in postList) {
+      post.user = user;
+    }
     return postList;
   }
 

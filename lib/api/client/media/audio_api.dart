@@ -1,0 +1,122 @@
+import 'package:dio/dio.dart';
+
+import '../../../model/audio.dart';
+import '../../../model/user.dart';
+import '../media_http_config.dart';
+
+class AudioApi {
+  static Future<Audio> createAudio(
+      String title,
+      String introduction,
+      String md5,
+      String coverUrl,
+  ) async {
+    var r = await MediaHttpConfig.dio.post(
+      "/audio/createAudio",
+      data: {
+        "title": title,
+        "introduction": introduction,
+        "md5": md5,
+        "coverUrl": coverUrl,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
+
+    return Audio.fromJson(r.data['audio']);
+  }
+
+  static Future<void> deleteUserAudioById(
+    String audioId,
+  ) async {
+    await MediaHttpConfig.dio.post(
+      "/audio/deleteUserAudioById",
+      data: {
+        "audioId": audioId,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
+  }
+
+  static Future<Audio> getAudioById(
+    String audioId,
+  ) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/audio/getAudioById",
+      queryParameters: {
+        "audioId": audioId,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": false,
+        "withToken": false,
+      }),
+    );
+    return Audio.fromJson(r.data['Audio']);
+  }
+
+  static Future<List<Audio>> getAudioListByUserId(
+    int userId,
+    int pageIndex,
+    int pageSize,
+  ) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/audio/getAudioListByUserId",
+      queryParameters: {
+        "targetUserId": userId,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": false,
+        "withToken": false,
+      }),
+    );
+
+    return _parseAudio(r);
+  }
+
+  static Future<List<Audio>> getAudioListRandom(
+    int pageSize,
+  ) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/audio/getAudioListRandom",
+      queryParameters: {
+        "pageSize": pageSize,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": false,
+        "withToken": false,
+      }),
+    );
+    return _parseAudioWithUser(r);
+  }
+
+  static List<Audio> _parseAudioWithUser(Response<dynamic> r) {
+    Map<int, User> userMap = {};
+    for (var userJson in r.data['userList']) {
+      var user = User.fromJson(userJson);
+      userMap[user.id ?? 0] = user;
+    }
+    List<Audio> audioList = [];
+    for (var audioJson in r.data['audioList']) {
+      var audio = Audio.fromJson(audioJson);
+      audio.user = userMap[audio.userId];
+      audioList.add(audio);
+    }
+    return audioList;
+  }
+
+  static List<Audio> _parseAudio(Response<dynamic> r) {
+    List<Audio> audioList = [];
+    for (var audioJson in r.data['audioList']) {
+      var audio = Audio.fromJson(audioJson);
+      audioList.add(audio);
+    }
+    return audioList;
+  }
+}

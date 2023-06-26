@@ -4,7 +4,8 @@ import 'dart:isolate';
 
 import 'package:flutter/services.dart';
 
-import '../api/client/media_api.dart';
+import '../api/client/media/multipart_api.dart';
+import '../api/client/media_http_config.dart';
 import '../config/file_config.dart';
 import '../config/global.dart';
 import '../domain/task/upload_media_task.dart';

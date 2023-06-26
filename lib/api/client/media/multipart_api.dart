@@ -1,30 +1,14 @@
-import 'package:dio/dio.dart';
 import 'package:post_client/domain/multipart_info.dart';
 
-import '../../config/global.dart';
-import '../../config/net_config.dart';
-
-class MediaHttpConfig {
-  static Options options = Options();
-
-  static Dio dio = Dio(BaseOptions(
-    baseUrl: NetConfig.mediaApiUrl,
-  ));
-
-  static void init() {
-    // 添加拦截器
-    dio.interceptors.add(Global.netCacheInterceptor);
-    dio.interceptors.add(Global.netCommonInterceptor);
-  }
-}
+import '../media_http_config.dart';
 
 class MultipartApi {
   //初始化上传任务
   static Future<MultipartInfo> initMultipartUpload(
-    String md5,
-    bool private,
-    int fileSize,
-  ) async {
+      String md5,
+      bool private,
+      int fileSize,
+      ) async {
     var r = await MediaHttpConfig.dio.post(
       "/multipart/initMultipartUpload",
       queryParameters: {
@@ -82,46 +66,3 @@ class MultipartApi {
     );
   }
 }
-
-class FileApi {
-  //获取putUrl，小文件上传
-  static Future<String> genPutFileUrl(String md5, bool private) async {
-    var r = await MediaHttpConfig.dio.post(
-      "/file/genPutFileUrl",
-      data: {
-        "md5": md5,
-        "private": private,
-      },
-      options: MediaHttpConfig.options.copyWith(
-        extra: {
-          "noCache": true,
-          "withToken": true,
-        },
-      ),
-    );
-
-    //获取数据
-    return r.data["putFileUrl"];
-  }
-
-  //获取getUrl，文件下载
-  static Future<(String,String)> genGetFileUrl(String md5,bool staticLink) async {
-    var r = await MediaHttpConfig.dio.post(
-      "/file/genGetFileUrl",
-      data: {
-        "md5": md5,
-        "staticLink": staticLink,
-      },
-      options: MediaHttpConfig.options.copyWith(
-        extra: {
-          "noCache": true,
-          "withToken": true,
-        },
-      ),
-    );
-
-    //获取数据
-    return (r.data["getFileUrl"] as String,r.data["staticUrl"] as String);
-  }
-}
-

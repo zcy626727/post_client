@@ -3,24 +3,29 @@ import 'package:post_client/model/user.dart';
 
 import 'media.dart';
 
-part 'video.g.dart';
+part 'album.g.dart';
 
 @JsonSerializable()
-class Video extends Media{
+class Album{
   String? id;
   int? userId;
-  String? md5;
   String? title;
   String? introduction;
   DateTime? createTime;
-  String? coverUrl;
+  int? mediaType;
+  List<String>? mediaIdList;
+
+
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   User? user;
 
-  Video();
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  List<Media>? mediaList;
 
-  factory Video.fromJson(Map<String, dynamic> json) => _$VideoFromJson(json);
+  Album();
 
-  Map<String, dynamic> toJson() => _$VideoToJson(this);
+  factory Album.fromJson(Map<String, dynamic> json) => _$AlbumFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AlbumToJson(this);
 }

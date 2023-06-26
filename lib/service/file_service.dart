@@ -2,10 +2,12 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:flutter/services.dart';
-import 'package:post_client/api/client/media_api.dart';
+import 'package:post_client/api/client/media_http_config.dart';
 import 'package:post_client/config/global.dart';
 import 'package:post_client/domain/task/upload_media_task.dart';
 import 'package:post_client/util/file_util.dart';
+
+import '../api/client/media/file_api.dart';
 
 class FileService {
   static Future<void> startUploadIsolate(SendPort sendPort) async {
