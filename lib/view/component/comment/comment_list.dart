@@ -117,7 +117,6 @@ class _CommentListState extends State<CommentList> {
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
 
-    print('${MediaQuery.of(context).viewInsets.bottom}');
     return FutureBuilder(
       future: _futureBuilderFuture,
       builder: (BuildContext context, AsyncSnapshot snapShot) {

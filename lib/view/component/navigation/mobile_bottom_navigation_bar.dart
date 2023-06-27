@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/view/page/article/article_edit_page.dart';
+import 'package:post_client/view/page/audio/audio_edit_page.dart';
 import 'package:post_client/view/page/post/post_edit_page.dart';
+import 'package:post_client/view/page/video/video_edit_page.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
 import 'package:post_client/view/widget/button/common_action_two_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../../state/screen_state.dart';
+import '../../page/gallery/gallery_edit_page.dart';
 
 class MobileBottomNavigationBar extends StatefulWidget {
   const MobileBottomNavigationBar({Key? key}) : super(key: key);
@@ -70,23 +73,41 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
-
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
-                                      buildUploadItem(title: "图片", iconData: Icons.image_outlined, onTap: () {}),
-                                      buildUploadItem(title: "视频", iconData: Icons.video_file_outlined, onTap: () {}),
-                                      buildUploadItem(title: "音频", iconData: Icons.audio_file_outlined, onTap: () {}),
+                                      buildUploadItem(title: "图片", iconData: Icons.image_outlined, onTap: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => const GalleryEditPage()),
+                                        );
+                                      }),
+                                      buildUploadItem(title: "视频", iconData: Icons.video_file_outlined, onTap: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => const VideoEditPage()),
+                                        );
+                                      }),
+                                      buildUploadItem(title: "音频", iconData: Icons.audio_file_outlined, onTap: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => const AudioEditPage()),
+                                        );
+                                      }),
                                       buildUploadItem(
-                                          title: "文章",
-                                          iconData: Icons.article_outlined,
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) =>  const ArticleEditPage()),
-                                            );
-                                          }), //文章
+                                        title: "文章",
+                                        iconData: Icons.article_outlined,
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => const ArticleEditPage()),
+                                          );
+                                        },
+                                      ), //文章
                                     ],
                                   ),
                                   Row(

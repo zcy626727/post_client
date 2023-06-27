@@ -2,7 +2,7 @@ import 'package:post_client/api/client/media_http_config.dart';
 import 'package:post_client/domain/task/upload_media_task.dart';
 import 'package:post_client/model/article.dart';
 import 'package:post_client/model/audio.dart';
-import 'package:post_client/model/image.dart';
+import 'package:post_client/model/gallery.dart';
 import 'package:post_client/model/media.dart';
 import 'package:post_client/model/video.dart';
 
@@ -84,7 +84,7 @@ class AlbumApi {
     for (var mediaJson in r.data['mediaList']) {
       switch(album.mediaType){
         case MediaType.image:
-          mediaList.add(Image.fromJson(mediaJson));
+          mediaList.add(Gallery.fromJson(mediaJson));
         case MediaType.audio:
           mediaList.add(Audio.fromJson(mediaJson));
         case MediaType.article:
