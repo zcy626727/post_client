@@ -156,7 +156,7 @@ class _PostCardState extends State<PostCard> {
       child: PostQuillEditor(
         controller: controller,
         focusNode: FocusNode(),
-        readMode: true,
+        readOnly: true,
       ),
     );
   }

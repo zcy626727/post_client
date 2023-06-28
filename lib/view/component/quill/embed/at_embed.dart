@@ -49,6 +49,11 @@ class MyAtEmbedBuilder implements EmbedBuilder {
 
   @override
   bool get expanded => false;
+
+  @override
+  String toPlainText(Embed node) {
+    throw node.toPlainText();
+  }
 }
 
 //连接嵌入块和按钮

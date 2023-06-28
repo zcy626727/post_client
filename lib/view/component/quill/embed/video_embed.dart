@@ -41,6 +41,11 @@ class MyVideoEmbedBuilder implements EmbedBuilder {
 
   @override
   bool get expanded => true;
+
+  @override
+  String toPlainText(Embed node) {
+    throw node.toPlainText();
+  }
 }
 
 class MyVideoBlockEmbed extends CustomBlockEmbed {

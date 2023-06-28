@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/component/media/media_selector.dart';
-import 'package:post_client/view/widget/player/common_audio_player.dart';
+import 'package:post_client/view/widget/player/audio/common_audio_player_mini.dart';
 
 
 //嵌入块样式
@@ -40,6 +40,11 @@ class MyAudioEmbedBuilder implements EmbedBuilder {
 
   @override
   bool get expanded => true;
+
+  @override
+  String toPlainText(Embed node) {
+    throw node.toPlainText();
+  }
 }
 
 //连接嵌入块和按钮

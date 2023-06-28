@@ -61,8 +61,8 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                   Expanded(
                     child: TextField(
                       controller: TextEditingController(),
-                      maxLines: 3,
-                      maxLength: 100,
+                      maxLines: 4,
+                      maxLength: 50,
                       style: TextStyle(
                         color: colorScheme.onSurface,
                       ),
@@ -75,10 +75,8 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                           //添加边框
                           borderRadius: BorderRadius.circular(5.0),
                         ),
-                        hintStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onBackground.withAlpha(150),
-                        ),
-                        hintText: "标题",
+                        labelText: "标题",
+                        alignLabelWithHint: true,
                         counterStyle: TextStyle(color: colorScheme.onSurface),
                       ),
                     ),
@@ -100,25 +98,6 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                 ],
               ),
             ),
-            // Container(
-            //   color: colorScheme.surface,
-            //   child: Column(
-            //     children: [
-            //       ListTile(
-            //         title: Text("权限",style: TextStyle(color: colorScheme.onSurface,fontSize: 15),),
-            //         trailing: SizedBox(
-            //           width: 100,
-            //           child: Row(
-            //             children: [
-            //               Checkbox(value: false, onChanged: (b){}),
-            //               Checkbox(value: true, onChanged: (b){}),
-            //             ],
-            //           ),
-            //         ),
-            //       )
-            //     ],
-            //   ),
-            // ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 5),
               color: colorScheme.surface,
@@ -139,10 +118,8 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                     //添加边框
                     borderRadius: BorderRadius.circular(5.0),
                   ),
-                  hintStyle: TextStyle(
-                    color: Theme.of(context).colorScheme.onBackground.withAlpha(150),
-                  ),
-                  hintText: "简介",
+                  labelText: "简介",
+                  alignLabelWithHint: true,
                   counterStyle: TextStyle(color: colorScheme.onSurface),
                 ),
               ),

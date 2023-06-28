@@ -1,3 +1,4 @@
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -10,20 +11,28 @@ class CommonVideoPlayer extends StatefulWidget {
 }
 
 class _CommonVideoPlayerState extends State<CommonVideoPlayer> {
-  late VideoPlayerController _controller;
+  late VideoPlayerController videoPlayerController;
   late Future<void> _initializeVideoPlayerFuture;
+
+  late final ChewieController chewieController;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl);
-    _initializeVideoPlayerFuture = _controller.initialize();
+    videoPlayerController = VideoPlayerController.network(widget.videoUrl);
+    chewieController =  ChewieController(
+      videoPlayerController: videoPlayerController,
+      autoPlay: true,
+      looping: true,
+    );
+    _initializeVideoPlayerFuture = videoPlayerController.initialize();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    videoPlayerController.dispose();
+    chewieController.dispose();
   }
 
   @override
@@ -37,24 +46,24 @@ class _CommonVideoPlayerState extends State<CommonVideoPlayer> {
             color: colorScheme.background,
             child:  GestureDetector(
               onTap: (){
-                if(_controller.value.isPlaying){
-                  _controller.pause();
+                if(videoPlayerController.value.isPlaying){
+                  videoPlayerController.pause();
                 }else{
-                  _controller.play();
+                  videoPlayerController.play();
                 }
-
               },
               child: AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
+                aspectRatio: videoPlayerController.value.aspectRatio,
+                child: Chewie(
+                  controller: chewieController,
+                ),
               ),
             ),
           );
         } else {
-          return Center(
-            child: AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              child: const CircularProgressIndicator(),
+          return const Center(
+            child: SizedBox(
+              child: CircularProgressIndicator(),
             ),
           );
         }

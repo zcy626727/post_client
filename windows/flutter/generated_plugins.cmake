@@ -3,7 +3,8 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  audioplayers_windows
+  file_selector_windows
+  just_audio_windows
   pasteboard
   url_launcher_windows
 )
