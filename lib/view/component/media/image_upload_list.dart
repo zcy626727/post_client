@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -45,10 +47,18 @@ class _ImageUploadListState extends State<ImageUploadList> {
                   );
 
                   if (result != null) {
-                    var file = result.files.single;
-                    //消息接收器
-                    var task = UploadMediaTask.all(fileName: file.name, srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.uploading.index, mediaType: MediaType.image);
-                    widget.imageUploadTaskList.add(task);
+                    RandomAccessFile? read;
+                    try {
+                      var file = result.files.single;
+                      read = await File(result.files.single.path!).open();
+                      var data = await read.read(16);
+                      //消息接收器
+                      var task = UploadMediaTask.all(fileName: file.name, srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.uploading.index, mediaType: MediaType.image, magicNumber: data);
+                      widget.imageUploadTaskList.add(task);
+
+                    } finally {
+                      read?.close();
+                    }
                     setState(() {});
                   } else {
                     // User canceled the picker

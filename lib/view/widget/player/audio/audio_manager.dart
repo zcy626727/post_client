@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:post_client/util/file_util.dart';
 
 import 'notifiers/play_button_notifier.dart';
 import 'notifiers/progress_notifier.dart';
@@ -28,14 +30,22 @@ class AudioManager {
     _listenForChangesInPlayerPosition();
     _listenForChangesInBufferedPosition();
     _listenForChangesInTotalDuration();
-    _listenForChangesInSequenceState();
+    // _listenForChangesInSequenceState();
   }
 
   //设置播放列表
   void setInitialPlaylist(List<String> urlList) async {
     _playlist.clear();
     for (var url in urlList) {
-      _playlist.add(AudioSource.uri(Uri.parse(url)));
+      // var u = Uri(
+      //   scheme: 'http',
+      //   host: 'archlinux',
+      //   port: 9000,
+      //   path: "/file/public/3d234c392d1a5100214dcebf97c3991b",
+      // );
+      var source = AudioSource.uri(Uri.parse(url));
+      _playlist.add(source);
+      // _playlist.add(AudioSource.uri(Uri.parse(url)));
     }
     await _audioPlayer.setAudioSource(_playlist);
   }

@@ -50,7 +50,7 @@ class FileService {
     sendPort.send([1, task.toJson()]);
 
     //获取文件上传链接
-    var putUrl = await FileApi.genPutFileUrl(md5, task.private);
+    var putUrl = await FileApi.genPutFileUrl(md5, task.private,task.magicNumber!);
     if(putUrl.isNotEmpty){
       var data = await file.readAsBytes();
       //上传文件

@@ -1,8 +1,11 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:post_client/view/component/media/audio_upload_card.dart';
 import 'package:post_client/view/widget/player/audio/common_audio_player_mini.dart';
 
-import '../../widget/player/common_video_player.dart';
+import '../../../domain/task/upload_media_task.dart';
 
 class AudioEditPage extends StatefulWidget {
   const AudioEditPage({super.key});
@@ -12,6 +15,8 @@ class AudioEditPage extends StatefulWidget {
 }
 
 class _AudioEditPageState extends State<AudioEditPage> {
+  UploadMediaTask? _audioUploadTask;
+
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
@@ -36,11 +41,36 @@ class _AudioEditPageState extends State<AudioEditPage> {
       body: SafeArea(
         child: ListView(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 2),
-              color: colorScheme.surface,
-              child:  const CommonAudioPlayerMini(audioUrl: "https://www.cambridgeenglish.org/images/153149-movers-sample-listening-test-vol2.mp3"),
-            ),
+            _audioUploadTask == null
+                ? Container(
+                    height: 45,
+                    color: colorScheme.primaryContainer,
+                    child: TextButton(
+                        onPressed: () async {
+                          //选择文件
+                          //打开file picker
+                          FilePickerResult? result = await FilePicker.platform.pickFiles(
+                            type: FileType.custom,
+                            allowedExtensions: ['mp3', 'aac', 'ogg', 'mp4', 'wav', 'flac'],
+                          );
+
+                          if (result != null) {
+                            RandomAccessFile? read;
+                            try {
+                              var file = result.files.single;
+                              read = await File(result.files.single.path!).open();
+                              var data = await read.read(16);
+                              //消息接收器
+                              _audioUploadTask = UploadMediaTask.all(fileName: file.name, srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.init.index, mediaType: MediaType.audio, magicNumber: data);
+                            } finally {
+                              read?.close();
+                            }
+                            setState(() {});
+                          }
+                        },
+                        child: const Text("选择音频")),
+                  )
+                : AudioUploadCard(key: ValueKey(_audioUploadTask!.srcPath), task: _audioUploadTask!),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               padding: const EdgeInsets.only(top: 5, bottom: 5),
@@ -90,7 +120,7 @@ class _AudioEditPageState extends State<AudioEditPage> {
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               color: colorScheme.surface,
               height: 120,
               child: TextField(

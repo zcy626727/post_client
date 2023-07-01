@@ -20,7 +20,6 @@ class _CommonAudioPlayerMiniState extends State<CommonAudioPlayerMini> {
 
   @override
   void initState() {
-    // _pageManager.addSong(widget.audioUrl);
     _pageManager.setInitialPlaylist(<String>[widget.audioUrl]);
     super.initState();
   }

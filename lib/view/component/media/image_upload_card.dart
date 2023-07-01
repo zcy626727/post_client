@@ -8,7 +8,7 @@ import 'package:post_client/domain/task/upload_media_task.dart';
 import 'package:post_client/service/file_service.dart';
 
 class ImageUploadCard extends StatefulWidget {
-  const ImageUploadCard({super.key, required this.task});
+  const ImageUploadCard({required super.key, required this.task});
 
   final UploadMediaTask task;
 
@@ -22,8 +22,8 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
 
   @override
   void initState() {
-    super.initState();
     print('开启上传图片任务：${widget.task.srcPath}');
+    super.initState();
     uploadImage(widget.task);
   }
 
@@ -83,6 +83,7 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
       },
     );
 
+    //todo 删除功能：从列表删除图片的功能应该将isolate设置为外部变量，点击删除后这个组件中删除，然后调用外部回调更新外部页面
     var isolate = await Isolate.spawn(FileService.startUploadIsolate, receivePort.sendPort);
     isolate.addOnExitListener(receivePort.sendPort);
   }

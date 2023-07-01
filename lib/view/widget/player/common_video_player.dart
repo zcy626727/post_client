@@ -11,28 +11,29 @@ class CommonVideoPlayer extends StatefulWidget {
 }
 
 class _CommonVideoPlayerState extends State<CommonVideoPlayer> {
-  late VideoPlayerController videoPlayerController;
+  late VideoPlayerController _videoPlayerController;
   late Future<void> _initializeVideoPlayerFuture;
 
-  late final ChewieController chewieController;
+  late final ChewieController _chewieController;
 
   @override
   void initState() {
     super.initState();
-    videoPlayerController = VideoPlayerController.network(widget.videoUrl);
-    chewieController =  ChewieController(
-      videoPlayerController: videoPlayerController,
-      autoPlay: true,
-      looping: true,
+    _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
+    _chewieController =  ChewieController(
+      videoPlayerController: _videoPlayerController,
+      autoPlay: false,
+      looping: false,
     );
-    _initializeVideoPlayerFuture = videoPlayerController.initialize();
+    _initializeVideoPlayerFuture = _videoPlayerController.initialize();
   }
 
   @override
   void dispose() {
     super.dispose();
-    videoPlayerController.dispose();
-    chewieController.dispose();
+    _videoPlayerController.pause();
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
   }
 
   @override
@@ -44,19 +45,10 @@ class _CommonVideoPlayerState extends State<CommonVideoPlayer> {
         if (snapshot.connectionState == ConnectionState.done) {
           return Container(
             color: colorScheme.background,
-            child:  GestureDetector(
-              onTap: (){
-                if(videoPlayerController.value.isPlaying){
-                  videoPlayerController.pause();
-                }else{
-                  videoPlayerController.play();
-                }
-              },
-              child: AspectRatio(
-                aspectRatio: videoPlayerController.value.aspectRatio,
-                child: Chewie(
-                  controller: chewieController,
-                ),
+            child:  AspectRatio(
+              aspectRatio: _videoPlayerController.value.aspectRatio,
+              child: Chewie(
+                controller: _chewieController,
               ),
             ),
           );

@@ -1,5 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:post_client/domain/task/upload_media_task.dart';
+import 'package:post_client/view/component/media/video_upload_card.dart';
+import 'package:post_client/view/widget/button/common_action_one_button.dart';
 
 import '../../widget/player/common_video_player.dart';
 
@@ -11,10 +16,11 @@ class VideoEditPage extends StatefulWidget {
 }
 
 class _VideoEditPageState extends State<VideoEditPage> {
+  UploadMediaTask? _videoUploadTask;
+
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 50,
@@ -35,13 +41,34 @@ class _VideoEditPageState extends State<VideoEditPage> {
       body: SafeArea(
         child: ListView(
           children: [
-            Container(
-              margin: const EdgeInsets.only(top: 2),
-              padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 5.0),
-              height: 200,
-              color: colorScheme.surface,
-              child: const CommonVideoPlayer(videoUrl: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"),
-            ),
+            _videoUploadTask == null
+                ? Container(
+                    height: 45,
+                    color: colorScheme.primaryContainer,
+                    child: TextButton(
+                        onPressed: () async {
+                          FilePickerResult? result = await FilePicker.platform.pickFiles(
+                            type: FileType.video,
+                          );
+
+                          if (result != null) {
+                            RandomAccessFile? read;
+                            try {
+                              var file = result.files.single;
+                              read = await File(result.files.single.path!).open();
+                              var data = await read.read(16);
+                              //消息接收器
+                              _videoUploadTask = UploadMediaTask.all(
+                                  fileName: file.name, srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.init.index, mediaType: MediaType.audio, magicNumber: data);
+                            } finally {
+                              read?.close();
+                            }
+                            setState(() {});
+                          }
+                        },
+                        child: const Text("选择视频")),
+                  )
+                : VideoUploadCard(key: ValueKey(_videoUploadTask!.srcPath), task: _videoUploadTask!),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               padding: const EdgeInsets.only(top: 5, bottom: 5),
@@ -91,7 +118,7 @@ class _VideoEditPageState extends State<VideoEditPage> {
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               color: colorScheme.surface,
               height: 120,
               child: TextField(

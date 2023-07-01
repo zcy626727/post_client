@@ -1,13 +1,20 @@
+import 'dart:typed_data';
+
 import '../media_http_config.dart';
 
 class FileApi {
   //获取putUrl，小文件上传
-  static Future<String> genPutFileUrl(String md5, bool private) async {
+  static Future<String> genPutFileUrl(
+    String md5,
+    bool private,
+    List<int> magicNumber,
+  ) async {
     var r = await MediaHttpConfig.dio.post(
       "/file/genPutFileUrl",
       data: {
         "md5": md5,
         "private": private,
+        "magicNumber": magicNumber,
       },
       options: MediaHttpConfig.options.copyWith(
         extra: {
@@ -22,7 +29,7 @@ class FileApi {
   }
 
   //获取getUrl，文件下载
-  static Future<(String,String)> genGetFileUrl(String md5,bool staticLink) async {
+  static Future<(String, String)> genGetFileUrl(String md5, bool staticLink) async {
     var r = await MediaHttpConfig.dio.post(
       "/file/genGetFileUrl",
       data: {
@@ -38,6 +45,6 @@ class FileApi {
     );
 
     //获取数据
-    return (r.data["getFileUrl"] as String,r.data["staticUrl"] as String);
+    return (r.data["getFileUrl"] as String, r.data["staticUrl"] as String);
   }
 }

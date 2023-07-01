@@ -89,7 +89,7 @@ class _PostEditPageState extends State<PostEditPage> {
                     }
                   }
                   for (var task in imageUploadTaskList) {
-                    if(!enablePush){
+                    if (!enablePush) {
                       enablePush = true;
                     }
                     pictureUrlList.add(task.link!);
@@ -168,10 +168,25 @@ class _PostEditPageState extends State<PostEditPage> {
                   );
 
                   if (result != null) {
-                    var file = result.files.single;
-                    //消息接收器
-                    var task = UploadMediaTask.all(fileName: file.name, srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.uploading.index, mediaType: MediaType.image);
-                    imageUploadTaskList.add(task);
+                    RandomAccessFile? read;
+                    try {
+                      var file = result.files.single;
+
+                      read = await File(file.path!).open();
+                      var data = await read.read(16);
+                      //消息接收器
+                      var task = UploadMediaTask.all(
+                        fileName: file.name,
+                        srcPath: file.path,
+                        totalSize: file.size,
+                        status: UploadTaskStatus.uploading.index,
+                        mediaType: MediaType.image,
+                        magicNumber: data,
+                      );
+                      imageUploadTaskList.add(task);
+                    } finally {
+                      read?.close();
+                    }
                     setState(() {});
                   } else {
                     // User canceled the picker

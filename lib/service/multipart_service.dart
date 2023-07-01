@@ -80,11 +80,14 @@ class MultipartService {
     }
   }
 
-  static Future<void> initMultipartUpload(UploadMediaTask task, SendPort sendPort, bool private) async {
+  static Future<void> initMultipartUpload(
+    UploadMediaTask task,
+    SendPort sendPort,
+    bool private,
+  ) async {
     final file = File(task.srcPath!);
     var fileStat = await file.stat();
     task.status = UploadTaskStatus.init.index;
-
     //验证文件
     if (fileStat.size >= FileConfig.maxUploadFileSize) throw const FormatException("文件大小超出限制");
 
@@ -107,10 +110,9 @@ class MultipartService {
     }
 
     //初始化上传
-    var multipartInfo = await MultipartApi.initMultipartUpload(task.md5!, private, fileStat.size);
+    var multipartInfo = await MultipartApi.initMultipartUpload(task.md5!, private, fileStat.size, task.magicNumber!);
 
-    task.fileName = multipartInfo.fileName;
-    task.uploadedSize = multipartInfo.uploadedPartNum! * multipartInfo.partSize!;
+    task.uploadedSize = multipartInfo.uploadedPartNum ?? 0 * multipartInfo.partSize!;
     sendPort.send([1, task.toJson()]);
   }
 
@@ -127,13 +129,13 @@ class MultipartService {
       //获取上传url和上传任务状态
       var (multipartInfo, urlList) = await MultipartApi.getUploadUrl(task.md5!, Global.urlCount, 0);
       //已上传的大小
-      int uploadedPartNum = multipartInfo.uploadedPartNum!;
+      int uploadedPartNum = multipartInfo.uploadedPartNum ?? 0;
       //缓冲区
       List<int> buffer = List<int>.filled(multipartInfo.partSize!, 0);
       //开始上传
       while (uploadedPartNum < multipartInfo.totalPartNum!) {
         //设置起始位置，第一个分片起始位置为0，第二个为partSize，依此类推
-        access.setPositionSync(multipartInfo.uploadedPartNum! * multipartInfo.partSize!);
+        access.setPositionSync(multipartInfo.uploadedPartNum ?? 0 * multipartInfo.partSize!);
         for (var url in urlList) {
           //读取数据
           var len = await access.readInto(buffer);
@@ -153,7 +155,7 @@ class MultipartService {
         //获取url和上传任务状态
         (multipartInfo, urlList) = await MultipartApi.getUploadUrl(task.md5!, Global.urlCount, uploadedPartNum);
         //更新已上传分片数
-        uploadedPartNum = multipartInfo.uploadedPartNum!;
+        uploadedPartNum = multipartInfo.uploadedPartNum ?? 0;
       }
     } catch (e) {
       rethrow;

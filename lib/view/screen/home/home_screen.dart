@@ -11,6 +11,8 @@ import 'package:provider/provider.dart';
 
 import '../../../model/user.dart';
 import '../../../state/user_state.dart';
+import '../../widget/player/audio/common_audio_player_mini.dart';
+import '../../widget/player/audio/common_audio_playr.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -101,7 +103,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (ctx, post) {
                         return Container(
                           color: colorScheme.surface,
-                          child: CommonVideoPlayer(videoUrl: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"),
+                          child: CommonVideoPlayer(videoUrl: "http://192.168.239.148:9000/file/public/sample_1280x720_surfing_with_audio.mp4"),
+                          // child: CommonVideoPlayer(videoUrl: "http://vjs.zencdn.net/v/oceans.mp4"),
+                          // child: CommonAudioPlayerMini(audioUrl: "http://192.168.239.148:9000/file/public/3d234c392d1a5100214dcebf97c3991b"),
+                          // child: CommonAudioPlayerMini(audioUrl: "http://downsc.chinaz.net/Files/DownLoad/sound1/201906/11582.mp3"),
                         );
                       },
                     )
@@ -116,7 +121,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildDesktop() {
-    return Container();
+    return Container(
+      child: CommonVideoPlayer(videoUrl: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"),
+      // child: CommonAudioPlayerMini(audioUrl: "http://downsc.chinaz.net/Files/DownLoad/sound1/201906/11582.mp3"),
+      // child: CommonAudioPlayerMini2(audioUrl: "http://archlinux:9000/file/public/3d234c392d1a5100214dcebf97c3991b"),
+      // child: CommonAudioPlayerMini2(audioUrl: "http://192.168.239.148:9000/file/public/4444"),
+    );
   }
 }
 

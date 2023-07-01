@@ -5,11 +5,16 @@ part 'multipart_info.g.dart';
 @JsonSerializable()
 class MultipartInfo {
   String? md5;
+  @JsonKey(name: 'file_name')
   String? fileName;
   bool? finished;
+  @JsonKey(name: 'total_part_num')
   int? totalPartNum;
+  @JsonKey(name: 'uploaded_part_num')
   int? uploadedPartNum;
+  @JsonKey(name: 'file_size')
   int? fileSize;
+  @JsonKey(name: 'part_size')
   int? partSize;
 
   MultipartInfo(

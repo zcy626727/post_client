@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sqflite/sqflite.dart';
@@ -16,7 +17,7 @@ class UploadMediaTask {
   String? fileName; //文件名
   String? srcPath; //文件原路径
   int? totalSize; //文件/文件夹下的文件的大小
-  int? uploadedSize; //进度
+  int uploadedSize=0; //进度
   String? md5; //文件的MD5
   String? statusMessage; //文件的MD5
   int? status; //上传状态
@@ -24,13 +25,14 @@ class UploadMediaTask {
   int? mediaType;
   bool private = false;
   String? link;
+  List<int>? magicNumber;
 
   UploadMediaTask();
 
   UploadMediaTask.all({
     required this.fileName,
     required this.srcPath,
-    this.uploadedSize,
+    this.uploadedSize=0,
     required this.totalSize,
     this.statusMessage,
     required this.status,
@@ -38,6 +40,7 @@ class UploadMediaTask {
     this.createTime,
     this.md5,
     this.private=false,
+    required this.magicNumber,
   });
 
   void copy(UploadMediaTask task) {
@@ -52,6 +55,7 @@ class UploadMediaTask {
     statusMessage = task.statusMessage;
     md5 = task.md5;
     link = task.link;
+    magicNumber = task.magicNumber;
   }
 
   factory UploadMediaTask.fromJson(Map<String, dynamic> json) =>
