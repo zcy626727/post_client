@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/service/audio_service.dart';
-import 'package:post_client/view/component/media/audio_upload_card.dart';
-import 'package:post_client/view/component/media/media_info_card.dart';
+import 'package:post_client/view/component/media/upload/audio_upload_card.dart';
+import 'package:post_client/view/component/media/upload/media_info_card.dart';
 import 'package:post_client/view/widget/player/audio/common_audio_player_mini.dart';
 
 import '../../../domain/task/upload_media_task.dart';
-import '../../component/media/image_upload_card.dart';
+import '../../component/media/upload/image_upload_card.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
 
@@ -57,27 +57,27 @@ class _AudioEditPageState extends State<AudioEditPage> {
                 height: 30,
                 onTap: () async {
                   formKey.currentState?.save();
+                  if (audioUploadTask == null) {
+                    ShowSnackBar.error(context: context, message: "还未上传视频");
+                    return;
+                  }
+                  if (audioUploadTask!.status != UploadTaskStatus.finished.index) {
+                    ShowSnackBar.error(context: context, message: "视频未上传完成，请稍后");
+                    return;
+                  }
+                  String? coverUrl;
+                  if (coverUploadImage.status != UploadTaskStatus.finished.index) {
+                    ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
+                    return;
+                  } else {
+                    coverUrl = coverUploadImage.staticUrl!;
+                  }
                   //执行验证
                   if (formKey.currentState!.validate()) {
                     try {
-                      if (audioUploadTask == null) {
-                        ShowSnackBar.error(context: context, message: "还未上传视频");
-                        return;
-                      }
-                      if (audioUploadTask!.status != UploadTaskStatus.finished.index) {
-                        ShowSnackBar.error(context: context, message: "视频未上传完成，请稍后");
-                        return;
-                      }
-                      String? coverUrl;
-                      if (coverUploadImage.status != UploadTaskStatus.finished.index) {
-                        ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
-                        return;
-                      } else {
-                        coverUrl = coverUploadImage.staticUrl!;
-                      }
                       var video = await AudioService.createAudio(
                         titleController.value.text,
-                        introductionController.value.text,
+                        introductionController.value.text??"",
                         audioUploadTask!.fileId!,
                         coverUrl,
                       );

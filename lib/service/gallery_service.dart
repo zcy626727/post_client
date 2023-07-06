@@ -29,12 +29,11 @@ class GalleryService {
   }
 
   static Future<List<Gallery>> getGalleryListByUserId(
-    int userId,
+    User user,
     int pageIndex,
     int pageSize,
-    User user,
   ) async {
-    var galleryList = await GalleryApi.getGalleryListByUserId(userId, pageIndex, pageSize);
+    var galleryList = await GalleryApi.getGalleryListByUserId(user.id!, pageIndex, pageSize);
     for (var gallery in galleryList) {
       gallery.user = user;
     }

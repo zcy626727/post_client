@@ -6,7 +6,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:post_client/view/widget/player/common_video_player.dart';
 
 import '../../../../util/responsive.dart';
-import '../../media/media_selector.dart';
+import '../media_selector.dart';
 
 class MyVideoEmbedBuilder implements EmbedBuilder {
   MyVideoEmbedBuilder();

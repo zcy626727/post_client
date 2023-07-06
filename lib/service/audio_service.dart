@@ -20,29 +20,28 @@ class AudioService {
   }
 
   static Future<Audio> getAudioById(
-    String AudioId,
+    String audioId,
   ) async {
-    var Audio = await AudioApi.getAudioById(AudioId);
-    return Audio;
+    var audio = await AudioApi.getAudioById(audioId);
+    return audio;
   }
 
   static Future<List<Audio>> getAudioListByUserId(
-    int userId,
+    User user,
     int pageIndex,
     int pageSize,
-    User user,
   ) async {
-    var AudioList = await AudioApi.getAudioListByUserId(userId, pageIndex, pageSize);
-    for (var Audio in AudioList) {
-      Audio.user = user;
+    var audioList = await AudioApi.getAudioListByUserId(user.id!, pageIndex, pageSize);
+    for (var audio in audioList) {
+      audio.user = user;
     }
-    return AudioList;
+    return audioList;
   }
 
   static Future<List<Audio>> getAudioListRandom(
     int pageSize,
   ) async {
-    var AudioList = await AudioApi.getAudioListRandom(pageSize);
-    return AudioList;
+    var audioList = await AudioApi.getAudioListRandom(pageSize);
+    return audioList;
   }
 }

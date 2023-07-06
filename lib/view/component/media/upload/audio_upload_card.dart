@@ -7,9 +7,9 @@ import 'package:post_client/service/file_service.dart';
 import 'package:post_client/service/multipart_service.dart';
 import 'package:post_client/util/file_util.dart';
 
-import '../../../config/global.dart';
-import '../../../domain/task/upload_media_task.dart';
-import '../../widget/player/audio/common_audio_player_mini.dart';
+import '../../../../config/global.dart';
+import '../../../../domain/task/upload_media_task.dart';
+import '../../../widget/player/audio/common_audio_player_mini.dart';
 
 class AudioUploadCard extends StatefulWidget {
   const AudioUploadCard({required super.key, required this.task});
@@ -109,9 +109,9 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
         } else if (msg == true) {
           //上传结束
           task.status = UploadTaskStatus.finished.index;
-          var (link,_) = await FileApi.genGetFileUrl(task.fileId!);
-          print(link);
+          var (link,staticUrl) = await FileApi.genGetFileUrl(task.fileId!);
           task.getUrl = link;
+          task.staticUrl = staticUrl;
           setState(() {});
         }
       },

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-import '../../../domain/task/upload_media_task.dart';
+import '../../../../domain/task/upload_media_task.dart';
 import 'image_upload_card.dart';
 
 class MediaInfoCard extends StatefulWidget {

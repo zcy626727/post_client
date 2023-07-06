@@ -4,7 +4,7 @@ import 'package:post_client/model/user.dart';
 import 'package:post_client/service/post_service.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
-import 'package:post_client/view/component/post/post_card.dart';
+import 'package:post_client/view/component/post/post_list_tile.dart';
 import 'package:post_client/view/component/post/post_list.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:provider/provider.dart';
@@ -102,13 +102,13 @@ class _FollowScreenState extends State<FollowScreen> {
                       style: ButtonStyle(
                         elevation: const MaterialStatePropertyAll(0),
                         backgroundColor: MaterialStatePropertyAll(
-                          colorScheme.background,
+                          colorScheme.surfaceVariant,
                         ),
                       ),
                       child: Text(
-                        "动态",
+                        "音频",
                         style: TextStyle(
-                          color: colorScheme.onBackground,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ),

@@ -27,12 +27,11 @@ class VideoService {
   }
 
   static Future<List<Video>> getVideoListByUserId(
-    int userId,
+    User user,
     int pageIndex,
     int pageSize,
-    User user,
   ) async {
-    var videoList = await VideoApi.getVideoListByUserId(userId, pageIndex, pageSize);
+    var videoList = await VideoApi.getVideoListByUserId(user.id!, pageIndex, pageSize);
     for (var video in videoList) {
       video.user = user;
     }

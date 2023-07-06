@@ -7,17 +7,36 @@ import 'package:flutter/material.dart';
 import '../../../util/responsive.dart';
 
 class CommonItemList<T> extends StatefulWidget {
-  const CommonItemList({Key? key, required this.onLoad, required this.itemBuilder, required this.itemName, this.itemHeight, this.enableRefresh = true, this.isGrip = true, this.enableScrollbar = false,  this.enableLoad = true})
-      : super(key: key);
+  const CommonItemList({
+    Key? key,
+    required this.onLoad,
+    required this.itemBuilder,
+    required this.itemName,
+    this.itemHeight,
+    this.enableRefresh = true,
+    this.isGrip = true,
+    this.enableScrollbar = false,
+    this.enableLoad = true,
+    this.gripCount = 2,
+    this.gripAspectRatio = 1.5,
+  }) : super(key: key);
 
   final Future<List<T>> Function(int) onLoad;
   final bool enableRefresh;
   final bool enableLoad;
-  final bool isGrip;
   final String itemName;
   final double? itemHeight;
-  final Widget Function(BuildContext context, T item) itemBuilder;
+  final Widget Function(BuildContext context, T item, List<T>? itemList, Function onFresh) itemBuilder;
   final bool enableScrollbar;
+
+  //是否为网格
+  final bool isGrip;
+
+  //网格横向数量
+  final int gripCount;
+
+  //长宽比例
+  final double gripAspectRatio;
 
   @override
   State<CommonItemList> createState() => _CommonItemListState<T>();
@@ -132,25 +151,29 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
       );
     }
     return EasyRefresh(
+      header: MaterialHeader(backgroundColor: colorScheme.primaryContainer, color: colorScheme.onPrimaryContainer),
+      footer: CupertinoFooter(backgroundColor: colorScheme.primaryContainer, foregroundColor: colorScheme.onPrimaryContainer),
       controller: _refreshController,
       onRefresh: _onRefresh,
       onLoad: _onLoading,
       child: GridView.builder(
         controller: ScrollController(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: Responsive.isSmall(context) ? 1 : 3,
+          crossAxisCount: widget.gripCount,
           //长宽比例
-          childAspectRatio: 2,
+          childAspectRatio: widget.gripAspectRatio,
           //主轴高度
           mainAxisExtent: widget.itemHeight,
           //主轴距离
-          mainAxisSpacing: 1.0,
+          mainAxisSpacing: 5.0,
           //辅轴距离
           crossAxisSpacing: 5.0,
         ),
         itemCount: _itemList!.length,
         itemBuilder: (context, index) {
-          return widget.itemBuilder(context, _itemList![index]);
+          return widget.itemBuilder(context, _itemList![index], _itemList, () {
+            setState(() {});
+          });
         },
       ),
     );
@@ -169,23 +192,27 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
       );
     }
     return EasyRefresh(
-      header: MaterialHeader(backgroundColor:colorScheme.primaryContainer,color: colorScheme.onPrimaryContainer),
-      footer: CupertinoFooter(backgroundColor: colorScheme.primaryContainer,foregroundColor: colorScheme.onPrimaryContainer),
+      header: MaterialHeader(backgroundColor: colorScheme.primaryContainer, color: colorScheme.onPrimaryContainer),
+      footer: CupertinoFooter(backgroundColor: colorScheme.primaryContainer, foregroundColor: colorScheme.onPrimaryContainer),
       controller: _refreshController,
-      onRefresh: widget.enableRefresh?_onRefresh:null,
-      onLoad: widget.enableLoad?_onLoading:null,
+      onRefresh: widget.enableRefresh ? _onRefresh : null,
+      onLoad: widget.enableLoad ? _onLoading : null,
       child: widget.enableScrollbar
           ? Scrollbar(
               child: ListView.builder(
               itemCount: _itemList!.length,
               itemBuilder: (context, index) {
-                return widget.itemBuilder(context, _itemList![index]);
+                return widget.itemBuilder(context, _itemList![index], _itemList, () {
+                  setState(() {});
+                });
               },
             ))
           : ListView.builder(
               itemCount: _itemList!.length,
               itemBuilder: (context, index) {
-                return widget.itemBuilder(context, _itemList![index]);
+                return widget.itemBuilder(context, _itemList![index], _itemList, () {
+                  setState(() {});
+                });
               },
             ),
     );

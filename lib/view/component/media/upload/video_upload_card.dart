@@ -4,12 +4,12 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../api/client/media/file_api.dart';
-import '../../../config/global.dart';
-import '../../../domain/task/upload_media_task.dart';
-import '../../../service/multipart_service.dart';
-import '../../widget/button/common_action_one_button.dart';
-import '../../widget/player/common_video_player.dart';
+import '../../../../api/client/media/file_api.dart';
+import '../../../../config/global.dart';
+import '../../../../domain/task/upload_media_task.dart';
+import '../../../../service/multipart_service.dart';
+import '../../../widget/button/common_action_one_button.dart';
+import '../../../widget/player/common_video_player.dart';
 
 class VideoUploadCard extends StatefulWidget {
   const VideoUploadCard({required super.key, required this.task});
@@ -104,9 +104,9 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
         } else if (msg == true) {
           //上传结束
           task.status = UploadTaskStatus.finished.index;
-          var (link, _) = await FileApi.genGetFileUrl(task.fileId!);
-          print(link);
+          var (link, staticUrl) = await FileApi.genGetFileUrl(task.fileId!);
           task.getUrl = link;
+          task.staticUrl = staticUrl;
           setState(() {});
         }
       },

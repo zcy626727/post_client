@@ -13,7 +13,6 @@ class Post {
   DateTime? createTime;
   //文字内容，只包含文字 @ #
   String? content;
-  int? contentType;
   //评论数
   int? commentNumber;
   //点赞数
@@ -33,7 +32,8 @@ class Post {
   Post.one() {
     // id = 1;
     content = "这是一条动态";
-    contentType = PostSourceType.teletext;
+    sourceType = PostSourceType.teletext;
+    likeNumber = 1;
     likeNumber = 1;
     commentNumber = 4;
     pictureUrlList = <String>[
@@ -52,12 +52,12 @@ class Post {
 
   bool isInnerMode() {
     //如果
-    return contentType == PostSourceType.article ||
-        contentType == PostSourceType.image ||
-        contentType == PostSourceType.audio ||
-        contentType == PostSourceType.video ||
-        contentType == PostSourceType.collection ||
-        contentType == PostSourceType.post;
+    return sourceType == PostSourceType.article ||
+        sourceType == PostSourceType.image ||
+        sourceType == PostSourceType.audio ||
+        sourceType == PostSourceType.video ||
+        sourceType == PostSourceType.collection ||
+        sourceType == PostSourceType.post;
   }
 
   Post();

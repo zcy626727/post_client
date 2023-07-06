@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:post_client/model/article.dart';
+import 'package:post_client/model/audio.dart';
+import 'package:post_client/model/gallery.dart';
 import 'package:post_client/model/post.dart';
 import 'package:post_client/model/video.dart';
+import 'package:post_client/service/article_service.dart';
+import 'package:post_client/service/audio_service.dart';
+import 'package:post_client/service/gallery_service.dart';
 import 'package:post_client/service/post_service.dart';
+import 'package:post_client/service/video_service.dart';
 import 'package:post_client/util/responsive.dart';
-import 'package:post_client/view/component/post/post_card.dart';
+import 'package:post_client/view/component/media/article_list_tile.dart';
+import 'package:post_client/view/component/media/audio_list_tile.dart';
+import 'package:post_client/view/component/media/gallery_list_tile.dart';
+import 'package:post_client/view/component/media/video_list_tile.dart';
+import 'package:post_client/view/component/post/post_list_tile.dart';
 import 'package:post_client/view/component/post/post_list.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:post_client/view/widget/player/common_video_player.dart';
@@ -66,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ];
         },
         body: DefaultTabController(
-          length: 2,
+          length: 5,
           child: Column(
             children: [
               Divider(
@@ -77,41 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const HomeScreenTabBar(),
               //tab bar view list
               Expanded(
-                child: TabBarView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    PostList(
-                      onLoad: (int page) async {
-                        var postList = await PostService.getPostListRandom(20);
-                        return postList;
-                      },
-                      enableRefresh: true,
-                      itemName: "动态",
-                      itemHeight: null,
-                      enableScrollbar: true,
-                    ),
-                    CommonItemList<Video>(
-                      onLoad: (int page) async {
-                        var videoList = <Video>[];
-                        videoList.add(Video());
-                        return videoList;
-                      },
-                      itemName: "视频",
-                      itemHeight: null,
-                      isGrip: false,
-                      enableScrollbar: true,
-                      itemBuilder: (ctx, post) {
-                        return Container(
-                          color: colorScheme.surface,
-                          child: CommonVideoPlayer(videoUrl: "http://192.168.239.148:9000/file/public/sample_1280x720_surfing_with_audio.mp4"),
-                          // child: CommonVideoPlayer(videoUrl: "http://vjs.zencdn.net/v/oceans.mp4"),
-                          // child: CommonAudioPlayerMini(audioUrl: "http://192.168.239.148:9000/file/public/3d234c392d1a5100214dcebf97c3991b"),
-                          // child: CommonAudioPlayerMini(audioUrl: "http://downsc.chinaz.net/Files/DownLoad/sound1/201906/11582.mp3"),
-                        );
-                      },
-                    )
-                  ],
-                ),
+                child: buildTabBarView(),
               ),
             ],
           ),
@@ -126,6 +103,88 @@ class _HomeScreenState extends State<HomeScreen> {
       // child: CommonAudioPlayerMini(audioUrl: "http://downsc.chinaz.net/Files/DownLoad/sound1/201906/11582.mp3"),
       // child: CommonAudioPlayerMini2(audioUrl: "http://archlinux:9000/file/public/3d234c392d1a5100214dcebf97c3991b"),
       // child: CommonAudioPlayerMini2(audioUrl: "http://192.168.239.148:9000/file/public/4444"),
+    );
+  }
+
+  Widget buildTabBarView() {
+    return Container(
+      margin: const EdgeInsets.only(left: 3, right: 3, top: 1),
+      child: TabBarView(
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          PostList(
+            onLoad: (int page) async {
+              var postList = await PostService.getPostListRandom(20);
+              return postList;
+            },
+            enableRefresh: true,
+            itemName: "动态",
+            itemHeight: null,
+            enableScrollbar: true,
+          ),
+          CommonItemList<Gallery>(
+            onLoad: (int page) async {
+              var galleryList = await GalleryService.getGalleryListRandom(20);
+              return galleryList;
+            },
+            itemName: "图片",
+            itemHeight: null,
+            isGrip: true,
+            gripAspectRatio: 1,
+            enableScrollbar: true,
+            itemBuilder: (ctx, gallery, galleryList, onFresh) {
+              return GalleryListTile(key: ValueKey(gallery.id), gallery: gallery);
+            },
+          ),
+          CommonItemList<Video>(
+            onLoad: (int page) async {
+              var videoList = await VideoService.getVideoListRandom(20);
+              return videoList;
+            },
+            itemName: "视频",
+            itemHeight: null,
+            isGrip: false,
+            enableScrollbar: true,
+            itemBuilder: (ctx, video, videoList, onFresh) {
+              return VideoListTile(
+                key: ValueKey(video.id),
+                video: video,
+                onDelete: (video) {
+                  if (videoList != null) {
+                    videoList.remove(video);
+                  }
+                },
+              );
+            },
+          ),
+          CommonItemList<Audio>(
+            onLoad: (int page) async {
+              var audioList = await AudioService.getAudioListRandom(20);
+              return audioList;
+            },
+            itemName: "音频",
+            itemHeight: null,
+            isGrip: false,
+            enableScrollbar: true,
+            itemBuilder: (ctx, audio, audioList, onFresh) {
+              return AudioListTile(key: ValueKey(audio.id), audio: audio);
+            },
+          ),
+          CommonItemList<Article>(
+            onLoad: (int page) async {
+              var articleList = await ArticleService.getArticleListRandom(20);
+              return articleList;
+            },
+            itemName: "文章",
+            itemHeight: null,
+            isGrip: false,
+            enableScrollbar: true,
+            itemBuilder: (ctx, article, articleList, onFresh) {
+              return ArticleListTile(key: ValueKey(article.id), article: article);
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -160,7 +219,7 @@ class _HomeScreenTabBarState extends State<HomeScreenTabBar> {
           //指示器大小设置为和label一致
           indicatorSize: TabBarIndicatorSize.label,
           //启动滚动(选项多时启用)
-          // isScrollable: true,
+          isScrollable: true,
           //未选中内容颜色
           unselectedLabelColor: Colors.grey,
           //选中内容颜色
@@ -175,9 +234,10 @@ class _HomeScreenTabBarState extends State<HomeScreenTabBar> {
           splashBorderRadius: BorderRadius.circular(50),
           tabs: [
             tabBuild(0, Icons.topic, "动态"),
-            tabBuild(1, Icons.video_file, "视频"),
-            // tabBuild(2,Icons.subject_outlined, "话题"),
-            // tabBuild(3,Icons.insert_drive_file, "文件"),
+            tabBuild(1, Icons.image, "图片"),
+            tabBuild(2, Icons.video_collection_sharp, "视频"),
+            tabBuild(3, Icons.audiotrack, "音频"),
+            tabBuild(4, Icons.article, "文章"),
           ]),
     );
   }
@@ -187,7 +247,7 @@ class _HomeScreenTabBarState extends State<HomeScreenTabBar> {
       iconMargin: EdgeInsets.zero,
       child: SizedBox(
         //高度会自动填充剩余部分，设置宽度以保证背景圆形
-        width: 90,
+        width: 85,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

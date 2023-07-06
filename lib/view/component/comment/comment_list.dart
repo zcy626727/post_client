@@ -192,6 +192,7 @@ class _CommentListState extends State<CommentList> {
                   onDeleteComment: (comment) {
                     _commentList.remove(comment);
                     _focusNode.unfocus();
+                    setState(() {});
                   },
                 ),
               ),

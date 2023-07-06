@@ -7,27 +7,28 @@ import 'package:intl/intl.dart';
 import 'package:post_client/config/global.dart';
 import 'package:post_client/model/post.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
-import 'package:post_client/view/page/post/post_comment_page.dart';
 
+import '../../../model/comment.dart';
 import '../../../service/post_service.dart';
+import '../../page/comment/comment_page.dart';
 import '../../widget/dialog/confirm_alert_dialog.dart';
 import '../show/show_snack_bar.dart';
 
-class PostCard extends StatefulWidget {
+class PostListTile extends StatefulWidget {
   final Post post;
   final Function(Post) onDeletePost;
 
-  const PostCard({
+  const PostListTile({
     Key? key,
     required this.post,
     required this.onDeletePost,
   }) : super(key: key);
 
   @override
-  State<PostCard> createState() => _PostCardState();
+  State<PostListTile> createState() => _PostListTileState();
 }
 
-class _PostCardState extends State<PostCard> {
+class _PostListTileState extends State<PostListTile> {
   int commentLen = 0;
   bool isLikeAnimating = false;
   final QuillController controller = QuillController.basic();
@@ -254,11 +255,7 @@ class _PostCardState extends State<PostCard> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => PostCommentPage(
-                      post: widget.post,
-                    ),
-                  ),
+                  MaterialPageRoute(builder: (context) => CommentPage(commentParentType: CommentParentType.post, commentParentId: widget.post.id!)),
                 );
               },
             ),

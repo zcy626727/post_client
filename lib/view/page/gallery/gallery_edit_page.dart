@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:post_client/config/constants.dart';
 import 'package:post_client/config/media_config.dart';
 import 'package:post_client/service/gallery_service.dart';
-import 'package:post_client/view/component/media/media_info_card.dart';
+import 'package:post_client/view/component/media/upload/media_info_card.dart';
 
 import '../../../config/post_config.dart';
 import '../../../domain/task/upload_media_task.dart';
-import '../../component/media/image_upload_card.dart';
-import '../../component/media/image_upload_list.dart';
+import '../../component/media/upload/image_upload_card.dart';
+import '../../component/media/upload/image_upload_list.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
 

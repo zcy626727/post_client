@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:post_client/model/comment.dart';
 import 'package:post_client/service/comment_service.dart';
 import 'package:post_client/view/component/comment/comment_list.dart';
@@ -83,11 +82,11 @@ class _ReplyPageState extends State<ReplyPage> {
                     padding: const EdgeInsets.only(top: 2),
                     child: CommentList(
                       onLoad: (pageIndex) async {
-                        var commentList = await CommentService.getCommentListByParent(widget.comment.id!, CommentParentType.comment.index, pageIndex, 20);
+                        var commentList = await CommentService.getCommentListByParent(widget.comment.id!, CommentParentType.comment, pageIndex, 20);
                         return commentList;
                       },
                       parentId: widget.comment.id!,
-                      parentType: CommentParentType.comment.index,
+                      parentType: CommentParentType.comment,
                     ),
                   ),
                 ),

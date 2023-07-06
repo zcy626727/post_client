@@ -5,10 +5,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:post_client/service/article_service.dart';
-import 'package:post_client/view/component/media/media_info_card.dart';
+import 'package:post_client/view/component/media/upload/media_info_card.dart';
 
 import '../../../domain/task/upload_media_task.dart';
-import '../../component/media/image_upload_card.dart';
+import '../../component/media/upload/image_upload_card.dart';
 import '../../component/quill/quill_editor.dart';
 import '../../component/quill/quill_tool_bar.dart';
 import '../../component/show/show_snack_bar.dart';
@@ -70,7 +70,6 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                         ShowSnackBar.error(context: context, message: "内容为空");
                         return;
                       }
-
                       String? coverUrl;
                       if (coverUploadImage.status != UploadTaskStatus.finished.index) {
                         ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");

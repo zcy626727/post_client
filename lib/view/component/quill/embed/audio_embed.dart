@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:post_client/util/responsive.dart';
-import 'package:post_client/view/component/media/media_selector.dart';
+import 'package:post_client/view/component/quill/media_selector.dart';
 import 'package:post_client/view/widget/player/audio/common_audio_player_mini.dart';
 
 

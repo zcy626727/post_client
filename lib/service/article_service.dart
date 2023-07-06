@@ -27,12 +27,11 @@ class ArticleService {
   }
 
   static Future<List<Article>> getArticleListByUserId(
-    int userId,
+    User user,
     int pageIndex,
     int pageSize,
-    User user,
   ) async {
-    var articleList = await ArticleApi.getArticleListByUserId(userId, pageIndex, pageSize);
+    var articleList = await ArticleApi.getArticleListByUserId(user.id!, pageIndex, pageSize);
     for (var article in articleList) {
       article.user = user;
     }

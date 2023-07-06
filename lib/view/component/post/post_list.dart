@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/model/post.dart';
-import 'package:post_client/view/component/post/post_card.dart';
+import 'package:post_client/view/component/post/post_list_tile.dart';
 
 import '../../../service/post_service.dart';
 import '../../../util/responsive.dart';
@@ -133,7 +133,7 @@ class _PostListState extends State<PostList> {
       itemCount: _postList.length,
       itemBuilder: (context, index) {
         var post = _postList[index];
-        return PostCard(
+        return PostListTile(
           key: ValueKey(post.id),
           post: post,
           onDeletePost: (deletedPost) {

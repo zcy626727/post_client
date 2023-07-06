@@ -10,7 +10,7 @@ import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:post_client/config/post_config.dart';
 import 'package:post_client/domain/task/upload_media_task.dart';
 import 'package:post_client/service/post_service.dart';
-import 'package:post_client/view/component/media/image_upload_card.dart';
+import 'package:post_client/view/component/media/upload/image_upload_card.dart';
 import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
@@ -64,50 +64,51 @@ class _PostEditPageState extends State<PostEditPage> {
                 title: "发布",
                 height: 30,
                 onTap: () async {
-                  var content = jsonEncode(_controller.document.toDelta().toJson());
-                  var pictureUrlList = <String>[];
-                  bool enablePush = false;
-                  var delta = _controller.document.toDelta().toList();
-                  for (var d in delta) {
-                    var data = d.data;
-                    if (data is Map<String, dynamic>) {
-                      //只要有map类型的就应该不是空的
-                      enablePush = true;
-                      //获取@的人
-                      var data2 = data['at'];
-                      if (data2 != null) {
-                        print("找到一个：$data2");
-                      }
-                    } else if (data is String) {
-                      //检查是否可以发布
-                      if (!enablePush) {
-                        var newString = data.replaceAll(RegExp(r'[ \r\n\t]+'), "");
-                        if (newString.isNotEmpty) {
-                          enablePush = true;
+                  try {
+                    var content = jsonEncode(_controller.document.toDelta().toJson());
+                    var pictureUrlList = <String>[];
+                    bool enablePush = false;
+                    var delta = _controller.document.toDelta().toList();
+                    for (var d in delta) {
+                      var data = d.data;
+                      if (data is Map<String, dynamic>) {
+                        //只要有map类型的就应该不是空的
+                        enablePush = true;
+                        //获取@的人
+                        var data2 = data['at'];
+                        if (data2 != null) {
+                          print("找到一个：$data2");
+                        }
+                      } else if (data is String) {
+                        //检查是否可以发布
+                        if (!enablePush) {
+                          var newString = data.replaceAll(RegExp(r'[ \r\n\t]+'), "");
+                          if (newString.isNotEmpty) {
+                            enablePush = true;
+                          }
                         }
                       }
                     }
-                  }
-                  for (var task in imageUploadTaskList) {
-                    if (!enablePush) {
-                      enablePush = true;
+                    for (var task in imageUploadTaskList) {
+                      if (!enablePush) {
+                        enablePush = true;
+                      }
+                      if (task.status != UploadTaskStatus.finished.index) {
+                        ShowSnackBar.error(context: context, message: "图片没有上传完毕");
+                        return;
+                      }
+                      pictureUrlList.add(task.staticUrl!);
                     }
-                    pictureUrlList.add(task.getUrl!);
-                    if (task.status != UploadTaskStatus.finished.index) {
-                      ShowSnackBar.error(context: context, message: "图片没有上传完毕");
+                    if (!enablePush) {
+                      ShowSnackBar.error(context: context, message: "没有内容啊");
                       return;
                     }
-                  }
-                  if (!enablePush) {
-                    ShowSnackBar.error(context: context, message: "没有内容啊");
-                    return;
-                  }
-                  try {
                     var post = await PostService.createPost(null, null, content, pictureUrlList);
+                    Navigator.pop(context);
+
                   } on Exception catch (e) {
                     ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
                   } finally {
-                    Navigator.pop(context);
                   }
                 },
                 backgroundColor: colorScheme.primary,

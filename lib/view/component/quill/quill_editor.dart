@@ -55,14 +55,13 @@ class PostQuillEditor extends StatelessWidget {
 }
 
 class ArticleQuillEditor extends StatelessWidget {
-  const ArticleQuillEditor({Key? key, required this.controller, this.placeholder, this.maxHeight, this.minHeight, required this.focusNode}) : super(key: key);
+  const ArticleQuillEditor({Key? key, required this.controller, this.placeholder, this.maxHeight, this.minHeight, required this.focusNode, this.readOnly = false}) : super(key: key);
 
   final QuillController controller;
   final double? maxHeight;
   final double? minHeight;
-
   final String? placeholder;
-
+  final bool readOnly;
   final FocusNode focusNode;
 
   @override
@@ -84,7 +83,7 @@ class ArticleQuillEditor extends StatelessWidget {
         padding: EdgeInsets.zero,
         showCursor: true,
         autoFocus: false,
-        readOnly: false,
+        readOnly: readOnly,
         expands: false,
         placeholder: placeholder,
         embedBuilders: ArticleQuillEmbeds.builders(),
