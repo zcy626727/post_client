@@ -50,17 +50,18 @@ class FileService {
     sendPort.send([1, task.toJson()]);
 
     //获取文件上传链接
-    var putUrl = await FileApi.genPutFileUrl(md5, task.private,task.magicNumber!);
+    var (putUrl,fileId) = await FileApi.genPutFileUrl(md5, task.private,task.magicNumber!);
+    task.fileId = fileId;
     if(putUrl.isNotEmpty){
       var data = await file.readAsBytes();
       //上传文件
       await FileUtil.uploadFile(putUrl, data);
     }
 
-    var (getUrl,staticUrl) = await FileApi.genGetFileUrl(task.md5!, true);
-    task.link = staticUrl;
+    var (getUrl,staticUrl) = await FileApi.genGetFileUrl(task.fileId!);
+    task.getUrl = getUrl;
+    task.staticUrl = staticUrl;
     sendPort.send([1, task.toJson()]);
     sendPort.send(true);
-
   }
 }

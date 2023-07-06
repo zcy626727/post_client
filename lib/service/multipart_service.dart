@@ -113,6 +113,7 @@ class MultipartService {
     var multipartInfo = await MultipartApi.initMultipartUpload(task.md5!, private, fileStat.size, task.magicNumber!);
 
     task.uploadedSize = multipartInfo.uploadedPartNum ?? 0 * multipartInfo.partSize!;
+    task.fileId = multipartInfo.fileId;
     sendPort.send([1, task.toJson()]);
   }
 
@@ -127,7 +128,7 @@ class MultipartService {
       final file = File(task.srcPath!);
       access = await file.open();
       //获取上传url和上传任务状态
-      var (multipartInfo, urlList) = await MultipartApi.getUploadUrl(task.md5!, Global.urlCount, 0);
+      var (multipartInfo, urlList) = await MultipartApi.getUploadUrl(task.fileId!, Global.urlCount, 0);
       //已上传的大小
       int uploadedPartNum = multipartInfo.uploadedPartNum ?? 0;
       //缓冲区
@@ -149,11 +150,11 @@ class MultipartService {
           //用于通知已上传分片数
           uploadedPartNum++;
           //每次上传一个分片后发送task状态
-          task.uploadedSize = task.uploadedSize! + len;
+          task.uploadedSize = task.uploadedSize + len;
           sendPort.send([1, task.toJson()]);
         }
         //获取url和上传任务状态
-        (multipartInfo, urlList) = await MultipartApi.getUploadUrl(task.md5!, Global.urlCount, uploadedPartNum);
+        (multipartInfo, urlList) = await MultipartApi.getUploadUrl(task.fileId!, Global.urlCount, uploadedPartNum);
         //更新已上传分片数
         uploadedPartNum = multipartInfo.uploadedPartNum ?? 0;
       }
@@ -170,7 +171,7 @@ class MultipartService {
     task.statusMessage = "整合中";
     sendPort.send([1, task.toJson()]);
 
-    await MultipartApi.completeMultipartUpload(task.md5!);
+    await MultipartApi.completeMultipartUpload(task.fileId!);
 
     task.statusMessage = "上传完毕";
     task.status = UploadTaskStatus.finished.index;

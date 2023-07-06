@@ -11,6 +11,7 @@ class Album{
   int? userId;
   String? title;
   String? introduction;
+  String? coverUrl;
   DateTime? createTime;
   int? mediaType;
   List<String>? mediaIdList;

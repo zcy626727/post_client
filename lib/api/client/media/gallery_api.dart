@@ -8,16 +8,18 @@ class GalleryApi {
   static Future<Gallery> createGallery(
     String title,
     String introduction,
-    List<String> md5List,
+    List<int> fileIdList,
     List<String> thumbnailUrlList,
+    String coverUrl,
   ) async {
     var r = await MediaHttpConfig.dio.post(
       "/gallery/createGallery",
       data: {
         "title": title,
         "introduction": introduction,
-        "md5List": md5List,
+        "fileIdList": fileIdList,
         "thumbnailUrlList": thumbnailUrlList,
+        "coverUrl": coverUrl,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

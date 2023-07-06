@@ -6,10 +6,10 @@ class AudioService {
   static Future<Audio> createAudio(
     String title,
     String introduction,
-    String md5,
-    String coverUrl,
+    int fileId,
+    String? coverUrl,
   ) async {
-    var audio = await AudioApi.createAudio(title, introduction, md5, coverUrl);
+    var audio = await AudioApi.createAudio(title, introduction, fileId, coverUrl);
     return audio;
   }
 

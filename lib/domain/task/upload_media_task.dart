@@ -14,38 +14,37 @@ part 'upload_media_task.g.dart';
 @JsonSerializable()
 class UploadMediaTask {
   int? id;
-  String? fileName; //文件名
   String? srcPath; //文件原路径
   int? totalSize; //文件/文件夹下的文件的大小
-  int uploadedSize=0; //进度
+  int uploadedSize = 0; //进度
   String? md5; //文件的MD5
+  int? fileId;
   String? statusMessage; //文件的MD5
   int? status; //上传状态
   DateTime? createTime;
   int? mediaType;
   bool private = false;
-  String? link;
+  String? getUrl;
+  String? staticUrl;
   List<int>? magicNumber;
 
   UploadMediaTask();
 
   UploadMediaTask.all({
-    required this.fileName,
     required this.srcPath,
-    this.uploadedSize=0,
+    this.uploadedSize = 0,
     required this.totalSize,
     this.statusMessage,
     required this.status,
     required this.mediaType,
     this.createTime,
     this.md5,
-    this.private=false,
+    this.private = false,
     required this.magicNumber,
   });
 
   void copy(UploadMediaTask task) {
     id = task.id;
-    fileName = task.fileName;
     srcPath = task.srcPath;
     uploadedSize = task.uploadedSize;
     totalSize = task.totalSize;
@@ -54,18 +53,35 @@ class UploadMediaTask {
     createTime = task.createTime;
     statusMessage = task.statusMessage;
     md5 = task.md5;
-    link = task.link;
+    getUrl = task.getUrl;
     magicNumber = task.magicNumber;
+    staticUrl = task.staticUrl;
+    fileId = task.fileId;
   }
 
-  factory UploadMediaTask.fromJson(Map<String, dynamic> json) =>
-      _$UploadMediaTaskFromJson(json);
+  void clear() {
+    id = null;
+    srcPath = null;
+    uploadedSize = 0;
+    totalSize = null;
+    status = null;
+    mediaType = null;
+    createTime = null;
+    statusMessage = null;
+    md5 = null;
+    getUrl = null;
+    magicNumber = null;
+    staticUrl = null;
+    fileId = null;
+  }
+
+  factory UploadMediaTask.fromJson(Map<String, dynamic> json) => _$UploadMediaTaskFromJson(json);
 
   Map<String, dynamic> toJson() => _$UploadMediaTaskToJson(this);
 }
 
 enum UploadTaskStatus {
-  init,//初始化阶段
+  init, //初始化阶段
   uploading, //上传中
   awaiting, //等待阶段
   pause, //暂停阶段

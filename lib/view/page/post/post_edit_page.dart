@@ -92,7 +92,7 @@ class _PostEditPageState extends State<PostEditPage> {
                     if (!enablePush) {
                       enablePush = true;
                     }
-                    pictureUrlList.add(task.link!);
+                    pictureUrlList.add(task.getUrl!);
                     if (task.status != UploadTaskStatus.finished.index) {
                       ShowSnackBar.error(context: context, message: "图片没有上传完毕");
                       return;
@@ -176,7 +176,6 @@ class _PostEditPageState extends State<PostEditPage> {
                       var data = await read.read(16);
                       //消息接收器
                       var task = UploadMediaTask.all(
-                        fileName: file.name,
                         srcPath: file.path,
                         totalSize: file.size,
                         status: UploadTaskStatus.uploading.index,

@@ -10,6 +10,7 @@ class Article extends Media{
   String? id;
   int? userId;
   String? content;
+  String? coverUrl;
   String? title;
   String? introduction;
   DateTime? createTime;

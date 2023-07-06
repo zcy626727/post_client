@@ -39,7 +39,7 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
       padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
       height: 70,
       color: colorScheme.surface,
-      child: widget.task.link == null
+      child: widget.task.getUrl == null
           ? Container(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
               height: 60,
@@ -77,7 +77,7 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
                 ],
               ),
             )
-          :  CommonAudioPlayerMini(audioUrl: widget.task.link!),
+          :  CommonAudioPlayerMini(audioUrl: widget.task.getUrl!),
     );
   }
 
@@ -109,9 +109,9 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
         } else if (msg == true) {
           //上传结束
           task.status = UploadTaskStatus.finished.index;
-          var (link,_) = await FileApi.genGetFileUrl(task.md5!, false);
+          var (link,_) = await FileApi.genGetFileUrl(task.fileId!);
           print(link);
-          task.link = link;
+          task.getUrl = link;
           setState(() {});
         }
       },

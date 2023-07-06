@@ -6,17 +6,17 @@ import '../media_http_config.dart';
 
 class VideoApi {
   static Future<Video> createVideo(
-      String title,
-      String introduction,
-      String md5,
-      String coverUrl,
+    String title,
+    String introduction,
+    int fileId,
+    String? coverUrl,
   ) async {
     var r = await MediaHttpConfig.dio.post(
       "/video/createVideo",
       data: {
         "title": title,
         "introduction": introduction,
-        "md5": md5,
+        "fileId": fileId,
         "coverUrl": coverUrl,
       },
       options: MediaHttpConfig.options.copyWith(extra: {

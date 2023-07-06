@@ -11,8 +11,9 @@ class Gallery extends Media{
   String? title;
   String? introduction;
   DateTime? createTime;
-  List<String>? md5List;
+  List<int>? fileIdList;
   List<String>? thumbnailUrlList;
+  String? coverUrl;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   User? user;

@@ -6,10 +6,10 @@ class VideoService {
   static Future<Video> createVideo(
     String title,
     String introduction,
-    String md5,
-    String coverUrl,
+    int fileId,
+    String? coverUrl,
   ) async {
-    var video = await VideoApi.createVideo(title, introduction, md5, coverUrl);
+    var video = await VideoApi.createVideo(title, introduction, fileId, coverUrl);
     return video;
   }
 

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
 import 'package:post_client/domain/task/upload_media_task.dart';
 import 'package:post_client/service/file_service.dart';
+import 'package:image/image.dart' as img;
+
 
 class ImageUploadCard extends StatefulWidget {
   const ImageUploadCard({required super.key, required this.task});
@@ -49,6 +51,9 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
         ),
       ),
     );
+  }
+
+  void uploadThumb(UploadMediaTask task) async {
   }
 
   void uploadImage(UploadMediaTask task) async {

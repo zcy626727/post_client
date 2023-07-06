@@ -6,17 +6,17 @@ import '../media_http_config.dart';
 
 class AudioApi {
   static Future<Audio> createAudio(
-      String title,
-      String introduction,
-      String md5,
-      String coverUrl,
+    String title,
+    String introduction,
+    int fileId,
+    String? coverUrl,
   ) async {
     var r = await MediaHttpConfig.dio.post(
       "/audio/createAudio",
       data: {
         "title": title,
         "introduction": introduction,
-        "md5": md5,
+        "fileId": fileId,
         "coverUrl": coverUrl,
       },
       options: MediaHttpConfig.options.copyWith(extra: {

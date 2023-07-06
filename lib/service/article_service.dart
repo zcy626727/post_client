@@ -4,11 +4,12 @@ import '../model/user.dart';
 
 class ArticleService {
   static Future<Article> createArticle(
-      String title,
-      String introduction,
-      String content,
+    String title,
+    String introduction,
+    String content,
+    String? coverUrl,
   ) async {
-    var article = await ArticleApi.createArticle(title, introduction, content);
+    var article = await ArticleApi.createArticle(title, introduction, content, coverUrl);
     return article;
   }
 

@@ -5,8 +5,8 @@ part 'multipart_info.g.dart';
 @JsonSerializable()
 class MultipartInfo {
   String? md5;
-  @JsonKey(name: 'file_name')
-  String? fileName;
+  @JsonKey(name: 'file_id')
+  int? fileId;
   bool? finished;
   @JsonKey(name: 'total_part_num')
   int? totalPartNum;
@@ -19,7 +19,7 @@ class MultipartInfo {
 
   MultipartInfo(
     this.md5,
-    this.fileName,
+    this.fileId,
     this.finished,
     this.totalPartNum,
     this.uploadedPartNum,
@@ -27,8 +27,7 @@ class MultipartInfo {
     this.partSize,
   );
 
-  factory MultipartInfo.fromJson(Map<String, dynamic> json) =>
-      _$MultipartInfoFromJson(json);
+  factory MultipartInfo.fromJson(Map<String, dynamic> json) => _$MultipartInfoFromJson(json);
 
   Map<String, dynamic> toJson() => _$MultipartInfoToJson(this);
 }

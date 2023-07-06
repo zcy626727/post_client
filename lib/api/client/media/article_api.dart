@@ -9,6 +9,7 @@ class ArticleApi {
     String title,
     String introduction,
     String content,
+    String? coverUrl,
   ) async {
     var r = await MediaHttpConfig.dio.post(
       "/article/createArticle",
@@ -16,6 +17,7 @@ class ArticleApi {
         "title": title,
         "introduction": introduction,
         "content": content,
+        "coverUrl": coverUrl,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

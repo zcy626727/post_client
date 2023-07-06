@@ -9,6 +9,7 @@ import 'image_upload_card.dart';
 
 class ImageUploadList extends StatefulWidget {
   const ImageUploadList({super.key, required this.imageUploadTaskList, required this.maxUploadNum});
+
   final List<UploadMediaTask> imageUploadTaskList;
   final int maxUploadNum;
 
@@ -19,6 +20,7 @@ class ImageUploadList extends StatefulWidget {
 class _ImageUploadListState extends State<ImageUploadList> {
   final double imagePadding = 5.0;
   final double imageWidth = 100;
+
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
@@ -53,9 +55,9 @@ class _ImageUploadListState extends State<ImageUploadList> {
                       read = await File(result.files.single.path!).open();
                       var data = await read.read(16);
                       //消息接收器
-                      var task = UploadMediaTask.all(fileName: file.name, srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.uploading.index, mediaType: MediaType.image, magicNumber: data);
+                      var task =
+                          UploadMediaTask.all(srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.uploading.index, mediaType: MediaType.image, magicNumber: data);
                       widget.imageUploadTaskList.add(task);
-
                     } finally {
                       read?.close();
                     }
@@ -80,7 +82,7 @@ class _ImageUploadListState extends State<ImageUploadList> {
                 ),
               );
             } else {
-              return ImageUploadCard(key: ValueKey(widget.imageUploadTaskList[index].srcPath), task: widget.imageUploadTaskList[index]);
+              return ImageUploadCard(key: ValueKey(widget.imageUploadTaskList[index].srcPath), task: widget.imageUploadTaskList[index],);
             }
           },
         ),

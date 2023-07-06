@@ -1,6 +1,3 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:post_client/domain/multipart_info.dart';
 
 import '../media_http_config.dart';
@@ -33,11 +30,11 @@ class MultipartApi {
   }
 
   //获取上传url
-  static Future<(MultipartInfo, List<String>)> getUploadUrl(String md5, int urlCount, int uploadedPartCount) async {
+  static Future<(MultipartInfo, List<String>)> getUploadUrl(int fileId, int urlCount, int uploadedPartCount) async {
     var r = await MediaHttpConfig.dio.post(
       "/multipart/getUploadUrl",
       data: {
-        "md5": md5,
+        "fileId": fileId,
         "urlCount": urlCount,
         "uploadedPartNum": uploadedPartCount,
       },
@@ -60,11 +57,11 @@ class MultipartApi {
   }
 
   //完成上传
-  static Future<void> completeMultipartUpload(String md5) async {
+  static Future<void> completeMultipartUpload(int fileId) async {
     var r = await MediaHttpConfig.dio.post(
       "/multipart/completeMultipartUpload",
       data: {
-        "md5": md5,
+        "fileId": fileId,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

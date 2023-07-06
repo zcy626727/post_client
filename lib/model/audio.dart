@@ -8,7 +8,8 @@ part 'audio.g.dart';
 class Audio extends Media{
   String? id;
   int? userId;
-  String? md5;
+  int? fileId;
+  String? coverUrl;
   String? title;
   String? introduction;
   DateTime? createTime;

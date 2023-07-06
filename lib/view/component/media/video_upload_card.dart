@@ -39,7 +39,7 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
       padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
       height: 200,
       color: colorScheme.surface,
-      child: widget.task.link == null
+      child: widget.task.getUrl == null
           ? Center(
               child: SizedBox(
                 height: 130,
@@ -72,7 +72,7 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
                 ),
               ),
             )
-          : CommonVideoPlayer(videoUrl: widget.task.link!),
+          : CommonVideoPlayer(videoUrl: widget.task.getUrl!),
     );
   }
 
@@ -104,9 +104,9 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
         } else if (msg == true) {
           //上传结束
           task.status = UploadTaskStatus.finished.index;
-          var (link, _) = await FileApi.genGetFileUrl(task.md5!, false);
+          var (link, _) = await FileApi.genGetFileUrl(task.fileId!);
           print(link);
-          task.link = link;
+          task.getUrl = link;
           setState(() {});
         }
       },

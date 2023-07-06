@@ -7,10 +7,11 @@ class GalleryService {
   static Future<Gallery> createGallery(
     String title,
     String introduction,
-    List<String> md5List,
+    List<int> fileIdList,
     List<String> thumbnailUrlList,
+    String coverUrl,
   ) async {
-    var gallery = await GalleryApi.createGallery(title, introduction, md5List, thumbnailUrlList);
+    var gallery = await GalleryApi.createGallery(title, introduction, fileIdList, thumbnailUrlList, coverUrl);
     return gallery;
   }
 
