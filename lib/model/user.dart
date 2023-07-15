@@ -13,9 +13,8 @@ class User {
     this.avatarUrl,
     this.name,
     this.themeMode = 0,
-    this.blacklistNumber,
     this.followerNumber,
-    this.followNumber,
+    this.followeeNumber,
   });
 
   String? phoneNumber;
@@ -30,10 +29,7 @@ class User {
   int? followerNumber;
 
   //关注
-  int? followNumber;
-
-  //拉黑
-  int? blacklistNumber;
+  int? followeeNumber;
 
   //0：跟随系统，1：亮，2：暗
   int? themeMode = 0;
@@ -54,8 +50,7 @@ class User {
       avatarUrl text,
       themeMode integer not null,
       followerNumber integer,
-      followNumber integer,
-      blacklistNumber integer
+      followeeNumber integer
     )
   ''';
 
@@ -105,8 +100,7 @@ class UserProvider {
         "lastLoginTime",
         "themeMode",
         "followerNumber",
-        "followNumber",
-        "blacklistNumber",
+        "followeeNumber",
       ],
       where: 'phoneNumber = ?',
       whereArgs: [phoneNumber],
@@ -129,8 +123,7 @@ class UserProvider {
         "lastLoginTime",
         "themeMode",
         "followerNumber",
-        "followNumber",
-        "blacklistNumber",
+        "followeeNumber",
       ],
       orderBy: "lastLoginTime desc",
       limit: 1,

@@ -54,6 +54,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
       builder: (BuildContext context, AsyncSnapshot snapShot) {
         if (snapShot.connectionState == ConnectionState.done) {
           return Scaffold(
+            backgroundColor: colorScheme.background,
             appBar: AppBar(
               toolbarHeight: 50,
               centerTitle: true,
@@ -72,12 +73,12 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
               actions: [],
             ),
             body: Container(
-              margin: const EdgeInsets.only(left: 3, right: 3, top: 1),
+              color: colorScheme.surface,
+              margin: const EdgeInsets.only(top: 1),
+              padding: const EdgeInsets.only(left: 3, right: 3),
               child: ListView(
                 children: [
-                  Container(
-                    child: CommonVideoPlayer(videoUrl: videoUrl!),
-                  ),
+                  CommonVideoPlayer(videoUrl: videoUrl!),
                   ListTile(
                     contentPadding: const EdgeInsets.only(left: 3, right: 3),
                     visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
@@ -102,7 +103,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                     margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                     child: Text(
                       widget.video.introduction!,
-                      style: const TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15, color: colorScheme.onSurface),
                     ),
                   ),
                   Container(

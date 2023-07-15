@@ -15,6 +15,7 @@ import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
 
+import '../../../model/user.dart';
 import '../../component/quill/quill_editor.dart';
 
 class PostEditPage extends StatefulWidget {
@@ -69,16 +70,16 @@ class _PostEditPageState extends State<PostEditPage> {
                     var pictureUrlList = <String>[];
                     bool enablePush = false;
                     var delta = _controller.document.toDelta().toList();
+                    List<int> targetUserIdList = <int>[];
+
                     for (var d in delta) {
                       var data = d.data;
                       if (data is Map<String, dynamic>) {
                         //只要有map类型的就应该不是空的
                         enablePush = true;
                         //获取@的人
-                        var data2 = data['at'];
-                        if (data2 != null) {
-                          print("找到一个：$data2");
-                        }
+                        var user = User.fromJson(json.decode(data['at']));
+                        targetUserIdList.add(user.id!);
                       } else if (data is String) {
                         //检查是否可以发布
                         if (!enablePush) {
@@ -103,13 +104,11 @@ class _PostEditPageState extends State<PostEditPage> {
                       ShowSnackBar.error(context: context, message: "没有内容啊");
                       return;
                     }
-                    var post = await PostService.createPost(null, null, content, pictureUrlList);
-                    Navigator.pop(context);
-
+                    var post = await PostService.createPost(null, null, content, pictureUrlList, targetUserIdList);
+                    if (mounted) Navigator.pop(context);
                   } on Exception catch (e) {
                     ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
-                  } finally {
-                  }
+                  } finally {}
                 },
                 backgroundColor: colorScheme.primary,
                 textColor: colorScheme.onPrimary,

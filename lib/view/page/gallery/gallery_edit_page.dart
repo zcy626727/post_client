@@ -29,12 +29,14 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
   final introductionController = TextEditingController(text: "");
   final double imagePadding = 5.0;
   final double imageWidth = 100;
+  bool _withPost = true;
 
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
+      backgroundColor: colorScheme.background,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         toolbarHeight: 50,
@@ -85,11 +87,11 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                         fileIdList,
                         thumbnailUrlList,
                         coverUrl,
+                        _withPost,
                       );
+                      if (mounted) Navigator.pop(context);
                     } on Exception catch (e) {
                       ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
-                    } finally {
-                      Navigator.pop(context);
                     }
                     //加载
                     setState(() {});
@@ -116,10 +118,28 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                 coverUploadImage: coverUploadImage,
                 titleController: titleController,
                 introductionController: introductionController,
-                onRefresh: (){
+                onRefresh: () {
                   setState(() {});
                 },
-              )
+              ),
+              Container(
+                color: colorScheme.surface,
+                child: ListTile(
+                  leading: Text(
+                    '同时发布动态',
+                    style: TextStyle(color: colorScheme.onSurface),
+                  ),
+                  trailing: Checkbox(
+                    fillColor: MaterialStateProperty.all(_withPost ? colorScheme.primary : colorScheme.onSurface),
+                    value: _withPost,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _withPost = value!;
+                      });
+                    },
+                  ),
+                ),
+              ),
             ],
           ),
         ),

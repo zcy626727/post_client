@@ -6,10 +6,10 @@ import '../message_http_config.dart';
 
 class CommentApi {
   static Future<Comment> createComment(
-      String parentId,
-      int parentType,
-      String content,
-      ) async {
+    String parentId,
+    int parentType,
+    String content,
+  ) async {
     var r = await MessageHttpConfig.dio.post(
       "/comment/createComment",
       data: {
@@ -27,9 +27,9 @@ class CommentApi {
     return Comment.fromJson(r.data['comment']);
   }
 
-  static Future<void> deleteComment(
-      String commentId,
-      ) async {
+  static Future<void> deleteCommentById(
+    String commentId,
+  ) async {
     await MessageHttpConfig.dio.post(
       "/comment/deleteCommentById",
       data: {
@@ -43,11 +43,11 @@ class CommentApi {
   }
 
   static Future<List<Comment>> getCommentListByParent(
-      String parentId,
-      int parentType,
-      int pageIndex,
-      int pageSize,
-      ) async {
+    String parentId,
+    int parentType,
+    int pageIndex,
+    int pageSize,
+  ) async {
     var r = await MessageHttpConfig.dio.get(
       "/comment/getCommentListByParent",
       queryParameters: {
@@ -59,6 +59,43 @@ class CommentApi {
       options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": false,
         "withToken": false,
+      }),
+    );
+    var commentList = _parseCommentWithUser(r);
+    return commentList;
+  }
+
+  static Future<Comment> getCommentById(
+    String commentId,
+  ) async {
+    var r = await MessageHttpConfig.dio.get(
+      "/comment/getCommentById",
+      data: {
+        "commentId": commentId,
+      },
+      options: MessageHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
+    return Comment.fromJson(r.data['comment']);
+  }
+
+  //获取回复我的评论列表
+  static Future<List<Comment>> getReplyCommentList(
+    String commentId,
+    int pageIndex,
+    int pageSize,
+  ) async {
+    var r = await MessageHttpConfig.dio.get(
+      "/comment/getReplyCommentList",
+      data: {
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
+      },
+      options: MessageHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
       }),
     );
     var commentList = _parseCommentWithUser(r);

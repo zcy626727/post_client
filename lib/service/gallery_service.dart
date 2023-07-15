@@ -10,8 +10,9 @@ class GalleryService {
     List<int> fileIdList,
     List<String> thumbnailUrlList,
     String coverUrl,
+    bool withPost,
   ) async {
-    var gallery = await GalleryApi.createGallery(title, introduction, fileIdList, thumbnailUrlList, coverUrl);
+    var gallery = await GalleryApi.createGallery(title, introduction, fileIdList, thumbnailUrlList, coverUrl, withPost);
     return gallery;
   }
 

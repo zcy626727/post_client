@@ -8,8 +8,9 @@ class AudioService {
     String introduction,
     int fileId,
     String? coverUrl,
+    bool withPost,
   ) async {
-    var audio = await AudioApi.createAudio(title, introduction, fileId, coverUrl);
+    var audio = await AudioApi.createAudio(title, introduction, fileId, coverUrl, withPost);
     return audio;
   }
 

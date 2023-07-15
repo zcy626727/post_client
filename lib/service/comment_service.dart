@@ -17,7 +17,7 @@ class CommentService {
   static Future<void> deleteComment(
     String commentId,
   ) async {
-    await CommentApi.deleteComment(commentId);
+    await CommentApi.deleteCommentById(commentId);
   }
 
   static Future<List<Comment>> getCommentListByParent(
@@ -27,6 +27,22 @@ class CommentService {
     int pageSize,
   ) async {
     var commentList = await CommentApi.getCommentListByParent(parentId, parentType, pageIndex, pageSize);
+    return commentList;
+  }
+
+  static Future<Comment> getCommentById(
+    String commentId,
+  ) async {
+    var comment = await CommentApi.getCommentById(commentId);
+    return comment;
+  }
+
+  static Future<List<Comment>> getReplyCommentList(
+    String commentId,
+    int pageIndex,
+    int pageSize,
+  ) async {
+    var commentList = await CommentApi.getReplyCommentList(commentId, pageIndex, pageSize);
     return commentList;
   }
 }

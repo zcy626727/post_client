@@ -5,8 +5,11 @@ import 'package:post_client/model/article.dart';
 import 'detail/article_detail_page.dart';
 
 class ArticleListTile extends StatefulWidget {
-  const ArticleListTile({super.key, required this.article});
+  const ArticleListTile({super.key, required this.article, this.isInner = false});
+
   final Article article;
+  final bool isInner;
+
   @override
   State<ArticleListTile> createState() => _ArticleListTileState();
 }
@@ -41,8 +44,7 @@ class _ArticleListTileState extends State<ArticleListTile> {
                     ),
                     Text(
                       widget.article.introduction!,
-                      style:
-                      TextStyle(color: colorScheme.onSurface.withAlpha(150)),
+                      style: TextStyle(color: colorScheme.onSurface.withAlpha(150)),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -50,21 +52,22 @@ class _ArticleListTileState extends State<ArticleListTile> {
                 ),
               ),
             ),
-            if (widget.article.coverUrl != null)
+            if (widget.article.coverUrl != null && widget.article.coverUrl!.isNotEmpty)
               Container(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                 child: Image(image: NetworkImage(widget.article.coverUrl!)),
               )
           ],
         ),
       ),
-      onTap: (){
+      onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) {
-              return ArticleDetailPage(article: widget.article,);
+              return ArticleDetailPage(
+                article: widget.article,
+              );
             },
           ),
         );

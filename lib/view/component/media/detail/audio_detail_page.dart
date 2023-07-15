@@ -53,6 +53,7 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
       builder: (BuildContext context, AsyncSnapshot snapShot) {
         if (snapShot.connectionState == ConnectionState.done) {
           return Scaffold(
+            backgroundColor: colorScheme.background,
             appBar: AppBar(
               toolbarHeight: 50,
               centerTitle: true,
@@ -71,6 +72,7 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
               actions: [],
             ),
             body: Container(
+              color: colorScheme.surface,
               margin: const EdgeInsets.only(left: 3, right: 3, top: 1),
               child: ListView(
                 children: [
@@ -98,7 +100,7 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
                     margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                     child: Text(
                       widget.audio.introduction!,
-                      style: const TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15, color: colorScheme.onSurface),
                     ),
                   ),
                   CommonAudioPlayerMini(audioUrl: audioUrl!),

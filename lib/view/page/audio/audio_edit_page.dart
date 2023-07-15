@@ -25,12 +25,14 @@ class _AudioEditPageState extends State<AudioEditPage> {
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
+  bool _withPost = true;
 
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
+      backgroundColor: colorScheme.background,
       appBar: AppBar(
         toolbarHeight: 50,
         centerTitle: true,
@@ -62,29 +64,29 @@ class _AudioEditPageState extends State<AudioEditPage> {
                     return;
                   }
                   if (audioUploadTask!.status != UploadTaskStatus.finished.index) {
-                    ShowSnackBar.error(context: context, message: "视频未上传完成，请稍后");
+                    ShowSnackBar.error(context: context, message: "音频未上传完成，请稍后");
                     return;
                   }
                   String? coverUrl;
-                  if (coverUploadImage.status != UploadTaskStatus.finished.index) {
+                  if (coverUploadImage.status != null && coverUploadImage.status != UploadTaskStatus.finished.index) {
                     ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                     return;
-                  } else {
-                    coverUrl = coverUploadImage.staticUrl!;
                   }
+
+                  coverUrl = coverUploadImage.staticUrl;
                   //执行验证
                   if (formKey.currentState!.validate()) {
                     try {
                       var video = await AudioService.createAudio(
                         titleController.value.text,
-                        introductionController.value.text??"",
+                        introductionController.value.text ?? "",
                         audioUploadTask!.fileId!,
                         coverUrl,
+                        _withPost,
                       );
+                      if (mounted) Navigator.pop(context);
                     } on Exception catch (e) {
                       ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
-                    } finally {
-                      Navigator.pop(context);
                     }
                     //加载
                     setState(() {});
@@ -122,7 +124,13 @@ class _AudioEditPageState extends State<AudioEditPage> {
                                 read = await File(result.files.single.path!).open();
                                 var data = await read.read(16);
                                 //消息接收器
-                                audioUploadTask = UploadMediaTask.all(srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.init.index, mediaType: MediaType.audio, magicNumber: data);
+                                audioUploadTask = UploadMediaTask.all(
+                                  srcPath: file.path,
+                                  totalSize: file.size,
+                                  status: UploadTaskStatus.init.index,
+                                  mediaType: MediaType.audio,
+                                  magicNumber: data,
+                                );
                               } finally {
                                 read?.close();
                               }
@@ -136,7 +144,25 @@ class _AudioEditPageState extends State<AudioEditPage> {
                 coverUploadImage: coverUploadImage,
                 titleController: titleController,
                 introductionController: introductionController,
-              )
+              ),
+              Container(
+                color: colorScheme.surface,
+                child: ListTile(
+                  leading: Text(
+                    '同时发布动态',
+                    style: TextStyle(color: colorScheme.onSurface),
+                  ),
+                  trailing: Checkbox(
+                    fillColor: MaterialStateProperty.all(_withPost ? colorScheme.primary : colorScheme.onSurface),
+                    value: _withPost,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _withPost = value!;
+                      });
+                    },
+                  ),
+                ),
+              ),
             ],
           ),
         ),

@@ -62,6 +62,7 @@ class ArticleQuillToolBar extends StatelessWidget {
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
     return QuillToolbar.basic(
+      color: colorScheme.surface,
       locale: const Locale('en'),
       showColorButton: false,
       controller: controller,

@@ -11,13 +11,17 @@ class Post {
   String? sourceId;
   int? sourceType;
   DateTime? createTime;
+
   //文字内容，只包含文字 @ #
   String? content;
+
   //评论数
   int? commentNumber;
+
   //点赞数
   int? likeNumber;
   int? unlikeNumber;
+
   //图片布局，九宫格或大图
   List<String>? pictureUrlList;
 
@@ -32,7 +36,6 @@ class Post {
   Post.one() {
     // id = 1;
     content = "这是一条动态";
-    sourceType = PostSourceType.teletext;
     likeNumber = 1;
     likeNumber = 1;
     commentNumber = 4;
@@ -50,14 +53,17 @@ class Post {
     ];
   }
 
-  bool isInnerMode() {
-    //如果
+  bool isSourceMode() {
     return sourceType == PostSourceType.article ||
-        sourceType == PostSourceType.image ||
+        sourceType == PostSourceType.gallery ||
         sourceType == PostSourceType.audio ||
         sourceType == PostSourceType.video ||
-        sourceType == PostSourceType.collection ||
+        sourceType == PostSourceType.album ||
         sourceType == PostSourceType.post;
+  }
+
+  bool hasMedia() {
+    return sourceType == PostSourceType.article || sourceType == PostSourceType.gallery || sourceType == PostSourceType.audio || sourceType == PostSourceType.video;
   }
 
   Post();
@@ -69,19 +75,12 @@ class Post {
 
 class PostSourceType {
   //媒体
-  static const image = 1;
+  static const gallery = 1;
   static const article = 2;
   static const audio = 3;
   static const video = 4;
-
   //合集
-  static const collection = 5;
-
+  static const album = 5;
   //动态
   static const post = 6;
-
-  //图文模式
-  static const teletext = 7;
-  //问题
-  static const question = 8;
 }

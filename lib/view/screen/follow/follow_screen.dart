@@ -18,6 +18,7 @@ class FollowScreen extends StatefulWidget {
 
 class _FollowScreenState extends State<FollowScreen> {
   final int selectedIndex = 0;
+  int? _sourceType;
 
   @override
   void initState() {
@@ -120,7 +121,7 @@ class _FollowScreenState extends State<FollowScreen> {
           Expanded(
             child: PostList(
               onLoad: (int page) async {
-                var postList = await PostService.getPostListRandom(20);
+                var postList = await PostService.getFolloweePostList(_sourceType, page, 20);
                 return postList;
               },
               enableRefresh: true,

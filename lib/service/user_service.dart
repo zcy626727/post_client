@@ -33,8 +33,7 @@ class UserService {
     return user;
   }
 
-  static Future<User> signUp(
-      String phoneNumber, String password, String name) async {
+  static Future<User> signUp(String phoneNumber, String password, String name) async {
     var user = await UserApi.signUp(phoneNumber, password, name);
     //最新登录时间
     user.lastLoginTime = DateTime.now().toString();
@@ -62,5 +61,13 @@ class UserService {
     target.avatarUrl = user.avatarUrl;
     target.name = user.name;
     target.token = user.token;
+  }
+
+  static Future<void> updateUsername(String newUsername) async {
+    await UserApi.updateUsername(newUsername);
+  }
+
+  static Future<void> updateAvatarUrl(String avatarUrl) async {
+    await UserApi.updateUsername(avatarUrl);
   }
 }

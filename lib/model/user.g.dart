@@ -14,9 +14,8 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       avatarUrl: json['avatarUrl'] as String?,
       name: json['name'] as String?,
       themeMode: json['themeMode'] as int? ?? 0,
-      blacklistNumber: json['blacklistNumber'] as int?,
       followerNumber: json['followerNumber'] as int?,
-      followNumber: json['followNumber'] as int?,
+      followeeNumber: json['followeeNumber'] as int?,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -27,7 +26,6 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'lastLoginTime': instance.lastLoginTime,
       'avatarUrl': instance.avatarUrl,
       'followerNumber': instance.followerNumber,
-      'followNumber': instance.followNumber,
-      'blacklistNumber': instance.blacklistNumber,
+      'followeeNumber': instance.followeeNumber,
       'themeMode': instance.themeMode,
     };

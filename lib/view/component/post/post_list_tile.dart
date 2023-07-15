@@ -5,9 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:intl/intl.dart';
 import 'package:post_client/config/global.dart';
+import 'package:post_client/model/audio.dart';
+import 'package:post_client/model/gallery.dart';
 import 'package:post_client/model/post.dart';
+import 'package:post_client/model/video.dart';
+import 'package:post_client/view/component/media/article_list_tile.dart';
+import 'package:post_client/view/component/media/audio_list_tile.dart';
+import 'package:post_client/view/component/media/gallery_list_tile.dart';
+import 'package:post_client/view/component/media/video_list_tile.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
 
+import '../../../model/article.dart';
 import '../../../model/comment.dart';
 import '../../../service/post_service.dart';
 import '../../page/comment/comment_page.dart';
@@ -36,7 +44,9 @@ class _PostListTileState extends State<PostListTile> {
   @override
   void initState() {
     super.initState();
-    controller.document = Document.fromJson(json.decode(widget.post.content ?? ""));
+    if (!widget.post.isSourceMode()) {
+      controller.document = Document.fromJson(json.decode(widget.post.content ?? ""));
+    }
   }
 
   @override
@@ -52,15 +62,15 @@ class _PostListTileState extends State<PostListTile> {
           // 用户信息
           buildUserInfo(),
           //文本
-          if (!widget.post.isInnerMode()) buildText(),
+          buildText(),
           //图片列表
-          if (!widget.post.isInnerMode() && widget.post.pictureUrlList != null && widget.post.pictureUrlList!.isNotEmpty) buildPictureList(),
+          if (!widget.post.isSourceMode() && widget.post.pictureUrlList != null && widget.post.pictureUrlList!.isNotEmpty) buildPictureList(),
           // 媒体
-          if (widget.post.isInnerMode()) buildMediaCard(),
+          if (widget.post.isSourceMode()) buildMediaCard(),
           // 点赞、收藏等
           buildOperation(),
           // 描述信息
-          if (widget.post.isInnerMode()) buildDescribe()
+          // if (widget.post.isSourceMode()) buildDescribe()
         ],
       ),
     );
@@ -151,15 +161,21 @@ class _PostListTileState extends State<PostListTile> {
   }
 
   Widget buildText() {
-    return Container(
-      margin: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
-      width: double.infinity,
-      child: PostQuillEditor(
-        controller: controller,
-        focusNode: FocusNode(),
-        readOnly: true,
-      ),
-    );
+    return (!widget.post.isSourceMode())
+        ? Container(
+            margin: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
+            width: double.infinity,
+            child: PostQuillEditor(
+              controller: controller,
+              focusNode: FocusNode(),
+              readOnly: true,
+            ),
+          )
+        : widget.post.content != null && widget.post.content!.isNotEmpty
+            ? Text(
+                widget.post.content!,
+              )
+            : Container();
   }
 
   Widget buildPictureList() {
@@ -217,23 +233,45 @@ class _PostListTileState extends State<PostListTile> {
   }
 
   Widget buildMediaCard() {
+    Widget mediaCard = Container();
     var colorScheme = Theme.of(context).colorScheme;
 
+    var media = widget.post.media;
+    if (media == null) {
+      return Text(
+        "媒体获取失败",
+        style: TextStyle(color: colorScheme.onSurface),
+      );
+    }
+    if (media is Article) {
+      mediaCard = ArticleListTile(
+        article: media,
+        isInner: true,
+      );
+    } else if (media is Audio) {
+      mediaCard = AudioListTile(
+        audio: media,
+        isInner: true,
+      );
+    } else if (media is Gallery) {
+      mediaCard = GalleryListTile(
+        gallery: media,
+        isInner: true,
+      );
+    } else if (media is Video) {
+      mediaCard = VideoListTile(
+        video: media,
+        isInner: true,
+        onDelete: (video) {},
+      );
+    }
     return GestureDetector(
       onDoubleTap: () {},
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.35,
-            margin: const EdgeInsets.symmetric(horizontal: 5.0),
-            width: double.infinity,
-            child: Image.network(
-              "https://pic1.zhimg.com/80/v2-64803cb7928272745eb2bb0203e03648_1440w.webp",
-              fit: BoxFit.fill,
-            ),
-          ),
-        ],
+      child: Container(
+        color: colorScheme.primary,
+        padding: const EdgeInsets.only(left: 2, right: 2, top: 2),
+        width: double.infinity,
+        child: mediaCard,
       ),
     );
   }
@@ -292,17 +330,17 @@ class _PostListTileState extends State<PostListTile> {
       padding: const EdgeInsets.only(top: 5, bottom: 8),
       width: double.infinity,
       child: RichText(
-        text: const TextSpan(
-          style: TextStyle(color: Colors.green),
+        text: TextSpan(
+          style: const TextStyle(color: Colors.green),
           children: [
-            TextSpan(
+            const TextSpan(
               text: "路由器：",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             TextSpan(
-              text: '这小娘子真好看',
+              text: widget.post.content,
             ),
           ],
         ),

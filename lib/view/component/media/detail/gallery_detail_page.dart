@@ -23,6 +23,7 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
     var colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
+      backgroundColor: colorScheme.background,
       appBar: AppBar(
         toolbarHeight: 50,
         centerTitle: true,
@@ -41,7 +42,9 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
         actions: [],
       ),
       body: Container(
-        margin: const EdgeInsets.only(left: 3, right: 3, top: 1),
+        color: colorScheme.surface,
+        margin: EdgeInsets.only(top: 1),
+        padding: const EdgeInsets.only(left: 3, right: 3, top: 1),
         child: ListView(
           children: [
             ...List<Image>.generate(widget.gallery.thumbnailUrlList!.length, (index) {
@@ -74,7 +77,7 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
               margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               child: Text(
                 widget.gallery.introduction!,
-                style: const TextStyle(fontSize: 15),
+                style: TextStyle(fontSize: 15, color: colorScheme.onSurface),
               ),
             ),
             Container(
@@ -85,9 +88,7 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => CommentPage(commentParentType: CommentParentType.gallery, commentParentId: widget.gallery.id!)
-                    ),
+                    MaterialPageRoute(builder: (context) => CommentPage(commentParentType: CommentParentType.gallery, commentParentId: widget.gallery.id!)),
                   );
                 },
                 child: const Text("查看评论"),

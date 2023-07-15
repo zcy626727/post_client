@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:post_client/service/article_service.dart';
 import 'package:post_client/view/component/media/upload/media_info_card.dart';
 
@@ -28,6 +28,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
   UploadMediaTask coverUploadImage = UploadMediaTask();
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
+  bool _withPost = true;
 
   @override
   Widget build(BuildContext context) {
@@ -71,22 +72,22 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                         return;
                       }
                       String? coverUrl;
-                      if (coverUploadImage.status != UploadTaskStatus.finished.index) {
+                      if (coverUploadImage.status != null && coverUploadImage.status != UploadTaskStatus.finished.index) {
                         ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                         return;
-                      } else {
-                        coverUrl = coverUploadImage.staticUrl!;
                       }
+                      coverUrl = coverUploadImage.staticUrl;
+
                       var article = await ArticleService.createArticle(
                         titleController.value.text,
                         introductionController.value.text,
                         content,
                         coverUrl,
+                        _withPost,
                       );
+                      if (mounted) Navigator.pop(context);
                     } on Exception catch (e) {
                       ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
-                    } finally {
-                      Navigator.pop(context);
                     }
                     //加载
                     setState(() {});
@@ -107,11 +108,35 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
               SliverOverlapAbsorber(
                 handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 sliver: SliverToBoxAdapter(
-                  child: MediaInfoCard(
-                    coverUploadImage: coverUploadImage,
-                    titleController: titleController,
-                    introductionController: introductionController,
-                  ),
+                  child: Column(
+                    children: [
+                      MediaInfoCard(
+                        coverUploadImage: coverUploadImage,
+                        titleController: titleController,
+                        introductionController: introductionController,
+                      ),
+                      Container(
+                        color: colorScheme.surface,
+                        padding: const EdgeInsets.symmetric(horizontal: 1),
+                        margin: const EdgeInsets.only(top: 2,bottom: 2),
+                        child: ListTile(
+                          leading: Text(
+                            '同时发布动态',
+                            style: TextStyle(color: colorScheme.onSurface),
+                          ),
+                          trailing: Checkbox(
+                            fillColor: MaterialStateProperty.all(_withPost ? colorScheme.primary : colorScheme.onSurface),
+                            value: _withPost,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _withPost = value!;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ),
               ),
             ];
@@ -130,7 +155,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                   ),
                 ),
                 ArticleQuillToolBar(controller: _contentController),
-                const SizedBox(height: 5),
+
               ],
             ),
           ),

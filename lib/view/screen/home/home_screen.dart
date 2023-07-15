@@ -45,7 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildMobile(User user) {
-    var colorScheme = Theme.of(context).colorScheme;
+    var colorScheme = Theme
+        .of(context)
+        .colorScheme;
     return Container(
       color: colorScheme.background,
       child: NestedScrollView(
@@ -115,6 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
           PostList(
             onLoad: (int page) async {
               var postList = await PostService.getPostListRandom(20);
+
               return postList;
             },
             enableRefresh: true,
@@ -203,7 +206,9 @@ class _HomeScreenTabBarState extends State<HomeScreenTabBar> {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme colorScheme = Theme.of(context).colorScheme;
+    ColorScheme colorScheme = Theme
+        .of(context)
+        .colorScheme;
     return Container(
       height: 50,
       width: double.infinity,

@@ -11,7 +11,9 @@ class GalleryApi {
     List<int> fileIdList,
     List<String> thumbnailUrlList,
     String coverUrl,
-  ) async {
+      bool withPost,
+
+      ) async {
     var r = await MediaHttpConfig.dio.post(
       "/gallery/createGallery",
       data: {
@@ -20,6 +22,7 @@ class GalleryApi {
         "fileIdList": fileIdList,
         "thumbnailUrlList": thumbnailUrlList,
         "coverUrl": coverUrl,
+        "withPost": withPost,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

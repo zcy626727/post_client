@@ -8,8 +8,9 @@ class VideoService {
     String introduction,
     int fileId,
     String? coverUrl,
+    bool withPost,
   ) async {
-    var video = await VideoApi.createVideo(title, introduction, fileId, coverUrl);
+    var video = await VideoApi.createVideo(title, introduction, fileId, coverUrl, withPost);
     return video;
   }
 

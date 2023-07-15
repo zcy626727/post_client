@@ -10,6 +10,7 @@ class AudioApi {
     String introduction,
     int fileId,
     String? coverUrl,
+    bool withPost,
   ) async {
     var r = await MediaHttpConfig.dio.post(
       "/audio/createAudio",
@@ -18,6 +19,7 @@ class AudioApi {
         "introduction": introduction,
         "fileId": fileId,
         "coverUrl": coverUrl,
+        "withPost": withPost,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

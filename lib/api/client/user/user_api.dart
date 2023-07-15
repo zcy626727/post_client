@@ -36,8 +36,7 @@ class UserApi {
     return user;
   }
 
-  static Future<User> signUp(
-      String phoneNumber, String password, String name) async {
+  static Future<User> signUp(String phoneNumber, String password, String name) async {
     var r = await UserHttpConfig.dio.post(
       "/user/signUp",
       data: {
@@ -52,5 +51,31 @@ class UserApi {
     User user = User.fromJson(r.data["user"]);
     user.token = r.data["token"] ?? "";
     return user;
+  }
+
+  static Future<void> updateUsername(String newUsername) async {
+    var r = await UserHttpConfig.dio.post(
+      "/user/updateUsername",
+      data: {
+        "newUsername": newUsername,
+      },
+      options: UserHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
+  }
+
+  static Future<void> updateAvatarUrl(String avatarUrl) async {
+    var r = await UserHttpConfig.dio.post(
+      "/user/updateAvatarUrl",
+      data: {
+        "avatarUrl": avatarUrl,
+      },
+      options: UserHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
   }
 }

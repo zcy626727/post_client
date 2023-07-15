@@ -8,8 +8,9 @@ class ArticleService {
     String introduction,
     String content,
     String? coverUrl,
+    bool withPost,
   ) async {
-    var article = await ArticleApi.createArticle(title, introduction, content, coverUrl);
+    var article = await ArticleApi.createArticle(title, introduction, content, coverUrl, withPost);
     return article;
   }
 

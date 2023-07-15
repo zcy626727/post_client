@@ -55,6 +55,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       builder: (BuildContext context, AsyncSnapshot snapShot) {
         if (snapShot.connectionState == ConnectionState.done) {
           return Scaffold(
+            backgroundColor: colorScheme.background,
             appBar: AppBar(
               toolbarHeight: 50,
               centerTitle: true,
@@ -73,15 +74,17 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
               actions: [],
             ),
             body: Container(
-              margin: const EdgeInsets.only(left: 3, right: 3, top: 1),
+              color: colorScheme.surface,
+              margin: const EdgeInsets.only(top: 1),
+              padding: const EdgeInsets.only(left: 3, right: 3),
               child: ListView(
                 children: [
-                  if (widget.article.coverUrl != null) Image(image: NetworkImage(widget.article.coverUrl!)),
+                  if (widget.article.coverUrl != null && widget.article.coverUrl!.isNotEmpty) Image(image: NetworkImage(widget.article.coverUrl!)),
                   Container(
                     margin: const EdgeInsets.only(left: 5, right: 5),
                     child: Text(
                       widget.article.title!,
-                      style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: colorScheme.onSurface),
                     ),
                   ),
                   ListTile(

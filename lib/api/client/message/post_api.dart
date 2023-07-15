@@ -10,6 +10,7 @@ class PostApi {
     int? sourceType,
     String content,
     List<String>? pictureUrlList,
+    List<int>? targetUserIdList,
   ) async {
     var r = await MessageHttpConfig.dio.post(
       "/post/createPost",
@@ -18,6 +19,7 @@ class PostApi {
         "sourceType": sourceType,
         "content": content,
         "pictureUrlList": pictureUrlList,
+        "targetUserIdList": targetUserIdList,
       },
       options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -97,6 +99,28 @@ class PostApi {
       options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": false,
         "withToken": false,
+      }),
+    );
+
+    var postList = _parsePostWithUser(r);
+    return postList;
+  }
+
+  static Future<List<Post>> getFolloweePostList(
+    int? sourceType,
+    int pageSize,
+    int pageIndex,
+  ) async {
+    var r = await MessageHttpConfig.dio.post(
+      "/post/getFolloweePostList",
+      data: {
+        "sourceType": sourceType,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
+      },
+      options: MessageHttpConfig.options.copyWith(extra: {
+        "noCache": false,
+        "withToken": true,
       }),
     );
 

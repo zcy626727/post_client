@@ -135,16 +135,15 @@ class MobileAccountDrawerPage extends StatelessWidget {
             icon: CircleAvatar(
               //头像半径
               radius: 50,
-              backgroundImage:
-                  user.avatarUrl == null ? null : NetworkImage(user.avatarUrl!),
+              backgroundImage: user.avatarUrl == null ? null : NetworkImage(user.avatarUrl!),
             ),
             onPressed: () async {
-              if ((user.token!=null&&user.token!="")) {
+              if ((user.token != null && user.token != "")) {
                 //已登录
                 //进入用户详情页面
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) =>  const UserDetailPage()),
+                  MaterialPageRoute(builder: (context) => const UserDetailPage()),
                 );
               } else {
                 //未登录
@@ -157,14 +156,10 @@ class MobileAccountDrawerPage extends StatelessWidget {
 
           Text(
             user.name != null && user.name!.isNotEmpty ? user.name! : "未登录",
-            style: TextStyle(
-                color: colorScheme.onSurface,
-                fontSize: 22,
-                fontWeight: FontWeight.w500),
+            style: TextStyle(color: colorScheme.onSurface, fontSize: 22, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 4),
-          Text(user.formatId(),
-              style: TextStyle(color: colorScheme.onSurface.withAlpha(160))),
+          Text(user.formatId(), style: TextStyle(color: colorScheme.onSurface.withAlpha(160))),
           const SizedBox(height: 4),
           SizedBox(
             height: 20,
@@ -175,10 +170,7 @@ class MobileAccountDrawerPage extends StatelessWidget {
               visualDensity: const VisualDensity(vertical: -4, horizontal: -4),
               label: const Text(
                 'lv 6',
-                style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white),
+                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.white),
               ),
             ),
           ),
@@ -189,8 +181,7 @@ class MobileAccountDrawerPage extends StatelessWidget {
               margin: const EdgeInsets.only(top: 10),
               child: CommonSocialInfo(
                 followerNumber: user.followerNumber ?? 0,
-                followNumber: user.followNumber ?? 0,
-                blacklistNumber: user.blacklistNumber ?? 0,
+                followNumber: user.followeeNumber ?? 0,
               ),
             ),
           ),
@@ -246,25 +237,22 @@ class MobileDrawerItem extends StatelessWidget {
 }
 
 class CommonSocialInfo extends StatelessWidget {
-  const CommonSocialInfo(
-      {Key? key,
-      required this.followerNumber,
-      required this.followNumber,
-      required this.blacklistNumber})
-      : super(key: key);
+  const CommonSocialInfo({
+    Key? key,
+    required this.followerNumber,
+    required this.followNumber,
+  }) : super(key: key);
 
   //粉丝
   final int followerNumber;
+
   //关注
   final int followNumber;
-  //拉黑
-  final int blacklistNumber;
 
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    TextStyle textStyle =
-        TextStyle(color: colorScheme.onSurface.withAlpha(160));
+    TextStyle textStyle = TextStyle(color: colorScheme.onSurface.withAlpha(160));
     TextStyle numberStyle = TextStyle(color: colorScheme.onSurface);
 
     return Row(
@@ -283,14 +271,6 @@ class CommonSocialInfo extends StatelessWidget {
             children: [
               Text("$followerNumber", style: numberStyle),
               Text("粉丝", style: textStyle),
-            ],
-          ),
-        ),
-        Expanded(
-          child: Column(
-            children: [
-              Text("$blacklistNumber", style: numberStyle),
-              Text("拉黑", style: textStyle),
             ],
           ),
         ),

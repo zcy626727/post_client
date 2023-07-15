@@ -10,6 +10,7 @@ class VideoApi {
     String introduction,
     int fileId,
     String? coverUrl,
+    bool withPost,
   ) async {
     var r = await MediaHttpConfig.dio.post(
       "/video/createVideo",
@@ -18,6 +19,7 @@ class VideoApi {
         "introduction": introduction,
         "fileId": fileId,
         "coverUrl": coverUrl,
+        "withPost": withPost,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

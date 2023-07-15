@@ -53,6 +53,7 @@ class _PostListState extends State<PostList> {
   }
 
   Future getData() async {
+    var s = ScrollController();
     return Future.wait([getDataList()]);
   }
 
@@ -61,7 +62,7 @@ class _PostListState extends State<PostList> {
       var list = await widget.onLoad(_page);
       _postList.addAll(list);
       _page++;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       log(e.toString());
     } catch (e) {
       log(e.toString());

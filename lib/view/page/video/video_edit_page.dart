@@ -24,11 +24,13 @@ class _VideoEditPageState extends State<VideoEditPage> {
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
+  bool _withPost = true;
 
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
+      backgroundColor: colorScheme.background,
       appBar: AppBar(
         toolbarHeight: 50,
         centerTitle: true,
@@ -71,18 +73,18 @@ class _VideoEditPageState extends State<VideoEditPage> {
                         ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                         return;
                       } else {
-                        coverUrl = coverUploadImage.staticUrl!;
+                        coverUrl = coverUploadImage.staticUrl;
                       }
                       var video = await VideoService.createVideo(
                         titleController.value.text,
                         introductionController.value.text,
                         videoUploadTask!.fileId!,
                         coverUrl,
+                        _withPost,
                       );
+                      if (mounted) Navigator.pop(context);
                     } on Exception catch (e) {
                       ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
-                    } finally {
-                      Navigator.pop(context);
                     }
                     //加载
                     setState(() {});
@@ -130,6 +132,24 @@ class _VideoEditPageState extends State<VideoEditPage> {
                 coverUploadImage: coverUploadImage,
                 titleController: titleController,
                 introductionController: introductionController,
+              ),
+              Container(
+                color: colorScheme.surface,
+                child: ListTile(
+                  leading: Text(
+                    '同时发布动态',
+                    style: TextStyle(color: colorScheme.onSurface),
+                  ),
+                  trailing: Checkbox(
+                    fillColor: MaterialStateProperty.all(_withPost ? colorScheme.primary : colorScheme.onSurface),
+                    value: _withPost,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _withPost = value!;
+                      });
+                    },
+                  ),
+                ),
               ),
             ],
           ),

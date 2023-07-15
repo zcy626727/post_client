@@ -171,14 +171,16 @@ class _UserDetailPageState extends State<UserDetailPage> {
   }
 
   Widget buildTabBarView() {
+    var colorScheme = Theme.of(context).colorScheme;
     return Container(
-      margin: const EdgeInsets.only(left: 3, right: 3, top: 1),
+      color: colorScheme.background,
+      padding: const EdgeInsets.only(left: 1, right: 1, top: 1),
       child: TabBarView(
         physics: const NeverScrollableScrollPhysics(),
         children: [
           PostList(
             onLoad: (int page) async {
-              var postList = await PostService.getPostListByUserId(Global.user,page,20);
+              var postList = await PostService.getPostListByUserId(Global.user, page, 20);
               return postList;
             },
             enableRefresh: true,
@@ -188,7 +190,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
           ),
           CommonItemList<Gallery>(
             onLoad: (int page) async {
-              var galleryList = await GalleryService.getGalleryListByUserId(Global.user,page,20);
+              var galleryList = await GalleryService.getGalleryListByUserId(Global.user, page, 20);
               return galleryList;
             },
             itemName: "图片",
@@ -202,7 +204,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
           ),
           CommonItemList<Video>(
             onLoad: (int page) async {
-              var videoList = await VideoService.getVideoListByUserId(Global.user,page,20);
+              var videoList = await VideoService.getVideoListByUserId(Global.user, page, 20);
               return videoList;
             },
             itemName: "视频",
@@ -222,7 +224,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
           ),
           CommonItemList<Audio>(
             onLoad: (int page) async {
-              var audioList = await AudioService.getAudioListByUserId(Global.user,page,20);
+              var audioList = await AudioService.getAudioListByUserId(Global.user, page, 20);
               return audioList;
             },
             itemName: "音频",
@@ -235,7 +237,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
           ),
           CommonItemList<Article>(
             onLoad: (int page) async {
-              var articleList = await ArticleService.getArticleListByUserId(Global.user,page,20);
+              var articleList = await ArticleService.getArticleListByUserId(Global.user, page, 20);
               return articleList;
             },
             itemName: "文章",
