@@ -5,7 +5,7 @@ import 'package:post_client/model/user.dart';
 import '../user_http_config.dart';
 
 class FollowApi {
-  static Future<Follow> followUser(String followeeId) async {
+  static Future<Follow> followUser(int followeeId) async {
     var r = await UserHttpConfig.dio.post(
       "/follow/followUser",
       data: {
@@ -20,8 +20,8 @@ class FollowApi {
   }
 
   static Future<void> unfollowUser({
-    required String followerId,
-    required String followeeId,
+    required int followerId,
+    required int followeeId,
   }) async {
     var r = await UserHttpConfig.dio.post(
       "/follow/unfollowUser",
@@ -37,10 +37,16 @@ class FollowApi {
   }
 
   //获取我关注的列表
-  static Future<List<User>> getFolloweeListByFollowerId(int followerId) async {
+  static Future<List<User>> getFolloweeList(
+    int pageIndex,
+    int pageSize,
+  ) async {
     var r = await UserHttpConfig.dio.get(
-      "/follow/getFolloweeListByFollowerId",
-      data: {"followerId": Global.user.id},
+      "/follow/getFolloweeList",
+      queryParameters: {
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
+      },
       options: UserHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
@@ -55,10 +61,16 @@ class FollowApi {
   }
 
   //获取关注我的列表
-  static Future<List<User>> getFollowerListByFolloweeId(int followerId) async {
+  static Future<List<User>> getFollowerList(
+    int pageIndex,
+    int pageSize,
+  ) async {
     var r = await UserHttpConfig.dio.get(
       "/follow/getFollowerListByFolloweeId",
-      data: {"followerId": Global.user.id},
+      queryParameters: {
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
+      },
       options: UserHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
@@ -78,8 +90,11 @@ class FollowApi {
     required int followeeId,
   }) async {
     var r = await UserHttpConfig.dio.get(
-      "/follow/getFollowerListByFolloweeId",
-      data: {"followerId": followerId, "followeeId": followeeId},
+      "/follow/getFollow",
+      queryParameters: {
+        "followerId": followerId,
+        "followeeId": followeeId,
+      },
       options: UserHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,

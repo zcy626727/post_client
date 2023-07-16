@@ -51,11 +51,11 @@ class PostService {
   }
 
   static Future<List<Post>> getFolloweePostList(
-    int? sourceType,
-    int pageSize,
+    int sourceType,
     int pageIndex,
+    int pageSize,
   ) async {
-    var postList = await PostApi.getFolloweePostList(sourceType, pageSize, pageIndex);
+    var postList = await PostApi.getFolloweePostList(sourceType, pageIndex, pageSize);
     await fillMedia(postList);
     return postList;
   }

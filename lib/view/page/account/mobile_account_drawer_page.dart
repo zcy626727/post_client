@@ -143,7 +143,7 @@ class MobileAccountDrawerPage extends StatelessWidget {
                 //进入用户详情页面
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const UserDetailPage()),
+                  MaterialPageRoute(builder: (context) => UserDetailPage(user: user)),
                 );
               } else {
                 //未登录

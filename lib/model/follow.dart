@@ -5,10 +5,9 @@ part 'follow.g.dart';
 
 @JsonSerializable()
 class Follow{
-  String? id;
-  int? userId;
-  int? mediaType;
-  List<String>? mediaIdList;
+  int? id;
+  int? followerId;
+  int? followeeId;
   DateTime? createTime;
 
   Follow();

@@ -107,13 +107,13 @@ class PostApi {
   }
 
   static Future<List<Post>> getFolloweePostList(
-    int? sourceType,
-    int pageSize,
+    int sourceType,
     int pageIndex,
+    int pageSize,
   ) async {
-    var r = await MessageHttpConfig.dio.post(
+    var r = await MessageHttpConfig.dio.get(
       "/post/getFolloweePostList",
-      data: {
+      queryParameters: {
         "sourceType": sourceType,
         "pageIndex": pageIndex,
         "pageSize": pageSize,

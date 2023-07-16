@@ -16,7 +16,9 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       themeMode: json['themeMode'] as int? ?? 0,
       followerNumber: json['followerNumber'] as int?,
       followeeNumber: json['followeeNumber'] as int?,
-    );
+    )..createTime = json['createTime'] == null
+        ? null
+        : DateTime.parse(json['createTime'] as String);
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'phoneNumber': instance.phoneNumber,
@@ -25,6 +27,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'token': instance.token,
       'lastLoginTime': instance.lastLoginTime,
       'avatarUrl': instance.avatarUrl,
+      'createTime': instance.createTime?.toIso8601String(),
       'followerNumber': instance.followerNumber,
       'followeeNumber': instance.followeeNumber,
       'themeMode': instance.themeMode,

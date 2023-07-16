@@ -18,6 +18,7 @@ import 'package:post_client/view/component/quill/quill_editor.dart';
 import '../../../model/article.dart';
 import '../../../model/comment.dart';
 import '../../../service/post_service.dart';
+import '../../page/account/user_details_page.dart';
 import '../../page/comment/comment_page.dart';
 import '../../widget/dialog/confirm_alert_dialog.dart';
 import '../show/show_snack_bar.dart';
@@ -82,10 +83,18 @@ class _PostListTileState extends State<PostListTile> {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       visualDensity: const VisualDensity(horizontal: -2, vertical: -2),
-      leading: CircleAvatar(
-        radius: 18,
-        backgroundImage: NetworkImage(
-          widget.post.user!.avatarUrl!,
+      leading: GestureDetector(
+        onTap: (){
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => UserDetailPage(user: widget.post.user!)),
+          );
+        },
+        child: CircleAvatar(
+          radius: 18,
+          backgroundImage: NetworkImage(
+            widget.post.user!.avatarUrl!,
+          ),
         ),
       ),
       title: Text(
@@ -268,7 +277,7 @@ class _PostListTileState extends State<PostListTile> {
     return GestureDetector(
       onDoubleTap: () {},
       child: Container(
-        color: colorScheme.primary,
+        color: colorScheme.primaryContainer,
         padding: const EdgeInsets.only(left: 2, right: 2, top: 2),
         width: double.infinity,
         child: mediaCard,

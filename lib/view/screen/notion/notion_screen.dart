@@ -3,6 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:post_client/model/user.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
+import 'package:post_client/view/page/notion/bulletin_list_page.dart';
+import 'package:post_client/view/page/reply/reply_comment_list_page.dart';
+import 'package:post_client/view/page/reply/reply_mention_list_page.dart';
 import 'package:provider/provider.dart';
 
 class NotionScreen extends StatefulWidget {
@@ -31,7 +34,6 @@ class _NotionScreenState extends State<NotionScreen> {
       color: colorScheme.background,
       child: Column(
         children: [
-          //四个按钮
           Container(
             color: colorScheme.surface,
             height: 70,
@@ -42,17 +44,32 @@ class _NotionScreenState extends State<NotionScreen> {
               children: [
                 NotionTabButton(
                   title: "回复",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ReplyCommentListPage()),
+                    );
+                  },
                   svgPath: "assets/icons/huifu.svg",
                 ),
                 NotionTabButton(
                   title: "@我",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ReplyMentionListPage()),
+                    );
+                  },
                   svgPath: "assets/icons/aite.svg",
                 ),
                 NotionTabButton(
                   title: "通知",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const BulletinListPage()),
+                    );
+                  },
                   svgPath: "assets/icons/tongzhi.svg",
                 ),
               ],

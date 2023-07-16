@@ -83,7 +83,6 @@ class CommentApi {
 
   //获取回复我的评论列表
   static Future<List<Comment>> getReplyCommentList(
-    String commentId,
     int pageIndex,
     int pageSize,
   ) async {

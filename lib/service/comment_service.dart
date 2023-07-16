@@ -38,11 +38,10 @@ class CommentService {
   }
 
   static Future<List<Comment>> getReplyCommentList(
-    String commentId,
     int pageIndex,
     int pageSize,
   ) async {
-    var commentList = await CommentApi.getReplyCommentList(commentId, pageIndex, pageSize);
+    var commentList = await CommentApi.getReplyCommentList(pageIndex, pageSize);
     return commentList;
   }
 }

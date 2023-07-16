@@ -24,7 +24,7 @@ class User {
   String? token;
   String? lastLoginTime;
   String? avatarUrl;
-
+  DateTime? createTime;
   //粉丝
   int? followerNumber;
 

@@ -1,10 +1,17 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
+import 'package:post_client/model/follow.dart';
 import 'package:post_client/model/post.dart';
+import 'package:post_client/service/follow_service.dart';
 import 'package:post_client/service/post_service.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/view/component/post/post_list_tile.dart';
 import 'package:post_client/view/component/post/post_list.dart';
+import 'package:post_client/view/component/show/show_snack_bar.dart';
+import 'package:post_client/view/widget/button/common_action_one_button.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:provider/provider.dart';
 
@@ -24,88 +31,127 @@ import '../../component/media/gallery_list_tile.dart';
 import '../../component/media/video_list_tile.dart';
 
 class UserDetailPage extends StatefulWidget {
-  const UserDetailPage({Key? key}) : super(key: key);
+  const UserDetailPage({Key? key, required this.user}) : super(key: key);
+  final User user;
 
   @override
   State<UserDetailPage> createState() => _UserDetailPageState();
 }
 
 class _UserDetailPageState extends State<UserDetailPage> {
+  late Future _futureBuilderFuture;
+
+  Follow? _follow;
+
+  @override
+  void initState() {
+    super.initState();
+    _futureBuilderFuture = getData();
+  }
+
+  Future getData() async {
+    var s = ScrollController();
+    return Future.wait([getDataList()]);
+  }
+
+  Future<void> getDataList() async {
+    try {
+      _follow = await FollowService.getFollow(followerId: Global.user.id!, followeeId: widget.user.id!);
+    } on DioException catch (e) {
+      log(e.toString());
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var userState = Provider.of<UserState>(context);
 
     var colorScheme = Theme.of(context).colorScheme;
-    return Scaffold(
-      body: DefaultTabController(
-        length: 5,
-        child: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverOverlapAbsorber(
-                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                sliver: SliverAppBar(
-                  backgroundColor: colorScheme.surface,
-                  pinned: true,
-                  //划到上面时标题栏是否隐藏
-                  floating: false,
-                  //向下滑动一点就显示全部
-                  snap: false,
-                  primary: true,
-                  expandedHeight: 300,
-                  toolbarHeight: 50,
-                  leading: Center(
-                    child: SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: Material(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-                        clipBehavior: Clip.hardEdge,
-                        color: colorScheme.surface.withAlpha(100),
-                        child: IconButton(
-                          splashRadius: 20,
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: colorScheme.onSurface,
+    return FutureBuilder(
+      future: _futureBuilderFuture,
+      builder: (BuildContext context, AsyncSnapshot snapShot) {
+        if (snapShot.connectionState == ConnectionState.done) {
+          return Scaffold(
+            body: DefaultTabController(
+              length: 5,
+              child: NestedScrollView(
+                headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverOverlapAbsorber(
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                      sliver: SliverAppBar(
+                        backgroundColor: colorScheme.surface,
+                        pinned: true,
+                        //划到上面时标题栏是否隐藏
+                        floating: false,
+                        //向下滑动一点就显示全部
+                        snap: false,
+                        primary: true,
+                        expandedHeight: 300,
+                        toolbarHeight: 50,
+                        leading: Center(
+                          child: SizedBox(
+                            width: 40,
+                            height: 40,
+                            child: Material(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                              clipBehavior: Clip.hardEdge,
+                              color: colorScheme.surface.withAlpha(100),
+                              child: IconButton(
+                                splashRadius: 20,
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  color: colorScheme.onSurface,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        flexibleSpace: FlexibleSpaceBar(
+                          background: buildProfileCard(userState.user),
+                        ),
+                        bottom: PreferredSize(
+                          //如果高度有问题就改这里的值
+                          preferredSize: const Size(double.infinity, 30),
+                          child: Container(
+                            color: colorScheme.surface,
+                            child: TabBar(
+                              labelPadding: EdgeInsets.zero,
+                              padding: EdgeInsets.zero,
+                              tabs: [
+                                buildTab("动态"),
+                                buildTab("图片"),
+                                buildTab("视频"),
+                                buildTab("音频"),
+                                buildTab("文章"),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: buildProfileCard(userState.user),
-                  ),
-                  bottom: PreferredSize(
-                    //如果高度有问题就改这里的值
-                    preferredSize: const Size(double.infinity, 30),
-                    child: Container(
-                      color: colorScheme.surface,
-                      child: TabBar(
-                        labelPadding: EdgeInsets.zero,
-                        padding: EdgeInsets.zero,
-                        tabs: [
-                          buildTab("动态"),
-                          buildTab("图片"),
-                          buildTab("视频"),
-                          buildTab("音频"),
-                          buildTab("文章"),
-                        ],
-                      ),
-                    ),
-                  ),
+                  ];
+                },
+                body: Container(
+                  margin: const EdgeInsets.only(top: 80),
+                  child: buildTabBarView(),
                 ),
               ),
-            ];
-          },
-          body: Container(
-            margin: const EdgeInsets.only(top: 80),
-            child: buildTabBarView(),
-          ),
-        ),
-      ),
+            ),
+          );
+        } else {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -139,7 +185,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                 Container(
                   margin: const EdgeInsets.only(top: 50),
                   child: Text(
-                    Global.user.name ?? "未知",
+                    widget.user.name ?? "未知",
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20, color: colorScheme.onSurface),
                   ),
                 ),
@@ -160,8 +206,42 @@ class _UserDetailPageState extends State<UserDetailPage> {
                 Container(
                   margin: const EdgeInsets.only(top: 40),
                   height: 30,
-                  child: OutlinedButton(onPressed: () {}, child: const Text("编辑资料")),
-                )
+                  width: 100,
+                  child: widget.user.id != null && widget.user.id == Global.user.id
+                      ? OutlinedButton(onPressed: () {}, child: const Text("编辑资料"))
+                      : _follow == null
+                          ? CommonActionOneButton(
+                              title: "关注",
+                              backgroundColor: colorScheme.primary,
+                              textColor: colorScheme.onPrimary,
+                              onTap: () async {
+                                try {
+                                  _follow = await FollowService.followUser(widget.user.id!);
+                                  setState(() {});
+                                } on Exception catch (e) {
+                                  ShowSnackBar.exception(context: context, e: e);
+                                }
+                                return false;
+                              },
+                            )
+                          : CommonActionOneButton(
+                              title: "取消关注",
+                              textColor: colorScheme.onSurface,
+                              onTap: () async {
+                                try {
+                                  await FollowService.unfollowUser(
+                                    followerId: Global.user.id!,
+                                    followeeId: widget.user.id!,
+                                  );
+                                  _follow = null;
+                                  setState(() {});
+                                } on Exception catch (e) {
+                                  ShowSnackBar.exception(context: context, e: e);
+                                }
+                                return false;
+                              },
+                            ),
+                ),
               ],
             ),
           ),
@@ -180,7 +260,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
         children: [
           PostList(
             onLoad: (int page) async {
-              var postList = await PostService.getPostListByUserId(Global.user, page, 20);
+              var postList = await PostService.getPostListByUserId(widget.user, page, 20);
               return postList;
             },
             enableRefresh: true,
@@ -190,7 +270,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
           ),
           CommonItemList<Gallery>(
             onLoad: (int page) async {
-              var galleryList = await GalleryService.getGalleryListByUserId(Global.user, page, 20);
+              var galleryList = await GalleryService.getGalleryListByUserId(widget.user, page, 20);
               return galleryList;
             },
             itemName: "图片",
@@ -204,7 +284,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
           ),
           CommonItemList<Video>(
             onLoad: (int page) async {
-              var videoList = await VideoService.getVideoListByUserId(Global.user, page, 20);
+              var videoList = await VideoService.getVideoListByUserId(widget.user, page, 20);
               return videoList;
             },
             itemName: "视频",
@@ -224,7 +304,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
           ),
           CommonItemList<Audio>(
             onLoad: (int page) async {
-              var audioList = await AudioService.getAudioListByUserId(Global.user, page, 20);
+              var audioList = await AudioService.getAudioListByUserId(widget.user, page, 20);
               return audioList;
             },
             itemName: "音频",
@@ -237,7 +317,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
           ),
           CommonItemList<Article>(
             onLoad: (int page) async {
-              var articleList = await ArticleService.getArticleListByUserId(Global.user, page, 20);
+              var articleList = await ArticleService.getArticleListByUserId(widget.user, page, 20);
               return articleList;
             },
             itemName: "文章",

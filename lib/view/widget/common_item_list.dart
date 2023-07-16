@@ -74,7 +74,7 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
         _itemList!.addAll(list);
       }
       _page++;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       log(e.toString());
     } catch (e) {
       log(e.toString());
