@@ -111,7 +111,7 @@ class Global {
       try {
         user = await UserService.signInByToken(user.phoneNumber!)
             .timeout(const Duration(seconds: 1));
-      } on DioError catch (e) {
+      } on DioException catch (e) {
         //http错误
         if (e.response != null) {
           user.clearUserInfo();

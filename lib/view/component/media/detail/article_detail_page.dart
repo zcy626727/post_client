@@ -116,7 +116,12 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => CommentPage(commentParentType: CommentParentType.article, commentParentId: widget.article.id!)),
+                          MaterialPageRoute(
+                              builder: (context) => CommentPage(
+                                    commentParentType: CommentParentType.article,
+                                    commentParentId: widget.article.id!,
+                                    parentUserId: widget.article.userId!,
+                                  )),
                         );
                       },
                       child: const Text("查看评论"),

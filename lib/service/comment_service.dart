@@ -1,6 +1,3 @@
-import 'package:post_client/api/client/message_http_config.dart';
-import 'package:post_client/model/post.dart';
-
 import '../api/client/message/comment_api.dart';
 import '../model/comment.dart';
 
@@ -8,9 +5,11 @@ class CommentService {
   static Future<Comment> createComment(
     String parentId,
     int parentType,
+    int parentUserId,
+    List<int> targetUserIdList,
     String content,
   ) async {
-    var comment = await CommentApi.createComment(parentId, parentType, content);
+    var comment = await CommentApi.createComment(parentId, parentType, parentUserId, targetUserIdList, content);
     return comment;
   }
 

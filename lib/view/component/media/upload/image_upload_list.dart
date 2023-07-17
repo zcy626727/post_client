@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../constant/media.dart';
 import '../../../../domain/task/upload_media_task.dart';
 import '../../show/show_snack_bar.dart';
 import 'image_upload_card.dart';
@@ -56,7 +57,7 @@ class _ImageUploadListState extends State<ImageUploadList> {
                       var data = await read.read(16);
                       //消息接收器
                       var task =
-                          UploadMediaTask.all(srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.uploading.index, mediaType: MediaType.image, magicNumber: data);
+                          UploadMediaTask.all(srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.uploading.index, mediaType: MediaType.gallery, magicNumber: data);
                       widget.imageUploadTaskList.add(task);
                     } finally {
                       read?.close();

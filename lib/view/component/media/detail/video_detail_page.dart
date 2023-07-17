@@ -114,7 +114,12 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => CommentPage(commentParentType: CommentParentType.video, commentParentId: widget.video.id!)),
+                          MaterialPageRoute(
+                              builder: (context) => CommentPage(
+                                    commentParentType: CommentParentType.video,
+                                    commentParentId: widget.video.id!,
+                                    parentUserId: widget.video.userId!,
+                                  )),
                         );
                       },
                       child: const Text("查看评论"),

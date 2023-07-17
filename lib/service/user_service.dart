@@ -10,7 +10,7 @@ class UserService {
     //查询当前id的用户在本机是否有数据
     User user = await UserApi.signIn(phoneNumber, password);
     //最新登录时间
-    user.lastLoginTime = DateTime.now().toString();
+    user.lastLoginTime = DateTime.now();
     user.phoneNumber = phoneNumber;
     if (kIsWeb) {
     } else {
@@ -23,7 +23,7 @@ class UserService {
   static Future<User> signInByToken(String phoneNumber) async {
     var user = await UserApi.signInByToken(phoneNumber);
     //最新登录时间
-    user.lastLoginTime = DateTime.now().toString();
+    user.lastLoginTime = DateTime.now();
     if (kIsWeb) {
     } else {
       //插入或更新到数据库
@@ -36,7 +36,7 @@ class UserService {
   static Future<User> signUp(String phoneNumber, String password, String name) async {
     var user = await UserApi.signUp(phoneNumber, password, name);
     //最新登录时间
-    user.lastLoginTime = DateTime.now().toString();
+    user.lastLoginTime = DateTime.now();
     //这里返回user用于让回显到用户登录文本中
     return user;
   }

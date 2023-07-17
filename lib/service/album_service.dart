@@ -26,12 +26,11 @@ class AlbumService {
   }
 
   static Future<List<Album>> getAlbumListByUserId(
-    int userId,
+    User user,
     int pageIndex,
     int pageSize,
-    User user,
   ) async {
-    var albumList = await AlbumApi.getAlbumListByUserId(userId, pageIndex, pageSize);
+    var albumList = await AlbumApi.getAlbumListByUserId(user.id!, pageIndex, pageSize);
     for (var album in albumList) {
       album.user = user;
     }

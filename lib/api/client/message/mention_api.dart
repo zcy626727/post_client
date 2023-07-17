@@ -15,7 +15,7 @@ class MentionApi{
       ) async {
     var r = await MessageHttpConfig.dio.get(
       "/mention/getReplyMentionList",
-      data: {
+      queryParameters: {
         "pageIndex": pageIndex,
         "pageSize": pageSize,
       },

@@ -128,6 +128,23 @@ class PostApi {
     return postList;
   }
 
+  static Future<Map<String, Post>> getPostMapByIdList(
+      List<String> postIdList,
+      ) async {
+    var r = await MessageHttpConfig.dio.post(
+      "/post/getPostListByIdList",
+      data: {
+        "commentIdList": postIdList,
+      },
+      options: MessageHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": false,
+      }),
+    );
+
+    return _parsePostMapWithUser(r);
+  }
+
   static List<Post> _parsePostWithUser(Response<dynamic> r) {
     Map<int, User> userMap = {};
     for (var userJson in r.data['userList']) {
@@ -141,5 +158,25 @@ class PostApi {
       postList.add(post);
     }
     return postList;
+  }
+
+  static Map<String, Post> _parsePostMapWithUser(Response<dynamic> r) {
+    Map<int, User> userMap = {};
+    if (r.data['userList'] != null) {
+      for (var userJson in r.data['userList']) {
+        var user = User.fromJson(userJson);
+        userMap[user.id!] = user;
+      }
+    }
+
+    Map<String, Post> postMap = {};
+    if (r.data['commentList'] != null) {
+      for (var commentJson in r.data['commentList']) {
+        var post = Post.fromJson(commentJson);
+        post.user = userMap[post.userId];
+        postMap[post.id!] = post;
+      }
+    }
+    return postMap;
   }
 }

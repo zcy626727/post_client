@@ -10,6 +10,7 @@ class ReplyPage extends StatefulWidget {
 
   final Comment comment;
   final Function(Comment) onDeleteComment;
+
   @override
   State<ReplyPage> createState() => _ReplyPageState();
 }
@@ -87,6 +88,7 @@ class _ReplyPageState extends State<ReplyPage> {
                       },
                       parentId: widget.comment.id!,
                       parentType: CommentParentType.comment,
+                      parentUserId: widget.comment.userId!,
                     ),
                   ),
                 ),

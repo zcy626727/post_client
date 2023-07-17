@@ -5,15 +5,15 @@ import '../message_http_config.dart';
 
 class FavoritesApi {
   static Future<Favorites> createFavorites(
-    List<String> mediaIdList,
-    int mediaType,
+    List<String> sourceIdList,
+    int sourceType,
     String position,
   ) async {
     var r = await MediaHttpConfig.dio.post(
       "/favorites/createFavorites",
       data: {
-        "mediaIdList": mediaIdList,
-        "mediaType": mediaType,
+        "sourceIdList": sourceIdList,
+        "sourceType": sourceType,
       },
       options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -40,17 +40,17 @@ class FavoritesApi {
     );
   }
 
-  static Future<void> addMediaToFavorites(
+  static Future<void> addSourceToFavorites(
     String favoritesId,
-    String mediaId,
-    int mediaType,
+    String sourceId,
+    int sourceType,
   ) async {
     await MediaHttpConfig.dio.post(
-      "/favorites/addMediaToFavorites",
+      "/favorites/addSourceToFavorites",
       data: {
         "favoritesId": favoritesId,
-        "mediaId": mediaId,
-        "mediaType": mediaType,
+        "sourceId": sourceId,
+        "sourceType": sourceType,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -60,14 +60,14 @@ class FavoritesApi {
   }
 
   static Future<List<Favorites>> getUserFavoritesList(
-      int mediaType,
+      int sourceType,
       int pageIndex,
       int pageSize,
       ) async {
     var r = await MediaHttpConfig.dio.get(
       "/favorites/getUserFavoritesList",
       queryParameters: {
-        "mediaType": mediaType,
+        "sourceType": sourceType,
         "pageIndex": pageIndex,
         "pageSize": pageSize,
       },

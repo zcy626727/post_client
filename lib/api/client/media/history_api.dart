@@ -4,15 +4,15 @@ import '../message_http_config.dart';
 
 class HistoryApi {
   static Future<History> createHistory(
-    String mediaId,
-    int mediaType,
+    String sourceId,
+    int sourceType,
     String position,
   ) async {
     var r = await MessageHttpConfig.dio.post(
       "/history/createHistory",
       data: {
-        "mediaId": mediaId,
-        "mediaType": mediaType,
+        "sourceId": sourceId,
+        "sourceType": sourceType,
         "position": position,
       },
       options: MessageHttpConfig.options.copyWith(extra: {
@@ -57,15 +57,15 @@ class HistoryApi {
     );
   }
 
-  static Future<History> getHistoryByMedia(
-    String mediaId,
-    String mediaType,
+  static Future<History> getHistoryBySource(
+    String sourceId,
+    String sourceType,
   ) async {
     var r = await MessageHttpConfig.dio.get(
-      "/history/getHistoryByMedia",
+      "/history/getHistoryBySource",
       data: {
-        "mediaType": mediaType,
-        "commentId": mediaId,
+        "sourceType": sourceType,
+        "commentId": sourceId,
       },
       options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -76,14 +76,14 @@ class HistoryApi {
   }
 
   static Future<List<History>> getUserHistoryList(
-      int mediaType,
+      int sourceType,
       int pageIndex,
       int pageSize,
       ) async {
     var r = await MessageHttpConfig.dio.get(
       "/history/getUserHistoryList",
       data: {
-        "mediaType": mediaType,
+        "sourceType": sourceType,
         "pageIndex": pageIndex,
         "pageSize": pageSize,
       },

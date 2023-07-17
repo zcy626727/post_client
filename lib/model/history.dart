@@ -6,10 +6,14 @@ part 'history.g.dart';
 class History{
   String? id;
   int? userId;
-  int? mediaType;
-  String? mediaId;
+  int? sourceType;
+  String? sourceId;
   String? position;
   DateTime? createTime;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  dynamic source;
+
 
   History();
 

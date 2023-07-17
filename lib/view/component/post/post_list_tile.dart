@@ -84,7 +84,7 @@ class _PostListTileState extends State<PostListTile> {
       contentPadding: EdgeInsets.zero,
       visualDensity: const VisualDensity(horizontal: -2, vertical: -2),
       leading: GestureDetector(
-        onTap: (){
+        onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => UserDetailPage(user: widget.post.user!)),
@@ -302,7 +302,12 @@ class _PostListTileState extends State<PostListTile> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CommentPage(commentParentType: CommentParentType.post, commentParentId: widget.post.id!)),
+                  MaterialPageRoute(
+                      builder: (context) => CommentPage(
+                            commentParentType: CommentParentType.post,
+                            commentParentId: widget.post.id!,
+                            parentUserId: widget.post.userId!,
+                          )),
                 );
               },
             ),

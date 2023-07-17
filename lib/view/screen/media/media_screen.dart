@@ -11,8 +11,14 @@ import 'package:post_client/service/favorites_service.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/component/media/album_list_tile.dart';
+import 'package:post_client/view/page/media/album_list_page.dart';
+import 'package:post_client/view/page/media/history_list_page.dart';
+import 'package:post_client/view/page/media/watch_later_list_page.dart';
 import 'package:post_client/view/widget/common_header_bar.dart';
 import 'package:provider/provider.dart';
+
+import '../../page/media/download_list_page.dart';
+import '../../page/media/favorites_list_page.dart';
 
 class MediaScreen extends StatefulWidget {
   const MediaScreen({super.key});
@@ -37,14 +43,12 @@ class _MediaScreenState extends State<MediaScreen> {
   }
 
   Future<void> getAlbum() async {
-    try {
-    } on DioException catch (e) {
+    try {} on DioException catch (e) {
       log(e.toString());
     } catch (e) {
       log(e.toString());
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -102,10 +106,63 @@ class _MediaScreenState extends State<MediaScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                buildItemButton(iconData: Icons.collections_bookmark, text: "我的收藏", onPress: () {}),
-                buildItemButton(iconData: Icons.history, text: "历史记录"),
-                buildItemButton(iconData: Icons.watch_later_outlined, text: "稍后再看"),
-                buildItemButton(iconData: Icons.download, text: "缓存列表"),
+                buildItemButton(
+                    iconData: Icons.collections_bookmark,
+                    text: "我的收藏",
+                    onPress: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const FavoritesListPage()),
+                      );
+                    }),
+                buildItemButton(
+                    iconData: Icons.album,
+                    text: "我的合集",
+                    onPress: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const AlbumListPage()),
+                      );
+                    }),
+                buildItemButton(
+                    iconData: Icons.history,
+                    text: "历史记录",
+                    onPress: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const HistoryListPage()),
+                      );
+                    }),
+                buildItemButton(
+                    iconData: Icons.watch_later_outlined,
+                    text: "稍后再看",
+                    onPress: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const WatchLaterListPage()),
+                      );
+                    }),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(bottom: 5),
+            color: colorScheme.surface,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                buildItemButton(
+                    iconData: Icons.download,
+                    text: "缓存列表",
+                    onPress: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const DownloadListPage()),
+                      );
+                    }),
+                Container(width: 85),
+                Container(width: 85),
+                Container(width: 85),
               ],
             ),
           ),

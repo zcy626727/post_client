@@ -88,7 +88,12 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CommentPage(commentParentType: CommentParentType.gallery, commentParentId: widget.gallery.id!)),
+                    MaterialPageRoute(
+                        builder: (context) => CommentPage(
+                              commentParentType: CommentParentType.gallery,
+                              commentParentId: widget.gallery.id!,
+                              parentUserId: widget.gallery.userId!,
+                            )),
                   );
                 },
                 child: const Text("查看评论"),

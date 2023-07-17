@@ -89,9 +89,4 @@ enum UploadTaskStatus {
   error, //上传出错
 }
 
-class MediaType {
-  static const article = 1;
-  static const image = 2;
-  static const audio = 3;
-  static const video = 4;
-}
+

@@ -7,6 +7,7 @@ import 'package:post_client/service/video_service.dart';
 import 'package:post_client/view/component/media/upload/media_info_card.dart';
 import 'package:post_client/view/component/media/upload/video_upload_card.dart';
 
+import '../../../constant/media.dart';
 import '../../component/media/upload/image_upload_card.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';

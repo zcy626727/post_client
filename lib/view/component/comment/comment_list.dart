@@ -12,6 +12,7 @@ import 'package:post_client/view/component/input/comment_text_field.dart';
 import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 import 'package:post_client/view/page/comment/reply_page.dart';
 
+import '../../../model/user.dart';
 import 'comment_card.dart';
 
 class CommentList extends StatefulWidget {
@@ -23,6 +24,7 @@ class CommentList extends StatefulWidget {
     required this.onLoad,
     required this.parentId,
     required this.parentType,
+    required this.parentUserId,
   }) : super(key: key);
 
   final Future<List<Comment>> Function(int) onLoad;
@@ -31,6 +33,7 @@ class CommentList extends StatefulWidget {
   final bool enableScrollbar;
   final String parentId;
   final int parentType;
+  final int parentUserId;
 
   @override
   State<CommentList> createState() => _CommentListState();
@@ -125,7 +128,7 @@ class _CommentListState extends State<CommentList> {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     _focusNode.unfocus();
                   },
                   child: Container(
@@ -141,7 +144,20 @@ class _CommentListState extends State<CommentList> {
                 focusNode: _focusNode,
                 onSubmit: () async {
                   var content = jsonEncode(_controller.document.toDelta().toJson());
-                  var comment = await CommentService.createComment(widget.parentId, widget.parentType, content);
+                  var delta = _controller.document.toDelta().toList();
+                  List<int> targetUserIdList = <int>[];
+
+                  for (var d in delta) {
+                    var data = d.data;
+                    if (data is Map<String, dynamic>) {
+                      //只要有map类型的就应该不是空的
+                      //获取@的人
+                      var user = User.fromJson(json.decode(data['at']));
+                      targetUserIdList.add(user.id!);
+                    }
+                  }
+
+                  var comment = await CommentService.createComment(widget.parentId, widget.parentType, widget.parentUserId, targetUserIdList, content);
                   comment.user = Global.user;
                   _commentList.insert(0, comment);
                   _controller.clear();

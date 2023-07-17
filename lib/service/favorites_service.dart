@@ -3,11 +3,11 @@ import '../model/favorites.dart';
 
 class FavoritesService {
   static Future<Favorites> createFavorites(
-    List<String> mediaIdList,
-    int mediaType,
+    List<String> sourceIdList,
+    int sourceType,
     String position,
   ) async {
-    var history = await FavoritesApi.createFavorites(mediaIdList, mediaType, position);
+    var history = await FavoritesApi.createFavorites(sourceIdList, sourceType, position);
     return history;
   }
 
@@ -17,21 +17,23 @@ class FavoritesService {
     await FavoritesApi.deleteUserFavoritesById(favoritesId);
   }
 
-  static Future<void> addMediaToFavorites(
+  static Future<void> addSourceToFavorites(
     String favoritesId,
-    String mediaId,
-    int mediaType,
+    String sourceId,
+    int sourceType,
   ) async {
-    await FavoritesApi.addMediaToFavorites(favoritesId, mediaId, mediaType);
+    await FavoritesApi.addSourceToFavorites(favoritesId, sourceId, sourceType);
   }
 
 
   static Future<List<Favorites>> getUserFavoritesList(
-    int mediaType,
+    int sourceType,
     int pageIndex,
     int pageSize,
   ) async {
-    var historyList = await FavoritesApi.getUserFavoritesList(mediaType, pageIndex, pageSize);
+    var historyList = await FavoritesApi.getUserFavoritesList(sourceType, pageIndex, pageSize);
     return historyList;
   }
+
+
 }

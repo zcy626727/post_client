@@ -14,6 +14,8 @@ import 'package:post_client/view/page/account/user_details_page.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:provider/provider.dart';
 
+import '../../../constant/post.dart';
+
 class FollowScreen extends StatefulWidget {
   const FollowScreen({super.key});
 

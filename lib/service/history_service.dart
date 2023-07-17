@@ -3,11 +3,11 @@ import 'package:post_client/model/history.dart';
 
 class HistoryService {
   static Future<History> createHistory(
-    String mediaId,
-    int mediaType,
+    String sourceId,
+    int sourceType,
     String position,
   ) async {
-    var history = await HistoryApi.createHistory(mediaId, mediaType, position);
+    var history = await HistoryApi.createHistory(sourceId, sourceType, position);
     return history;
   }
 
@@ -24,20 +24,20 @@ class HistoryService {
     await HistoryApi.updateHistoryPosition(historyId, newPosition);
   }
 
-  static Future<History> getHistoryByMedia(
-    String mediaId,
-    String mediaType,
+  static Future<History> getHistoryBySource(
+    String sourceId,
+    String sourceType,
   ) async {
-    var history = await HistoryApi.getHistoryByMedia(mediaId, mediaType);
+    var history = await HistoryApi.getHistoryBySource(sourceId, sourceType);
     return history;
   }
 
   static Future<List<History>> getUserHistoryList(
-    int mediaType,
+    int sourceType,
     int pageIndex,
     int pageSize,
   ) async {
-    var historyList = await HistoryApi.getUserHistoryList(mediaType, pageIndex, pageSize);
+    var historyList = await HistoryApi.getUserHistoryList(sourceType, pageIndex, pageSize);
     return historyList;
   }
 }

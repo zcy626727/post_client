@@ -8,6 +8,8 @@ class CommentApi {
   static Future<Comment> createComment(
     String parentId,
     int parentType,
+    int parentUserId,
+    List<int> targetUserIdList,
     String content,
   ) async {
     var r = await MessageHttpConfig.dio.post(
@@ -15,7 +17,9 @@ class CommentApi {
       data: {
         "parentId": parentId,
         "parentType": parentType,
+        "parentUserId": parentUserId,
         "content": content,
+        "targetUserIdList": targetUserIdList,
       },
       options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -61,7 +65,7 @@ class CommentApi {
         "withToken": false,
       }),
     );
-    var commentList = _parseCommentWithUser(r);
+    var commentList = _parseCommentListWithUser(r);
     return commentList;
   }
 
@@ -70,7 +74,7 @@ class CommentApi {
   ) async {
     var r = await MessageHttpConfig.dio.get(
       "/comment/getCommentById",
-      data: {
+      queryParameters: {
         "commentId": commentId,
       },
       options: MessageHttpConfig.options.copyWith(extra: {
@@ -88,7 +92,7 @@ class CommentApi {
   ) async {
     var r = await MessageHttpConfig.dio.get(
       "/comment/getReplyCommentList",
-      data: {
+      queryParameters: {
         "pageIndex": pageIndex,
         "pageSize": pageSize,
       },
@@ -97,11 +101,28 @@ class CommentApi {
         "withToken": true,
       }),
     );
-    var commentList = _parseCommentWithUser(r);
+    var commentList = _parseCommentListWithUser(r);
     return commentList;
   }
 
-  static List<Comment> _parseCommentWithUser(Response<dynamic> r) {
+  static Future<Map<String, Comment>> getCommentMapByIdList(
+    List<String> commentIdList,
+  ) async {
+    var r = await MessageHttpConfig.dio.post(
+      "/comment/getCommentListByIdList",
+      data: {
+        "commentIdList": commentIdList,
+      },
+      options: MessageHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": false,
+      }),
+    );
+
+    return _parseCommentMapWithUser(r);
+  }
+
+  static List<Comment> _parseCommentListWithUser(Response<dynamic> r) {
     Map<int, User> userMap = {};
     for (var userJson in r.data['userList']) {
       var user = User.fromJson(userJson);
@@ -114,5 +135,25 @@ class CommentApi {
       commentList.add(comment);
     }
     return commentList;
+  }
+
+  static Map<String, Comment> _parseCommentMapWithUser(Response<dynamic> r) {
+    Map<int, User> userMap = {};
+    if (r.data['userList'] != null) {
+      for (var userJson in r.data['userList']) {
+        var user = User.fromJson(userJson);
+        userMap[user.id!] = user;
+      }
+    }
+
+    Map<String, Comment> commentMap = {};
+    if (r.data['commentList'] != null) {
+      for (var commentJson in r.data['commentList']) {
+        var comment = Comment.fromJson(commentJson);
+        comment.user = userMap[comment.userId];
+        commentMap[comment.id!] = comment;
+      }
+    }
+    return commentMap;
   }
 }

@@ -7,6 +7,7 @@ import 'package:post_client/view/component/media/upload/audio_upload_card.dart';
 import 'package:post_client/view/component/media/upload/media_info_card.dart';
 import 'package:post_client/view/widget/player/audio/common_audio_player_mini.dart';
 
+import '../../../constant/media.dart';
 import '../../../domain/task/upload_media_task.dart';
 import '../../component/media/upload/image_upload_card.dart';
 import '../../component/show/show_snack_bar.dart';

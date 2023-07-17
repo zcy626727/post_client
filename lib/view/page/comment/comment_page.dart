@@ -6,9 +6,10 @@ import '../../../service/comment_service.dart';
 import '../../component/comment/comment_list.dart';
 
 class CommentPage extends StatefulWidget {
-  const CommentPage({super.key, required this.commentParentType, required this.commentParentId});
+  const CommentPage({super.key, required this.commentParentType, required this.commentParentId, required this.parentUserId});
 
   final int commentParentType;
+  final int parentUserId;
   final String commentParentId;
 
   @override
@@ -50,6 +51,7 @@ class _CommentPageState extends State<CommentPage> {
           },
           parentId: widget.commentParentId,
           parentType: widget.commentParentType,
+          parentUserId: widget.parentUserId,
         ),
       ),
     );

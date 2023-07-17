@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../constant/media.dart';
 import '../../../../domain/task/upload_media_task.dart';
 import 'image_upload_card.dart';
 
@@ -88,7 +89,7 @@ class _MediaInfoCardState extends State<MediaInfoCard> {
                                 widget.coverUploadImage.srcPath = file.path;
                                 widget.coverUploadImage.totalSize = file.size;
                                 widget.coverUploadImage.status = UploadTaskStatus.uploading.index;
-                                widget.coverUploadImage.mediaType = MediaType.image;
+                                widget.coverUploadImage.mediaType = MediaType.gallery;
                                 widget.coverUploadImage.magicNumber = data;
                               } catch (e) {
                                 widget.coverUploadImage.clear();

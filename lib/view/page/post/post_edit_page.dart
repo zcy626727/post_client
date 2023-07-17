@@ -15,6 +15,7 @@ import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
 
+import '../../../constant/media.dart';
 import '../../../model/user.dart';
 import '../../component/quill/quill_editor.dart';
 
@@ -179,7 +180,7 @@ class _PostEditPageState extends State<PostEditPage> {
                         srcPath: file.path,
                         totalSize: file.size,
                         status: UploadTaskStatus.uploading.index,
-                        mediaType: MediaType.image,
+                        mediaType: MediaType.gallery,
                         magicNumber: data,
                       );
                       imageUploadTaskList.add(task);

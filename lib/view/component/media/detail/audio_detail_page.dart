@@ -112,7 +112,12 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => CommentPage(commentParentType: CommentParentType.audio, commentParentId: widget.audio.id!)),
+                          MaterialPageRoute(
+                              builder: (context) => CommentPage(
+                                    commentParentType: CommentParentType.audio,
+                                    commentParentId: widget.audio.id!,
+                                    parentUserId: widget.audio.userId!,
+                                  )),
                         );
                       },
                       child: const Text("查看评论"),

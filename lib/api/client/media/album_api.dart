@@ -6,6 +6,7 @@ import 'package:post_client/model/gallery.dart';
 import 'package:post_client/model/media.dart';
 import 'package:post_client/model/video.dart';
 
+import '../../../constant/media.dart';
 import '../../../model/album.dart';
 
 class AlbumApi {
@@ -83,7 +84,7 @@ class AlbumApi {
 
     for (var mediaJson in r.data['mediaList']) {
       switch(album.mediaType){
-        case MediaType.image:
+        case MediaType.gallery:
           mediaList.add(Gallery.fromJson(mediaJson));
         case MediaType.audio:
           mediaList.add(Audio.fromJson(mediaJson));

@@ -18,13 +18,15 @@ class User {
   });
 
   String? phoneNumber;
+
   int? id;
   String? name;
 
   String? token;
-  String? lastLoginTime;
+  DateTime? lastLoginTime;
   String? avatarUrl;
   DateTime? createTime;
+
   //粉丝
   int? followerNumber;
 
@@ -34,7 +36,7 @@ class User {
   //0：跟随系统，1：亮，2：暗
   int? themeMode = 0;
 
-  User.one(){
+  User.one() {
     id = 1;
     name = "aaa";
     avatarUrl = "https://pic1.zhimg.com/80/v2-64803cb7928272745eb2bb0203e03648_1440w.webp";
@@ -50,7 +52,8 @@ class User {
       avatarUrl text,
       themeMode integer not null,
       followerNumber integer,
-      followeeNumber integer
+      followeeNumber integer,
+      createTime text not null
     )
   ''';
 
@@ -101,6 +104,7 @@ class UserProvider {
         "themeMode",
         "followerNumber",
         "followeeNumber",
+        "createTime",
       ],
       where: 'phoneNumber = ?',
       whereArgs: [phoneNumber],
@@ -124,6 +128,7 @@ class UserProvider {
         "themeMode",
         "followerNumber",
         "followeeNumber",
+        "createTime",
       ],
       orderBy: "lastLoginTime desc",
       limit: 1,
@@ -139,7 +144,6 @@ class UserProvider {
   }
 
   Future<int> update(User user) async {
-    return await db
-        .update("user", user.toJson(), where: 'id = ?', whereArgs: [user.id]);
+    return await db.update("user", user.toJson(), where: 'id = ?', whereArgs: [user.id]);
   }
 }
