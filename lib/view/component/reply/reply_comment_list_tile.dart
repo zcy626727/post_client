@@ -34,11 +34,15 @@ class ReplyCommentListTile extends StatelessWidget {
         ),
         title: Container(
           margin: const EdgeInsets.only(top: 6),
-          child: Text(comment.user!.name!),
+          child: Text(
+            comment.user!.name!,
+            style: TextStyle(color: colorScheme.onSurface),
+          ),
         ),
         subtitle: Text(
           text,
           maxLines: 2,
+          style: TextStyle(color: colorScheme.onSurface),
           overflow: TextOverflow.ellipsis,
         ),
       ),

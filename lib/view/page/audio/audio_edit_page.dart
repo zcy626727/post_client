@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/service/audio_service.dart';
 import 'package:post_client/view/component/media/upload/audio_upload_card.dart';
-import 'package:post_client/view/component/media/upload/media_info_card.dart';
+import 'package:post_client/view/component/input/common_info_card.dart';
 import 'package:post_client/view/widget/player/audio/common_audio_player_mini.dart';
 
 import '../../../constant/media.dart';
@@ -141,7 +141,7 @@ class _AudioEditPageState extends State<AudioEditPage> {
                           child: const Text("选择音频")),
                     )
                   : AudioUploadCard(key: ValueKey(audioUploadTask!.srcPath), task: audioUploadTask!),
-              MediaInfoCard(
+              CommonInfoCard(
                 coverUploadImage: coverUploadImage,
                 titleController: titleController,
                 introductionController: introductionController,

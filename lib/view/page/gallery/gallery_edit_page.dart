@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:post_client/config/constants.dart';
 import 'package:post_client/config/media_config.dart';
 import 'package:post_client/service/gallery_service.dart';
-import 'package:post_client/view/component/media/upload/media_info_card.dart';
+import 'package:post_client/view/component/input/common_info_card.dart';
 
 import '../../../config/post_config.dart';
 import '../../../domain/task/upload_media_task.dart';
@@ -114,7 +114,7 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                 color: colorScheme.surface,
                 child: ImageUploadList(imageUploadTaskList: imageUploadTaskList, maxUploadNum: MediaConfig.maxGalleryUploadImageNum),
               ),
-              MediaInfoCard(
+              CommonInfoCard(
                 coverUploadImage: coverUploadImage,
                 titleController: titleController,
                 introductionController: introductionController,

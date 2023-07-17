@@ -13,7 +13,8 @@ class AlbumApi {
   static Future<Album> createAlbum(
     String title,
     String introduction,
-    int? mediaType,
+    int mediaType,
+    String? coverUrl,
   ) async {
     var r = await MediaHttpConfig.dio.post(
       "/album/createAlbum",
@@ -21,6 +22,7 @@ class AlbumApi {
         "title": title,
         "introduction": introduction,
         "mediaType": mediaType,
+        "coverUrl": coverUrl,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -48,10 +50,10 @@ class AlbumApi {
   }
 
   static Future<void> addMediaToAlbum(
-      String albumId,
-      int mediaType,
-      String mediaId,
-      ) async {
+    String albumId,
+    int mediaType,
+    String mediaId,
+  ) async {
     await MediaHttpConfig.dio.post(
       "/album/addMediaToAlbum",
       data: {
@@ -83,7 +85,7 @@ class AlbumApi {
     var mediaList = <Media>[];
 
     for (var mediaJson in r.data['mediaList']) {
-      switch(album.mediaType){
+      switch (album.mediaType) {
         case MediaType.gallery:
           mediaList.add(Gallery.fromJson(mediaJson));
         case MediaType.audio:
@@ -99,21 +101,23 @@ class AlbumApi {
     return album;
   }
 
-  static Future<List<Album>> getAlbumListByUserId(
+  static Future<List<Album>> getUserAlbumList(
     int userId,
+    int mediaType,
     int pageIndex,
     int pageSize,
   ) async {
     var r = await MediaHttpConfig.dio.get(
-      "/album/getAlbumListByUserId",
+      "/album/getUserAlbumList",
       queryParameters: {
         "targetUserId": userId,
+        "mediaType": mediaType,
         "pageIndex": pageIndex,
         "pageSize": pageSize,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": false,
-        "withToken": false,
+        "withToken": true,
       }),
     );
     List<Album> albumList = [];

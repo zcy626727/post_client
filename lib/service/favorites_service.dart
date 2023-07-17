@@ -3,11 +3,12 @@ import '../model/favorites.dart';
 
 class FavoritesService {
   static Future<Favorites> createFavorites(
-    List<String> sourceIdList,
+    String title,
+    String introduction,
+    String? coverUrl,
     int sourceType,
-    String position,
   ) async {
-    var history = await FavoritesApi.createFavorites(sourceIdList, sourceType, position);
+    var history = await FavoritesApi.createFavorites(title, introduction, coverUrl, sourceType);
     return history;
   }
 
@@ -25,7 +26,6 @@ class FavoritesService {
     await FavoritesApi.addSourceToFavorites(favoritesId, sourceId, sourceType);
   }
 
-
   static Future<List<Favorites>> getUserFavoritesList(
     int sourceType,
     int pageIndex,
@@ -34,6 +34,4 @@ class FavoritesService {
     var historyList = await FavoritesApi.getUserFavoritesList(sourceType, pageIndex, pageSize);
     return historyList;
   }
-
-
 }

@@ -6,9 +6,10 @@ class AlbumService {
   static Future<Album> createAlbum(
     String title,
     String introduction,
-    int? mediaType,
+    int mediaType,
+    String? coverUrl,
   ) async {
-    var album = await AlbumApi.createAlbum(title, introduction, mediaType);
+    var album = await AlbumApi.createAlbum(title, introduction, mediaType, coverUrl);
     return album;
   }
 
@@ -25,12 +26,13 @@ class AlbumService {
     return album;
   }
 
-  static Future<List<Album>> getAlbumListByUserId(
+  static Future<List<Album>> getUserAlbumList(
     User user,
+    int mediaType,
     int pageIndex,
     int pageSize,
   ) async {
-    var albumList = await AlbumApi.getAlbumListByUserId(user.id!, pageIndex, pageSize);
+    var albumList = await AlbumApi.getUserAlbumList(user.id!, mediaType, pageIndex, pageSize);
     for (var album in albumList) {
       album.user = user;
     }

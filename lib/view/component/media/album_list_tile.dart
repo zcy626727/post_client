@@ -33,6 +33,7 @@ class _AlbumListTileState extends State<AlbumListTile> {
                     borderRadius: BorderRadius.circular(5),
                     child: Image(
                       image: NetworkImage(widget.album.coverUrl!),
+                      fit: BoxFit.cover,
                     ),
                   )
                 : Icon(
@@ -57,7 +58,7 @@ class _AlbumListTileState extends State<AlbumListTile> {
                         widget.album.title ?? "已失效",
                         style: TextStyle(
                           color: colorScheme.onSurface.withAlpha(200),
-                          fontSize: 16,
+                          fontSize: 18,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -101,5 +102,4 @@ class _AlbumListTileState extends State<AlbumListTile> {
       ),
     );
   }
-
 }

@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../constant/media.dart';
-import '../../../../domain/task/upload_media_task.dart';
-import 'image_upload_card.dart';
+import '../../../constant/media.dart';
+import '../../../domain/task/upload_media_task.dart';
+import '../media/upload/image_upload_card.dart';
 
-class MediaInfoCard extends StatefulWidget {
-  const MediaInfoCard({super.key, required this.coverUploadImage, required this.titleController, required this.introductionController, this.onRefresh});
+class CommonInfoCard extends StatefulWidget {
+  const CommonInfoCard({super.key, required this.coverUploadImage, required this.titleController, required this.introductionController, this.onRefresh});
 
   final UploadMediaTask coverUploadImage;
   final TextEditingController titleController;
@@ -16,10 +16,10 @@ class MediaInfoCard extends StatefulWidget {
   final Function? onRefresh;
 
   @override
-  State<MediaInfoCard> createState() => _MediaInfoCardState();
+  State<CommonInfoCard> createState() => _CommonInfoCardState();
 }
 
-class _MediaInfoCardState extends State<MediaInfoCard> {
+class _CommonInfoCardState extends State<CommonInfoCard> {
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
@@ -57,7 +57,7 @@ class _MediaInfoCardState extends State<MediaInfoCard> {
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                     labelText: "标题",
-                    labelStyle: TextStyle(color: colorScheme.primary),
+                    labelStyle: TextStyle(color: colorScheme.onSurface),
                     alignLabelWithHint: true,
                     errorStyle: const TextStyle(fontSize: 10),
                     counterStyle: TextStyle(color: colorScheme.onSurface),
@@ -129,7 +129,7 @@ class _MediaInfoCardState extends State<MediaInfoCard> {
                 borderRadius: BorderRadius.circular(5.0),
               ),
               labelText: "简介",
-              labelStyle: TextStyle(color: colorScheme.primary),
+              labelStyle: TextStyle(color: colorScheme.onSurface),
               alignLabelWithHint: true,
               counterStyle: TextStyle(color: colorScheme.onSurface),
             ),

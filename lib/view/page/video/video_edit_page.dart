@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/domain/task/upload_media_task.dart';
 import 'package:post_client/service/video_service.dart';
-import 'package:post_client/view/component/media/upload/media_info_card.dart';
+import 'package:post_client/view/component/input/common_info_card.dart';
 import 'package:post_client/view/component/media/upload/video_upload_card.dart';
 
 import '../../../constant/media.dart';
@@ -129,7 +129,7 @@ class _VideoEditPageState extends State<VideoEditPage> {
                           child: const Text("选择视频")),
                     )
                   : VideoUploadCard(key: ValueKey(videoUploadTask!.srcPath), task: videoUploadTask!),
-              MediaInfoCard(
+              CommonInfoCard(
                 coverUploadImage: coverUploadImage,
                 titleController: titleController,
                 introductionController: introductionController,

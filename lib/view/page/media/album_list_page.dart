@@ -7,6 +7,7 @@ import 'package:post_client/domain/task/upload_media_task.dart';
 import 'package:post_client/model/album.dart';
 import 'package:post_client/service/album_service.dart';
 import 'package:post_client/view/component/media/album_list_tile.dart';
+import 'package:post_client/view/page/album/album_edit_page.dart';
 
 import '../../../constant/media.dart';
 import '../../../constant/source.dart';
@@ -22,7 +23,8 @@ class AlbumListPage extends StatefulWidget {
 class _AlbumListPageState extends State<AlbumListPage> {
   late Future _futureBuilderFuture;
 
-  int _sourceType = 0;
+  int _mediaType = 0;
+
   @override
   void initState() {
     super.initState();
@@ -69,7 +71,44 @@ class _AlbumListPageState extends State<AlbumListPage> {
                 "合集",
                 style: TextStyle(color: colorScheme.onSurface),
               ),
-              actions: [],
+              actions: [
+                PopupMenuButton<String>(
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem(
+                        height: 35,
+                        value: 'create',
+                        child: Text(
+                          '创建合集',
+                          style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
+                        ),
+                      ),
+                    ];
+                  },
+                  icon: Icon(Icons.more_horiz, color: colorScheme.onSurface),
+                  splashRadius: 20,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    side: BorderSide(
+                      width: 1,
+                      color: colorScheme.onSurface.withAlpha(30),
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  color: colorScheme.surface,
+                  onSelected: (value) async {
+                    switch (value) {
+                      case "create":
+                        var album = await Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const AlbumEditPage()),
+                        );
+                        //todo 创建成功返回album，然后根据条件添加到列表
+                        break;
+                    }
+                  },
+                ),
+              ],
             ),
             body: Container(
               color: colorScheme.surface,
@@ -97,8 +136,9 @@ class _AlbumListPageState extends State<AlbumListPage> {
                   ),
                   Expanded(
                     child: CommonItemList<Album>(
+                      key: ValueKey(_mediaType),
                       onLoad: (int page) async {
-                        var commentList = await AlbumService.getAlbumListByUserId(Global.user, page, 20);
+                        var commentList = await AlbumService.getUserAlbumList(Global.user, _mediaType, page, 20);
                         return commentList;
                       },
                       itemName: "合集",
@@ -134,23 +174,23 @@ class _AlbumListPageState extends State<AlbumListPage> {
         margin: const EdgeInsets.symmetric(vertical: 5),
         child: ElevatedButton(
           onPressed: () {
-            if (_sourceType == sourceType) {
+            if (_mediaType == sourceType) {
               return;
             }
             setState(() {
-              _sourceType = sourceType;
+              _mediaType = sourceType;
             });
           },
           style: ButtonStyle(
             elevation: const MaterialStatePropertyAll(0),
             backgroundColor: MaterialStatePropertyAll(
-              sourceType == _sourceType ? colorScheme.inverseSurface : colorScheme.surfaceVariant,
+              sourceType == _mediaType ? colorScheme.inverseSurface : colorScheme.surfaceVariant,
             ),
           ),
           child: Text(
             title,
             style: TextStyle(
-              color: sourceType == _sourceType ? colorScheme.onInverseSurface : colorScheme.onSurface,
+              color: sourceType == _mediaType ? colorScheme.onInverseSurface : colorScheme.onSurface,
             ),
           ),
         ),

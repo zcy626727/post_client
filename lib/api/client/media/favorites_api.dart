@@ -5,14 +5,17 @@ import '../message_http_config.dart';
 
 class FavoritesApi {
   static Future<Favorites> createFavorites(
-    List<String> sourceIdList,
+    String title,
+    String introduction,
+    String? coverUrl,
     int sourceType,
-    String position,
   ) async {
     var r = await MediaHttpConfig.dio.post(
       "/favorites/createFavorites",
       data: {
-        "sourceIdList": sourceIdList,
+        "title": title,
+        "introduction": introduction,
+        "coverUrl": coverUrl,
         "sourceType": sourceType,
       },
       options: MessageHttpConfig.options.copyWith(extra: {
@@ -60,10 +63,10 @@ class FavoritesApi {
   }
 
   static Future<List<Favorites>> getUserFavoritesList(
-      int sourceType,
-      int pageIndex,
-      int pageSize,
-      ) async {
+    int sourceType,
+    int pageIndex,
+    int pageSize,
+  ) async {
     var r = await MediaHttpConfig.dio.get(
       "/favorites/getUserFavoritesList",
       queryParameters: {
@@ -73,7 +76,7 @@ class FavoritesApi {
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": false,
-        "withToken": false,
+        "withToken": true,
       }),
     );
 

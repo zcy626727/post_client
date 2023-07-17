@@ -1,14 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
 
-
 part 'favorites.g.dart';
 
 @JsonSerializable()
-class Favorites{
+class Favorites {
   String? id;
   int? userId;
-  int? mediaType;
-  List<String>? mediaIdList;
+  String? title;
+  String? introduction;
+  String? coverUrl;
+  int? sourceType;
+  List<String>? sourceIdList;
   DateTime? createTime;
 
   Favorites();

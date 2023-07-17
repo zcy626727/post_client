@@ -128,7 +128,7 @@ class _FollowScreenState extends State<FollowScreen> {
                 ),
                 Expanded(
                   child: PostList(
-                    key: ValueKey(DateTime.now()),
+                    key: ValueKey(_sourceType),
                     onLoad: (int page) async {
                       var postList = await PostService.getFolloweePostList(_sourceType, page, 20);
                       return postList;

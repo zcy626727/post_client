@@ -5,7 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:post_client/service/article_service.dart';
-import 'package:post_client/view/component/media/upload/media_info_card.dart';
+import 'package:post_client/view/component/input/common_info_card.dart';
 
 import '../../../domain/task/upload_media_task.dart';
 import '../../component/media/upload/image_upload_card.dart';
@@ -113,7 +113,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                 sliver: SliverToBoxAdapter(
                   child: Column(
                     children: [
-                      MediaInfoCard(
+                      CommonInfoCard(
                         coverUploadImage: coverUploadImage,
                         titleController: titleController,
                         introductionController: introductionController,

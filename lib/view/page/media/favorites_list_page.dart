@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/constant/source.dart';
+import 'package:post_client/model/favorites.dart';
+import 'package:post_client/service/favorites_service.dart';
+import 'package:post_client/view/component/favorites/favorites_list_tile.dart';
+import 'package:post_client/view/page/favorites/favorites_edit_page.dart';
 
 import '../../../model/article.dart';
 import '../../../model/audio.dart';
@@ -56,17 +60,53 @@ class _FavoritesListPageState extends State<FavoritesListPage> {
           "收藏",
           style: TextStyle(color: colorScheme.onSurface),
         ),
-        actions: [],
+        actions: [
+          PopupMenuButton<String>(
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(
+                  height: 35,
+                  value: 'create',
+                  child: Text(
+                    '新建收藏夹',
+                    style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
+                  ),
+                ),
+              ];
+            },
+            icon: Icon(Icons.more_horiz, color: colorScheme.onSurface),
+            splashRadius: 20,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+              side: BorderSide(
+                width: 1,
+                color: colorScheme.onSurface.withAlpha(30),
+                style: BorderStyle.solid,
+              ),
+            ),
+            color: colorScheme.surface,
+            onSelected: (value) async {
+              switch (value) {
+                case "create":
+                  var post = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const FavoritesEditPage()),
+                  );
+                  //todo 创建成功返回post，然后根据条件添加到列表
+                  break;
+              }
+            },
+          ),
+        ],
       ),
       body: Container(
-        color: colorScheme.surface,
+        color: colorScheme.background,
         child: Column(
           children: [
             Container(
               height: 40,
               color: colorScheme.surface,
               padding: const EdgeInsets.only(left: 5, right: 5),
-              margin: const EdgeInsets.only(bottom: 2),
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
@@ -87,7 +127,21 @@ class _FavoritesListPageState extends State<FavoritesListPage> {
               ),
             ),
             Expanded(
-              child: Container(),
+              child: CommonItemList<Favorites>(
+                key: ValueKey(_sourceType),
+                onLoad: (int page) async {
+                  var favoritesList = await FavoritesService.getUserFavoritesList(_sourceType, page, 20);
+                  return favoritesList;
+                },
+                itemName: "合集",
+                isGrip: false,
+                enableScrollbar: true,
+                itemBuilder: (ctx, favorites, favoritesList, onFresh) {
+                  return FavoritesListTile(
+                    favorites: favorites,
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -101,7 +155,6 @@ class _FavoritesListPageState extends State<FavoritesListPage> {
     return Center(
       child: Container(
         height: 25,
-        margin: const EdgeInsets.symmetric(vertical: 5),
         child: ElevatedButton(
           onPressed: () {
             if (_sourceType == sourceType) {
