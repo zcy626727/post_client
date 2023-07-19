@@ -7,10 +7,15 @@ import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:intl/intl.dart';
 import 'package:post_client/model/article.dart';
 import 'package:post_client/service/article_service.dart';
+import 'package:post_client/view/component/feedback/media_feedback_bar.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
 
-import '../../../../model/comment.dart';
-import '../../../page/comment/comment_page.dart';
+import '../../../constant/media.dart';
+import '../../../model/comment.dart';
+import '../../../model/media_feedback.dart';
+import '../../../service/media_feedback_service.dart';
+import '../../component/feedback/media_feedback_button.dart';
+import '../comment/comment_page.dart';
 
 class ArticleDetailPage extends StatefulWidget {
   const ArticleDetailPage({super.key, required this.article});
@@ -25,6 +30,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   late Future _futureBuilderFuture;
   final QuillController controller = QuillController.basic();
   final FocusNode focusNode = FocusNode();
+  MediaFeedback _mediaFeedback = MediaFeedback();
 
   @override
   void initState() {
@@ -33,10 +39,10 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   }
 
   Future getData() async {
-    return Future.wait([getDataList()]);
+    return Future.wait([getArticle()]);
   }
 
-  Future<void> getDataList() async {
+  Future<void> getArticle() async {
     try {
       var article = await ArticleService.getArticleById(widget.article.id!);
       controller.document = Document.fromJson(json.decode(article.content ?? ""));
@@ -108,6 +114,11 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                     ),
                   ),
                   buildText(),
+                  MediaFeedbackBar(
+                    mediaType: MediaType.article,
+                    mediaId: widget.article.id!,
+                    media: widget.article,
+                  ),
                   Container(
                     margin: const EdgeInsets.only(top: 5),
                     height: 40,

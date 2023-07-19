@@ -1,21 +1,21 @@
-import '../api/client/media/favorites_api.dart';
-import '../model/favorites.dart';
+import '../api/client/media/media_favorites_api.dart';
+import '../model/media_favorites.dart';
 
 class FavoritesService {
-  static Future<Favorites> createFavorites(
+  static Future<MediaFavorites> createFavorites(
     String title,
     String introduction,
     String? coverUrl,
     int sourceType,
   ) async {
-    var history = await FavoritesApi.createFavorites(title, introduction, coverUrl, sourceType);
+    var history = await MediaFavoritesApi.createFavorites(title, introduction, coverUrl, sourceType);
     return history;
   }
 
   static Future<void> deleteUserFavoritesById(
     String favoritesId,
   ) async {
-    await FavoritesApi.deleteUserFavoritesById(favoritesId);
+    await MediaFavoritesApi.deleteUserFavoritesById(favoritesId);
   }
 
   static Future<void> addSourceToFavorites(
@@ -23,15 +23,15 @@ class FavoritesService {
     String sourceId,
     int sourceType,
   ) async {
-    await FavoritesApi.addSourceToFavorites(favoritesId, sourceId, sourceType);
+    await MediaFavoritesApi.addSourceToFavorites(favoritesId, sourceId, sourceType);
   }
 
-  static Future<List<Favorites>> getUserFavoritesList(
+  static Future<List<MediaFavorites>> getUserFavoritesList(
     int sourceType,
     int pageIndex,
     int pageSize,
   ) async {
-    var historyList = await FavoritesApi.getUserFavoritesList(sourceType, pageIndex, pageSize);
+    var historyList = await MediaFavoritesApi.getUserFavoritesList(sourceType, pageIndex, pageSize);
     return historyList;
   }
 }

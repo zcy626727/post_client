@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:post_client/config/constants.dart';
 import 'package:post_client/model/video.dart';
 import 'package:post_client/service/video_service.dart';
-import 'package:post_client/view/component/media/detail/video_detail_page.dart';
+import 'package:post_client/view/page/video/video_detail_page.dart';
 
 import '../../../config/global.dart';
 import '../../widget/dialog/confirm_alert_dialog.dart';

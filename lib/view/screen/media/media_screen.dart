@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/model/album.dart';
-import 'package:post_client/model/favorites.dart';
+import 'package:post_client/model/media_favorites.dart';
 import 'package:post_client/model/history.dart';
 import 'package:post_client/model/user.dart';
 import 'package:post_client/service/album_service.dart';

@@ -64,7 +64,7 @@ class _HistoryListPageState extends State<HistoryListPage> {
               actions: [],
             ),
             body: DefaultTabController(
-              length: 6,
+              length: 4,
               child: Container(
                 color: colorScheme.surface,
                 child: Column(
@@ -73,8 +73,6 @@ class _HistoryListPageState extends State<HistoryListPage> {
                       labelPadding: EdgeInsets.zero,
                       padding: EdgeInsets.zero,
                       tabs: [
-                        buildTab("动态"),
-                        buildTab("评论"),
                         buildTab("图片"),
                         buildTab("视频"),
                         buildTab("音频"),
@@ -123,8 +121,6 @@ class _HistoryListPageState extends State<HistoryListPage> {
       child: TabBarView(
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          Container(),
-          Container(),
           Container(),
           Container(),
           Container(),

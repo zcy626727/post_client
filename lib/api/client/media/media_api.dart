@@ -13,9 +13,9 @@ class MediaApi {
     required List<String> galleryIdList,
     required List<String> videoIdList,
   }) async {
-    var r = await MediaHttpConfig.dio.post(
+    var r = await MediaHttpConfig.dio.get(
       "/media/getMediaListByIdList",
-      data: {
+      queryParameters: {
         "articleIdList": articleIdList,
         "audioIdList": audioIdList,
         "galleryIdList": galleryIdList,

@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+
+class MediaFeedbackButton extends StatelessWidget {
+  const MediaFeedbackButton({
+    super.key,
+    required this.iconData,
+    this.iconSize,
+    required this.text,
+    this.fontSize,
+    this.selected = false,
+    this.onPressed,
+  });
+
+  final IconData iconData;
+  final double? iconSize;
+  final String text;
+  final double? fontSize;
+  final bool selected;
+  final Function? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+    return SizedBox(
+      height: 60,
+      child: TextButton(
+        onPressed: () {
+          if (onPressed != null) {
+            onPressed!();
+          }
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(
+              iconData,
+              color: selected ? Colors.red : colorScheme.onSurface,
+              size: iconSize,
+            ),
+            Text(
+              text,
+              style: TextStyle(color: colorScheme.onSurface, fontWeight: FontWeight.w300, fontSize: fontSize),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

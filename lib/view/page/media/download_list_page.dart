@@ -125,8 +125,6 @@ class _DownloadListPageState extends State<DownloadListPage> {
           Container(),
           Container(),
           Container(),
-          Container(),
-          Container(),
         ],
       ),
     );

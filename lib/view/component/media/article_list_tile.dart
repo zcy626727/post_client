@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/model/article.dart';
 
-import 'detail/article_detail_page.dart';
+import '../../page/article/article_detail_page.dart';
 
 class ArticleListTile extends StatefulWidget {
   const ArticleListTile({super.key, required this.article, this.isInner = false});

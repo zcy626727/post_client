@@ -14,6 +14,7 @@ class Article extends Media{
   String? title;
   String? introduction;
   DateTime? createTime;
+
   @JsonKey(includeFromJson: false, includeToJson: false)
   User? user;
 

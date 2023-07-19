@@ -10,9 +10,8 @@ class ArticleApi {
     String introduction,
     String content,
     String? coverUrl,
-      bool withPost,
-
-      ) async {
+    bool withPost,
+  ) async {
     var r = await MediaHttpConfig.dio.post(
       "/article/createArticle",
       data: {

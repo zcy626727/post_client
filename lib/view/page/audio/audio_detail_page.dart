@@ -1,28 +1,34 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:post_client/service/file_service.dart';
-import 'package:post_client/view/widget/player/common_video_player.dart';
+import 'package:post_client/model/audio.dart';
+import 'package:post_client/view/widget/player/audio/common_audio_player_mini.dart';
 
-import '../../../../model/comment.dart';
-import '../../../../model/video.dart';
-import '../../../page/comment/comment_page.dart';
+import '../../../constant/media.dart';
+import '../../../model/comment.dart';
+import '../../../model/media_feedback.dart';
+import '../../../service/file_service.dart';
+import '../../../service/media_feedback_service.dart';
+import '../../component/feedback/media_feedback_bar.dart';
+import '../../component/feedback/media_feedback_button.dart';
+import '../comment/comment_page.dart';
 
-class VideoDetailPage extends StatefulWidget {
-  const VideoDetailPage({super.key, required this.video});
+class AudioDetailPage extends StatefulWidget {
+  const AudioDetailPage({super.key, required this.audio});
 
-  final Video video;
+  final Audio audio;
 
   @override
-  State<VideoDetailPage> createState() => _VideoDetailPageState();
+  State<AudioDetailPage> createState() => _AudioDetailPageState();
 }
 
-class _VideoDetailPageState extends State<VideoDetailPage> {
+class _AudioDetailPageState extends State<AudioDetailPage> {
   late Future _futureBuilderFuture;
-  String? videoUrl;
+  String? audioUrl;
+
+  MediaFeedback _mediaFeedback = MediaFeedback();
 
   @override
   void initState() {
@@ -31,13 +37,13 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
   }
 
   Future getData() async {
-    return Future.wait([getDataList()]);
+    return Future.wait([getAudioUrl()]);
   }
 
-  Future<void> getDataList() async {
+  Future<void> getAudioUrl() async {
     try {
-      var (url, _) = await FileService.genGetFileUrl(widget.video.fileId!);
-      videoUrl = url;
+      var (url, _) = await FileService.genGetFileUrl(widget.audio.fileId!);
+      audioUrl = url;
     } on DioException catch (e) {
       log(e.toString());
     } catch (e) {
@@ -74,17 +80,15 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
             ),
             body: Container(
               color: colorScheme.surface,
-              margin: const EdgeInsets.only(top: 1),
-              padding: const EdgeInsets.only(left: 3, right: 3),
+              margin: const EdgeInsets.only(left: 3, right: 3, top: 1),
               child: ListView(
                 children: [
-                  CommonVideoPlayer(videoUrl: videoUrl!),
                   ListTile(
                     contentPadding: const EdgeInsets.only(left: 3, right: 3),
                     visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-                    leading: CircleAvatar(radius: 18, backgroundImage: NetworkImage(widget.video.user!.avatarUrl!)),
+                    leading: CircleAvatar(radius: 18, backgroundImage: NetworkImage(widget.audio.user!.avatarUrl!)),
                     title: Text(
-                      widget.video.title!,
+                      widget.audio.title!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -93,7 +97,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                       ),
                     ),
                     subtitle: Text(
-                      DateFormat("yyyy-MM-dd").format(widget.video.createTime!),
+                      DateFormat("yyyy-MM-dd").format(widget.audio.createTime!),
                       style: TextStyle(
                         color: colorScheme.onSurface,
                       ),
@@ -102,9 +106,15 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                     child: Text(
-                      widget.video.introduction!,
+                      widget.audio.introduction!,
                       style: TextStyle(fontSize: 15, color: colorScheme.onSurface),
                     ),
+                  ),
+                  CommonAudioPlayerMini(audioUrl: audioUrl!),
+                  MediaFeedbackBar(
+                    mediaType: MediaType.article,
+                    mediaId: widget.audio.id!,
+                    media: widget.audio,
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 5),
@@ -116,9 +126,9 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => CommentPage(
-                                    commentParentType: CommentParentType.video,
-                                    commentParentId: widget.video.id!,
-                                    parentUserId: widget.video.userId!,
+                                    commentParentType: CommentParentType.audio,
+                                    commentParentId: widget.audio.id!,
+                                    parentUserId: widget.audio.userId!,
                                   )),
                         );
                       },

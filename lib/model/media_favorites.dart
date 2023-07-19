@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'favorites.g.dart';
+part 'media_favorites.g.dart';
 
 @JsonSerializable()
-class Favorites {
+class MediaFavorites {
   String? id;
   int? userId;
   String? title;
@@ -13,9 +13,9 @@ class Favorites {
   List<String>? sourceIdList;
   DateTime? createTime;
 
-  Favorites();
+  MediaFavorites();
 
-  factory Favorites.fromJson(Map<String, dynamic> json) => _$FavoritesFromJson(json);
+  factory MediaFavorites.fromJson(Map<String, dynamic> json) => _$MediaFavoritesFromJson(json);
 
-  Map<String, dynamic> toJson() => _$FavoritesToJson(this);
+  Map<String, dynamic> toJson() => _$MediaFavoritesToJson(this);
 }

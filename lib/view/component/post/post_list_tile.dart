@@ -263,9 +263,12 @@ class _PostListTileState extends State<PostListTile> {
         isInner: true,
       );
     } else if (media is Gallery) {
-      mediaCard = GalleryListTile(
-        gallery: media,
-        isInner: true,
+      mediaCard = Container(
+        height: 200,
+        child: GalleryListTile(
+          gallery: media,
+          isInner: true,
+        ),
       );
     } else if (media is Video) {
       mediaCard = VideoListTile(

@@ -18,11 +18,10 @@ class Post {
   String? content;
 
   //评论数
-  int? commentNumber;
+  int? commentNum;
 
   //点赞数
-  int? likeNumber;
-  int? unlikeNumber;
+  int? likeNum;
 
   //图片布局，九宫格或大图
   List<String>? pictureUrlList;
@@ -38,9 +37,9 @@ class Post {
   Post.one() {
     // id = 1;
     content = "这是一条动态";
-    likeNumber = 1;
-    likeNumber = 1;
-    commentNumber = 4;
+    likeNum = 1;
+    likeNum = 1;
+    commentNum = 4;
     pictureUrlList = <String>[
       "https://pic4.zhimg.com/e32d48b88ae8491a39e6b96e29af7447_r.jpg?source=1940ef5c",
       "https://pic4.zhimg.com/e32d48b88ae8491a39e6b96e29af7447_r.jpg?source=1940ef5c",

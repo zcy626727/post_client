@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/constant/source.dart';
-import 'package:post_client/model/favorites.dart';
+import 'package:post_client/model/media_favorites.dart';
 import 'package:post_client/service/favorites_service.dart';
 import 'package:post_client/view/component/favorites/favorites_list_tile.dart';
 import 'package:post_client/view/page/favorites/favorites_edit_page.dart';
@@ -127,7 +127,7 @@ class _FavoritesListPageState extends State<FavoritesListPage> {
               ),
             ),
             Expanded(
-              child: CommonItemList<Favorites>(
+              child: CommonItemList<MediaFavorites>(
                 key: ValueKey(_sourceType),
                 onLoad: (int page) async {
                   var favoritesList = await FavoritesService.getUserFavoritesList(_sourceType, page, 20);
