@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/constants.dart';
-import 'package:post_client/model/user.dart';
+import 'package:post_client/model/user/user.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
 
 class UserSelectorPage extends StatefulWidget {

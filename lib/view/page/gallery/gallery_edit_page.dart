@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/constants.dart';
 import 'package:post_client/config/media_config.dart';
-import 'package:post_client/service/gallery_service.dart';
+import 'package:post_client/service/media/gallery_service.dart';
 import 'package:post_client/view/component/input/common_info_card.dart';
 
 import '../../../config/post_config.dart';

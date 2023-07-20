@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:post_client/model/audio.dart';
 import 'package:post_client/view/page/audio/audio_detail_page.dart';
 
 import '../../../config/global.dart';
+import '../../../model/media/audio.dart';
 
 class AudioListTile extends StatefulWidget {
   const AudioListTile({super.key, required this.audio, this.isInner = false});

@@ -4,8 +4,8 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
-import 'package:post_client/model/comment.dart';
-import 'package:post_client/service/comment_service.dart';
+import 'package:post_client/model/message/comment.dart';
+import 'package:post_client/service/message/comment_service.dart';
 import 'package:post_client/view/component/reply/reply_comment_list_tile.dart';
 
 import '../../widget/common_item_list.dart';

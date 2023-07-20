@@ -2,14 +2,12 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/service/audio_service.dart';
 import 'package:post_client/view/component/media/upload/audio_upload_card.dart';
 import 'package:post_client/view/component/input/common_info_card.dart';
-import 'package:post_client/view/widget/player/audio/common_audio_player_mini.dart';
 
 import '../../../constant/media.dart';
 import '../../../domain/task/upload_media_task.dart';
-import '../../component/media/upload/image_upload_card.dart';
+import '../../../service/media/audio_service.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
 

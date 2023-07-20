@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/model/gallery.dart';
+import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/view/page/gallery/gallery_detail_page.dart';
 
 class GalleryListTile extends StatefulWidget {

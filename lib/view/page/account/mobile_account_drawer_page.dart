@@ -7,7 +7,7 @@ import 'package:post_client/view/page/account/user_details_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../config/global.dart';
-import '../../../model/user.dart';
+import '../../../model/user/user.dart';
 import '../../../state/user_state.dart';
 import '../../component/setting/light_dark_switch.dart';
 

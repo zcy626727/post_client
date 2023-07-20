@@ -1,17 +1,12 @@
-import 'dart:developer';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:post_client/constant/media.dart';
-import 'package:post_client/model/gallery.dart';
-import 'package:post_client/model/media_feedback.dart';
-import 'package:post_client/service/media_feedback_service.dart';
+import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/view/page/comment/comment_page.dart';
 
-import '../../../model/comment.dart';
+import '../../../model/message/comment.dart';
 import '../../component/feedback/media_feedback_bar.dart';
-import '../../component/feedback/media_feedback_button.dart';
 
 class GalleryDetailPage extends StatefulWidget {
   const GalleryDetailPage({super.key, required this.gallery});

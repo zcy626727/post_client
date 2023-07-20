@@ -4,8 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
 import 'package:post_client/domain/task/upload_media_task.dart';
-import 'package:post_client/model/album.dart';
-import 'package:post_client/service/album_service.dart';
+import 'package:post_client/model/media/album.dart';
+import 'package:post_client/service/media/album_service.dart';
 import 'package:post_client/view/component/media/album_list_tile.dart';
 import 'package:post_client/view/page/album/album_edit_page.dart';
 

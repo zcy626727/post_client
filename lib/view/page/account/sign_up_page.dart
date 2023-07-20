@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../config/constants.dart';
-import '../../../service/user_service.dart';
+import '../../../service/user/user_service.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key, required this.onSignUpSuccess}) : super(key: key);

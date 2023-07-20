@@ -1,4 +1,4 @@
-import '../../../model/user.dart';
+import '../../../model/user/user.dart';
 import '../user_http_config.dart';
 
 class UserApi {

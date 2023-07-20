@@ -2,19 +2,16 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/model/post.dart';
-import 'package:post_client/model/user.dart';
-import 'package:post_client/service/follow_service.dart';
-import 'package:post_client/service/post_service.dart';
+import 'package:post_client/model/user/user.dart';
+import 'package:post_client/service/user/follow_service.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
-import 'package:post_client/view/component/post/post_list_tile.dart';
 import 'package:post_client/view/component/post/post_list.dart';
 import 'package:post_client/view/page/account/user_details_page.dart';
-import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constant/post.dart';
+import '../../../service/message/post_service.dart';
 
 class FollowScreen extends StatefulWidget {
   const FollowScreen({super.key});

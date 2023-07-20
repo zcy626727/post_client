@@ -5,16 +5,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:intl/intl.dart';
-import 'package:post_client/model/article.dart';
-import 'package:post_client/service/article_service.dart';
 import 'package:post_client/view/component/feedback/media_feedback_bar.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
 
 import '../../../constant/media.dart';
-import '../../../model/comment.dart';
-import '../../../model/media_feedback.dart';
-import '../../../service/media_feedback_service.dart';
-import '../../component/feedback/media_feedback_button.dart';
+import '../../../model/media/article.dart';
+import '../../../model/media/media_feedback.dart';
+import '../../../model/message/comment.dart';
+import '../../../service/media/article_service.dart';
 import '../comment/comment_page.dart';
 
 class ArticleDetailPage extends StatefulWidget {

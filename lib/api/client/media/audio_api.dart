@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import '../../../model/audio.dart';
-import '../../../model/user.dart';
+import '../../../model/media/audio.dart';
+import '../../../model/user/user.dart';
 import '../media_http_config.dart';
 
 class AudioApi {

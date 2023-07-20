@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_svg/svg.dart';
-import 'package:post_client/model/user.dart';
+import 'package:post_client/model/user/user.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/page/user/user_selector_page.dart';
 

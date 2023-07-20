@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import '../../../model/post.dart';
-import '../../../model/user.dart';
+import '../../../model/message/post.dart';
+import '../../../model/user/user.dart';
 import '../message_http_config.dart';
 
 class PostApi {

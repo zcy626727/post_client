@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:post_client/view/screen/account/sign_in_or_up_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/user.dart';
-import '../../../service/user_service.dart';
+import '../../../model/user/user.dart';
+import '../../../service/user/user_service.dart';
 import '../../../state/user_state.dart';
 
 class DesktopAccountScreen extends StatefulWidget {

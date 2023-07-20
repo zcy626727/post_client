@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:post_client/model/video.dart';
 
-import '../../../model/user.dart';
+import '../../../model/media/video.dart';
+import '../../../model/user/user.dart';
 import '../media_http_config.dart';
 
 class VideoApi {

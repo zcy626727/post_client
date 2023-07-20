@@ -1,24 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/constant/source.dart';
-import 'package:post_client/model/media_favorites.dart';
-import 'package:post_client/service/favorites_service.dart';
 import 'package:post_client/view/component/favorites/favorites_list_tile.dart';
 import 'package:post_client/view/page/favorites/favorites_edit_page.dart';
 
-import '../../../model/article.dart';
-import '../../../model/audio.dart';
-import '../../../model/gallery.dart';
-import '../../../model/video.dart';
-import '../../../service/article_service.dart';
-import '../../../service/audio_service.dart';
-import '../../../service/gallery_service.dart';
-import '../../../service/post_service.dart';
-import '../../../service/video_service.dart';
-import '../../component/media/article_list_tile.dart';
-import '../../component/media/audio_list_tile.dart';
-import '../../component/media/gallery_list_tile.dart';
-import '../../component/media/video_list_tile.dart';
-import '../../component/post/post_list.dart';
+import '../../../model/media/media_favorites.dart';
+import '../../../service/media/media_favorites_service.dart';
 import '../../widget/common_item_list.dart';
 
 class FavoritesListPage extends StatefulWidget {
@@ -130,7 +116,7 @@ class _FavoritesListPageState extends State<FavoritesListPage> {
               child: CommonItemList<MediaFavorites>(
                 key: ValueKey(_sourceType),
                 onLoad: (int page) async {
-                  var favoritesList = await FavoritesService.getUserFavoritesList(_sourceType, page, 20);
+                  var favoritesList = await MediaFavoritesService.getUserFavoritesList(_sourceType, page, 20);
                   return favoritesList;
                 },
                 itemName: "合集",

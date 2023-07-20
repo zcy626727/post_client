@@ -5,19 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:intl/intl.dart';
 import 'package:post_client/config/global.dart';
-import 'package:post_client/model/audio.dart';
-import 'package:post_client/model/gallery.dart';
-import 'package:post_client/model/post.dart';
-import 'package:post_client/model/video.dart';
+import 'package:post_client/model/media/gallery.dart';
+import 'package:post_client/model/message/feed_feedback.dart';
+import 'package:post_client/view/component/feedback/feed_feedback_bar.dart';
 import 'package:post_client/view/component/media/article_list_tile.dart';
 import 'package:post_client/view/component/media/audio_list_tile.dart';
 import 'package:post_client/view/component/media/gallery_list_tile.dart';
 import 'package:post_client/view/component/media/video_list_tile.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
 
-import '../../../model/article.dart';
-import '../../../model/comment.dart';
-import '../../../service/post_service.dart';
+import '../../../constant/feed.dart';
+import '../../../model/media/article.dart';
+import '../../../model/media/audio.dart';
+import '../../../model/media/video.dart';
+import '../../../model/message/comment.dart';
+import '../../../model/message/post.dart';
+import '../../../service/message/post_service.dart';
 import '../../page/account/user_details_page.dart';
 import '../../page/comment/comment_page.dart';
 import '../../widget/dialog/confirm_alert_dialog.dart';
@@ -25,12 +28,14 @@ import '../show/show_snack_bar.dart';
 
 class PostListTile extends StatefulWidget {
   final Post post;
+  final FeedFeedback feedback;
   final Function(Post) onDeletePost;
 
   const PostListTile({
     Key? key,
     required this.post,
     required this.onDeletePost,
+    required this.feedback,
   }) : super(key: key);
 
   @override
@@ -316,27 +321,7 @@ class _PostListTileState extends State<PostListTile> {
             ),
           ],
         ),
-        Row(
-          children: [
-            //点赞
-            IconButton(
-              icon: const Icon(
-                Icons.thumb_up_alt_outlined,
-              ),
-              color: colorScheme.onSurface,
-              onPressed: () {},
-            ),
-            //收藏
-            IconButton(
-              icon: const Icon(
-                Icons.bookmark_border,
-                size: 27,
-              ),
-              color: colorScheme.onSurface,
-              onPressed: () {},
-            )
-          ],
-        )
+        FeedFeedbackBar(feedType: FeedType.post, feed: widget.post, feedFeedback: widget.feedback, feedId: widget.post.id!)
       ],
     );
   }

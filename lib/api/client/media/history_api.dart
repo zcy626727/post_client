@@ -1,4 +1,4 @@
-import 'package:post_client/model/history.dart';
+import 'package:post_client/model/media/history.dart';
 
 import '../message_http_config.dart';
 

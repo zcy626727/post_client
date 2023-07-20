@@ -2,7 +2,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../config/global.dart';
-import '../../../model/user.dart';
+import '../../model/user/user.dart';
 import '../../config/net_config.dart';
 
 class UserHttpConfig {

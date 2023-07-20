@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:post_client/model/article.dart';
-import 'package:post_client/model/audio.dart';
-import 'package:post_client/model/gallery.dart';
-import 'package:post_client/model/post.dart';
-import 'package:post_client/model/video.dart';
-import 'package:post_client/service/article_service.dart';
-import 'package:post_client/service/audio_service.dart';
-import 'package:post_client/service/gallery_service.dart';
-import 'package:post_client/service/post_service.dart';
-import 'package:post_client/service/video_service.dart';
+import 'package:post_client/model/media/gallery.dart';
+import 'package:post_client/service/media/gallery_service.dart';
+import 'package:post_client/service/media/video_service.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/component/media/article_list_tile.dart';
 import 'package:post_client/view/component/media/audio_list_tile.dart';
 import 'package:post_client/view/component/media/gallery_list_tile.dart';
 import 'package:post_client/view/component/media/video_list_tile.dart';
-import 'package:post_client/view/component/post/post_list_tile.dart';
 import 'package:post_client/view/component/post/post_list.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:post_client/view/widget/player/common_video_player.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/user.dart';
+import '../../../model/media/article.dart';
+import '../../../model/media/audio.dart';
+import '../../../model/media/video.dart';
+import '../../../model/user/user.dart';
+import '../../../service/media/article_service.dart';
+import '../../../service/media/audio_service.dart';
+import '../../../service/message/post_service.dart';
 import '../../../state/user_state.dart';
-import '../../widget/player/audio/common_audio_player_mini.dart';
-import '../../widget/player/audio/common_audio_playr.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

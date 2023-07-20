@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/model/mention.dart';
+import 'package:post_client/model/message/mention.dart';
 
-import '../../../service/mention_service.dart';
+import '../../../service/message/mention_service.dart';
 
 class BulletinListPage extends StatefulWidget {
   const BulletinListPage({super.key});

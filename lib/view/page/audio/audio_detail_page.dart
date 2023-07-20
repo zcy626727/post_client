@@ -3,16 +3,14 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:post_client/model/audio.dart';
 import 'package:post_client/view/widget/player/audio/common_audio_player_mini.dart';
 
 import '../../../constant/media.dart';
-import '../../../model/comment.dart';
-import '../../../model/media_feedback.dart';
-import '../../../service/file_service.dart';
-import '../../../service/media_feedback_service.dart';
+import '../../../model/media/audio.dart';
+import '../../../model/media/media_feedback.dart';
+import '../../../model/message/comment.dart';
+import '../../../service/media/file_service.dart';
 import '../../component/feedback/media_feedback_bar.dart';
-import '../../component/feedback/media_feedback_button.dart';
 import '../comment/comment_page.dart';
 
 class AudioDetailPage extends StatefulWidget {

@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/model/media.dart';
+import 'package:post_client/model/media/media.dart';
 
-import '../../../model/media_feedback.dart';
-import '../../../service/media_feedback_service.dart';
+import '../../../model/media/media_feedback.dart';
+import '../../../service/media/media_feedback_service.dart';
 import 'media_feedback_button.dart';
 
 class MediaFeedbackBar extends StatefulWidget {

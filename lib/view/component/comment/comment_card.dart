@@ -4,9 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:post_client/config/global.dart';
-import 'package:post_client/model/comment.dart';
+import 'package:post_client/model/message/comment.dart';
 
-import '../../../service/comment_service.dart';
+import '../../../service/message/comment_service.dart';
 import '../../widget/dialog/confirm_alert_dialog.dart';
 import '../quill/quill_editor.dart';
 import '../show/show_snack_bar.dart';

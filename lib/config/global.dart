@@ -12,8 +12,8 @@ import '../api/client/message_http_config.dart';
 import '../api/client/user_http_config.dart';
 import '../api/net_cache_interceptor.dart';
 import '../api/net_common_interceptor.dart';
-import '../model/user.dart';
-import '../service/user_service.dart';
+import '../model/user/user.dart';
+import '../service/user/user_service.dart';
 import 'database_config.dart';
 import 'net_config.dart';
 

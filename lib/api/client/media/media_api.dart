@@ -1,9 +1,9 @@
-import 'package:post_client/model/article.dart';
-import 'package:post_client/model/audio.dart';
-import 'package:post_client/model/gallery.dart';
-import 'package:post_client/model/user.dart';
-import 'package:post_client/model/video.dart';
+import 'package:post_client/model/media/gallery.dart';
+import 'package:post_client/model/user/user.dart';
 
+import '../../../model/media/article.dart';
+import '../../../model/media/audio.dart';
+import '../../../model/media/video.dart';
 import '../media_http_config.dart';
 
 class MediaApi {

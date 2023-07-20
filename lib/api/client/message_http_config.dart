@@ -1,7 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:post_client/model/comment.dart';
-import 'package:post_client/model/post.dart';
-import 'package:post_client/model/user.dart';
 
 import '../../config/global.dart';
 import '../../config/net_config.dart';

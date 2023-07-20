@@ -3,13 +3,9 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/model/post.dart';
 import 'package:post_client/view/component/post/post_list_tile.dart';
 
-import '../../../service/post_service.dart';
-import '../../../util/responsive.dart';
-import '../../widget/dialog/confirm_alert_dialog.dart';
-import '../show/show_snack_bar.dart';
+import '../../../model/message/post.dart';
 
 class PostList extends StatefulWidget {
   const PostList({
@@ -141,6 +137,7 @@ class _PostListState extends State<PostList> {
             _postList.remove(deletedPost);
             setState(() {});
           },
+          feedback: post.feedback!,
         );
       },
     );
@@ -157,5 +154,4 @@ class _PostListState extends State<PostList> {
           : card,
     );
   }
-
 }

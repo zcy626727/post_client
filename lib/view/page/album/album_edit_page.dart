@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/constant/media.dart';
-import 'package:post_client/service/album_service.dart';
+import 'package:post_client/service/media/album_service.dart';
 
 import '../../../domain/task/upload_media_task.dart';
 import '../../component/input/common_dropdown.dart';

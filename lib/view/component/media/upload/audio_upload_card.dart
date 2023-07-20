@@ -3,8 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:post_client/api/client/media/file_api.dart';
-import 'package:post_client/service/file_service.dart';
-import 'package:post_client/service/multipart_service.dart';
+import 'package:post_client/service/media/file_service.dart';
+import 'package:post_client/service/media/multipart_service.dart';
 import 'package:post_client/util/file_util.dart';
 
 import '../../../../config/global.dart';

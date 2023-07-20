@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../model/comment.dart';
-import '../../../service/comment_service.dart';
+import '../../../model/message/comment.dart';
+import '../../../service/message/comment_service.dart';
 import '../../component/comment/comment_list.dart';
 
 class CommentPage extends StatefulWidget {

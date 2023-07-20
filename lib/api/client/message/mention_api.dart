@@ -1,10 +1,10 @@
 
 import 'package:dio/dio.dart';
-import 'package:post_client/model/comment.dart';
-import 'package:post_client/model/mention.dart';
-import 'package:post_client/model/post.dart';
+import 'package:post_client/model/message/comment.dart';
+import 'package:post_client/model/message/mention.dart';
 
-import '../../../model/user.dart';
+import '../../../model/message/post.dart';
+import '../../../model/user/user.dart';
 import '../message_http_config.dart';
 
 class MentionApi{

@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
-import 'package:post_client/model/comment.dart';
-import 'package:post_client/model/mention.dart';
+import 'package:post_client/model/message/comment.dart';
+import 'package:post_client/model/message/mention.dart';
 
-import '../../../model/post.dart';
+import '../../../model/message/post.dart';
+
 
 class ReplyMentionListTile extends StatelessWidget {
   const ReplyMentionListTile({super.key, required this.mention});

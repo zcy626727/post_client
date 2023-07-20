@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/model/article.dart';
 
+import '../../../model/media/article.dart';
 import '../../page/article/article_detail_page.dart';
 
 class ArticleListTile extends StatefulWidget {

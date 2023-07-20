@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/model/history.dart';
+import 'package:post_client/model/media/history.dart';
 
 class HistoryListTile extends StatelessWidget {
   const HistoryListTile({super.key, required this.history});

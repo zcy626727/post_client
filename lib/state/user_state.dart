@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../config/global.dart';
-import '../model/user.dart';
+import '../model/user/user.dart';
 
 //用户相关状态
 class UserState extends ChangeNotifier {

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import '../../../model/comment.dart';
-import '../../../model/user.dart';
+import '../../../model/message/comment.dart';
+import '../../../model/user/user.dart';
 import '../message_http_config.dart';
 
 class CommentApi {

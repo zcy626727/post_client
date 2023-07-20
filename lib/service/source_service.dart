@@ -1,16 +1,16 @@
 import 'package:post_client/api/client/message/comment_api.dart';
 import 'package:post_client/api/client/message/post_api.dart';
-import 'package:post_client/model/article.dart';
-import 'package:post_client/model/audio.dart';
-import 'package:post_client/model/comment.dart';
-import 'package:post_client/model/gallery.dart';
-import 'package:post_client/model/history.dart';
-import 'package:post_client/model/post.dart';
-import 'package:post_client/model/video.dart';
+import 'package:post_client/model/message/comment.dart';
+import 'package:post_client/model/media/gallery.dart';
+import 'package:post_client/model/media/history.dart';
 
 import '../api/client/media/media_api.dart';
 import '../constant/post.dart';
 import '../constant/source.dart';
+import '../model/media/article.dart';
+import '../model/media/audio.dart';
+import '../model/media/video.dart';
+import '../model/message/post.dart';
 
 class SourceService{
   static Future<void> fillSource(List<History> historyList) async {

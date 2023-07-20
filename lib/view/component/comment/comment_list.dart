@@ -6,13 +6,13 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:post_client/config/global.dart';
-import 'package:post_client/model/comment.dart';
-import 'package:post_client/service/comment_service.dart';
+import 'package:post_client/model/message/comment.dart';
+import 'package:post_client/service/message/comment_service.dart';
 import 'package:post_client/view/component/input/comment_text_field.dart';
 import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 import 'package:post_client/view/page/comment/reply_page.dart';
 
-import '../../../model/user.dart';
+import '../../../model/user/user.dart';
 import 'comment_card.dart';
 
 class CommentList extends StatefulWidget {

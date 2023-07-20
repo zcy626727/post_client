@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../model/media_favorites.dart';
+import '../../../model/media/media_favorites.dart';
+
 
 class FavoritesListTile extends StatelessWidget {
   const FavoritesListTile({super.key, required this.favorites});

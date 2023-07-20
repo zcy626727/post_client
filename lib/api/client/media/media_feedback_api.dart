@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:post_client/model/media_feedback.dart';
 
+import '../../../model/media/media_feedback.dart';
 import '../media_http_config.dart';
 
 class MediaFeedbackApi {

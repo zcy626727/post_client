@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:post_client/model/article.dart';
-import 'package:post_client/model/user.dart';
+import 'package:post_client/model/media/article.dart';
+import 'package:post_client/model/user/user.dart';
 
 import '../media_http_config.dart';
 

@@ -2,12 +2,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/model/album.dart';
-import 'package:post_client/model/media_favorites.dart';
-import 'package:post_client/model/history.dart';
-import 'package:post_client/model/user.dart';
-import 'package:post_client/service/album_service.dart';
-import 'package:post_client/service/favorites_service.dart';
+import 'package:post_client/model/media/album.dart';
+import 'package:post_client/model/user/user.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/component/media/album_list_tile.dart';

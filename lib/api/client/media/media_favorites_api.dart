@@ -1,5 +1,5 @@
-import 'package:post_client/model/media_favorites.dart';
 
+import '../../../model/media/media_favorites.dart';
 import '../media_http_config.dart';
 import '../message_http_config.dart';
 

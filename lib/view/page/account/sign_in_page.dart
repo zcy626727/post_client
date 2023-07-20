@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../config/constants.dart';
-import '../../../model/user.dart';
-import '../../../service/user_service.dart';
+import '../../../model/user/user.dart';
+import '../../../service/user/user_service.dart';
 import '../../../state/user_state.dart';
 
 class SignInPage extends StatefulWidget {

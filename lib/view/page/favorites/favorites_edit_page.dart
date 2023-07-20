@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/constant/source.dart';
 import 'package:post_client/view/component/input/common_dropdown.dart';
 import 'package:post_client/view/component/input/common_info_card.dart';
 
 import '../../../domain/task/upload_media_task.dart';
-import '../../../service/favorites_service.dart';
+import '../../../service/media/media_favorites_service.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
 
@@ -67,7 +66,7 @@ class _FavoritesEditPageState extends State<FavoritesEditPage> {
                         ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                         return;
                       }
-                      var favorites = await FavoritesService.createFavorites(
+                      var favorites = await MediaFavoritesService.createFavorites(
                         titleController.text,
                         introductionController.text,
                         coverUploadImage.staticUrl,

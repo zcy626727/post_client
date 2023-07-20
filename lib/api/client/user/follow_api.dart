@@ -1,6 +1,6 @@
 import 'package:post_client/config/global.dart';
-import 'package:post_client/model/follow.dart';
-import 'package:post_client/model/user.dart';
+import 'package:post_client/model/user/follow.dart';
+import 'package:post_client/model/user/user.dart';
 
 import '../user_http_config.dart';
 

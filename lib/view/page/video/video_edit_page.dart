@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/domain/task/upload_media_task.dart';
-import 'package:post_client/service/video_service.dart';
+import 'package:post_client/service/media/video_service.dart';
 import 'package:post_client/view/component/input/common_info_card.dart';
 import 'package:post_client/view/component/media/upload/video_upload_card.dart';
 

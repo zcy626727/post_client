@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
 import 'package:post_client/domain/task/upload_media_task.dart';
-import 'package:post_client/service/file_service.dart';
+import 'package:post_client/service/media/file_service.dart';
 import 'package:image/image.dart' as img;
 
 
