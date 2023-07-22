@@ -12,12 +12,13 @@ class SourceType {
   static const post = 6;
 
   static const option = [
+    (SourceType.post, "动态"),
+    (SourceType.comment, "评论"),
     (SourceType.audio, "音频"),
     (SourceType.video, "视频"),
     (SourceType.gallery, "图片"),
     (SourceType.article, "文章"),
-    (SourceType.post, "动态"),
-    (SourceType.comment, "评论"),
+
   ];
 }
 

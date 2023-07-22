@@ -1,10 +1,9 @@
-import 'package:post_client/api/client/message/feed_feedback_api.dart';
 import 'package:post_client/constant/feed.dart';
-import 'package:post_client/model/message/feed.dart';
 import 'package:post_client/service/message/feed_service.dart';
 
 import '../../api/client/message/comment_api.dart';
 import '../../model/message/comment.dart';
+import '../../model/message/feed_feedback.dart';
 
 class CommentService {
   static Future<Comment> createComment(
@@ -31,6 +30,7 @@ class CommentService {
     int pageSize,
   ) async {
     var commentList = await CommentApi.getCommentListByParent(parentId, parentType, pageIndex, pageSize);
+    await fillFeedback(commentList);
     return commentList;
   }
 
@@ -46,16 +46,18 @@ class CommentService {
     int pageSize,
   ) async {
     var commentList = await CommentApi.getReplyCommentList(pageIndex, pageSize);
+    await fillFeedback(commentList);
     return commentList;
   }
 
   static Future<void> fillFeedback(List<Comment> commentList) async {
     //获取媒体列表
-    var map = await FeedService.getFeedbackMap(commentList, FeedType.post);
+    var map = await FeedService.getFeedbackMap(commentList, FeedType.comment);
 
     //填充
     for (var comment in commentList) {
-      comment.feedback = map[comment.id];
+      comment.feedback = map[comment.id]??FeedFeedback();
     }
   }
+
 }

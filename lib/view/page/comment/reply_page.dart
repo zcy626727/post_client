@@ -3,7 +3,7 @@ import 'package:post_client/model/message/comment.dart';
 import 'package:post_client/service/message/comment_service.dart';
 import 'package:post_client/view/component/comment/comment_list.dart';
 
-import '../../component/comment/comment_card.dart';
+import '../../component/comment/comment_list_tile.dart';
 
 class ReplyPage extends StatefulWidget {
   const ReplyPage({Key? key, required this.comment, required this.onDeleteComment}) : super(key: key);
@@ -54,7 +54,7 @@ class _ReplyPageState extends State<ReplyPage> {
                   child: Container(
                     color: colorScheme.surface,
                     margin: const EdgeInsets.only(bottom: 1),
-                    child: CommentCard(
+                    child: CommentListTile(
                       comment: widget.comment,
                       onTap: () {
                         //回复评论

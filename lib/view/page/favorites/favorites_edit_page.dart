@@ -4,7 +4,7 @@ import 'package:post_client/view/component/input/common_dropdown.dart';
 import 'package:post_client/view/component/input/common_info_card.dart';
 
 import '../../../domain/task/upload_media_task.dart';
-import '../../../service/media/media_favorites_service.dart';
+import '../../../service/favorites_service.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
 
@@ -20,13 +20,13 @@ class _FavoritesEditPageState extends State<FavoritesEditPage> {
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
-  bool _isPublic = false;
   (int, String) _selectedSource = SourceType.option[0];
 
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: colorScheme.background,
       appBar: AppBar(
         toolbarHeight: 50,
@@ -66,13 +66,16 @@ class _FavoritesEditPageState extends State<FavoritesEditPage> {
                         ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                         return;
                       }
-                      var favorites = await MediaFavoritesService.createFavorites(
+
+                      var favorites = await FavoritesService.createFavorites(
                         titleController.text,
                         introductionController.text,
                         coverUploadImage.staticUrl,
                         _selectedSource.$1,
                       );
+
                       if (mounted) Navigator.pop(context);
+
                     } on Exception catch (e) {
                       ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
                     }

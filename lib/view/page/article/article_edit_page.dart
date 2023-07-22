@@ -64,8 +64,6 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
 
                   if (formKey.currentState!.validate()) {
                     try {
-                      _contentController.document.delete(10, 100);
-                      // _contentController.document.toPlainText().substring(10)
                       var content = jsonEncode(_contentController.document.toDelta().toJson());
                       if (content.isEmpty) {
                         ShowSnackBar.error(context: context, message: "内容为空");

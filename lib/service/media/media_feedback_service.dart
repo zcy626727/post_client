@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:post_client/api/client/media/media_feedback_api.dart';
 
 import '../../model/media/media_feedback.dart';
@@ -32,6 +33,6 @@ class MediaFeedbackService {
     return await MediaFeedbackApi.getMediaFeedback(
       mediaType,
       mediaId,
-    );
+    )??MediaFeedback();
   }
 }

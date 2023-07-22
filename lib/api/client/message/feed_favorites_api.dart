@@ -1,20 +1,20 @@
-import '../../../model/message/feed_favorites.dart';
+import '../../../model/favorites.dart';
 import '../message_http_config.dart';
 
 class FeedFavoritesApi {
-  static Future<FeedFavorites> createFeedFavorites(
+  static Future<Favorites> createFavorites(
     String title,
     String introduction,
     String? coverUrl,
-    int feedType,
+    int sourceType,
   ) async {
     var r = await MessageHttpConfig.dio.post(
-      "/feedFavorites/createFeedFavorites",
+      "/feedFavorites/createFavorites",
       data: {
         "title": title,
         "introduction": introduction,
         "coverUrl": coverUrl,
-        "feedType": feedType,
+        "sourceType": sourceType,
       },
       options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -23,14 +23,14 @@ class FeedFavoritesApi {
     );
 
     //获取数据
-    return FeedFavorites.fromJson(r.data['feedFavorites']);
+    return Favorites.fromJson(r.data['favorites']);
   }
 
-  static Future<void> deleteUserFeedFavoritesById(
+  static Future<void> deleteUserFavoritesById(
     String favoritesId,
   ) async {
     await MessageHttpConfig.dio.post(
-      "/feedFavorites/deleteUserFeedFavoritesById",
+      "/feedFavorites/deleteUserFavoritesById",
       data: {
         "favoritesId": favoritesId,
       },
@@ -41,17 +41,19 @@ class FeedFavoritesApi {
     );
   }
 
-  static Future<void> addFeedToFavorites(
-    String favoritesId,
-    String feedId,
-    int feedType,
-  ) async {
+  static Future<void> updateFeedInFavoritesList({
+    required List<String> addFavoritesIdList,
+    required List<String> removeFavoritesIdList,
+    required String sourceId,
+    required int sourceType,
+  }) async {
     await MessageHttpConfig.dio.post(
-      "/feedFavorites/addFeedToFavorites",
+      "/feedFavorites/updateFeedInFavoritesList",
       data: {
-        "favoritesId": favoritesId,
-        "feedId": feedId,
-        "feedType": feedType,
+        "addFavoritesIdList": addFavoritesIdList,
+        "removeFavoritesIdList": removeFavoritesIdList,
+        "sourceId": sourceId,
+        "sourceType": sourceType,
       },
       options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -60,15 +62,15 @@ class FeedFavoritesApi {
     );
   }
 
-  static Future<List<FeedFavorites>> getUserFeedFavoritesList(
-    int feedType,
+  static Future<List<Favorites>> getUserFavoritesList(
+    int sourceType,
     int pageIndex,
     int pageSize,
   ) async {
     var r = await MessageHttpConfig.dio.get(
-      "/feedFavorites/getUserFeedFavoritesList",
+      "/feedFavorites/getUserFavoritesList",
       queryParameters: {
-        "feedType": feedType,
+        "sourceType": sourceType,
         "pageIndex": pageIndex,
         "pageSize": pageSize,
       },
@@ -78,10 +80,12 @@ class FeedFavoritesApi {
       }),
     );
 
-    List<FeedFavorites> favoritesList = [];
-    for (var favoritesJson in r.data['feedFavoritesList']) {
-      var favorites = FeedFavorites.fromJson(favoritesJson);
-      favoritesList.add(favorites);
+    List<Favorites> favoritesList = [];
+    if(r.data['favoritesList']!=null){
+      for (var favoritesJson in r.data['favoritesList']) {
+        var favorites = Favorites.fromJson(favoritesJson);
+        favoritesList.add(favorites);
+      }
     }
     return favoritesList;
   }

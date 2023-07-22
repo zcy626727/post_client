@@ -2,10 +2,14 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:post_client/constant/media.dart';
 import 'package:post_client/model/media/media.dart';
 
+import '../../../constant/source.dart';
 import '../../../model/media/media_feedback.dart';
 import '../../../service/media/media_feedback_service.dart';
+import '../favorites/select_favorites_dialog.dart';
+import '../show/show_snack_bar.dart';
 import 'media_feedback_button.dart';
 
 class MediaFeedbackBar extends StatefulWidget {
@@ -99,9 +103,40 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
                   ),
                   MediaFeedbackButton(
                     iconData: Icons.star,
-                    selected: _mediaFeedback.favorites ?? false,
+                    selected: _mediaFeedback.favorites == null ? false : _mediaFeedback.favorites! > 0,
                     text: "${widget.media.favoritesNum ?? 0}",
                     onPressed: () async {
+                      showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (BuildContext context) {
+                          var sourceType = SourceType.gallery;
+
+                          switch (widget.mediaType) {
+                            case MediaType.article:
+                              sourceType = SourceType.article;
+                            case MediaType.audio:
+                              sourceType = SourceType.audio;
+                            case MediaType.video:
+                              sourceType = SourceType.video;
+                          }
+                          return SelectFavoritesDialog(
+                            onConfirm: (count) async {
+                              try {
+                                _mediaFeedback.favorites = (_mediaFeedback.favorites ?? 0) + count;
+                                widget.media.favoritesNum = (widget.media.favoritesNum ?? 0) + count;
+                                setState(() {});
+                              } on Exception catch (e) {
+                                ShowSnackBar.exception(context: context, e: e, defaultValue: "收藏出错");
+                              } finally {
+                                Navigator.pop(context);
+                              }
+                            },
+                            sourceType: sourceType,
+                            sourceId: widget.mediaId,
+                          );
+                        },
+                      );
                       setState(() {});
                     },
                   ),

@@ -1,22 +1,20 @@
-
-import '../../../model/media/media_favorites.dart';
+import '../../../model/favorites.dart';
 import '../media_http_config.dart';
-import '../message_http_config.dart';
 
 class MediaFavoritesApi {
-  static Future<MediaFavorites> createMediaFavorites(
+  static Future<Favorites> createFavorites(
     String title,
     String introduction,
     String? coverUrl,
-    int mediaType,
+    int sourceType,
   ) async {
     var r = await MediaHttpConfig.dio.post(
-      "/mediaFavorites/createMediaFavorites",
+      "/mediaFavorites/createFavorites",
       data: {
         "title": title,
         "introduction": introduction,
         "coverUrl": coverUrl,
-        "mediaType": mediaType,
+        "sourceType": sourceType,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -25,7 +23,7 @@ class MediaFavoritesApi {
     );
 
     //获取数据
-    return MediaFavorites.fromJson(r.data['mediaFavorites']);
+    return Favorites.fromJson(r.data['favorites']);
   }
 
   static Future<void> deleteUserMediaFavoritesById(
@@ -43,17 +41,19 @@ class MediaFavoritesApi {
     );
   }
 
-  static Future<void> addMediaToFavorites(
-    String favoritesId,
-    String mediaId,
-    int mediaType,
-  ) async {
+  static Future<void> updateMediaInFavoritesList({
+    required List<String> addFavoritesIdList,
+    required List<String> removeFavoritesIdList,
+    required String sourceId,
+    required int sourceType,
+  }) async {
     await MediaHttpConfig.dio.post(
-      "/mediaFavorites/addMediaToFavorites",
+      "/mediaFavorites/updateMediaInFavoritesList",
       data: {
-        "favoritesId": favoritesId,
-        "mediaId": mediaId,
-        "mediaType": mediaType,
+        "addFavoritesIdList": addFavoritesIdList,
+        "removeFavoritesIdList": removeFavoritesIdList,
+        "sourceId": sourceId,
+        "sourceType": sourceType,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -62,15 +62,15 @@ class MediaFavoritesApi {
     );
   }
 
-  static Future<List<MediaFavorites>> getUserMediaFavoritesList(
-    int mediaType,
+  static Future<List<Favorites>> getUserFavoritesList(
+    int sourceType,
     int pageIndex,
     int pageSize,
   ) async {
     var r = await MediaHttpConfig.dio.get(
-      "/mediaFavorites/getUserMediaFavoritesList",
+      "/mediaFavorites/getUserFavoritesList",
       queryParameters: {
-        "mediaType": mediaType,
+        "sourceType": sourceType,
         "pageIndex": pageIndex,
         "pageSize": pageSize,
       },
@@ -80,9 +80,9 @@ class MediaFavoritesApi {
       }),
     );
 
-    List<MediaFavorites> favoritesList = [];
-    for (var favoritesJson in r.data['mediaFavoritesList']) {
-      var favorites = MediaFavorites.fromJson(favoritesJson);
+    List<Favorites> favoritesList = [];
+    for (var favoritesJson in r.data['favoritesList']) {
+      var favorites = Favorites.fromJson(favoritesJson);
       favoritesList.add(favorites);
     }
     return favoritesList;

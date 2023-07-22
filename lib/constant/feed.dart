@@ -3,7 +3,7 @@ class FeedType {
   static const comment = 2;
 
   static const option = [
-    (FeedType.post, "音频"),
-    (FeedType.comment, "视频"),
+    (FeedType.post, "动态"),
+    (FeedType.comment, "评论"),
   ];
 }

@@ -78,6 +78,7 @@ class Global {
         Global.databaseConfig.databaseName,
       );
       log("数据库位置为：$path");
+      // await deleteDatabase(path);
       //打开数据库
       database = await openDatabase(
         path,

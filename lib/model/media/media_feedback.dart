@@ -7,7 +7,7 @@ class MediaFeedback {
   String? id;
   bool? like;
   bool? dislike;
-  bool? favorites;
+  int? favorites;
   bool? share;
   int? mediaType;
   List<String>? mediaIdList;

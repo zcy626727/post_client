@@ -84,8 +84,6 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
   //刷新
   void _onRefresh() async {
     try {
-      await Future.delayed(const Duration(seconds: 1));
-
       _itemList = await widget.onLoad(0);
       _page = 1;
       //获取成功
@@ -102,17 +100,13 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
   void _onLoading() async {
     try {
       var list = await widget.onLoad(_page);
-      await Future.delayed(const Duration(seconds: 1));
-      if (list.isEmpty) {
+      if (list.isNotEmpty) {
         //获取
-        _refreshController.finishLoad();
-      } else {
         _itemList!.addAll(list);
         _page++;
-        //获取成功
-        _refreshController.finishLoad();
-        if (mounted) setState(() {});
       }
+      _refreshController.finishLoad();
+      if (mounted) setState(() {});
     } catch (e) {
       //获取失败
       log(e.toString());

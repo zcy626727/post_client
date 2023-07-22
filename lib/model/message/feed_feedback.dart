@@ -7,10 +7,10 @@ class FeedFeedback {
   String? id;
   bool? like;
   bool? dislike;
-  bool? favorites;
+  int? favorites;
   bool? share;
   int? feedType;
-  List<String>? feedIdList;
+  String? feedId;
 
   FeedFeedback();
 
@@ -25,6 +25,6 @@ class FeedFeedback {
     favorites = feedback.favorites;
     share = feedback.share;
     feedType = feedback.feedType;
-    feedIdList = feedback.feedIdList;
+    feedId = feedback.feedId;
   }
 }

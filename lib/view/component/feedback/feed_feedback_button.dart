@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FeedFeedbackButton extends StatelessWidget {
@@ -29,6 +28,9 @@ class FeedFeedbackButton extends StatelessWidget {
             onPressed!();
           }
         },
+        style: const ButtonStyle(
+          visualDensity: VisualDensity.compact,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

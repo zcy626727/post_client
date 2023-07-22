@@ -6,9 +6,7 @@ import '../../../model/message/feed_feedback.dart';
 class FeedFeedbackApi {
   static Future<FeedFeedback> uploadFeedFeedback({
     int like = 0,
-    int dislike = 0,
     int favorites = 0,
-    int share = 0,
     required int feedType,
     required String feedId,
   }) async {
@@ -16,9 +14,7 @@ class FeedFeedbackApi {
       "/feedFeedback/uploadFeedFeedback",
       data: {
         "like": like,
-        "dislike": dislike,
         "favorites": favorites,
-        "share": share,
         "feedType": feedType,
         "feedId": feedId,
       },
@@ -56,7 +52,7 @@ class FeedFeedbackApi {
     Map<String, FeedFeedback> map = {};
     for (var feedFeedbackJson in r.data['feedFeedbackList']) {
       var feedFeedback = FeedFeedback.fromJson(feedFeedbackJson);
-      map[feedFeedback.id ?? ""] = feedFeedback;
+      map[feedFeedback.feedId ?? ""] = feedFeedback;
     }
     return map;
   }

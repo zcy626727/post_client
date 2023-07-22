@@ -98,7 +98,7 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
                     ),
                   ),
                   MediaFeedbackBar(
-                    mediaType: MediaType.article,
+                    mediaType: MediaType.gallery,
                     mediaId: widget.gallery.id!,
                     media: widget.gallery,
 

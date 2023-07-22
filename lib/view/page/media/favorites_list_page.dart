@@ -3,8 +3,8 @@ import 'package:post_client/constant/source.dart';
 import 'package:post_client/view/component/favorites/favorites_list_tile.dart';
 import 'package:post_client/view/page/favorites/favorites_edit_page.dart';
 
-import '../../../model/media/media_favorites.dart';
-import '../../../service/media/media_favorites_service.dart';
+import '../../../model/favorites.dart';
+import '../../../service/favorites_service.dart';
 import '../../widget/common_item_list.dart';
 
 class FavoritesListPage extends StatefulWidget {
@@ -15,7 +15,7 @@ class FavoritesListPage extends StatefulWidget {
 }
 
 class _FavoritesListPageState extends State<FavoritesListPage> {
-  int _sourceType = 0;
+  int _sourceType = SourceType.post;
 
   @override
   void initState() {
@@ -96,7 +96,9 @@ class _FavoritesListPageState extends State<FavoritesListPage> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  buildSourceTypeItem("全部", 0),
+                  buildSourceTypeItem("动态", SourceType.post),
+                  const SizedBox(width: 5),
+                  buildSourceTypeItem("评论", SourceType.comment),
                   const SizedBox(width: 5),
                   buildSourceTypeItem("音频", SourceType.audio),
                   const SizedBox(width: 5),
@@ -105,18 +107,14 @@ class _FavoritesListPageState extends State<FavoritesListPage> {
                   buildSourceTypeItem("视频", SourceType.video),
                   const SizedBox(width: 5),
                   buildSourceTypeItem("图片", SourceType.gallery),
-                  const SizedBox(width: 5),
-                  buildSourceTypeItem("动态", SourceType.post),
-                  const SizedBox(width: 5),
-                  buildSourceTypeItem("评论", SourceType.comment),
                 ],
               ),
             ),
             Expanded(
-              child: CommonItemList<MediaFavorites>(
+              child: CommonItemList<Favorites>(
                 key: ValueKey(_sourceType),
                 onLoad: (int page) async {
-                  var favoritesList = await MediaFavoritesService.getUserFavoritesList(_sourceType, page, 20);
+                  var favoritesList = await FavoritesService.getUserFavoritesList(_sourceType, page, 20);
                   return favoritesList;
                 },
                 itemName: "合集",

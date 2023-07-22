@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:post_client/model/message/feed_feedback.dart';
 import 'package:post_client/view/component/post/post_list_tile.dart';
 
 import '../../../model/message/post.dart';
@@ -137,7 +138,7 @@ class _PostListState extends State<PostList> {
             _postList.remove(deletedPost);
             setState(() {});
           },
-          feedback: post.feedback!,
+          feedback: post.feedback??FeedFeedback(),
         );
       },
     );

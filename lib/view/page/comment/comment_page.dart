@@ -46,7 +46,7 @@ class _CommentPageState extends State<CommentPage> {
       body: SafeArea(
         child: CommentList(
           onLoad: (pageIndex) async {
-            var commentList = CommentService.getCommentListByParent(widget.commentParentId, widget.commentParentType, pageIndex, 20);
+            var commentList = await CommentService.getCommentListByParent(widget.commentParentId, widget.commentParentType, pageIndex, 20);
             return commentList;
           },
           parentId: widget.commentParentId,

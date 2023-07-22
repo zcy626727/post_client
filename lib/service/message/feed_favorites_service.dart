@@ -1,37 +1,43 @@
 import '../../api/client/message/feed_favorites_api.dart';
-import '../../model/message/feed_favorites.dart';
+import '../../model/favorites.dart';
 
 class FeedFavoritesService {
-  static Future<FeedFavorites> createFavorites(
-      String title,
-      String introduction,
-      String? coverUrl,
-      int feedType,
-      ) async {
-    var favorites = await FeedFavoritesApi.createFeedFavorites(title, introduction, coverUrl, feedType);
+  static Future<Favorites> createFavorites(
+    String title,
+    String introduction,
+    String? coverUrl,
+    int sourceType,
+  ) async {
+    var favorites = await FeedFavoritesApi.createFavorites(title, introduction, coverUrl, sourceType);
     return favorites;
   }
 
   static Future<void> deleteUserFavoritesById(
-      String favoritesId,
-      ) async {
-    await FeedFavoritesApi.deleteUserFeedFavoritesById(favoritesId);
+    String favoritesId,
+  ) async {
+    await FeedFavoritesApi.deleteUserFavoritesById(favoritesId);
   }
 
-  static Future<void> addMediaToFavorites(
-      String favoritesId,
-      String feedId,
-      int feedType,
-      ) async {
-    await FeedFavoritesApi.addFeedToFavorites(favoritesId, feedId, feedType);
+  static Future<void> addMediaToFavorites({
+    required List<String> addFavoritesIdList,
+    required List<String> removeFavoritesIdList,
+    required String sourceId,
+    required int sourceType,
+  }) async {
+    await FeedFavoritesApi.updateFeedInFavoritesList(
+      addFavoritesIdList: addFavoritesIdList,
+      removeFavoritesIdList: removeFavoritesIdList,
+      sourceId: sourceId,
+      sourceType: sourceType,
+    );
   }
 
-  static Future<List<FeedFavorites>> getUserFavoritesList(
-      int feedType,
-      int pageIndex,
-      int pageSize,
-      ) async {
-    var favoritesList = await FeedFavoritesApi.getUserFeedFavoritesList(feedType, pageIndex, pageSize);
+  static Future<List<Favorites>> getUserFavoritesList(
+    int sourceType,
+    int pageIndex,
+    int pageSize,
+  ) async {
+    var favoritesList = await FeedFavoritesApi.getUserFavoritesList(sourceType, pageIndex, pageSize);
     return favoritesList;
   }
 }

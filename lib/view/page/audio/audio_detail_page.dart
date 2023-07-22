@@ -110,7 +110,7 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
                   ),
                   CommonAudioPlayerMini(audioUrl: audioUrl!),
                   MediaFeedbackBar(
-                    mediaType: MediaType.article,
+                    mediaType: MediaType.audio,
                     mediaId: widget.audio.id!,
                     media: widget.audio,
                   ),

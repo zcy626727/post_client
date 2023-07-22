@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../../model/media/media_favorites.dart';
-
+import '../../../model/favorites.dart';
 
 class FavoritesListTile extends StatelessWidget {
   const FavoritesListTile({super.key, required this.favorites});
 
-  final MediaFavorites favorites;
+  final Favorites favorites;
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +45,7 @@ class FavoritesListTile extends StatelessWidget {
                     children: [
                       Text(
                         favorites.title ?? "已失效",
-                        style: TextStyle(
-                          color: colorScheme.onSurface.withAlpha(200),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600
-                        ),
+                        style: TextStyle(color: colorScheme.onSurface.withAlpha(200), fontSize: 20, fontWeight: FontWeight.w600),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

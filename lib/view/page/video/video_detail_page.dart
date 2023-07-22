@@ -112,7 +112,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                     ),
                   ),
                   MediaFeedbackBar(
-                    mediaType: MediaType.article,
+                    mediaType: MediaType.video,
                     mediaId: widget.video.id!,
                     media: widget.video,
                   ),

@@ -30,7 +30,7 @@ class MediaFeedbackApi {
     return MediaFeedback.fromJson(r.data['mediaFeedback']);
   }
 
-  static Future<MediaFeedback> getMediaFeedback(
+  static Future<MediaFeedback?> getMediaFeedback(
     int mediaType,
     String mediaId,
   ) async {

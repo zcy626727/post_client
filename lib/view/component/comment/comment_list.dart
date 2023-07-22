@@ -13,7 +13,7 @@ import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 import 'package:post_client/view/page/comment/reply_page.dart';
 
 import '../../../model/user/user.dart';
-import 'comment_card.dart';
+import 'comment_list_tile.dart';
 
 class CommentList extends StatefulWidget {
   const CommentList({
@@ -189,7 +189,7 @@ class _CommentListState extends State<CommentList> {
       itemCount: _commentList.length,
       itemBuilder: (context, index) {
         var comment = _commentList[index];
-        return CommentCard(
+        return CommentListTile(
           key: ValueKey(comment.id),
           focusNode: _focusNode,
           comment: comment,
