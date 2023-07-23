@@ -58,6 +58,8 @@ class _CommentListTileState extends State<CommentListTile> {
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      margin: const EdgeInsets.only(top: 2),
+      color: colorScheme.surface,
       child: Material(
         color: colorScheme.surface,
         child: Row(

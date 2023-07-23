@@ -27,9 +27,9 @@ class FavoritesService {
     switch (sourceType) {
       case SourceType.post:
       case SourceType.comment:
-        return await MediaFavoritesApi.deleteUserMediaFavoritesById(favoritesId);
-      default:
         return await FeedFavoritesApi.deleteUserFavoritesById(favoritesId);
+      default:
+        return await MediaFavoritesApi.deleteUserFavoritesById(favoritesId);
     }
   }
 

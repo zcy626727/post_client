@@ -61,7 +61,7 @@ class _PostListTileState extends State<PostListTile> {
     return Container(
       // boundary needed for web
       color: colorScheme.surface,
-      margin: const EdgeInsets.only(bottom: 2),
+      margin: const EdgeInsets.only(top: 2),
       padding: const EdgeInsets.only(left: 3.0, right: 3.0),
       child: Column(
         children: [

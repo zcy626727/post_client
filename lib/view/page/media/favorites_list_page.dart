@@ -123,6 +123,10 @@ class _FavoritesListPageState extends State<FavoritesListPage> {
                 itemBuilder: (ctx, favorites, favoritesList, onFresh) {
                   return FavoritesListTile(
                     favorites: favorites,
+                    onDelete: (f){
+                      favoritesList?.remove(favorites);
+                      setState(() {});
+                    },
                   );
                 },
               ),

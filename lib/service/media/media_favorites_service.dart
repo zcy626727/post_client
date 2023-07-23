@@ -15,7 +15,7 @@ class MediaFavoritesService {
   static Future<void> deleteUserFavoritesById(
     String favoritesId,
   ) async {
-    await MediaFavoritesApi.deleteUserMediaFavoritesById(favoritesId);
+    await MediaFavoritesApi.deleteUserFavoritesById(favoritesId);
   }
 
   static Future<void> addMediaToFavoritesList({

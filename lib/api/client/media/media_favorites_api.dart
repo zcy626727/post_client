@@ -26,11 +26,11 @@ class MediaFavoritesApi {
     return Favorites.fromJson(r.data['favorites']);
   }
 
-  static Future<void> deleteUserMediaFavoritesById(
+  static Future<void> deleteUserFavoritesById(
     String favoritesId,
   ) async {
     await MediaHttpConfig.dio.post(
-      "/mediaFavorites/deleteUserMediaFavoritesById",
+      "/mediaFavorites/deleteUserFavoritesById",
       data: {
         "favoritesId": favoritesId,
       },
