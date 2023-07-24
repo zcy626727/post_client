@@ -7,13 +7,9 @@ part 'gallery.g.dart';
 @JsonSerializable()
 class Gallery extends Media{
   String? id;
-  int? userId;
-  String? title;
-  String? introduction;
-  DateTime? createTime;
+
   List<int>? fileIdList;
   List<String>? thumbnailUrlList;
-  String? coverUrl;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   User? user;

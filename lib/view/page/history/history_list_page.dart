@@ -1,8 +1,13 @@
-
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:post_client/constant/media.dart';
+import 'package:post_client/model/media/history.dart';
+import 'package:post_client/service/media/history_service.dart';
+import 'package:post_client/view/component/history/history_list_tile.dart';
+
+import '../../widget/common_item_list.dart';
 
 class HistoryListPage extends StatefulWidget {
   const HistoryListPage({super.key});
@@ -25,8 +30,7 @@ class _HistoryListPageState extends State<HistoryListPage> {
   }
 
   Future<void> getFolloweeList() async {
-    try {
-    } on DioException catch (e) {
+    try {} on DioException catch (e) {
       log(e.toString());
     } catch (e) {
       log(e.toString());
@@ -121,10 +125,90 @@ class _HistoryListPageState extends State<HistoryListPage> {
       child: TabBarView(
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          Container(),
-          Container(),
-          Container(),
-          Container(),
+          CommonItemList<History>(
+            onLoad: (int page) async {
+              var galleryList = await HistoryService.getUserHistoryList(MediaType.gallery, page, 20);
+              return galleryList;
+            },
+            itemName: "历史",
+            itemHeight: null,
+            isGrip: false,
+            gripAspectRatio: 1,
+            enableScrollbar: true,
+            itemBuilder: (ctx, history, historyList, onFresh) {
+              return HistoryListTile(
+                key: ValueKey(history.id),
+                history: history,
+                onDelete: (History h) {
+                  historyList?.remove(history);
+                  setState(() {});
+                },
+              );
+            },
+          ),
+          CommonItemList<History>(
+            onLoad: (int page) async {
+              var galleryList = await HistoryService.getUserHistoryList(MediaType.video, page, 20);
+              return galleryList;
+            },
+            itemName: "历史",
+            itemHeight: null,
+            isGrip: false,
+            gripAspectRatio: 1,
+            enableScrollbar: true,
+            itemBuilder: (ctx, history, historyList, onFresh) {
+              return HistoryListTile(
+                key: ValueKey(history.id),
+                history: history,
+                onDelete: (History h) {
+                  historyList?.remove(history);
+                  setState(() {});
+                },
+              );
+            },
+          ),
+          CommonItemList<History>(
+            onLoad: (int page) async {
+              var galleryList = await HistoryService.getUserHistoryList(MediaType.audio, page, 20);
+              return galleryList;
+            },
+            itemName: "历史",
+            itemHeight: null,
+            isGrip: false,
+            gripAspectRatio: 1,
+            enableScrollbar: true,
+            itemBuilder: (ctx, history, historyList, onFresh) {
+              return HistoryListTile(
+                key: ValueKey(history.id),
+                history: history,
+                onDelete: (History h) {
+                  historyList?.remove(history);
+                  setState(() {});
+                },
+              );
+            },
+          ),
+          CommonItemList<History>(
+            onLoad: (int page) async {
+              var galleryList = await HistoryService.getUserHistoryList(MediaType.article, page, 20);
+              return galleryList;
+            },
+            itemName: "历史",
+            itemHeight: null,
+            isGrip: false,
+            gripAspectRatio: 1,
+            enableScrollbar: true,
+            itemBuilder: (ctx, history, historyList, onFresh) {
+              return HistoryListTile(
+                key: ValueKey(history.id),
+                history: history,
+                onDelete: (History h) {
+                  historyList?.remove(history);
+                  setState(() {});
+                },
+              );
+            },
+          ),
         ],
       ),
     );

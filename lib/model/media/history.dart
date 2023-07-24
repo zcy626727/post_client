@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:post_client/model/media/media.dart';
 
 part 'history.g.dart';
 
@@ -6,13 +7,14 @@ part 'history.g.dart';
 class History{
   String? id;
   int? userId;
-  int? sourceType;
-  String? sourceId;
+  int? mediaType;
+  String? mediaId;
   String? position;
+  DateTime? updateTime;
   DateTime? createTime;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
-  dynamic source;
+  Media? media;
 
 
   History();

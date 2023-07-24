@@ -6,7 +6,7 @@ import '../media/media.dart';
 part 'mention.g.dart';
 
 @JsonSerializable()
-class Mention extends Media {
+class Mention {
   String? id;
   int? targetUserId;
   int? sourceUserId;

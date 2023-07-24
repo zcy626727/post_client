@@ -4,12 +4,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:post_client/model/media/history.dart';
 import 'package:post_client/service/media/file_service.dart';
 import 'package:post_client/view/widget/player/common_video_player.dart';
 
 import '../../../constant/media.dart';
 import '../../../model/media/video.dart';
 import '../../../model/message/comment.dart';
+import '../../../service/media/history_service.dart';
 import '../../component/feedback/media_feedback_bar.dart';
 import '../comment/comment_page.dart';
 
@@ -25,6 +27,7 @@ class VideoDetailPage extends StatefulWidget {
 class _VideoDetailPageState extends State<VideoDetailPage> {
   late Future _futureBuilderFuture;
   String? videoUrl;
+  late History history;
 
   @override
   void initState() {
@@ -33,13 +36,24 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
   }
 
   Future getData() async {
-    return Future.wait([getVideoUrl()]);
+    return Future.wait([getVideoUrl(), getHistory()]);
   }
 
   Future<void> getVideoUrl() async {
     try {
       var (url, _) = await FileService.genGetFileUrl(widget.video.fileId!);
       videoUrl = url;
+    } on DioException catch (e) {
+      log(e.toString());
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> getHistory() async {
+    try {
+      //获取或创建历史
+      history = await HistoryService.getOrCreateHistoryByMedia(widget.video.id!, MediaType.video);
     } on DioException catch (e) {
       log(e.toString());
     } catch (e) {
@@ -80,9 +94,16 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
               padding: const EdgeInsets.only(left: 3, right: 3),
               child: ListView(
                 children: [
-                  SizedBox(
-                    height: 220,
-                    child: CommonVideoPlayer(videoUrl: videoUrl!),
+                  AspectRatio(
+                    aspectRatio: 1.8,
+                    child: Container(
+                      color: colorScheme.background,
+                      child: videoUrl == null
+                          ? const Center(
+                              child: Text("视频加载失败"),
+                            )
+                          : CommonVideoPlayer(videoUrl: videoUrl!),
+                    ),
                   ),
                   ListTile(
                     contentPadding: const EdgeInsets.only(left: 3, right: 3),

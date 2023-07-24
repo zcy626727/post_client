@@ -6,14 +6,9 @@ import 'media.dart';
 part 'article.g.dart';
 
 @JsonSerializable()
-class Article extends Media{
+class Article extends Media {
   String? id;
-  int? userId;
   String? content;
-  String? coverUrl;
-  String? title;
-  String? introduction;
-  DateTime? createTime;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   User? user;

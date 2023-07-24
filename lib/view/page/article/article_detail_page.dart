@@ -5,12 +5,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:intl/intl.dart';
+import 'package:post_client/service/media/history_service.dart';
 import 'package:post_client/view/component/feedback/media_feedback_bar.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
 
 import '../../../constant/media.dart';
 import '../../../model/media/article.dart';
-import '../../../model/media/media_feedback.dart';
+import '../../../model/media/history.dart';
 import '../../../model/message/comment.dart';
 import '../../../service/media/article_service.dart';
 import '../comment/comment_page.dart';
@@ -28,7 +29,8 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   late Future _futureBuilderFuture;
   final QuillController controller = QuillController.basic();
   final FocusNode focusNode = FocusNode();
-  MediaFeedback _mediaFeedback = MediaFeedback();
+
+  late History history;
 
   @override
   void initState() {
@@ -37,13 +39,26 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   }
 
   Future getData() async {
-    return Future.wait([getArticle()]);
+    return Future.wait([getArticle(),getHistory()]);
   }
 
   Future<void> getArticle() async {
     try {
       var article = await ArticleService.getArticleById(widget.article.id!);
+
+      //如果不存在则直接创建
       controller.document = Document.fromJson(json.decode(article.content ?? ""));
+    } on DioException catch (e) {
+      log(e.toString());
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> getHistory() async {
+    try {
+      //获取或创建历史
+      history = await HistoryService.getOrCreateHistoryByMedia(widget.article.id!, MediaType.article);
     } on DioException catch (e) {
       log(e.toString());
     } catch (e) {
@@ -75,7 +90,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                   color: colorScheme.onBackground,
                 ),
               ),
-              actions: [],
+              actions: const [],
             ),
             body: Container(
               color: colorScheme.surface,
@@ -161,5 +176,10 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
         readOnly: true,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

@@ -8,7 +8,7 @@ import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/component/media/album_list_tile.dart';
 import 'package:post_client/view/page/media/album_list_page.dart';
-import 'package:post_client/view/page/media/history_list_page.dart';
+import 'package:post_client/view/page/history/history_list_page.dart';
 import 'package:post_client/view/page/media/watch_later_list_page.dart';
 import 'package:post_client/view/widget/common_header_bar.dart';
 import 'package:provider/provider.dart';

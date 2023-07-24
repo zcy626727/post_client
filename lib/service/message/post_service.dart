@@ -46,6 +46,7 @@ class PostService {
       post.user = user;
     }
     await fillMedia(postList);
+    await fillFeedback(postList);
     return postList;
   }
 

@@ -1,21 +1,20 @@
+import 'package:post_client/api/client/media_http_config.dart';
 import 'package:post_client/model/media/history.dart';
-
-import '../message_http_config.dart';
 
 class HistoryApi {
   static Future<History> createHistory(
-    String sourceId,
-    int sourceType,
-    String position,
+    String mediaId,
+    int mediaType,
+    String? position,
   ) async {
-    var r = await MessageHttpConfig.dio.post(
+    var r = await MediaHttpConfig.dio.post(
       "/history/createHistory",
       data: {
-        "sourceId": sourceId,
-        "sourceType": sourceType,
+        "mediaId": mediaId,
+        "mediaType": mediaType,
         "position": position,
       },
-      options: MessageHttpConfig.options.copyWith(extra: {
+      options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
       }),
@@ -25,15 +24,15 @@ class HistoryApi {
     return History.fromJson(r.data['history']);
   }
 
-  static Future<void> deleteHistoryById(
+  static Future<void> deleteUserHistoryById(
     String historyId,
   ) async {
-    await MessageHttpConfig.dio.post(
-      "/history/deleteHistoryById",
+    await MediaHttpConfig.dio.post(
+      "/history/deleteUserHistoryById",
       data: {
         "historyId": historyId,
       },
-      options: MessageHttpConfig.options.copyWith(extra: {
+      options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
       }),
@@ -41,53 +40,60 @@ class HistoryApi {
   }
 
   static Future<void> updateHistoryPosition(
-      String historyId,
-      String newPosition,
+    String historyId,
+    String newPosition,
   ) async {
-    await MessageHttpConfig.dio.post(
+    await MediaHttpConfig.dio.post(
       "/history/updateHistoryPosition",
       data: {
         "newPosition": newPosition,
         "historyId": historyId,
       },
-      options: MessageHttpConfig.options.copyWith(extra: {
+      options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
       }),
     );
   }
 
-  static Future<History> getHistoryBySource(
-    String sourceId,
-    String sourceType,
+  static Future<History?> getHistoryByMedia(
+    String mediaId,
+    int mediaType,
+    bool needCreate,
+    bool needUpdateTime,
   ) async {
-    var r = await MessageHttpConfig.dio.get(
-      "/history/getHistoryBySource",
-      data: {
-        "sourceType": sourceType,
-        "commentId": sourceId,
+    var r = await MediaHttpConfig.dio.get(
+      "/history/getHistoryByMedia",
+      queryParameters: {
+        "mediaId": mediaId,
+        "mediaType": mediaType,
+        "needCreate": needCreate,
+        "needUpdateTime": needUpdateTime,
       },
-      options: MessageHttpConfig.options.copyWith(extra: {
+      options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
       }),
     );
+    if (r.data['history'] == null) {
+      return null;
+    }
     return History.fromJson(r.data['history']);
   }
 
   static Future<List<History>> getUserHistoryList(
-      int sourceType,
-      int pageIndex,
-      int pageSize,
-      ) async {
-    var r = await MessageHttpConfig.dio.get(
+    int mediaType,
+    int pageIndex,
+    int pageSize,
+  ) async {
+    var r = await MediaHttpConfig.dio.get(
       "/history/getUserHistoryList",
-      data: {
-        "sourceType": sourceType,
+      queryParameters: {
+        "mediaType": mediaType,
         "pageIndex": pageIndex,
         "pageSize": pageSize,
       },
-      options: MessageHttpConfig.options.copyWith(extra: {
+      options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
       }),

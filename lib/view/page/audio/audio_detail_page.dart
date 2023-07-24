@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:post_client/model/media/history.dart';
 import 'package:post_client/view/widget/player/audio/common_audio_player_mini.dart';
 
 import '../../../constant/media.dart';
@@ -10,6 +11,7 @@ import '../../../model/media/audio.dart';
 import '../../../model/media/media_feedback.dart';
 import '../../../model/message/comment.dart';
 import '../../../service/media/file_service.dart';
+import '../../../service/media/history_service.dart';
 import '../../component/feedback/media_feedback_bar.dart';
 import '../comment/comment_page.dart';
 
@@ -26,7 +28,7 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
   late Future _futureBuilderFuture;
   String? audioUrl;
 
-  MediaFeedback _mediaFeedback = MediaFeedback();
+  late History history;
 
   @override
   void initState() {
@@ -35,13 +37,24 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
   }
 
   Future getData() async {
-    return Future.wait([getAudioUrl()]);
+    return Future.wait([getAudioUrl(),getHistory()]);
   }
 
   Future<void> getAudioUrl() async {
     try {
       var (url, _) = await FileService.genGetFileUrl(widget.audio.fileId!);
       audioUrl = url;
+    } on DioException catch (e) {
+      log(e.toString());
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> getHistory() async {
+    try {
+      //获取或创建历史
+      history = await HistoryService.getOrCreateHistoryByMedia(widget.audio.id!, MediaType.audio);
     } on DioException catch (e) {
       log(e.toString());
     } catch (e) {

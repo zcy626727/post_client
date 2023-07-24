@@ -7,12 +7,7 @@ part 'audio.g.dart';
 @JsonSerializable()
 class Audio extends Media{
   String? id;
-  int? userId;
   int? fileId;
-  String? coverUrl;
-  String? title;
-  String? introduction;
-  DateTime? createTime;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   User? user;

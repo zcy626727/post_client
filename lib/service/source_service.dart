@@ -5,7 +5,6 @@ import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/model/media/history.dart';
 
 import '../api/client/media/media_api.dart';
-import '../constant/post.dart';
 import '../constant/source.dart';
 import '../model/media/article.dart';
 import '../model/media/audio.dart';
@@ -22,20 +21,20 @@ class SourceService{
     List<String> commentIdList = <String>[];
 
     for (var history in historyList) {
-      if (history.sourceId != null) {
-        switch (history.sourceType) {
+      if (history.mediaId != null) {
+        switch (history.mediaType) {
           case SourceType.article:
-            articleIdList.add(history.sourceId!);
+            articleIdList.add(history.mediaId!);
           case SourceType.video:
-            videoIdList.add(history.sourceId!);
+            videoIdList.add(history.mediaId!);
           case SourceType.audio:
-            audioIdList.add(history.sourceId!);
+            audioIdList.add(history.mediaId!);
           case SourceType.gallery:
-            galleryIdList.add(history.sourceId!);
+            galleryIdList.add(history.mediaId!);
           case SourceType.post:
-            postIdList.add(history.sourceId!);
+            postIdList.add(history.mediaId!);
           case SourceType.comment:
-            commentIdList.add(history.sourceId!);
+            commentIdList.add(history.mediaId!);
         }
       }
     }
@@ -65,20 +64,16 @@ class SourceService{
 
     //填充
     for (var history in historyList) {
-      if (history.sourceId != null) {
-        switch (history.sourceType) {
+      if (history.mediaId != null) {
+        switch (history.mediaType) {
           case SourceType.article:
-            history.source = articleMap[history.sourceId];
+            history.media = articleMap[history.mediaId];
           case SourceType.video:
-            history.source = videoMap[history.sourceId];
+            history.media = videoMap[history.mediaId];
           case SourceType.audio:
-            history.source = audioMap[history.sourceId];
+            history.media = audioMap[history.mediaId];
           case SourceType.gallery:
-            history.source = galleryMap[history.sourceId];
-          case SourceType.comment:
-            history.source = commentMap[history.sourceId];
-          case SourceType.post:
-            history.source = postMap[history.sourceId];
+            history.media = galleryMap[history.mediaId];
         }
       }
     }

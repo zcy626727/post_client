@@ -6,6 +6,7 @@ class CommonVideoPlayer extends StatefulWidget {
   const CommonVideoPlayer({Key? key, required this.videoUrl}) : super(key: key);
 
   final String videoUrl;
+
   @override
   State<CommonVideoPlayer> createState() => _CommonVideoPlayerState();
 }
@@ -20,7 +21,7 @@ class _CommonVideoPlayerState extends State<CommonVideoPlayer> {
   void initState() {
     super.initState();
     _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
-    _chewieController =  ChewieController(
+    _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       autoPlay: false,
       looping: false,
@@ -45,7 +46,7 @@ class _CommonVideoPlayerState extends State<CommonVideoPlayer> {
         if (snapshot.connectionState == ConnectionState.done) {
           return Container(
             color: colorScheme.background,
-            child:  AspectRatio(
+            child: AspectRatio(
               aspectRatio: _videoPlayerController.value.aspectRatio,
               child: Chewie(
                 controller: _chewieController,

@@ -1,11 +1,15 @@
+import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:post_client/constant/media.dart';
 import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/view/page/comment/comment_page.dart';
 
+import '../../../model/media/history.dart';
 import '../../../model/message/comment.dart';
+import '../../../service/media/history_service.dart';
 import '../../component/feedback/media_feedback_bar.dart';
 
 class GalleryDetailPage extends StatefulWidget {
@@ -19,6 +23,7 @@ class GalleryDetailPage extends StatefulWidget {
 
 class _GalleryDetailPageState extends State<GalleryDetailPage> {
   late Future _futureBuilderFuture;
+  late History history;
 
   @override
   void initState() {
@@ -27,9 +32,19 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
   }
 
   Future getData() async {
-    return Future.wait([]);
+    return Future.wait([getHistory()]);
   }
 
+  Future<void> getHistory() async {
+    try {
+      //获取或创建历史
+      history = await HistoryService.getOrCreateHistoryByMedia(widget.gallery.id!, MediaType.gallery);
+    } on DioException catch (e) {
+      log(e.toString());
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +116,6 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
                     mediaType: MediaType.gallery,
                     mediaId: widget.gallery.id!,
                     media: widget.gallery,
-
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 5),

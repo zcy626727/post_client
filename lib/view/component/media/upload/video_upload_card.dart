@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:post_client/util/unit.dart';
 
 import '../../../../api/client/media/file_api.dart';
 import '../../../../config/global.dart';
@@ -58,7 +59,7 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("预计不知道多少秒"),
-                        Text("${widget.task.uploadedSize}/${widget.task.totalSize!}"),
+                        Text("${UnitUtil.convertByteUnits(widget.task.uploadedSize)}/${UnitUtil.convertByteUnits(widget.task.totalSize)}"),
                       ],
                     ),
                     //取消上传
