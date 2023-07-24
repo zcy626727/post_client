@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:post_client/config/global.dart';
 import 'package:post_client/model/message/feed_feedback.dart';
 import 'package:post_client/service/source_service.dart';
 
@@ -69,6 +70,10 @@ class PostService {
   }
 
   static Future<void> fillFeedback(List<Post> postList) async {
+    //如果没有登录就不需要填充
+    if(Global.user.id==null){
+      return;
+    }
     //获取媒体列表
     var map = await FeedService.getFeedbackMap(postList, FeedType.post);
 

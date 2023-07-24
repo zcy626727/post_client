@@ -18,7 +18,10 @@ class FeedFeedback {
 
   Map<String, dynamic> toJson() => _$FeedFeedbackToJson(this);
 
-  void copy(FeedFeedback feedback) {
+  void copy(FeedFeedback? feedback) {
+    if(feedback==null){
+      return;
+    }
     id = feedback.id;
     like = feedback.like;
     dislike = feedback.dislike;

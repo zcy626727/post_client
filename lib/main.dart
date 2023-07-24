@@ -6,7 +6,7 @@ import 'package:post_client/state/screen_state.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/theme/color_schemes.g.dart';
 import 'package:post_client/view/main_screen.dart';
-import 'package:post_client/view/screen/account/sign_in_or_up_screen.dart';
+import 'package:post_client/view/page/account/sign_in_or_up_page.dart';
 import 'package:provider/provider.dart';
 
 import 'config/global.dart';
@@ -77,7 +77,7 @@ class _MyAppState extends State<MyApp> {
                   colorScheme: darkColorScheme,
                 ),
                 routes: {
-                  "login": (context) => const SignInOrUpScreen(),
+                  "login": (context) => const SignInOrUpPage(),
                 },
                 //全局状态获取主题模式
                 themeMode: currentThemeMode,

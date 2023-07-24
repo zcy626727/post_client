@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/view/screen/account/sign_in_or_up_screen.dart';
+import 'package:post_client/view/page/account/sign_in_or_up_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/user/user.dart';
@@ -26,7 +26,7 @@ class _DesktopAccountScreenState extends State<DesktopAccountScreen> {
       builder: (context, user, child) {
         //未登录，显示登录注册界面
         if (user.token == null) {
-          return const SignInOrUpScreen();
+          return const SignInOrUpPage();
         } else {
           return buildAccountInfo();
         }

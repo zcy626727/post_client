@@ -96,7 +96,7 @@ class _CommentListTileState extends State<CommentListTile> {
                         feedFeedback: widget.comment.feedback ?? FeedFeedback(),
                         feedId: widget.comment.id!,
                       ),
-                      buildMoreOpera(),
+                      if (Global.user.id != null) buildMoreOpera(),
                     ],
                   )
                 ],

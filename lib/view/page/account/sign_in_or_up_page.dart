@@ -2,17 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../util/responsive.dart';
-import '../../page/account/sign_in_page.dart';
-import '../../page/account/sign_up_page.dart';
+import 'sign_in_page.dart';
+import 'sign_up_page.dart';
 
-class SignInOrUpScreen extends StatefulWidget {
-  const SignInOrUpScreen({Key? key}) : super(key: key);
+class SignInOrUpPage extends StatefulWidget {
+  const SignInOrUpPage({Key? key}) : super(key: key);
 
   @override
-  State<SignInOrUpScreen> createState() => _SignInOrUpScreenState();
+  State<SignInOrUpPage> createState() => _SignInOrUpPageState();
 }
 
-class _SignInOrUpScreenState extends State<SignInOrUpScreen>
+class _SignInOrUpPageState extends State<SignInOrUpPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 

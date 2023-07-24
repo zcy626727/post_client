@@ -4,6 +4,7 @@ import 'package:post_client/constant/source.dart';
 import 'package:post_client/model/message/feed.dart';
 import 'package:post_client/model/message/feed_feedback.dart';
 
+import '../../../config/global.dart';
 import '../../../service/message/feed_feedback_service.dart';
 import '../favorites/select_favorites_dialog.dart';
 import '../show/show_snack_bar.dart';
@@ -55,16 +56,22 @@ class _FeedFeedbackBarState extends State<FeedFeedbackBar> {
               selected: widget.feedFeedback.like ?? false,
               text: "${widget.feed.likeNum ?? 0}",
               onPressed: () async {
-                FeedFeedback? feedFeedback;
-                if (widget.feedFeedback.like == true) {
-                  feedFeedback = await FeedFeedbackService.uploadFeedFeedback(mediaType: widget.feedType, mediaId: widget.feedId, like: -1);
-                  widget.feed.likeNum = (widget.feed.likeNum ?? 0) - 1;
+                if (Global.user.id == null) {
+                  //显示登录页
+                  Navigator.pushNamed(context, "login");
                 } else {
-                  feedFeedback = await FeedFeedbackService.uploadFeedFeedback(mediaType: widget.feedType, mediaId: widget.feedId, like: 1);
-                  widget.feed.likeNum = (widget.feed.likeNum ?? 0) + 1;
+                  FeedFeedback? feedFeedback;
+                  if (widget.feedFeedback.like == true) {
+                    feedFeedback = await FeedFeedbackService.uploadFeedFeedback(mediaType: widget.feedType, mediaId: widget.feedId, like: -1);
+                    widget.feed.likeNum = (widget.feed.likeNum ?? 0) - 1;
+                  } else {
+                    feedFeedback = await FeedFeedbackService.uploadFeedFeedback(mediaType: widget.feedType, mediaId: widget.feedId, like: 1);
+                    widget.feed.likeNum = (widget.feed.likeNum ?? 0) + 1;
+                  }
+                  widget.feedFeedback.copy(feedFeedback);
+                  setState(() {});
                 }
-                widget.feedFeedback.copy(feedFeedback);
-                setState(() {});
+
               },
             ),
             FeedFeedbackButton(
@@ -73,34 +80,40 @@ class _FeedFeedbackBarState extends State<FeedFeedbackBar> {
               selected: widget.feedFeedback.favorites == null ? false : widget.feedFeedback.favorites! > 0,
               text: "${widget.feed.favoritesNum ?? 0}",
               onPressed: () async {
-                //弹出列表
-                showDialog(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (BuildContext context) {
-                    var sourceType = SourceType.comment;
+                if (Global.user.id == null) {
+                  //显示登录页
+                  Navigator.pushNamed(context, "login");
+                } else {
+                  //弹出列表
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (BuildContext context) {
+                      var sourceType = SourceType.comment;
 
-                    switch (widget.feedType) {
-                      case FeedType.post:
-                        sourceType = SourceType.post;
-                    }
-                    return SelectFavoritesDialog(
-                      onConfirm: (count) async {
-                        try {
-                          widget.feedFeedback.favorites = (widget.feedFeedback.favorites ?? 0) + count;
-                          widget.feed.favoritesNum = (widget.feed.favoritesNum??0) + count;
-                          setState(() {});
-                        } on Exception catch (e) {
-                          ShowSnackBar.exception(context: context, e: e, defaultValue: "收藏出错");
-                        } finally {
-                          Navigator.pop(context);
-                        }
-                      },
-                      sourceType: sourceType,
-                      sourceId: widget.feedId,
-                    );
-                  },
-                );
+                      switch (widget.feedType) {
+                        case FeedType.post:
+                          sourceType = SourceType.post;
+                      }
+                      return SelectFavoritesDialog(
+                        onConfirm: (count) async {
+                          try {
+                            widget.feedFeedback.favorites = (widget.feedFeedback.favorites ?? 0) + count;
+                            widget.feed.favoritesNum = (widget.feed.favoritesNum??0) + count;
+                            setState(() {});
+                          } on Exception catch (e) {
+                            ShowSnackBar.exception(context: context, e: e, defaultValue: "收藏出错");
+                          } finally {
+                            Navigator.pop(context);
+                          }
+                        },
+                        sourceType: sourceType,
+                        sourceId: widget.feedId,
+                      );
+                    },
+                  );
+                }
+
                 setState(() {});
               },
             ),

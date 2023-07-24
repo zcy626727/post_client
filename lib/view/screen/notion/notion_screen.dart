@@ -8,6 +8,8 @@ import 'package:post_client/view/page/reply/reply_comment_list_page.dart';
 import 'package:post_client/view/page/reply/reply_mention_list_page.dart';
 import 'package:provider/provider.dart';
 
+import '../../../config/global.dart';
+
 class NotionScreen extends StatefulWidget {
   const NotionScreen({super.key});
 
@@ -45,20 +47,31 @@ class _NotionScreenState extends State<NotionScreen> {
                 NotionTabButton(
                   title: "回复",
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ReplyCommentListPage()),
-                    );
+                    if (Global.user.id == null) {
+                      //显示登录页
+                      Navigator.pushNamed(context, "login");
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ReplyCommentListPage()),
+                      );
+                    }
+
                   },
                   svgPath: "assets/icons/huifu.svg",
                 ),
                 NotionTabButton(
                   title: "@我",
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ReplyMentionListPage()),
-                    );
+                    if (Global.user.id == null) {
+                      //显示登录页
+                      Navigator.pushNamed(context, "login");
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ReplyMentionListPage()),
+                      );
+                    }
                   },
                   svgPath: "assets/icons/aite.svg",
                 ),

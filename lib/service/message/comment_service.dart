@@ -1,3 +1,4 @@
+import 'package:post_client/config/global.dart';
 import 'package:post_client/constant/feed.dart';
 import 'package:post_client/service/message/feed_service.dart';
 
@@ -51,6 +52,9 @@ class CommentService {
   }
 
   static Future<void> fillFeedback(List<Comment> commentList) async {
+    if(Global.user.id==null){
+      return;
+    }
     //获取媒体列表
     var map = await FeedService.getFeedbackMap(commentList, FeedType.comment);
 

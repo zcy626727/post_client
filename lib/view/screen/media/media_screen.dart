@@ -13,6 +13,7 @@ import 'package:post_client/view/page/media/watch_later_list_page.dart';
 import 'package:post_client/view/widget/common_header_bar.dart';
 import 'package:provider/provider.dart';
 
+import '../../../config/global.dart';
 import '../../page/media/download_list_page.dart';
 import '../../page/media/favorites_list_page.dart';
 
@@ -39,6 +40,9 @@ class _MediaScreenState extends State<MediaScreen> {
   }
 
   Future<void> getAlbum() async {
+    if (Global.user.id == null) {
+      return;
+    }
     try {} on DioException catch (e) {
       log(e.toString());
     } catch (e) {
@@ -76,25 +80,6 @@ class _MediaScreenState extends State<MediaScreen> {
       color: colorScheme.background,
       child: Column(
         children: [
-          // Container(
-          //   color: colorScheme.surface,
-          //   margin: const EdgeInsets.only(bottom: 3),
-          //   height: 200,
-          //   child: Column(
-          //     children: [
-          //       CommonHeaderBar(
-          //         title: "收藏",
-          //         trailing: TextButton(
-          //           onPressed: () {},
-          //           child: const Text("查看全部"),
-          //         ),
-          //       ),
-          //       Row(
-          //         children: [],
-          //       )
-          //     ],
-          //   ),
-          // ),
           Container(
             margin: const EdgeInsets.only(top: 1),
             padding: const EdgeInsets.symmetric(vertical: 5),
@@ -106,37 +91,57 @@ class _MediaScreenState extends State<MediaScreen> {
                     iconData: Icons.collections_bookmark,
                     text: "我的收藏",
                     onPress: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const FavoritesListPage()),
-                      );
+                      if (Global.user.id == null) {
+                        //显示登录页
+                        Navigator.pushNamed(context, "login");
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const FavoritesListPage()),
+                        );
+                      }
                     }),
                 buildItemButton(
                     iconData: Icons.album,
                     text: "我的合集",
                     onPress: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const AlbumListPage()),
-                      );
+                      if (Global.user.id == null) {
+                        //显示登录页
+                        Navigator.pushNamed(context, "login");
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const AlbumListPage()),
+                        );
+                      }
                     }),
                 buildItemButton(
                     iconData: Icons.history,
                     text: "历史记录",
                     onPress: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const HistoryListPage()),
-                      );
+                      if (Global.user.id == null) {
+                        //显示登录页
+                        Navigator.pushNamed(context, "login");
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const HistoryListPage()),
+                        );
+                      }
                     }),
                 buildItemButton(
                     iconData: Icons.watch_later_outlined,
                     text: "稍后再看",
                     onPress: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const WatchLaterListPage()),
-                      );
+                      if (Global.user.id == null) {
+                        //显示登录页
+                        Navigator.pushNamed(context, "login");
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const WatchLaterListPage()),
+                        );
+                      }
                     }),
               ],
             ),
@@ -189,31 +194,36 @@ class _MediaScreenState extends State<MediaScreen> {
 
   Widget buildItemButton({required IconData iconData, required String text, VoidCallback? onPress}) {
     var colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10),
-      height: 85,
-      child: TextButton(
-        onPressed: onPress,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              height: 45,
-              width: 50,
-              decoration: BoxDecoration(
-                color: colorScheme.primaryContainer,
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-              ),
-              child: Icon(
-                iconData,
-                color: colorScheme.onSurface,
-              ),
+    return Expanded(
+      child: Container(
+        // padding: const EdgeInsets.symmetric(horizontal: 10),
+        height: 85,
+        child: TextButton(
+          onPressed: onPress,
+          child: Container(
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  height: 45,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    color: colorScheme.primaryContainer.withAlpha(200),
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  ),
+                  child: Icon(
+                    iconData,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+                Text(
+                  text,
+                  style: TextStyle(color: colorScheme.onSurface, fontSize: 12),
+                ),
+              ],
             ),
-            Text(
-              text,
-              style: TextStyle(color: colorScheme.onSurface, fontSize: 12),
-            ),
-          ],
+          ),
         ),
       ),
     );

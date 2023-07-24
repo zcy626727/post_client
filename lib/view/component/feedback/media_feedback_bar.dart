@@ -2,8 +2,11 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:post_client/config/global.dart';
 import 'package:post_client/constant/media.dart';
 import 'package:post_client/model/media/media.dart';
+import 'package:post_client/state/user_state.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constant/source.dart';
 import '../../../model/media/media_feedback.dart';
@@ -44,7 +47,7 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
 
   Future<void> getMediaFeedback() async {
     try {
-      _mediaFeedback = await MediaFeedbackService.getMediaFeedback(widget.mediaType, widget.mediaId);
+      _mediaFeedback = (await MediaFeedbackService.getMediaFeedback(widget.mediaType, widget.mediaId)) ?? MediaFeedback();
       //获取下载信息
     } on DioException catch (e) {
       log(e.toString());
@@ -76,14 +79,19 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
                     selected: _mediaFeedback.like ?? false,
                     text: "${widget.media.likeNum ?? 0}",
                     onPressed: () async {
-                      if (_mediaFeedback.like == true) {
-                        _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, like: -1);
-                        widget.media.likeNum = (widget.media.likeNum ?? 0) - 1;
+                      if (Global.user.id == null) {
+                        //显示登录页
+                        Navigator.pushNamed(context, "login");
                       } else {
-                        _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, like: 1);
-                        widget.media.likeNum = (widget.media.likeNum ?? 0) + 1;
+                        if (_mediaFeedback.like == true) {
+                          _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, like: -1);
+                          widget.media.likeNum = (widget.media.likeNum ?? 0) - 1;
+                        } else {
+                          _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, like: 1);
+                          widget.media.likeNum = (widget.media.likeNum ?? 0) + 1;
+                        }
+                        setState(() {});
                       }
-                      setState(() {});
                     },
                   ),
                   MediaFeedbackButton(
@@ -91,13 +99,19 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
                     selected: _mediaFeedback.dislike ?? false,
                     text: "${widget.media.dislikeNum ?? 0}",
                     onPressed: () async {
-                      if (_mediaFeedback.dislike == true) {
-                        _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, dislike: -1);
-                        widget.media.dislikeNum = (widget.media.dislikeNum ?? 0) - 1;
+                      if (Global.user.id == null) {
+                        //显示登录页
+                        Navigator.pushNamed(context, "login");
                       } else {
-                        _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, dislike: 1);
-                        widget.media.dislikeNum = (widget.media.dislikeNum ?? 0) + 1;
+                        if (_mediaFeedback.dislike == true) {
+                          _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, dislike: -1);
+                          widget.media.dislikeNum = (widget.media.dislikeNum ?? 0) - 1;
+                        } else {
+                          _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, dislike: 1);
+                          widget.media.dislikeNum = (widget.media.dislikeNum ?? 0) + 1;
+                        }
                       }
+
                       setState(() {});
                     },
                   ),
@@ -106,37 +120,43 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
                     selected: _mediaFeedback.favorites == null ? false : _mediaFeedback.favorites! > 0,
                     text: "${widget.media.favoritesNum ?? 0}",
                     onPressed: () async {
-                      showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (BuildContext context) {
-                          var sourceType = SourceType.gallery;
+                      if (Global.user.id == null) {
+                        //显示登录页
+                        Navigator.pushNamed(context, "login");
+                      } else {
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (BuildContext context) {
+                            var sourceType = SourceType.gallery;
 
-                          switch (widget.mediaType) {
-                            case MediaType.article:
-                              sourceType = SourceType.article;
-                            case MediaType.audio:
-                              sourceType = SourceType.audio;
-                            case MediaType.video:
-                              sourceType = SourceType.video;
-                          }
-                          return SelectFavoritesDialog(
-                            onConfirm: (count) async {
-                              try {
-                                _mediaFeedback.favorites = (_mediaFeedback.favorites ?? 0) + count;
-                                widget.media.favoritesNum = (widget.media.favoritesNum ?? 0) + count;
-                                setState(() {});
-                              } on Exception catch (e) {
-                                ShowSnackBar.exception(context: context, e: e, defaultValue: "收藏出错");
-                              } finally {
-                                Navigator.pop(context);
-                              }
-                            },
-                            sourceType: sourceType,
-                            sourceId: widget.mediaId,
-                          );
-                        },
-                      );
+                            switch (widget.mediaType) {
+                              case MediaType.article:
+                                sourceType = SourceType.article;
+                              case MediaType.audio:
+                                sourceType = SourceType.audio;
+                              case MediaType.video:
+                                sourceType = SourceType.video;
+                            }
+                            return SelectFavoritesDialog(
+                              onConfirm: (count) async {
+                                try {
+                                  _mediaFeedback.favorites = (_mediaFeedback.favorites ?? 0) + count;
+                                  widget.media.favoritesNum = (widget.media.favoritesNum ?? 0) + count;
+                                  setState(() {});
+                                } on Exception catch (e) {
+                                  ShowSnackBar.exception(context: context, e: e, defaultValue: "收藏出错");
+                                } finally {
+                                  Navigator.pop(context);
+                                }
+                              },
+                              sourceType: sourceType,
+                              sourceId: widget.mediaId,
+                            );
+                          },
+                        );
+                      }
+
                       setState(() {});
                     },
                   ),
@@ -154,10 +174,16 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
                     selected: _mediaFeedback.share ?? false,
                     text: "${widget.media.shareNum ?? 0}",
                     onPressed: () async {
-                      if (_mediaFeedback.share != true) {
-                        _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, share: 1);
-                        widget.media.shareNum = (widget.media.shareNum ?? 0) + 1;
+                      if (Global.user.id == null) {
+                        //todo 显示登录页
+
+                      } else {
+                        if (_mediaFeedback.share != true) {
+                          _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, share: 1);
+                          widget.media.shareNum = (widget.media.shareNum ?? 0) + 1;
+                        }
                       }
+
                       setState(() {});
                     },
                   ),
