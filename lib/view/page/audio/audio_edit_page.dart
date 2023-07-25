@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:post_client/model/media/audio.dart';
 import 'package:post_client/view/component/media/upload/audio_upload_card.dart';
 import 'package:post_client/view/component/input/common_info_card.dart';
 
@@ -12,19 +13,37 @@ import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
 
 class AudioEditPage extends StatefulWidget {
-  const AudioEditPage({super.key});
+  const AudioEditPage({super.key, this.audio, this.onUpdateMedia});
+
+  final Audio? audio;
+  final Function(Audio)? onUpdateMedia;
 
   @override
   State<AudioEditPage> createState() => _AudioEditPageState();
 }
 
 class _AudioEditPageState extends State<AudioEditPage> {
-  UploadMediaTask? audioUploadTask;
+  UploadMediaTask audioUploadTask = UploadMediaTask();
   UploadMediaTask coverUploadImage = UploadMediaTask();
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
   bool _withPost = true;
+  bool isSave = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.audio != null && widget.audio!.id != null) {
+      isSave = true;
+      titleController.text = widget.audio!.title ?? "";
+      introductionController.text = widget.audio!.introduction ?? "";
+      coverUploadImage.staticUrl = widget.audio!.coverUrl;
+      coverUploadImage.status = UploadTaskStatus.finished.index;
+      coverUploadImage.mediaType = MediaType.gallery;
+      audioUploadTask.fileId = widget.audio!.fileId;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +66,10 @@ class _AudioEditPageState extends State<AudioEditPage> {
             color: colorScheme.onBackground,
           ),
         ),
+        title: Text(
+          "编辑音频",
+          style: TextStyle(color: colorScheme.onSurface),
+        ),
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 5),
@@ -54,15 +77,15 @@ class _AudioEditPageState extends State<AudioEditPage> {
             width: 70,
             child: Center(
               child: CommonActionOneButton(
-                title: "发布",
+                title: isSave ? "保存" : "发布",
                 height: 30,
                 onTap: () async {
                   formKey.currentState?.save();
-                  if (audioUploadTask == null) {
-                    ShowSnackBar.error(context: context, message: "还未上传视频");
+                  if (audioUploadTask.fileId == null) {
+                    ShowSnackBar.error(context: context, message: "还未上传音频");
                     return;
                   }
-                  if (audioUploadTask!.status != UploadTaskStatus.finished.index) {
+                  if (audioUploadTask.status != UploadTaskStatus.finished.index) {
                     ShowSnackBar.error(context: context, message: "音频未上传完成，请稍后");
                     return;
                   }
@@ -76,13 +99,46 @@ class _AudioEditPageState extends State<AudioEditPage> {
                   //执行验证
                   if (formKey.currentState!.validate()) {
                     try {
-                      var video = await AudioService.createAudio(
-                        titleController.value.text,
-                        introductionController.value.text ?? "",
-                        audioUploadTask!.fileId!,
-                        coverUrl,
-                        _withPost,
-                      );
+                      if (isSave) {
+                        //保存
+                        String? newTitle;
+                        String? newIntroduction;
+                        String? newCoverUrl;
+                        int? newFileId;
+
+                        Audio media = widget.audio!;
+
+                        if (titleController.value.text != widget.audio!.title) {
+                          newTitle = titleController.value.text;
+                          media.title = newTitle;
+                        }
+                        if (introductionController.value.text != widget.audio!.introduction) {
+                          newIntroduction = introductionController.value.text;
+                          media.introduction = newIntroduction;
+                        }
+                        if (audioUploadTask.fileId! != widget.audio!.fileId) {
+                          newFileId = audioUploadTask.fileId!;
+                          media.fileId = newFileId;
+                        }
+                        if (coverUrl != widget.audio!.coverUrl) {
+                          newCoverUrl = coverUrl;
+                          media.coverUrl = newCoverUrl;
+                        }
+                        await AudioService.updateAudioData(widget.audio!.id!, newTitle, newIntroduction, newFileId, newCoverUrl);
+                        if (widget.onUpdateMedia != null) {
+                          await widget.onUpdateMedia!(media);
+                        }
+                      } else {
+                        //新建
+                        var video = await AudioService.createAudio(
+                          titleController.value.text,
+                          introductionController.value.text ?? "",
+                          audioUploadTask.fileId!,
+                          coverUrl,
+                          _withPost,
+                        );
+                      }
+
                       if (mounted) Navigator.pop(context);
                     } on Exception catch (e) {
                       ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
@@ -103,65 +159,31 @@ class _AudioEditPageState extends State<AudioEditPage> {
           key: formKey,
           child: ListView(
             children: [
-              audioUploadTask == null
-                  ? Container(
-                      height: 45,
-                      color: colorScheme.primaryContainer,
-                      child: TextButton(
-                          onPressed: () async {
-                            //选择文件
-                            //打开file picker
-                            FilePickerResult? result = await FilePicker.platform.pickFiles(
-                              type: FileType.custom,
-                              allowedExtensions: ['mp3', 'aac', 'ogg', 'mp4', 'wav', 'flac'],
-                            );
-
-                            if (result != null) {
-                              RandomAccessFile? read;
-                              try {
-                                var file = result.files.single;
-                                read = await File(result.files.single.path!).open();
-                                var data = await read.read(16);
-                                //消息接收器
-                                audioUploadTask = UploadMediaTask.all(
-                                  srcPath: file.path,
-                                  totalSize: file.size,
-                                  status: UploadTaskStatus.init.index,
-                                  mediaType: MediaType.audio,
-                                  magicNumber: data,
-                                );
-                              } finally {
-                                read?.close();
-                              }
-                              setState(() {});
-                            }
-                          },
-                          child: const Text("选择音频")),
-                    )
-                  : AudioUploadCard(key: ValueKey(audioUploadTask!.srcPath), task: audioUploadTask!),
+              AudioUploadCard(key: ValueKey(audioUploadTask.srcPath), task: audioUploadTask),
               CommonInfoCard(
                 coverUploadImage: coverUploadImage,
                 titleController: titleController,
                 introductionController: introductionController,
               ),
-              Container(
-                color: colorScheme.surface,
-                child: ListTile(
-                  leading: Text(
-                    '同时发布动态',
-                    style: TextStyle(color: colorScheme.onSurface),
-                  ),
-                  trailing: Checkbox(
-                    fillColor: MaterialStateProperty.all(_withPost ? colorScheme.primary : colorScheme.onSurface),
-                    value: _withPost,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _withPost = value!;
-                      });
-                    },
+              if (!isSave)
+                Container(
+                  color: colorScheme.surface,
+                  child: ListTile(
+                    leading: Text(
+                      '同时发布动态',
+                      style: TextStyle(color: colorScheme.onSurface),
+                    ),
+                    trailing: Checkbox(
+                      fillColor: MaterialStateProperty.all(_withPost ? colorScheme.primary : colorScheme.onSurface),
+                      value: _withPost,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _withPost = value!;
+                        });
+                      },
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

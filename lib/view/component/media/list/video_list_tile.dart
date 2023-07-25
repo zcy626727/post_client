@@ -5,17 +5,18 @@ import 'package:post_client/config/constants.dart';
 import 'package:post_client/service/media/video_service.dart';
 import 'package:post_client/view/page/video/video_detail_page.dart';
 
-import '../../../config/global.dart';
-import '../../../model/media/video.dart';
-import '../../widget/dialog/confirm_alert_dialog.dart';
-import '../show/show_snack_bar.dart';
+import '../../../../config/global.dart';
+import '../../../../model/media/video.dart';
+import '../../../widget/dialog/confirm_alert_dialog.dart';
+import '../../show/show_snack_bar.dart';
 
 class VideoListTile extends StatefulWidget {
-  const VideoListTile({super.key, required this.video, required this.onDelete, this.isInner = false});
+  const VideoListTile({super.key, required this.video, this.isInner = false, this.onDeleteMedia, this.onUpdateMedia});
 
   final Video video;
-  final Function(Video) onDelete;
   final bool isInner;
+  final Function(Video)? onDeleteMedia;
+  final Function(Video)? onUpdateMedia;
 
   @override
   State<VideoListTile> createState() => _VideoListTileState();
@@ -38,6 +39,8 @@ class _VideoListTileState extends State<VideoListTile> {
               builder: (context) {
                 return VideoDetailPage(
                   video: widget.video,
+                  onUpdateMedia: widget.onUpdateMedia,
+                  onDeleteMedia: widget.onDeleteMedia,
                 );
               },
             ),
@@ -132,7 +135,9 @@ class _VideoListTileState extends State<VideoListTile> {
                               onConfirm: () async {
                                 try {
                                   await VideoService.deleteVideo(widget.video.id!);
-                                  widget.onDelete(widget.video);
+                                  if(widget.onDeleteMedia!=null){
+                                    widget.onDeleteMedia!(widget.video);
+                                  }
                                 } on DioException catch (e) {
                                   ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
                                 } finally {

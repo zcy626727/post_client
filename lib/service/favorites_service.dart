@@ -20,6 +20,25 @@ class FavoritesService {
     }
   }
 
+  static Future<void> updateFavoritesData(
+    String favoritesId,
+    int sourceType,
+    String? title,
+    String? introduction,
+    String? coverUrl,
+  ) async {
+    switch (sourceType) {
+      case SourceType.post:
+      case SourceType.comment:
+        await FeedFavoritesApi.updateFavoritesData(favoritesId, title, introduction, coverUrl);
+      case SourceType.video:
+      case SourceType.gallery:
+      case SourceType.audio:
+      case SourceType.article:
+        await MediaFavoritesApi.updateFavoritesData(favoritesId, title, introduction, coverUrl);
+    }
+  }
+
   static Future<void> deleteUserFavoritesById(
     String favoritesId,
     int sourceType,

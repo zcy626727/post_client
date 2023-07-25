@@ -11,11 +11,14 @@ import '../../../model/media/history.dart';
 import '../../../model/message/comment.dart';
 import '../../../service/media/history_service.dart';
 import '../../component/feedback/media_feedback_bar.dart';
+import '../../component/media/media_more_button.dart';
 
 class GalleryDetailPage extends StatefulWidget {
-  const GalleryDetailPage({super.key, required this.gallery});
+  const GalleryDetailPage({super.key, required this.gallery, this.onDeleteMedia, this.onUpdateMedia});
 
   final Gallery gallery;
+  final Function(Gallery)? onDeleteMedia;
+  final Function(Gallery)? onUpdateMedia;
 
   @override
   State<GalleryDetailPage> createState() => _GalleryDetailPageState();
@@ -71,7 +74,28 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
                   color: colorScheme.onBackground,
                 ),
               ),
-              actions: [],
+              title: Text(
+                "图片",
+                style: TextStyle(color: colorScheme.onSurface),
+              ),
+              actions: [
+                MediaMoreButton(
+                  media: widget.gallery,
+                  onDeleteMedia: (media) {
+                    Navigator.of(context).pop();
+                    if (widget.onDeleteMedia != null) {
+                      widget.onDeleteMedia!(media as Gallery);
+                    }
+                  },
+                  onUpdateMedia: (media) {
+                    widget.gallery.copyGallery(media as Gallery);
+                    if (widget.onUpdateMedia != null) {
+                      widget.onUpdateMedia!(media);
+                    }
+                    setState(() {});
+                  },
+                ),
+              ],
             ),
             body: Container(
               color: colorScheme.surface,

@@ -15,9 +15,20 @@ class ArticleService {
     return article;
   }
 
-  static Future<void> deleteArticle(
-    String articleId,
+  static Future<void> updateArticleData(
+    String mediaId,
+    String? title,
+    String? introduction,
+    String? content,
+    String? coverUrl,
   ) async {
+    await ArticleApi.updateArticleData(mediaId, title, introduction, content, coverUrl);
+  }
+
+  static Future<void> deleteArticle(
+    String? articleId,
+  ) async {
+    if(articleId==null) return;
     await ArticleApi.deleteUserArticleById(articleId);
   }
 

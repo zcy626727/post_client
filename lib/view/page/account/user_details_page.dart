@@ -22,10 +22,10 @@ import '../../../service/media/audio_service.dart';
 import '../../../service/media/gallery_service.dart';
 import '../../../service/media/video_service.dart';
 import '../../../service/message/post_service.dart';
-import '../../component/media/article_list_tile.dart';
-import '../../component/media/audio_list_tile.dart';
-import '../../component/media/gallery_list_tile.dart';
-import '../../component/media/video_list_tile.dart';
+import '../../component/media/list/article_list_tile.dart';
+import '../../component/media/list/audio_list_tile.dart';
+import '../../component/media/list/gallery_list_tile.dart';
+import '../../component/media/list/video_list_tile.dart';
 
 class UserDetailPage extends StatefulWidget {
   const UserDetailPage({Key? key, required this.user}) : super(key: key);
@@ -276,7 +276,19 @@ class _UserDetailPageState extends State<UserDetailPage> {
             gripAspectRatio: 1,
             enableScrollbar: true,
             itemBuilder: (ctx, gallery, galleryList, onFresh) {
-              return GalleryListTile(gallery: gallery);
+              return GalleryListTile(
+                gallery: gallery,
+                onUpdateMedia: (a) {
+                  gallery.copyGallery(a);
+                  setState(() {});
+                },
+                onDeleteMedia: (a) {
+                  if (galleryList != null) {
+                    galleryList.remove(gallery);
+                    setState(() {});
+                  }
+                },
+              );
             },
           ),
           CommonItemList<Video>(
@@ -291,9 +303,14 @@ class _UserDetailPageState extends State<UserDetailPage> {
             itemBuilder: (ctx, video, videoList, onFresh) {
               return VideoListTile(
                 video: video,
-                onDelete: (video) {
+                onUpdateMedia: (a) {
+                  video.copyGallery(a);
+                  setState(() {});
+                },
+                onDeleteMedia: (a) {
                   if (videoList != null) {
                     videoList.remove(video);
+                    setState(() {});
                   }
                 },
               );
@@ -309,7 +326,19 @@ class _UserDetailPageState extends State<UserDetailPage> {
             isGrip: false,
             enableScrollbar: true,
             itemBuilder: (ctx, audio, audioList, onFresh) {
-              return AudioListTile(audio: audio);
+              return AudioListTile(
+                audio: audio,
+                onUpdateMedia: (a) {
+                  audio.copyAudio(a);
+                  setState(() {});
+                },
+                onDeleteMedia: (a) {
+                  if (audioList != null) {
+                    audioList.remove(audio);
+                    setState(() {});
+                  }
+                },
+              );
             },
           ),
           CommonItemList<Article>(
@@ -322,7 +351,19 @@ class _UserDetailPageState extends State<UserDetailPage> {
             isGrip: false,
             enableScrollbar: true,
             itemBuilder: (ctx, article, articleList, onFresh) {
-              return ArticleListTile(article: article);
+              return ArticleListTile(
+                article: article,
+                onUpdateMedia: (a) {
+                  article.copyArticle(a);
+                  setState(() {});
+                },
+                onDeleteMedia: (a) {
+                  if (articleList != null) {
+                    articleList.remove(a);
+                    setState(() {});
+                  }
+                },
+              );
             },
           ),
         ],

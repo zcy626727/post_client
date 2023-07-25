@@ -4,10 +4,12 @@ import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/view/page/gallery/gallery_detail_page.dart';
 
 class GalleryListTile extends StatefulWidget {
-  const GalleryListTile({super.key, required this.gallery, this.isInner = false});
+  const GalleryListTile({super.key, required this.gallery, this.isInner = false, this.onDeleteMedia, this.onUpdateMedia});
 
   final Gallery gallery;
   final bool isInner;
+  final Function(Gallery)? onDeleteMedia;
+  final Function(Gallery)? onUpdateMedia;
 
   @override
   State<GalleryListTile> createState() => _GalleryListTileState();
@@ -25,6 +27,8 @@ class _GalleryListTileState extends State<GalleryListTile> {
             builder: (context) {
               return GalleryDetailPage(
                 gallery: widget.gallery,
+                onUpdateMedia: widget.onUpdateMedia,
+                onDeleteMedia: widget.onDeleteMedia,
               );
             },
           ),

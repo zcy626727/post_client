@@ -12,16 +12,14 @@ import 'package:post_client/model/message/feed_feedback.dart';
 import 'package:post_client/service/media/media_service.dart';
 import 'package:post_client/service/message/feed_service.dart';
 import 'package:post_client/view/component/comment/comment_list_tile.dart';
-import 'package:post_client/view/component/media/article_list_tile.dart';
-import 'package:post_client/view/component/media/audio_list_tile.dart';
 
-import '../../../domain/favorites_source.dart';
 import '../../../model/message/comment.dart';
 import '../../../model/message/post.dart';
-import '../../component/media/gallery_list_tile.dart';
-import '../../component/media/video_list_tile.dart';
+import '../../component/media/list/article_list_tile.dart';
+import '../../component/media/list/audio_list_tile.dart';
+import '../../component/media/list/gallery_list_tile.dart';
+import '../../component/media/list/video_list_tile.dart';
 import '../../component/post/post_list_tile.dart';
-import '../../widget/common_item_list.dart';
 import '../comment/reply_page.dart';
 
 class FavoritesSourceListPage extends StatefulWidget {
@@ -146,7 +144,18 @@ class _FavoritesSourceListPageState extends State<FavoritesSourceListPage> {
           ),
           itemBuilder: (ctx, index) {
             var source = galleryList[index];
-            return GalleryListTile(key: ValueKey(source.id), gallery: source);
+            return GalleryListTile(
+              key: ValueKey(source.id),
+              gallery: source,
+              onUpdateMedia: (a) {
+                source.copyGallery(a);
+                setState(() {});
+              },
+              onDeleteMedia: (a) {
+                videoList.remove(source);
+                setState(() {});
+              },
+            );
           },
           itemCount: galleryList.length,
         );
@@ -154,7 +163,18 @@ class _FavoritesSourceListPageState extends State<FavoritesSourceListPage> {
         return ListView.builder(
           itemBuilder: (ctx, index) {
             var source = audioList[index];
-            return AudioListTile(key: ValueKey(source.id), audio: source);
+            return AudioListTile(
+              key: ValueKey(source.id),
+              audio: source,
+              onUpdateMedia: (a) {
+                source.copyAudio(a);
+                setState(() {});
+              },
+              onDeleteMedia: (a) {
+                videoList.remove(source);
+                setState(() {});
+              },
+            );
           },
           itemCount: audioList.length,
         );
@@ -165,8 +185,12 @@ class _FavoritesSourceListPageState extends State<FavoritesSourceListPage> {
             return VideoListTile(
               key: ValueKey(source.id),
               video: source,
-              onDelete: (Video video) {
-                videoList.remove(video);
+              onUpdateMedia: (a) {
+                source.copyGallery(a);
+                setState(() {});
+              },
+              onDeleteMedia: (a) {
+                videoList.remove(source);
                 setState(() {});
               },
             );
@@ -177,7 +201,18 @@ class _FavoritesSourceListPageState extends State<FavoritesSourceListPage> {
         return ListView.builder(
             itemBuilder: (ctx, index) {
               var source = articleList[index];
-              return ArticleListTile(key: ValueKey(source.id), article: source);
+              return ArticleListTile(
+                key: ValueKey(source.id),
+                article: source,
+                onUpdateMedia: (a) {
+                  source.copyArticle(a);
+                  setState(() {});
+                },
+                onDeleteMedia: (a) {
+                  articleList.remove(a);
+                  setState(() {});
+                },
+              );
             },
             itemCount: articleList.length);
       case SourceType.post:

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/view/page/audio/audio_detail_page.dart';
 
-import '../../../config/global.dart';
-import '../../../model/media/audio.dart';
+import '../../../../config/global.dart';
+import '../../../../model/media/audio.dart';
 
 class AudioListTile extends StatefulWidget {
-  const AudioListTile({super.key, required this.audio, this.isInner = false});
+  const AudioListTile({super.key, required this.audio, this.isInner = false, this.onDeleteMedia, this.onUpdateMedia});
 
   final Audio audio;
   final bool isInner;
+  final Function(Audio)? onDeleteMedia;
+  final Function(Audio)? onUpdateMedia;
 
   @override
   State<AudioListTile> createState() => _AudioListTileState();
@@ -29,7 +31,11 @@ class _AudioListTileState extends State<AudioListTile> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return AudioDetailPage(audio: widget.audio);
+                return AudioDetailPage(
+                  audio: widget.audio,
+                  onUpdateMedia: widget.onUpdateMedia,
+                  onDeleteMedia: widget.onDeleteMedia,
+                );
               },
             ),
           );
@@ -51,7 +57,7 @@ class _AudioListTileState extends State<AudioListTile> {
                     color: colorScheme.onSurface,
                   ),
                 )
-              : CircleAvatar(radius: 18, backgroundImage: NetworkImage(widget.audio.user!.avatarUrl!)),
+              : CircleAvatar(radius: 18, backgroundImage: NetworkImage(widget.audio.coverUrl!)),
           title: Text(
             widget.audio.title!,
             maxLines: 1,
@@ -84,22 +90,22 @@ class _AudioListTileState extends State<AudioListTile> {
                   color: colorScheme.surface,
                   itemBuilder: (BuildContext context) {
                     return [
-                      if (widget.audio.user!.id! == Global.user.id!)
-                        PopupMenuItem(
-                          height: 35,
-                          value: 'delete',
-                          child: Text(
-                            '删除',
-                            style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
-                          ),
-                        ),
+                      // if (widget.audio.user!.id! == Global.user.id!)
+                      //   PopupMenuItem(
+                      //     height: 35,
+                      //     value: 'delete',
+                      //     child: Text(
+                      //       '删除',
+                      //       style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
+                      //     ),
+                      //   ),
                     ];
                   },
                   onSelected: (value) async {
-                    switch (value) {
-                      case "delete":
-                        break;
-                    }
+                    // switch (value) {
+                    //   case "delete":
+                    //     break;
+                    // }
                   },
                 ),
         ),

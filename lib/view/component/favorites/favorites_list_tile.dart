@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:post_client/config/global.dart';
 import 'package:post_client/service/favorites_service.dart';
+import 'package:post_client/view/page/favorites/favorites_edit_page.dart';
 import 'package:post_client/view/page/favorites/favorites_source_list_page.dart';
 
 import '../../../model/favorites.dart';
@@ -8,10 +10,11 @@ import '../../widget/dialog/confirm_alert_dialog.dart';
 import '../show/show_snack_bar.dart';
 
 class FavoritesListTile extends StatelessWidget {
-  const FavoritesListTile({super.key, required this.favorites, required this.onDelete});
+  const FavoritesListTile({super.key, required this.favorites, required this.onDelete, required this.onUpdate});
 
   final Favorites favorites;
   final Function(Favorites) onDelete;
+  final Function(Favorites) onUpdate;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +66,6 @@ class FavoritesListTile extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-
                       ],
                     ),
                     Row(
@@ -77,14 +79,24 @@ class FavoritesListTile extends StatelessWidget {
                           splashRadius: 20,
                           itemBuilder: (BuildContext context) {
                             return [
-                              PopupMenuItem(
-                                height: 35,
-                                value: 'delete',
-                                child: Text(
-                                  '删除',
-                                  style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
+                              if (Global.user.id == favorites.userId)
+                                PopupMenuItem(
+                                  height: 35,
+                                  value: 'delete',
+                                  child: Text(
+                                    '删除',
+                                    style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
+                                  ),
                                 ),
-                              ),
+                              if (Global.user.id == favorites.userId)
+                                PopupMenuItem(
+                                  height: 35,
+                                  value: 'edit',
+                                  child: Text(
+                                    '编辑',
+                                    style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
+                                  ),
+                                ),
                             ];
                           },
                           shape: RoundedRectangleBorder(
@@ -121,13 +133,23 @@ class FavoritesListTile extends StatelessWidget {
                                   },
                                 );
                                 break;
+                              case "edit":
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FavoritesEditPage(
+                                      favorites: favorites,
+                                      onUpdate: onUpdate,
+                                    ),
+                                  ),
+                                );
+                                break;
                             }
                           },
                           child: Icon(Icons.more_horiz, color: colorScheme.onSurface),
                         ),
                       ],
                     )
-
                   ],
                 ),
               ),

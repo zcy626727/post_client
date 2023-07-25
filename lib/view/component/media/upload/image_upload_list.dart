@@ -1,18 +1,21 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../constant/media.dart';
 import '../../../../domain/task/upload_media_task.dart';
+import '../../../widget/dialog/confirm_alert_dialog.dart';
 import '../../show/show_snack_bar.dart';
 import 'image_upload_card.dart';
 
 class ImageUploadList extends StatefulWidget {
-  const ImageUploadList({super.key, required this.imageUploadTaskList, required this.maxUploadNum});
+  const ImageUploadList({super.key, required this.imageUploadTaskList, required this.maxUploadNum, required this.onDeleteImage});
 
   final List<UploadMediaTask> imageUploadTaskList;
   final int maxUploadNum;
+  final Function(UploadMediaTask) onDeleteImage;
 
   @override
   State<ImageUploadList> createState() => _ImageUploadListState();
@@ -56,8 +59,7 @@ class _ImageUploadListState extends State<ImageUploadList> {
                       read = await File(result.files.single.path!).open();
                       var data = await read.read(16);
                       //消息接收器
-                      var task =
-                          UploadMediaTask.all(srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.uploading.index, mediaType: MediaType.gallery, magicNumber: data);
+                      var task = UploadMediaTask.all(srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.uploading.index, mediaType: MediaType.gallery, magicNumber: data);
                       widget.imageUploadTaskList.add(task);
                     } finally {
                       read?.close();
@@ -83,7 +85,11 @@ class _ImageUploadListState extends State<ImageUploadList> {
                 ),
               );
             } else {
-              return ImageUploadCard(key: ValueKey(widget.imageUploadTaskList[index].srcPath), task: widget.imageUploadTaskList[index],);
+              return ImageUploadCard(
+                key: ValueKey(widget.imageUploadTaskList[index].staticUrl),
+                task: widget.imageUploadTaskList[index],
+                onDeleteImage: widget.onDeleteImage,
+              );
             }
           },
         ),

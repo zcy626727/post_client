@@ -65,45 +65,14 @@ class _CommonInfoCardState extends State<CommonInfoCard> {
                 ),
               ),
               Container(
-                  margin: const EdgeInsets.only(left: 5, right: 5, bottom: 2),
+                  margin: const EdgeInsets.only(left: 5, bottom: 2),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
                     color: colorScheme.background,
                   ),
                   height: 95,
                   width: 95,
-                  child: widget.coverUploadImage.srcPath == null
-                      ? IconButton(
-                          onPressed: () async {
-                            //打开file picker
-                            FilePickerResult? result = await FilePicker.platform.pickFiles(
-                              type: FileType.image,
-                            );
-                            if (result != null) {
-                              RandomAccessFile? read;
-                              try {
-                                var file = result.files.single;
-                                read = await File(result.files.single.path!).open();
-                                var data = await read.read(16);
-                                //消息接收器
-                                widget.coverUploadImage.srcPath = file.path;
-                                widget.coverUploadImage.totalSize = file.size;
-                                widget.coverUploadImage.status = UploadTaskStatus.uploading.index;
-                                widget.coverUploadImage.mediaType = MediaType.gallery;
-                                widget.coverUploadImage.magicNumber = data;
-                              } catch (e) {
-                                widget.coverUploadImage.clear();
-                              } finally {
-                                read?.close();
-                              }
-                              setState(() {});
-                            } else {
-                              // User canceled the picker
-                            }
-                          },
-                          icon: const Icon(Icons.upload),
-                        )
-                      : ImageUploadCard(key: ValueKey(widget.coverUploadImage.srcPath), task: widget.coverUploadImage)),
+                  child: ImageUploadCard(key: ValueKey(widget.coverUploadImage.srcPath), task: widget.coverUploadImage)),
             ],
           ),
         ),

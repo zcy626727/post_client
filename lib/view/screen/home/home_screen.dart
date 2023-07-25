@@ -3,10 +3,7 @@ import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/service/media/gallery_service.dart';
 import 'package:post_client/service/media/video_service.dart';
 import 'package:post_client/util/responsive.dart';
-import 'package:post_client/view/component/media/article_list_tile.dart';
-import 'package:post_client/view/component/media/audio_list_tile.dart';
-import 'package:post_client/view/component/media/gallery_list_tile.dart';
-import 'package:post_client/view/component/media/video_list_tile.dart';
+import 'package:post_client/view/component/media/list/video_list_tile.dart';
 import 'package:post_client/view/component/post/post_list.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:post_client/view/widget/player/common_video_player.dart';
@@ -20,6 +17,9 @@ import '../../../service/media/article_service.dart';
 import '../../../service/media/audio_service.dart';
 import '../../../service/message/post_service.dart';
 import '../../../state/user_state.dart';
+import '../../component/media/list/article_list_tile.dart';
+import '../../component/media/list/audio_list_tile.dart';
+import '../../component/media/list/gallery_list_tile.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -41,9 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildMobile(User user) {
-    var colorScheme = Theme
-        .of(context)
-        .colorScheme;
+    var colorScheme = Theme.of(context).colorScheme;
     return Container(
       color: colorScheme.background,
       child: NestedScrollView(
@@ -132,7 +130,20 @@ class _HomeScreenState extends State<HomeScreen> {
             gripAspectRatio: 1,
             enableScrollbar: true,
             itemBuilder: (ctx, gallery, galleryList, onFresh) {
-              return GalleryListTile(key: ValueKey(gallery.id), gallery: gallery);
+              return GalleryListTile(
+                key: ValueKey(gallery.id),
+                gallery: gallery,
+                onUpdateMedia: (a) {
+                  gallery.copyGallery(a);
+                  setState(() {});
+                },
+                onDeleteMedia: (a) {
+                  if (galleryList != null) {
+                    galleryList.remove(a);
+                    setState(() {});
+                  }
+                },
+              );
             },
           ),
           CommonItemList<Video>(
@@ -148,9 +159,14 @@ class _HomeScreenState extends State<HomeScreen> {
               return VideoListTile(
                 key: ValueKey(video.id),
                 video: video,
-                onDelete: (video) {
+                onUpdateMedia: (v) {
+                  video.copyGallery(v);
+                  setState(() {});
+                },
+                onDeleteMedia: (v) {
                   if (videoList != null) {
-                    videoList.remove(video);
+                    videoList.remove(v);
+                    setState(() {});
                   }
                 },
               );
@@ -166,7 +182,20 @@ class _HomeScreenState extends State<HomeScreen> {
             isGrip: false,
             enableScrollbar: true,
             itemBuilder: (ctx, audio, audioList, onFresh) {
-              return AudioListTile(key: ValueKey(audio.id), audio: audio);
+              return AudioListTile(
+                key: ValueKey(audio.id),
+                audio: audio,
+                onUpdateMedia: (a) {
+                  audio.copyAudio(a);
+                  setState(() {});
+                },
+                onDeleteMedia: (a) {
+                  if (audioList != null) {
+                    audioList.remove(a);
+                    setState(() {});
+                  }
+                },
+              );
             },
           ),
           CommonItemList<Article>(
@@ -179,7 +208,20 @@ class _HomeScreenState extends State<HomeScreen> {
             isGrip: false,
             enableScrollbar: true,
             itemBuilder: (ctx, article, articleList, onFresh) {
-              return ArticleListTile(key: ValueKey(article.id), article: article);
+              return ArticleListTile(
+                key: ValueKey(article.id),
+                article: article,
+                onUpdateMedia: (a) {
+                  article.copyArticle(a);
+                  setState(() {});
+                },
+                onDeleteMedia: (a) {
+                  if (articleList != null) {
+                    articleList.remove(a);
+                    setState(() {});
+                  }
+                },
+              );
             },
           ),
         ],
@@ -202,9 +244,7 @@ class _HomeScreenTabBarState extends State<HomeScreenTabBar> {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme colorScheme = Theme
-        .of(context)
-        .colorScheme;
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Container(
       height: 50,
       width: double.infinity,

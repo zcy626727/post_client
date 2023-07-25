@@ -11,9 +11,8 @@ class GalleryApi {
     List<int> fileIdList,
     List<String> thumbnailUrlList,
     String coverUrl,
-      bool withPost,
-
-      ) async {
+    bool withPost,
+  ) async {
     var r = await MediaHttpConfig.dio.post(
       "/gallery/createGallery",
       data: {
@@ -31,6 +30,31 @@ class GalleryApi {
     );
 
     return Gallery.fromJson(r.data['gallery']);
+  }
+
+  static Future<void> updateGalleryData(
+    String mediaId,
+    String? title,
+    String? introduction,
+    List<int>? fileIdList,
+    List<String>? thumbnailUrlList,
+    String? coverUrl,
+  ) async {
+    var r = await MediaHttpConfig.dio.post(
+      "/gallery/updateGalleryData",
+      data: {
+        "mediaId": mediaId,
+        "title": title,
+        "introduction": introduction,
+        "fileIdList": fileIdList,
+        "thumbnailUrlList": thumbnailUrlList,
+        "coverUrl": coverUrl,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
   }
 
   static Future<void> deleteUserGalleryById(

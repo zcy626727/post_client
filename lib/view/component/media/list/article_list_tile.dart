@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../../../model/media/article.dart';
-import '../../page/article/article_detail_page.dart';
+import '../../../../model/media/article.dart';
+import '../../../page/article/article_detail_page.dart';
 
 class ArticleListTile extends StatefulWidget {
-  const ArticleListTile({super.key, required this.article, this.isInner = false});
+  const ArticleListTile({super.key, required this.article, this.isInner = false, this.onDeleteMedia, this.onUpdateMedia});
 
   final Article article;
   final bool isInner;
+  final Function(Article)? onDeleteMedia;
+  final Function(Article)? onUpdateMedia;
 
   @override
   State<ArticleListTile> createState() => _ArticleListTileState();
@@ -66,6 +68,8 @@ class _ArticleListTileState extends State<ArticleListTile> {
             builder: (context) {
               return ArticleDetailPage(
                 article: widget.article,
+                onUpdateMedia: widget.onUpdateMedia,
+                onDeleteMedia: widget.onDeleteMedia,
               );
             },
           ),

@@ -6,7 +6,7 @@ import 'package:post_client/model/media/album.dart';
 import 'package:post_client/model/user/user.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
-import 'package:post_client/view/component/media/album_list_tile.dart';
+import 'package:post_client/view/component/media/list/album_list_tile.dart';
 import 'package:post_client/view/page/media/album_list_page.dart';
 import 'package:post_client/view/page/history/history_list_page.dart';
 import 'package:post_client/view/page/media/watch_later_list_page.dart';
@@ -146,27 +146,27 @@ class _MediaScreenState extends State<MediaScreen> {
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.only(bottom: 5),
-            color: colorScheme.surface,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                buildItemButton(
-                    iconData: Icons.download,
-                    text: "缓存列表",
-                    onPress: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const DownloadListPage()),
-                      );
-                    }),
-                Container(width: 85),
-                Container(width: 85),
-                Container(width: 85),
-              ],
-            ),
-          ),
+          // Container(
+          //   padding: const EdgeInsets.only(bottom: 5),
+          //   color: colorScheme.surface,
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //     children: [
+          //       buildItemButton(
+          //           iconData: Icons.download,
+          //           text: "缓存列表",
+          //           onPress: () {
+          //             Navigator.push(
+          //               context,
+          //               MaterialPageRoute(builder: (context) => const DownloadListPage()),
+          //             );
+          //           }),
+          //       Container(width: 85),
+          //       Container(width: 85),
+          //       Container(width: 85),
+          //     ],
+          //   ),
+          // ),
           //订阅
           Expanded(
             child: Container(

@@ -14,9 +14,20 @@ class AudioService {
     return audio;
   }
 
-  static Future<void> deleteAudio(
-    String audioId,
+  static Future<void> updateAudioData(
+    String mediaId,
+    String? title,
+    String? introduction,
+    int? fileId,
+    String? coverUrl,
   ) async {
+    await AudioApi.updateAudioData(mediaId, title, introduction, fileId, coverUrl);
+  }
+
+  static Future<void> deleteAudio(
+    String? audioId,
+  ) async {
+    if (audioId == null) return;
     await AudioApi.deleteUserAudioById(audioId);
   }
 

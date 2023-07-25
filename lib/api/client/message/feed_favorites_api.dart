@@ -26,6 +26,30 @@ class FeedFavoritesApi {
     return Favorites.fromJson(r.data['favorites']);
   }
 
+  static Future<void> updateFavoritesData(
+    String favoritesId,
+    String? title,
+    String? introduction,
+    String? coverUrl,
+  ) async {
+    if (title == null && introduction == null && coverUrl == null) {
+      return;
+    }
+    var r = await MessageHttpConfig.dio.post(
+      "/feedFavorites/updateFavoritesData",
+      data: {
+        "favoritesId": favoritesId,
+        "title": title,
+        "introduction": introduction,
+        "coverUrl": coverUrl,
+      },
+      options: MessageHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
+  }
+
   static Future<void> deleteUserFavoritesById(
     String favoritesId,
   ) async {
@@ -81,7 +105,7 @@ class FeedFavoritesApi {
     );
 
     List<Favorites> favoritesList = [];
-    if(r.data['favoritesList']!=null){
+    if (r.data['favoritesList'] != null) {
       for (var favoritesJson in r.data['favoritesList']) {
         var favorites = Favorites.fromJson(favoritesJson);
         favoritesList.add(favorites);

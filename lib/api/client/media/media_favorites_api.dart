@@ -26,6 +26,30 @@ class MediaFavoritesApi {
     return Favorites.fromJson(r.data['favorites']);
   }
 
+  static Future<void> updateFavoritesData(
+    String favoritesId,
+    String? title,
+    String? introduction,
+    String? coverUrl,
+  ) async {
+    if (title == null && introduction == null && coverUrl == null) {
+      return;
+    }
+    var r = await MediaHttpConfig.dio.post(
+      "/mediaFavorites/updateFavoritesData",
+      data: {
+        "favoritesId": favoritesId,
+        "title": title,
+        "introduction": introduction,
+        "coverUrl": coverUrl,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
+  }
+
   static Future<void> deleteUserFavoritesById(
     String favoritesId,
   ) async {

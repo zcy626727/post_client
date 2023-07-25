@@ -6,7 +6,6 @@ part 'gallery.g.dart';
 
 @JsonSerializable()
 class Gallery extends Media{
-  String? id;
 
   List<int>? fileIdList;
   List<String>? thumbnailUrlList;
@@ -15,6 +14,13 @@ class Gallery extends Media{
   User? user;
 
   Gallery();
+
+  void copyGallery(Gallery gallery) {
+    super.copy(gallery);
+    fileIdList = gallery.fileIdList;
+    thumbnailUrlList = gallery.thumbnailUrlList;
+    user = gallery.user;
+  }
 
   factory Gallery.fromJson(Map<String, dynamic> json) => _$GalleryFromJson(json);
 

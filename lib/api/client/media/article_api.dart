@@ -30,11 +30,37 @@ class ArticleApi {
     return Article.fromJson(r.data['article']);
   }
 
+  static Future<void> updateArticleData(
+    String mediaId,
+    String? title,
+    String? introduction,
+    String? content,
+    String? coverUrl,
+  ) async {
+    if (title == null && introduction == null && content == null && coverUrl == null) {
+      return;
+    }
+    var r = await MediaHttpConfig.dio.post(
+      "/article/updateArticleData",
+      data: {
+        "mediaId": mediaId,
+        "title": title,
+        "introduction": introduction,
+        "content": content,
+        "coverUrl": coverUrl,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
+  }
+
   static Future<void> deleteUserArticleById(
     String articleId,
   ) async {
     await MediaHttpConfig.dio.post(
-      "/Article/deleteUserArticleById",
+      "/article/deleteUserArticleById",
       data: {
         "articleId": articleId,
       },

@@ -6,13 +6,18 @@ part 'audio.g.dart';
 
 @JsonSerializable()
 class Audio extends Media{
-  String? id;
   int? fileId;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   User? user;
 
   Audio();
+
+  void copyAudio(Audio audio) {
+    super.copy(audio);
+    fileId = audio.fileId;
+    user = audio.user;
+  }
 
   factory Audio.fromJson(Map<String, dynamic> json) => _$AudioFromJson(json);
 

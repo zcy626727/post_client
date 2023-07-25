@@ -30,6 +30,29 @@ class VideoApi {
     return Video.fromJson(r.data['video']);
   }
 
+  static Future<void> updateVideoData(
+    String mediaId,
+    String? title,
+    String? introduction,
+    int? fileId,
+    String? coverUrl,
+  ) async {
+    var r = await MediaHttpConfig.dio.post(
+      "/video/updateVideoData",
+      data: {
+        "mediaId": mediaId,
+        "title": title,
+        "introduction": introduction,
+        "fileId": fileId,
+        "coverUrl": coverUrl,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
+  }
+
   static Future<void> deleteUserVideoById(
     String videoId,
   ) async {

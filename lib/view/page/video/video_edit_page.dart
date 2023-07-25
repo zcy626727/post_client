@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/domain/task/upload_media_task.dart';
+import 'package:post_client/model/media/video.dart';
 import 'package:post_client/service/media/video_service.dart';
 import 'package:post_client/view/component/input/common_info_card.dart';
 import 'package:post_client/view/component/media/upload/video_upload_card.dart';
@@ -13,19 +14,37 @@ import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
 
 class VideoEditPage extends StatefulWidget {
-  const VideoEditPage({super.key});
+  const VideoEditPage({super.key, this.video, this.onUpdateMedia});
+
+  final Video? video;
+  final Function(Video)? onUpdateMedia;
 
   @override
   State<VideoEditPage> createState() => _VideoEditPageState();
 }
 
 class _VideoEditPageState extends State<VideoEditPage> {
-  UploadMediaTask? videoUploadTask;
+  UploadMediaTask videoUploadTask = UploadMediaTask();
   UploadMediaTask coverUploadImage = UploadMediaTask();
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
   bool _withPost = true;
+  bool isSave = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.video != null && widget.video!.id != null) {
+      isSave = true;
+      titleController.text = widget.video!.title ?? "";
+      introductionController.text = widget.video!.introduction ?? "";
+      coverUploadImage.staticUrl = widget.video!.coverUrl;
+      coverUploadImage.status = UploadTaskStatus.finished.index;
+      coverUploadImage.mediaType = MediaType.gallery;
+      videoUploadTask.fileId = widget.video!.fileId;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +66,10 @@ class _VideoEditPageState extends State<VideoEditPage> {
             color: colorScheme.onBackground,
           ),
         ),
+        title: Text(
+          "编辑视频",
+          style: TextStyle(color: colorScheme.onSurface),
+        ),
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 5),
@@ -54,18 +77,18 @@ class _VideoEditPageState extends State<VideoEditPage> {
             width: 70,
             child: Center(
               child: CommonActionOneButton(
-                title: "发布",
+                title: isSave ? "保存" : "发布",
                 height: 30,
                 onTap: () async {
                   formKey.currentState?.save();
                   //执行验证
                   if (formKey.currentState!.validate()) {
                     try {
-                      if (videoUploadTask == null) {
+                      if (videoUploadTask.fileId == null) {
                         ShowSnackBar.error(context: context, message: "还未上传视频");
                         return;
                       }
-                      if (videoUploadTask!.status != UploadTaskStatus.finished.index) {
+                      if (videoUploadTask.status != UploadTaskStatus.finished.index) {
                         ShowSnackBar.error(context: context, message: "视频未上传完成，请稍后");
                         return;
                       }
@@ -76,13 +99,47 @@ class _VideoEditPageState extends State<VideoEditPage> {
                       } else {
                         coverUrl = coverUploadImage.staticUrl;
                       }
-                      var video = await VideoService.createVideo(
-                        titleController.value.text,
-                        introductionController.value.text,
-                        videoUploadTask!.fileId!,
-                        coverUrl,
-                        _withPost,
-                      );
+
+                      if (isSave) {
+                        //保存
+                        String? newTitle;
+                        String? newIntroduction;
+                        String? newCoverUrl;
+                        int? newFileId;
+
+                        Video media = widget.video!;
+
+                        if (titleController.value.text != widget.video!.title) {
+                          newTitle = titleController.value.text;
+                          media.title = newTitle;
+                        }
+                        if (introductionController.value.text != widget.video!.introduction) {
+                          newIntroduction = introductionController.value.text;
+                          media.introduction = newIntroduction;
+                        }
+                        if (coverUrl != widget.video!.coverUrl) {
+                          newCoverUrl = coverUrl;
+                          media.coverUrl = newCoverUrl;
+                        }
+                        if (videoUploadTask.fileId! != widget.video!.fileId) {
+                          newFileId = videoUploadTask.fileId!;
+                          media.fileId = newFileId;
+                        }
+                        await VideoService.updateVideoData(widget.video!.id!, newTitle, newIntroduction, newFileId, coverUrl);
+                        if (widget.onUpdateMedia != null) {
+                          widget.onUpdateMedia!(media);
+                        }
+                      } else {
+                        //新建
+                        var video = await VideoService.createVideo(
+                          titleController.value.text,
+                          introductionController.value.text,
+                          videoUploadTask.fileId!,
+                          coverUrl,
+                          _withPost,
+                        );
+                      }
+
                       if (mounted) Navigator.pop(context);
                     } on Exception catch (e) {
                       ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
@@ -103,37 +160,13 @@ class _VideoEditPageState extends State<VideoEditPage> {
           key: formKey,
           child: ListView(
             children: [
-              videoUploadTask == null
-                  ? Container(
-                      height: 45,
-                      color: colorScheme.primaryContainer,
-                      child: TextButton(
-                          onPressed: () async {
-                            FilePickerResult? result = await FilePicker.platform.pickFiles(
-                              type: FileType.video,
-                            );
-                            if (result != null) {
-                              RandomAccessFile? read;
-                              try {
-                                var file = result.files.single;
-                                read = await File(result.files.single.path!).open();
-                                var data = await read.read(16);
-                                //消息接收器
-                                videoUploadTask = UploadMediaTask.all(srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.init.index, mediaType: MediaType.audio, magicNumber: data);
-                              } finally {
-                                read?.close();
-                              }
-                              setState(() {});
-                            }
-                          },
-                          child: const Text("选择视频")),
-                    )
-                  : VideoUploadCard(key: ValueKey(videoUploadTask!.srcPath), task: videoUploadTask!),
+              VideoUploadCard(key: ValueKey(videoUploadTask.srcPath), task: videoUploadTask),
               CommonInfoCard(
                 coverUploadImage: coverUploadImage,
                 titleController: titleController,
                 introductionController: introductionController,
               ),
+              if (!isSave)
               Container(
                 color: colorScheme.surface,
                 child: ListTile(

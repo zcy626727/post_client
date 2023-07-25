@@ -7,6 +7,7 @@ import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:intl/intl.dart';
 import 'package:post_client/service/media/history_service.dart';
 import 'package:post_client/view/component/feedback/media_feedback_bar.dart';
+import 'package:post_client/view/component/media/media_more_button.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
 
 import '../../../constant/media.dart';
@@ -17,9 +18,11 @@ import '../../../service/media/article_service.dart';
 import '../comment/comment_page.dart';
 
 class ArticleDetailPage extends StatefulWidget {
-  const ArticleDetailPage({super.key, required this.article});
+  const ArticleDetailPage({super.key, required this.article, this.onDeleteMedia, this.onUpdateMedia});
 
   final Article article;
+  final Function(Article)? onDeleteMedia;
+  final Function(Article)? onUpdateMedia;
 
   @override
   State<ArticleDetailPage> createState() => _ArticleDetailPageState();
@@ -39,7 +42,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   }
 
   Future getData() async {
-    return Future.wait([getArticle(),getHistory()]);
+    return Future.wait([getArticle(), getHistory()]);
   }
 
   Future<void> getArticle() async {
@@ -90,7 +93,28 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                   color: colorScheme.onBackground,
                 ),
               ),
-              actions: const [],
+              title: Text(
+                "文章",
+                style: TextStyle(color: colorScheme.onSurface),
+              ),
+              actions: [
+                MediaMoreButton(
+                  media: widget.article,
+                  onDeleteMedia: (media) {
+                    Navigator.of(context).pop();
+                    if (widget.onDeleteMedia != null) {
+                      widget.onDeleteMedia!(media as Article);
+                    }
+                  },
+                  onUpdateMedia: (media) {
+                    widget.article.copyArticle(media as Article);
+                    if (widget.onUpdateMedia != null) {
+                      widget.onUpdateMedia!(media);
+                    }
+                    setState(() {});
+                  },
+                ),
+              ],
             ),
             body: Container(
               color: colorScheme.surface,
@@ -141,11 +165,12 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => CommentPage(
-                                    commentParentType: CommentParentType.article,
-                                    commentParentId: widget.article.id!,
-                                    parentUserId: widget.article.userId!,
-                                  )),
+                            builder: (context) => CommentPage(
+                              commentParentType: CommentParentType.article,
+                              commentParentId: widget.article.id!,
+                              parentUserId: widget.article.userId!,
+                            ),
+                          ),
                         );
                       },
                       child: const Text("查看评论"),

@@ -16,9 +16,21 @@ class GalleryService {
     return gallery;
   }
 
-  static Future<void> deleteGallery(
-    String galleryId,
+  static Future<void> updateGalleryData(
+    String mediaId,
+    String? title,
+    String? introduction,
+    List<int>? fileIdList,
+    List<String>? thumbnailUrlList,
+    String? coverUrl,
   ) async {
+    await GalleryApi.updateGalleryData(mediaId, title, introduction, fileIdList, thumbnailUrlList, coverUrl);
+  }
+
+  static Future<void> deleteGallery(
+    String? galleryId,
+  ) async {
+    if (galleryId == null) return;
     await GalleryApi.deleteUserGalleryById(galleryId);
   }
 

@@ -8,10 +8,7 @@ import 'package:post_client/config/global.dart';
 import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/model/message/feed_feedback.dart';
 import 'package:post_client/view/component/feedback/feed_feedback_bar.dart';
-import 'package:post_client/view/component/media/article_list_tile.dart';
-import 'package:post_client/view/component/media/audio_list_tile.dart';
-import 'package:post_client/view/component/media/gallery_list_tile.dart';
-import 'package:post_client/view/component/media/video_list_tile.dart';
+import 'package:post_client/view/component/media/list/video_list_tile.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
 
 import '../../../constant/feed.dart';
@@ -24,6 +21,9 @@ import '../../../service/message/post_service.dart';
 import '../../page/account/user_details_page.dart';
 import '../../page/comment/comment_page.dart';
 import '../../widget/dialog/confirm_alert_dialog.dart';
+import '../media/list/article_list_tile.dart';
+import '../media/list/audio_list_tile.dart';
+import '../media/list/gallery_list_tile.dart';
 import '../show/show_snack_bar.dart';
 
 class PostListTile extends StatefulWidget {
@@ -279,7 +279,6 @@ class _PostListTileState extends State<PostListTile> {
       mediaCard = VideoListTile(
         video: media,
         isInner: true,
-        onDelete: (video) {},
       );
     }
     return GestureDetector(

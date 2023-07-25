@@ -7,7 +7,6 @@ part 'article.g.dart';
 
 @JsonSerializable()
 class Article extends Media {
-  String? id;
   String? content;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -18,4 +17,10 @@ class Article extends Media {
   factory Article.fromJson(Map<String, dynamic> json) => _$ArticleFromJson(json);
 
   Map<String, dynamic> toJson() => _$ArticleToJson(this);
+
+  void copyArticle(Article article) {
+    super.copy(article);
+    content = article.content;
+    user = article.user;
+  }
 }

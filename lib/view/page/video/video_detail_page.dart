@@ -13,12 +13,15 @@ import '../../../model/media/video.dart';
 import '../../../model/message/comment.dart';
 import '../../../service/media/history_service.dart';
 import '../../component/feedback/media_feedback_bar.dart';
+import '../../component/media/media_more_button.dart';
 import '../comment/comment_page.dart';
 
 class VideoDetailPage extends StatefulWidget {
-  const VideoDetailPage({super.key, required this.video});
+  const VideoDetailPage({super.key, required this.video, this.onDeleteMedia, this.onUpdateMedia});
 
   final Video video;
+  final Function(Video)? onDeleteMedia;
+  final Function(Video)? onUpdateMedia;
 
   @override
   State<VideoDetailPage> createState() => _VideoDetailPageState();
@@ -86,7 +89,29 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                   color: colorScheme.onBackground,
                 ),
               ),
-              actions: [],
+              title: Text(
+                "视频",
+                style: TextStyle(color: colorScheme.onSurface),
+              ),
+              actions: [
+                MediaMoreButton(
+                  media: widget.video,
+                  onDeleteMedia: (media) async {
+                    Navigator.of(context).pop();
+                    if (widget.onDeleteMedia != null) {
+                      await widget.onDeleteMedia!(media as Video);
+                    }
+                  },
+                  onUpdateMedia: (media) async {
+                    widget.video.copyGallery(media as Video);
+                    if (widget.onUpdateMedia != null) {
+                      await widget.onUpdateMedia!(media);
+                    }
+                    await getVideoUrl();
+                    setState(() {});
+                  },
+                ),
+              ],
             ),
             body: Container(
               color: colorScheme.surface,
@@ -102,7 +127,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                           ? const Center(
                               child: Text("视频加载失败"),
                             )
-                          : CommonVideoPlayer(videoUrl: videoUrl!),
+                          : CommonVideoPlayer(key: ValueKey(videoUrl), videoUrl: videoUrl!),
                     ),
                   ),
                   ListTile(
@@ -146,11 +171,12 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => CommentPage(
-                                    commentParentType: CommentParentType.video,
-                                    commentParentId: widget.video.id!,
-                                    parentUserId: widget.video.userId!,
-                                  )),
+                            builder: (context) => CommentPage(
+                              commentParentType: CommentParentType.video,
+                              commentParentId: widget.video.id!,
+                              parentUserId: widget.video.userId!,
+                            ),
+                          ),
                         );
                       },
                       child: const Text("查看评论"),

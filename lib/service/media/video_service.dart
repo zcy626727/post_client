@@ -14,9 +14,20 @@ class VideoService {
     return video;
   }
 
-  static Future<void> deleteVideo(
-    String videoId,
+  static Future<void> updateVideoData(
+    String mediaId,
+    String? title,
+    String? introduction,
+    int? fileId,
+    String? coverUrl,
   ) async {
+    await VideoApi.updateVideoData(mediaId, title, introduction, fileId, coverUrl);
+  }
+
+  static Future<void> deleteVideo(
+    String? videoId,
+  ) async {
+    if (videoId == null) return;
     await VideoApi.deleteUserVideoById(videoId);
   }
 

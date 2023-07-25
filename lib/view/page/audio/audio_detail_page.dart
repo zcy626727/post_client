@@ -13,12 +13,15 @@ import '../../../model/message/comment.dart';
 import '../../../service/media/file_service.dart';
 import '../../../service/media/history_service.dart';
 import '../../component/feedback/media_feedback_bar.dart';
+import '../../component/media/media_more_button.dart';
 import '../comment/comment_page.dart';
 
 class AudioDetailPage extends StatefulWidget {
-  const AudioDetailPage({super.key, required this.audio});
+  const AudioDetailPage({super.key, required this.audio, this.onDeleteMedia, this.onUpdateMedia});
 
   final Audio audio;
+  final Function(Audio)? onDeleteMedia;
+  final Function(Audio)? onUpdateMedia;
 
   @override
   State<AudioDetailPage> createState() => _AudioDetailPageState();
@@ -37,7 +40,7 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
   }
 
   Future getData() async {
-    return Future.wait([getAudioUrl(),getHistory()]);
+    return Future.wait([getAudioUrl(), getHistory()]);
   }
 
   Future<void> getAudioUrl() async {
@@ -87,7 +90,29 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
                   color: colorScheme.onBackground,
                 ),
               ),
-              actions: [],
+              title: Text(
+                "音频",
+                style: TextStyle(color: colorScheme.onSurface),
+              ),
+              actions: [
+                MediaMoreButton(
+                  media: widget.audio,
+                  onDeleteMedia: (media) async {
+                    Navigator.of(context).pop();
+                    if (widget.onDeleteMedia != null) {
+                      await widget.onDeleteMedia!(media as Audio);
+                    }
+                  },
+                  onUpdateMedia: (media) async {
+                    widget.audio.copyAudio(media as Audio);
+                    if (widget.onUpdateMedia != null) {
+                      await widget.onUpdateMedia!(media);
+                    }
+                    await getAudioUrl();
+                    setState(() {});
+                  },
+                ),
+              ],
             ),
             body: Container(
               color: colorScheme.surface,
@@ -121,7 +146,7 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
                       style: TextStyle(fontSize: 15, color: colorScheme.onSurface),
                     ),
                   ),
-                  CommonAudioPlayerMini(audioUrl: audioUrl!),
+                  CommonAudioPlayerMini(key: ValueKey(audioUrl),audioUrl: audioUrl!),
                   MediaFeedbackBar(
                     mediaType: MediaType.audio,
                     mediaId: widget.audio.id!,
@@ -140,7 +165,7 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
                                     commentParentType: CommentParentType.audio,
                                     commentParentId: widget.audio.id!,
                                     parentUserId: widget.audio.userId!,
-                                  )),
+                                  ),),
                         );
                       },
                       child: const Text("查看评论"),
