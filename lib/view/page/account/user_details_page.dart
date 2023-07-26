@@ -8,6 +8,7 @@ import 'package:post_client/service/user/follow_service.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/view/component/post/post_list.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
+import 'package:post_client/view/page/account/user_profile_page.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:provider/provider.dart';
@@ -205,7 +206,11 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   height: 30,
                   width: 100,
                   child: widget.user.id != null && widget.user.id == Global.user.id
-                      ? OutlinedButton(onPressed: () {}, child: const Text("编辑资料"))
+                      ? OutlinedButton(
+                          onPressed: () async {
+                            await Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfilePage()));
+                          },
+                          child: const Text("编辑资料"))
                       : _follow == null
                           ? CommonActionOneButton(
                               title: "关注",

@@ -67,7 +67,8 @@ class UserService {
     await UserApi.updateUsername(newUsername);
   }
 
-  static Future<void> updateAvatarUrl(String avatarUrl) async {
+  static Future<void> updateAvatarUrl(String? avatarUrl) async {
+    if (avatarUrl == null) return;
     await UserApi.updateUsername(avatarUrl);
   }
 }

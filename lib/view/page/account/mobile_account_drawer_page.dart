@@ -23,6 +23,7 @@ class MobileAccountDrawerPage extends StatelessWidget {
       child: SafeArea(
         child: Selector<UserState, UserState>(
           selector: (context, userState) => userState,
+          shouldRebuild: (pre, next) => true,
           builder: (context, userState, index) {
             User user = userState.user;
             bool isLogin = user.token != null;

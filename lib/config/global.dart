@@ -58,6 +58,8 @@ class Global {
 
     //搜索sqlite
     log("初始化完毕");
+
+
   }
 
   static initApi() async {

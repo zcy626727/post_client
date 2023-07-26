@@ -18,6 +18,10 @@ class UserState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void notify() {
+    notifyListeners();
+  }
+
   //获取当前是暗模式还是亮模式
   Brightness get currentBrightness {
     switch (Global.user.themeMode) {

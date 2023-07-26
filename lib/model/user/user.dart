@@ -74,6 +74,14 @@ class User {
     themeMode = 0;
   }
 
+  bool alreadyLogin() {
+    if (id == null || token == null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserToJson(this);

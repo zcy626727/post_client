@@ -15,10 +15,12 @@ import '../../../widget/dialog/confirm_alert_dialog.dart';
 import '../../show/show_snack_bar.dart';
 
 class ImageUploadCard extends StatefulWidget {
-  const ImageUploadCard({required super.key, required this.task, this.onDeleteImage});
+  const ImageUploadCard({required super.key, required this.task, this.onDeleteImage, this.onUpdateImage, this.enableDelete = true});
 
   final UploadMediaTask task;
   final Function(UploadMediaTask)? onDeleteImage;
+  final Function(UploadMediaTask)? onUpdateImage;
+  final bool enableDelete;
 
   @override
   State<ImageUploadCard> createState() => _ImageUploadCardState();
@@ -84,9 +86,11 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
           // User canceled the picker
         }
       },
-      onLongPress: () async {
-        await deleteImage();
-      },
+      onLongPress: widget.enableDelete
+          ? () async {
+              await deleteImage();
+            }
+          : null,
       child: Container(
         //上传成功前填充前景色为灰
         foregroundDecoration: widget.task.status == UploadTaskStatus.finished.index ? null : BoxDecoration(color: Colors.grey.withAlpha(100)),
@@ -133,6 +137,9 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
         } else if (msg == true) {
           //上传结束
           task.status = UploadTaskStatus.finished.index;
+          if (widget.onUpdateImage != null) {
+            await widget.onUpdateImage!(task);
+          }
           setState(() {});
         }
       },

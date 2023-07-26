@@ -25,7 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   String _phoneNumber = "";
   String _password = "";
-  String _alias = "";
+  String _name = "";
   bool _signUpIng = false;
 
   @override
@@ -71,7 +71,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   TextFormField nameBuild() {
     return TextFormField(
-      onSaved: (newValue) => _alias = newValue!,
+      onSaved: (newValue) => _name = newValue!,
       validator: (value) {
         if (value!.isEmpty) {
           return "随便起一个吧";
@@ -243,7 +243,7 @@ class _SignUpPageState extends State<SignUpPage> {
   signUp() async {
     try {
       //发送注册请求
-      await UserService.signUp(_phoneNumber, _password, _alias);
+      await UserService.signUp(_phoneNumber, _password, _name);
       widget.onSignUpSuccess();
       log("注册成功");
     } on TimeoutException catch (e) {
