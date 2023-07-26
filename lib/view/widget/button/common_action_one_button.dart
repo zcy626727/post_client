@@ -9,6 +9,7 @@ class CommonActionOneButton extends StatefulWidget {
     this.backgroundColor,
     this.textColor,
     this.height = 40,
+    this.radius = 0,
   }) : super(key: key);
 
   //返回值代表是否调用pop
@@ -18,6 +19,7 @@ class CommonActionOneButton extends StatefulWidget {
 
   final Color? backgroundColor;
   final Color? textColor;
+  final double radius;
 
   //高度
   final double height;
@@ -32,15 +34,15 @@ class _CommonActionOneButtonState extends State<CommonActionOneButton> {
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
-
     return SizedBox(
       height: widget.height,
       width: double.infinity,
       child: OutlinedButton(
         style: ButtonStyle(
-          backgroundColor: widget.backgroundColor == null
-              ? null
-              : MaterialStateProperty.all(widget.backgroundColor!),
+          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(widget.radius),
+          )),
+          backgroundColor: widget.backgroundColor == null ? null : MaterialStateProperty.all(widget.backgroundColor!),
         ),
         onPressed: _leftLoading
             ? null

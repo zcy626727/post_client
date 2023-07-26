@@ -66,6 +66,23 @@ class UserApi {
     );
   }
 
+  static Future<void> updatePassword(
+    String newPassword,
+    String oldPassword,
+  ) async {
+    var r = await UserHttpConfig.dio.post(
+      "/user/updatePassword",
+      data: {
+        "newPassword": newPassword,
+        "oldPassword": oldPassword,
+      },
+      options: UserHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
+  }
+
   static Future<void> updateAvatarUrl(String avatarUrl) async {
     var r = await UserHttpConfig.dio.post(
       "/user/updateAvatarUrl",

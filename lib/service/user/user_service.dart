@@ -69,6 +69,13 @@ class UserService {
 
   static Future<void> updateAvatarUrl(String? avatarUrl) async {
     if (avatarUrl == null) return;
-    await UserApi.updateUsername(avatarUrl);
+    await UserApi.updateAvatarUrl(avatarUrl);
+  }
+
+  static Future<void> updatePassword(
+    String newPassword,
+    String oldPassword,
+  ) async {
+    await UserApi.updatePassword(newPassword, oldPassword);
   }
 }

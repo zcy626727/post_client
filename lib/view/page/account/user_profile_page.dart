@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
 import 'package:post_client/service/user/user_service.dart';
 import 'package:post_client/view/component/media/upload/image_upload_card.dart';
+import 'package:post_client/view/page/account/reset_password_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../domain/task/upload_media_task.dart';
+import '../../../state/screen_state.dart';
 import '../../../state/user_state.dart';
 import '../../widget/button/common_action_two_button.dart';
 
@@ -34,6 +36,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     //更新用户信息时使用
     var userState = Provider.of<UserState>(context);
+    var navState = Provider.of<ScreenNavigatorState>(context);
     var colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       backgroundColor: colorScheme.background,
@@ -178,6 +181,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
             child: TextButton(
               onPressed: () {
                 //弹出修改密码界面
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ResetPasswordPage(
+                      onUpdated: () {
+                        userState.user.clearUserInfo();
+                        userState.notify();
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                );
               },
               child: SizedBox(
                 width: double.infinity,
