@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:post_client/api/client/media_http_config.dart';
 import 'package:post_client/domain/task/upload_media_task.dart';
 import 'package:post_client/model/media/gallery.dart';
@@ -8,6 +9,7 @@ import '../../../model/media/album.dart';
 import '../../../model/media/article.dart';
 import '../../../model/media/audio.dart';
 import '../../../model/media/video.dart';
+import '../../../model/user/user.dart';
 
 class AlbumApi {
   static Future<Album> createAlbum(
@@ -123,6 +125,40 @@ class AlbumApi {
     List<Album> albumList = [];
     for (var albumJson in r.data['albumList']) {
       var album = Album.fromJson(albumJson);
+      albumList.add(album);
+    }
+    return albumList;
+  }
+
+  static Future<List<Album>> searchAlbum(
+      String title,
+      int size,
+      ) async {
+    var r = await MediaHttpConfig.dio.post(
+      "/video/searchAlbum",
+      data: {
+        "title": title,
+        "size": size,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": false,
+      }),
+    );
+
+    return _parseAlbumListWithUser(r);
+  }
+
+  static List<Album> _parseAlbumListWithUser(Response<dynamic> r) {
+    Map<int, User> userMap = {};
+    for (var userJson in r.data['userList']) {
+      var user = User.fromJson(userJson);
+      userMap[user.id ?? 0] = user;
+    }
+    List<Album> albumList = [];
+    for (var albumJson in r.data['albumList']) {
+      var album = Album.fromJson(albumJson);
+      album.user = userMap[album.userId];
       albumList.add(album);
     }
     return albumList;

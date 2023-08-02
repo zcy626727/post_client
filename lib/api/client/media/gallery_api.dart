@@ -122,10 +122,29 @@ class GalleryApi {
         "withToken": false,
       }),
     );
-    return _parseGalleryWithUser(r);
+    return _parseGalleryListWithUser(r);
   }
 
-  static List<Gallery> _parseGalleryWithUser(Response<dynamic> r) {
+  static Future<List<Gallery>> searchGallery(
+    String title,
+    int size,
+  ) async {
+    var r = await MediaHttpConfig.dio.post(
+      "/gallery/searchGallery",
+      data: {
+        "title": title,
+        "size": size,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": false,
+      }),
+    );
+
+    return _parseGalleryListWithUser(r);
+  }
+
+  static List<Gallery> _parseGalleryListWithUser(Response<dynamic> r) {
     Map<int, User> userMap = {};
     for (var userJson in r.data['userList']) {
       var user = User.fromJson(userJson);

@@ -28,7 +28,7 @@ class ArticleService {
   static Future<void> deleteArticle(
     String? articleId,
   ) async {
-    if(articleId==null) return;
+    if (articleId == null) return;
     await ArticleApi.deleteUserArticleById(articleId);
   }
 
@@ -55,6 +55,14 @@ class ArticleService {
     int pageSize,
   ) async {
     var articleList = await ArticleApi.getArticleListRandom(pageSize);
+    return articleList;
+  }
+
+  static Future<List<Article>> searchAlbum(
+    String title,
+    int size,
+  ) async {
+    var articleList = await ArticleApi.searchArticle(title, size);
     return articleList;
   }
 }

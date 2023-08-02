@@ -102,7 +102,7 @@ class PostApi {
       }),
     );
 
-    var postList = _parsePostWithUser(r);
+    var postList = _parsePostListWithUser(r);
     return postList;
   }
 
@@ -124,13 +124,13 @@ class PostApi {
       }),
     );
 
-    var postList = _parsePostWithUser(r);
+    var postList = _parsePostListWithUser(r);
     return postList;
   }
 
   static Future<Map<String, Post>> getPostMapByIdList(
-      List<String> postIdList,
-      ) async {
+    List<String> postIdList,
+  ) async {
     var r = await MessageHttpConfig.dio.post(
       "/post/getPostListByIdList",
       data: {
@@ -145,7 +145,26 @@ class PostApi {
     return _parsePostMapWithUser(r);
   }
 
-  static List<Post> _parsePostWithUser(Response<dynamic> r) {
+  static Future<List<Post>> searchPost(
+    String content,
+    int size,
+  ) async {
+    var r = await MessageHttpConfig.dio.post(
+      "/post/searchPost",
+      data: {
+        "content": content,
+        "size": size,
+      },
+      options: MessageHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": false,
+      }),
+    );
+
+    return _parsePostListWithUser(r);
+  }
+
+  static List<Post> _parsePostListWithUser(Response<dynamic> r) {
     Map<int, User> userMap = {};
     for (var userJson in r.data['userList']) {
       var user = User.fromJson(userJson);

@@ -56,4 +56,12 @@ class AudioService {
     var audioList = await AudioApi.getAudioListRandom(pageSize);
     return audioList;
   }
+
+  static Future<List<Audio>> searchAudio(
+    String title,
+    int size,
+  ) async {
+    var audioList = await AudioApi.searchAudio(title, size);
+    return audioList;
+  }
 }

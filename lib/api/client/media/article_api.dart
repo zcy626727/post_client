@@ -128,6 +128,25 @@ class ArticleApi {
     return _parseArticleWithUser(r);
   }
 
+  static Future<List<Article>> searchArticle(
+      String title,
+      int size,
+      ) async {
+    var r = await MediaHttpConfig.dio.post(
+      "/gallery/searchArticle",
+      data: {
+        "title": title,
+        "size": size,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": false,
+      }),
+    );
+
+    return _parseArticleWithUser(r);
+  }
+
   static List<Article> _parseArticleWithUser(Response<dynamic> r) {
     Map<int, User> userMap = {};
     for (var userJson in r.data['userList']) {

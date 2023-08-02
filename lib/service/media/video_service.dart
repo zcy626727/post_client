@@ -56,4 +56,12 @@ class VideoService {
     var videoList = await VideoApi.getVideoListRandom(pageSize);
     return videoList;
   }
+
+  static Future<List<Video>> searchVideo(
+    String title,
+    int size,
+  ) async {
+    var videoList = await VideoApi.searchVideo(title, size);
+    return videoList;
+  }
 }

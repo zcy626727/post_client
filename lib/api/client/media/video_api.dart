@@ -118,10 +118,29 @@ class VideoApi {
         "withToken": false,
       }),
     );
-    return _parseVideoWithUser(r);
+    return _parseVideoListWithUser(r);
   }
 
-  static List<Video> _parseVideoWithUser(Response<dynamic> r) {
+  static Future<List<Video>> searchVideo(
+    String title,
+    int size,
+  ) async {
+    var r = await MediaHttpConfig.dio.post(
+      "/video/searchVideo",
+      data: {
+        "title": title,
+        "size": size,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": false,
+      }),
+    );
+
+    return _parseVideoListWithUser(r);
+  }
+
+  static List<Video> _parseVideoListWithUser(Response<dynamic> r) {
     Map<int, User> userMap = {};
     for (var userJson in r.data['userList']) {
       var user = User.fromJson(userJson);

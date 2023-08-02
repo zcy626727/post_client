@@ -72,7 +72,7 @@ class PostService {
 
   static Future<void> fillFeedback(List<Post> postList) async {
     //如果没有登录就不需要填充
-    if(Global.user.id==null){
+    if (Global.user.id == null) {
       return;
     }
     //获取媒体列表
@@ -126,5 +126,13 @@ class PostService {
         }
       }
     }
+  }
+
+  static Future<List<Post>> searchVideo(
+    String content,
+    int size,
+  ) async {
+    var postList = await PostApi.searchPost(content, size);
+    return postList;
   }
 }

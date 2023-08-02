@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 import '../../../model/user/user.dart';
 import '../user_http_config.dart';
 
@@ -94,5 +96,33 @@ class UserApi {
         "withToken": true,
       }),
     );
+  }
+
+  static Future<List<User>> searchUser(
+    String name,
+    int size,
+  ) async {
+    var r = await UserHttpConfig.dio.post(
+      "/user/searchUser",
+      data: {
+        "name": name,
+        "size": size,
+      },
+      options: UserHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": false,
+      }),
+    );
+
+    return _parseUserList(r);
+  }
+
+  static List<User> _parseUserList(Response<dynamic> r) {
+    List<User> userList = [];
+    for (var userJson in r.data['userList']) {
+      var user = User.fromJson(userJson);
+      userList.add(user);
+    }
+    return userList;
   }
 }

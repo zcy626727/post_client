@@ -59,4 +59,12 @@ class GalleryService {
     var galleryList = await GalleryApi.getGalleryListRandom(pageSize);
     return galleryList;
   }
+
+  static Future<List<Gallery>> searchAudio(
+    String title,
+    int size,
+  ) async {
+    var galleryList = await GalleryApi.searchGallery(title, size);
+    return galleryList;
+  }
 }
