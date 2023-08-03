@@ -58,11 +58,12 @@ class ArticleService {
     return articleList;
   }
 
-  static Future<List<Article>> searchAlbum(
+  static Future<List<Article>> searchArticle(
     String title,
-    int size,
+    int page,
+    int pageSize,
   ) async {
-    var articleList = await ArticleApi.searchArticle(title, size);
+    var articleList = await ArticleApi.searchArticle(title, page, pageSize);
     return articleList;
   }
 }

@@ -131,14 +131,16 @@ class AlbumApi {
   }
 
   static Future<List<Album>> searchAlbum(
-      String title,
-      int size,
-      ) async {
-    var r = await MediaHttpConfig.dio.post(
-      "/video/searchAlbum",
+    String title,
+    int page,
+    int pageSize,
+  ) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/album/searchAlbum",
       data: {
         "title": title,
-        "size": size,
+        "page": page,
+        "pageSize": pageSize,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

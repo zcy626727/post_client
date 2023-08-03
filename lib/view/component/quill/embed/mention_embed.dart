@@ -5,11 +5,12 @@ import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_svg/svg.dart';
 import 'package:post_client/model/user/user.dart';
 import 'package:post_client/util/responsive.dart';
-import 'package:post_client/view/page/user/user_selector_page.dart';
+
+import '../../../page/mention/mention_selector_page.dart';
 
 //嵌入块样式
-class MyAtEmbedBuilder implements EmbedBuilder {
-  MyAtEmbedBuilder();
+class MyMentionEmbedBuilder implements EmbedBuilder {
+  MyMentionEmbedBuilder();
 
   @override
   String get key => MyAtBlockEmbed.embedType;
@@ -114,7 +115,7 @@ class MyAtEmbedButton extends StatelessWidget {
       userJson = await showModalBottomSheet<String>(
           context: context,
           builder: (BuildContext context) {
-            return const UserSelectorPage();
+            return const MentionSelectorPage();
           });
     } else {
       userJson = await showDialog<String>(
@@ -126,7 +127,7 @@ class MyAtEmbedButton extends StatelessWidget {
             contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
             content: const SizedBox(
               height: 150,
-              child: UserSelectorPage(),
+              child: MentionSelectorPage(),
             ),
           );
         },

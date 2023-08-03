@@ -56,7 +56,6 @@ class _NotionScreenState extends State<NotionScreen> {
                         MaterialPageRoute(builder: (context) => const ReplyCommentListPage()),
                       );
                     }
-
                   },
                   svgPath: "assets/icons/huifu.svg",
                 ),

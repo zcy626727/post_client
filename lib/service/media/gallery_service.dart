@@ -60,11 +60,12 @@ class GalleryService {
     return galleryList;
   }
 
-  static Future<List<Gallery>> searchAudio(
+  static Future<List<Gallery>> searchGallery(
     String title,
-    int size,
+    int page,
+    int pageSize,
   ) async {
-    var galleryList = await GalleryApi.searchGallery(title, size);
+    var galleryList = await GalleryApi.searchGallery(title, page, pageSize);
     return galleryList;
   }
 }

@@ -129,14 +129,16 @@ class ArticleApi {
   }
 
   static Future<List<Article>> searchArticle(
-      String title,
-      int size,
-      ) async {
-    var r = await MediaHttpConfig.dio.post(
-      "/gallery/searchArticle",
-      data: {
+    String title,
+    int page,
+    int pageSize,
+  ) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/article/searchArticle",
+      queryParameters: {
         "title": title,
-        "size": size,
+        "page": page,
+        "pageSize": pageSize,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

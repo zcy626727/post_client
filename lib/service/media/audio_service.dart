@@ -59,9 +59,10 @@ class AudioService {
 
   static Future<List<Audio>> searchAudio(
     String title,
-    int size,
+    int page,
+    int pageSize,
   ) async {
-    var audioList = await AudioApi.searchAudio(title, size);
+    var audioList = await AudioApi.searchAudio(title, page, pageSize);
     return audioList;
   }
 }

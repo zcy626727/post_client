@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_extensions/embeds/builders.dart';
 import 'package:post_client/view/component/quill/embed/Image_embed.dart';
-import 'package:post_client/view/component/quill/embed/at_embed.dart';
+import 'package:post_client/view/component/quill/embed/mention_embed.dart';
 import 'package:post_client/view/component/quill/embed/audio_embed.dart';
 import 'package:post_client/view/component/quill/embed/video_embed.dart';
 
@@ -53,7 +53,7 @@ class ArticleQuillEmbeds {
 class PostQuillEmbeds {
   static List<EmbedBuilder> builders({void Function(GlobalKey videoContainerKey)? onVideoInit}) => [
         //builder
-        MyAtEmbedBuilder(),
+        MyMentionEmbedBuilder(),
       ];
 
   static List<EmbedButtonBuilder> buttons({

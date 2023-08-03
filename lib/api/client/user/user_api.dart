@@ -100,13 +100,15 @@ class UserApi {
 
   static Future<List<User>> searchUser(
     String name,
-    int size,
+    int page,
+    int pageSize,
   ) async {
-    var r = await UserHttpConfig.dio.post(
+    var r = await UserHttpConfig.dio.get(
       "/user/searchUser",
-      data: {
+      queryParameters: {
         "name": name,
-        "size": size,
+        "page": page,
+        "pageSize": pageSize,
       },
       options: UserHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -119,6 +121,7 @@ class UserApi {
 
   static List<User> _parseUserList(Response<dynamic> r) {
     List<User> userList = [];
+    if (r.data['userList'] == null) return userList;
     for (var userJson in r.data['userList']) {
       var user = User.fromJson(userJson);
       userList.add(user);

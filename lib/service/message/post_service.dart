@@ -128,11 +128,12 @@ class PostService {
     }
   }
 
-  static Future<List<Post>> searchVideo(
+  static Future<List<Post>> searchPost(
     String content,
-    int size,
+    int page,
+    int pageSize,
   ) async {
-    var postList = await PostApi.searchPost(content, size);
+    var postList = await PostApi.searchPost(content, page, pageSize);
     return postList;
   }
 }

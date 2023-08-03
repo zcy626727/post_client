@@ -35,6 +35,8 @@ class User {
 
   //0：跟随系统，1：亮，2：暗
   int? themeMode = 0;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  bool following = false;
 
   User.one() {
     id = 1;

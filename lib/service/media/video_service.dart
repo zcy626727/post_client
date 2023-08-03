@@ -59,9 +59,10 @@ class VideoService {
 
   static Future<List<Video>> searchVideo(
     String title,
-    int size,
+    int page,
+    int pageSize,
   ) async {
-    var videoList = await VideoApi.searchVideo(title, size);
+    var videoList = await VideoApi.searchVideo(title, page, pageSize);
     return videoList;
   }
 }

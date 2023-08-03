@@ -125,14 +125,16 @@ class AudioApi {
   }
 
   static Future<List<Audio>> searchAudio(
-      String title,
-      int size,
-      ) async {
-    var r = await MediaHttpConfig.dio.post(
+    String title,
+    int page,
+    int pageSize,
+  ) async {
+    var r = await MediaHttpConfig.dio.get(
       "/audio/searchAudio",
-      data: {
+      queryParameters: {
         "title": title,
-        "size": size,
+        "page": page,
+        "pageSize": pageSize,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

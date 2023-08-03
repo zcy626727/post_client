@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/service/media/gallery_service.dart';
@@ -20,6 +21,7 @@ import '../../../state/user_state.dart';
 import '../../component/media/list/article_list_tile.dart';
 import '../../component/media/list/audio_list_tile.dart';
 import '../../component/media/list/gallery_list_tile.dart';
+import '../../page/search/search_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -52,7 +54,41 @@ class _HomeScreenState extends State<HomeScreen> {
               // floating: true,
               // snap: true,
               backgroundColor: colorScheme.surface,
-              leading: Container(),
+              leadingWidth: 0,
+              titleSpacing: 0,
+              title: Center(
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchPage()));
+                  },
+                  child: Container(
+                    height: 35,
+                    margin: const EdgeInsets.only(left: 10),
+                    decoration: BoxDecoration(
+                      color: colorScheme.onSurface.withAlpha(20),
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    ),
+                    child: Center(
+                      child: SizedBox(
+                        width: 50,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 3),
+                              child: Icon(Icons.search,color: colorScheme.onSurface.withAlpha(100),size: 18,),
+                            ),
+                            Text(
+                              "搜索",
+                              style: TextStyle(color: colorScheme.onSurface.withAlpha(100),fontSize: 16),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               actions: [
                 Container(
                   width: 50.0,

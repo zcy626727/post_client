@@ -123,13 +123,15 @@ class VideoApi {
 
   static Future<List<Video>> searchVideo(
     String title,
-    int size,
+    int page,
+    int pageSize,
   ) async {
-    var r = await MediaHttpConfig.dio.post(
+    var r = await MediaHttpConfig.dio.get(
       "/video/searchVideo",
-      data: {
+      queryParameters: {
         "title": title,
-        "size": size,
+        "page": page,
+        "pageSize": pageSize,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

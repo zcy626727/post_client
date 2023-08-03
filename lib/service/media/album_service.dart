@@ -41,9 +41,10 @@ class AlbumService {
 
   static Future<List<Album>> searchAlbum(
     String title,
-    int size,
+    int page,
+    int pageSize,
   ) async {
-    var albumList = await AlbumApi.searchAlbum(title, size);
+    var albumList = await AlbumApi.searchAlbum(title, page, pageSize);
     return albumList;
   }
 }

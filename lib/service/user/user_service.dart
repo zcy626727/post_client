@@ -79,11 +79,12 @@ class UserService {
     await UserApi.updatePassword(newPassword, oldPassword);
   }
 
-  static Future<List<User>> searchVideo(
+  static Future<List<User>> searchUser(
     String name,
-    int size,
+    int page,
+    int pageSize,
   ) async {
-    var userList = await UserApi.searchUser(name, size);
+    var userList = await UserApi.searchUser(name, page, pageSize);
     return userList;
   }
 }

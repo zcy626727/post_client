@@ -47,9 +47,9 @@ class MentionApi{
     required List<String> postIdList,
     required List<String> commentIdList,
   }) async {
-    var r = await MessageHttpConfig.dio.post(
+    var r = await MessageHttpConfig.dio.get(
       "/mention/getMentionSourceListByIdList",
-      data: {
+      queryParameters: {
         "postIdList": postIdList,
         "commentIdList": commentIdList,
       },

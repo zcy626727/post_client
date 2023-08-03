@@ -127,13 +127,15 @@ class GalleryApi {
 
   static Future<List<Gallery>> searchGallery(
     String title,
-    int size,
+    int page,
+    int pageSize,
   ) async {
-    var r = await MediaHttpConfig.dio.post(
+    var r = await MediaHttpConfig.dio.get(
       "/gallery/searchGallery",
-      data: {
+      queryParameters: {
         "title": title,
-        "size": size,
+        "page": page,
+        "pageSize": pageSize,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

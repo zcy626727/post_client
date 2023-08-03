@@ -13,7 +13,7 @@ class MentionService {
       mention.targetUser = Global.user;
     }
     //填充source
-    fillMentionSource(mentionList);
+    await fillMentionSource(mentionList);
     return mentionList;
   }
 

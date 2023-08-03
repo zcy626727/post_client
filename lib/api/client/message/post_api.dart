@@ -147,13 +147,15 @@ class PostApi {
 
   static Future<List<Post>> searchPost(
     String content,
-    int size,
+    int page,
+    int pageSize,
   ) async {
-    var r = await MessageHttpConfig.dio.post(
+    var r = await MessageHttpConfig.dio.get(
       "/post/searchPost",
-      data: {
+      queryParameters: {
         "content": content,
-        "size": size,
+        "page": page,
+        "pageSize": pageSize,
       },
       options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,

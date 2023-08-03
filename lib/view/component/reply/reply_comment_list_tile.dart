@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:post_client/model/message/comment.dart';
 
+import '../../page/comment/reply_page.dart';
+import '../quill/quill_editor.dart';
+
 class ReplyCommentListTile extends StatelessWidget {
   const ReplyCommentListTile({super.key, required this.comment});
 
@@ -12,12 +15,10 @@ class ReplyCommentListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
-    var text = "";
+    var controller = QuillController.basic();
+
     if (comment.content != null) {
-      text = Document.fromJson(json.decode(comment.content!)).toPlainText();
-      if (text.length > 30) {
-        text = text.substring(30);
-      }
+      controller.document = Document.fromJson(json.decode(comment.content!));
     }
     return Container(
       margin: const EdgeInsets.only(top: 2),
@@ -39,11 +40,33 @@ class ReplyCommentListTile extends StatelessWidget {
             style: TextStyle(color: colorScheme.onSurface),
           ),
         ),
-        subtitle: Text(
-          text,
-          maxLines: 2,
-          style: TextStyle(color: colorScheme.onSurface),
-          overflow: TextOverflow.ellipsis,
+        subtitle: CommentQuillEditor(
+          autoFocus: false,
+          controller: controller,
+          focusNode: FocusNode(),
+          readOnly: true,
+        ),
+        trailing: Container(
+          width: 40,
+          height: double.infinity,
+          color: colorScheme.primaryContainer,
+          child: TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ReplyPage(
+                    comment: comment,
+                    onDeleteComment: (comment) {},
+                  ),
+                ),
+              );
+            },
+            child: Icon(
+              Icons.arrow_forward_ios,
+              color: colorScheme.onSurface,
+            ),
+          ),
         ),
       ),
     );
