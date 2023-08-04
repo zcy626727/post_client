@@ -39,16 +39,16 @@ class MobileAccountDrawerPage extends StatelessWidget {
                   child: ListView(
                     padding: EdgeInsets.zero,
                     children: [
-                      if (isLogin)
-                        MobileDrawerItem(
-                          leading: Icon(
-                            Icons.hive_outlined,
-                            color: colorScheme.onBackground,
-                            size: 23,
-                          ),
-                          title: "我的分区",
-                          onPress: () {},
-                        ),
+                      // if (isLogin)
+                      //   MobileDrawerItem(
+                      //     leading: Icon(
+                      //       Icons.hive_outlined,
+                      //       color: colorScheme.onBackground,
+                      //       size: 23,
+                      //     ),
+                      //     title: "我的分区",
+                      //     onPress: () {},
+                      //   ),
                       if (isLogin)
                         MobileDrawerItem(
                           leading: Icon(

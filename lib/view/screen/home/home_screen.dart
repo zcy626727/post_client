@@ -56,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
               backgroundColor: colorScheme.surface,
               leadingWidth: 0,
               titleSpacing: 0,
+              leading: Container(),
               title: Center(
                 child: GestureDetector(
                   onTap: () {

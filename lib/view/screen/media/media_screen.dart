@@ -101,20 +101,20 @@ class _MediaScreenState extends State<MediaScreen> {
                         );
                       }
                     }),
-                buildItemButton(
-                    iconData: Icons.album,
-                    text: "我的合集",
-                    onPress: () {
-                      if (Global.user.id == null) {
-                        //显示登录页
-                        Navigator.pushNamed(context, "login");
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const AlbumListPage()),
-                        );
-                      }
-                    }),
+                // buildItemButton(
+                //     iconData: Icons.album,
+                //     text: "我的合集",
+                //     onPress: () {
+                //       if (Global.user.id == null) {
+                //         //显示登录页
+                //         Navigator.pushNamed(context, "login");
+                //       } else {
+                //         Navigator.push(
+                //           context,
+                //           MaterialPageRoute(builder: (context) => const AlbumListPage()),
+                //         );
+                //       }
+                //     }),
                 buildItemButton(
                     iconData: Icons.history,
                     text: "历史记录",
@@ -129,20 +129,22 @@ class _MediaScreenState extends State<MediaScreen> {
                         );
                       }
                     }),
-                buildItemButton(
-                    iconData: Icons.watch_later_outlined,
-                    text: "稍后再看",
-                    onPress: () {
-                      if (Global.user.id == null) {
-                        //显示登录页
-                        Navigator.pushNamed(context, "login");
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const WatchLaterListPage()),
-                        );
-                      }
-                    }),
+                // buildItemButton(
+                //     iconData: Icons.watch_later_outlined,
+                //     text: "稍后再看",
+                //     onPress: () {
+                //       if (Global.user.id == null) {
+                //         //显示登录页
+                //         Navigator.pushNamed(context, "login");
+                //       } else {
+                //         Navigator.push(
+                //           context,
+                //           MaterialPageRoute(builder: (context) => const WatchLaterListPage()),
+                //         );
+                //       }
+                //     }),
+                Container(width: 95),
+                Container(width: 95),
               ],
             ),
           ),
@@ -167,26 +169,26 @@ class _MediaScreenState extends State<MediaScreen> {
           //     ],
           //   ),
           // ),
-          //订阅
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.only(top: 2),
-              color: colorScheme.surface,
-              child: Column(
-                children: [
-                  const CommonHeaderBar(title: "订阅合集"),
-                  Expanded(
-                    child: ListView.builder(
-                      itemBuilder: (ctx, index) {
-                        return AlbumListTile(album: _albumList[index]);
-                      },
-                      itemCount: _albumList.length,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          //todo 订阅合集
+          // Expanded(
+          //   child: Container(
+          //     margin: const EdgeInsets.only(top: 2),
+          //     color: colorScheme.surface,
+          //     child: Column(
+          //       children: [
+          //         const CommonHeaderBar(title: "订阅合集"),
+          //         Expanded(
+          //           child: ListView.builder(
+          //             itemBuilder: (ctx, index) {
+          //               return AlbumListTile(album: _albumList[index]);
+          //             },
+          //             itemCount: _albumList.length,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

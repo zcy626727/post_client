@@ -41,7 +41,7 @@ class _FeedFeedbackBarState extends State<FeedFeedbackBar> {
     var colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      color: colorScheme.primary,
+      color: colorScheme.surface,
       margin: const EdgeInsets.symmetric(
         vertical: 5,
       ),

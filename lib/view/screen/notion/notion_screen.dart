@@ -87,9 +87,9 @@ class _NotionScreenState extends State<NotionScreen> {
               ],
             ),
           ),
-          Expanded(
-            child: buildChatList(),
-          )
+          // Expanded(
+          //   child: buildChatList(),
+          // )
         ],
       ),
     );
