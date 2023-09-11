@@ -62,7 +62,7 @@ class FileService {
 
     var isolate = await Isolate.spawn(FileService.startUploadIsolate, receivePort.sendPort);
     isolate.addOnExitListener(receivePort.sendPort);
-    await onAfterStart(isolate);
+    onAfterStart(isolate);
   }
 
   static Future<void> startUploadIsolate(SendPort sendPort) async {
@@ -119,11 +119,11 @@ class FileService {
         await FileUtil.uploadFile(
           putUrl,
           data,
-          onUpload: (count, total) {
-            task.uploadedSize = count;
-            task.totalSize = total;
-            sendPort.send([1, task.toJson()]);
-          },
+          // onUpload: (count, total) {
+          //   task.uploadedSize = count;
+          //   task.totalSize = total;
+          //   sendPort.send([1, task.toJson()]);
+          // },
         );
 
         await FileApi.completePutFile(fileId);

@@ -9,9 +9,9 @@ class FileApi {
     bool private,
     List<int> magicNumber,
   ) async {
-    var r = await MediaHttpConfig.dio.post(
+    var r = await MediaHttpConfig.dio.get(
       "/file/genPutFileUrl",
-      data: {
+      queryParameters: {
         "md5": md5,
         "private": private,
         "magicNumber": magicNumber,
@@ -51,9 +51,9 @@ class FileApi {
 
   //获取getUrl，文件下载
   static Future<(String, String)> genGetFileUrl(int fileId) async {
-    var r = await MediaHttpConfig.dio.post(
+    var r = await MediaHttpConfig.dio.get(
       "/file/genGetFileUrl",
-      data: {
+      queryParameters: {
         "fileId": fileId,
       },
       options: MediaHttpConfig.options.copyWith(
@@ -65,6 +65,9 @@ class FileApi {
     );
 
     //获取数据
-    return (r.data["getFileUrl"] as String, r.data["staticUrl"] as String);
+    String getFileUrl = r.data["getFileUrl"];
+    String staticUrl = r.data["staticUrl"];
+    //获取数据
+    return (getFileUrl, staticUrl);
   }
 }
