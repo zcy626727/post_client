@@ -5,13 +5,66 @@ import 'dart:isolate';
 import 'package:flutter/services.dart';
 
 import '../../api/client/media/multipart_api.dart';
-import '../../api/client/media_http_config.dart';
 import '../../config/file_config.dart';
 import '../../config/global.dart';
-import '../../domain/task/upload_media_task.dart';
+import '../../domain/task/multipart_upload_task.dart';
+import '../../enums/upload_task.dart';
 import '../../util/file_util.dart';
 
 class MultipartService {
+  static Future<void> doUploadFile({
+    //上传任务
+    required MultipartUploadTask task,
+    //上传出错
+    required Function(MultipartUploadTask) onError,
+    //上传成功
+    required Function(MultipartUploadTask) onSuccess,
+    //上传中更新状态
+    required Function(MultipartUploadTask) onUpload,
+    //上传开始后
+    required Function(Isolate) onAfterStart,
+    ReceivePort? receivePort,
+  }) async {
+    receivePort ??= ReceivePort();
+
+    RootIsolateToken rootIsolateToken = RootIsolateToken.instance!;
+    receivePort.listen(
+      (msg) async {
+        if (msg is SendPort) {
+          //传递初始值
+          msg.send([1, task.toJson()]);
+          msg.send([2, Global.user, Global.database!]);
+          msg.send([3, rootIsolateToken]);
+          msg.send(null);
+          //获取发送器
+        } else if (msg is List) {
+          //上传中消息
+          switch (msg[0]) {
+            case 1: //task
+              task.copy(MultipartUploadTask.fromJson(msg[1]));
+              await onUpload(task);
+              break;
+          }
+        } else if (msg is FormatException) {
+          //上传出现异常
+          task.status = UploadTaskStatus.error;
+          task.statusMessage = msg.message;
+          await onError(task);
+          receivePort!.close();
+        } else if (msg == true) {
+          //上传结束
+          task.status = UploadTaskStatus.finished;
+          await onSuccess(task);
+          receivePort!.close();
+        }
+      },
+    );
+
+    var isolate = await Isolate.spawn(MultipartService.startUploadIsolate, receivePort.sendPort);
+    isolate.addOnExitListener(receivePort.sendPort);
+    await onAfterStart(isolate);
+  }
+
   //用于组合初始化、上传、完成上传方法和初始化isolate环境
   //其他队列->上传队列（uploading）->传入方法->初始化->上传->完成上传->结束方法->完成队列
   //该方法内不应该存在更改status的情况，因为status的更改会伴随着状态的改变
@@ -31,7 +84,7 @@ class MultipartService {
 
       log("上传线程开始执行...");
       //任务
-      late UploadMediaTask task;
+      late MultipartUploadTask task;
       //等待主isolate发送消息并根据消息设置当前isolate环境，配置环境是必须的，所以这里采用阻塞的方式
       await for (var msg in receivePort) {
         if (msg == null) {
@@ -40,7 +93,7 @@ class MultipartService {
         } else if (msg is List) {
           switch (msg[0]) {
             case 1: //获取状态，用于之后修改状态和发送最新状态
-              task = UploadMediaTask.fromJson(msg[1]);
+              task = MultipartUploadTask.fromJson(msg[1]);
               break;
             case 2: //复制主线程环境：数据库、用户信息
               Global.copyEnv(msg[1], msg[2]);
@@ -56,7 +109,7 @@ class MultipartService {
       //文件上传时通过task发送任务信息，用于更新任务信息
       //初始化，确保文件计算好md5、后台初创建了上传任务
       log("初始化...");
-      await initMultipartUpload(task, sendPort, task.private);
+      await initMultipartUpload(task, sendPort);
       log("初始化完成");
       //进行上传
       //上传分片过程中要将任务持久化到数据库
@@ -81,45 +134,67 @@ class MultipartService {
   }
 
   static Future<void> initMultipartUpload(
-    UploadMediaTask task,
+    MultipartUploadTask task,
     SendPort sendPort,
-    bool private,
   ) async {
-    final file = File(task.srcPath!);
-    var fileStat = await file.stat();
-    task.status = UploadTaskStatus.init.index;
-    //验证文件
-    if (fileStat.size >= FileConfig.maxUploadFileSize) throw const FormatException("文件大小超出限制");
+    RandomAccessFile? read;
 
-    if (task.md5 != null) {
-      //已经解析过文件了，不需要再计算md5
-      //初始化阶段
-      task.statusMessage = "恢复上传";
-      sendPort.send([1, task.toJson()]);
-    } else {
-      //初始化阶段
-      task.statusMessage = "解析文件";
-      sendPort.send([1, task.toJson()]);
+    try {
+      final file = File(task.srcPath!);
+      var fileStat = await file.stat();
 
-      var md5 = await FileUtil.getFileChecksum(file);
-      if (md5 == null) {
-        return;
+      //验证文件
+      if (fileStat.size >= FileConfig.maxUploadFileSize) throw const FormatException("文件大小超出限制");
+
+      read = await file.open();
+      var data = await read.read(16);
+      task.magicNumber = data;
+
+      if (task.md5 != null) {
+        //已经解析过文件了，不需要再计算md5
+        //初始化阶段
+        task.statusMessage = "恢复上传";
+        task.status = UploadTaskStatus.init;
+
+        sendPort.send([1, task.toJson()]);
+
+        //校验是否和原文件一致
+        if (task.totalSize != fileStat.size) throw const FormatException("文件与源文件不一致");
+      } else {
+        //初始化阶段
+        task.statusMessage = "解析文件";
+        task.createTime = DateTime.now();
+        task.totalSize = fileStat.size;
+        sendPort.send([1, task.toJson()]);
+        //计算md5
+        var md5 = await FileUtil.getFileChecksum(file);
+        if (md5 == null) {
+          return;
+        }
+        task.md5 = md5;
       }
-      task.md5 = md5;
+
+      task.statusMessage = "初始化上传";
       sendPort.send([1, task.toJson()]);
+
+      //初始化上传
+      var multipartInfo = await MultipartApi.initMultipartUpload(task.md5!, fileStat.size, task.magicNumber!);
+
+      task.uploadedSize = multipartInfo.uploadedPartNum ?? 0 * multipartInfo.partSize!;
+      task.fileId = multipartInfo.fileId;
+
+      task.statusMessage = "开始上传";
+      sendPort.send([1, task.toJson()]);
+    } catch (e) {
+      rethrow;
+    } finally {
+      read?.close();
     }
-
-    //初始化上传
-    var multipartInfo = await MultipartApi.initMultipartUpload(task.md5!, private, fileStat.size, task.magicNumber!);
-
-    task.uploadedSize = multipartInfo.uploadedPartNum ?? 0 * multipartInfo.partSize!;
-    task.fileId = multipartInfo.fileId;
-    sendPort.send([1, task.toJson()]);
   }
 
-  static Future<void> doMultipartUpload(UploadMediaTask task, SendPort sendPort) async {
-    task.statusMessage = "上传中";
-    task.status = UploadTaskStatus.uploading.index;
+  static Future<void> doMultipartUpload(MultipartUploadTask task, SendPort sendPort) async {
+    task.statusMessage = "正在上传";
+    task.status = UploadTaskStatus.uploading;
     sendPort.send([1, task.toJson()]);
 
     RandomAccessFile? access;
@@ -136,7 +211,7 @@ class MultipartService {
       //开始上传
       while (uploadedPartNum < multipartInfo.totalPartNum!) {
         //设置起始位置，第一个分片起始位置为0，第二个为partSize，依此类推
-        access.setPositionSync(multipartInfo.uploadedPartNum ?? 0 * multipartInfo.partSize!);
+        access.setPositionSync((multipartInfo.uploadedPartNum ?? 0) * multipartInfo.partSize!);
         for (var url in urlList) {
           //读取数据
           var len = await access.readInto(buffer);
@@ -167,16 +242,14 @@ class MultipartService {
     }
   }
 
-  static Future<void> completeMultipartUpload(UploadMediaTask task, SendPort sendPort) async {
+  static Future<void> completeMultipartUpload(MultipartUploadTask task, SendPort sendPort) async {
     task.statusMessage = "整合中";
     sendPort.send([1, task.toJson()]);
 
     await MultipartApi.completeMultipartUpload(task.fileId!);
 
     task.statusMessage = "上传完毕";
-    task.status = UploadTaskStatus.finished.index;
+    task.status = UploadTaskStatus.finished;
     sendPort.send([1, task.toJson()]);
   }
-
-  static Future<void> testUpload(SendPort sendPort) async {}
 }

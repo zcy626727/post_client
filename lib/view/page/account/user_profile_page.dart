@@ -5,7 +5,9 @@ import 'package:post_client/view/component/media/upload/image_upload_card.dart';
 import 'package:post_client/view/page/account/reset_password_page.dart';
 import 'package:provider/provider.dart';
 
-import '../../../domain/task/upload_media_task.dart';
+import '../../../api/client/media/file_api.dart';
+import '../../../domain/task/single_upload_task.dart';
+import '../../../enums/upload_task.dart';
 import '../../../state/screen_state.dart';
 import '../../../state/user_state.dart';
 import '../../widget/button/common_action_two_button.dart';
@@ -18,16 +20,15 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class _UserProfilePageState extends State<UserProfilePage> {
-  late UploadMediaTask _avatarTask;
+  late SingleUploadTask _avatarTask;
   final TextEditingController _usernameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _avatarTask = UploadMediaTask();
+    _avatarTask = SingleUploadTask();
     if (Global.user.alreadyLogin()) {
-      _avatarTask.status = UploadTaskStatus.finished.index;
-      _avatarTask.staticUrl = Global.user.avatarUrl;
+      _avatarTask.status = UploadTaskStatus.finished;
       _usernameController.text = Global.user.name ?? "";
     }
   }
@@ -88,9 +89,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     task: _avatarTask,
                     enableDelete: false,
                     onUpdateImage: (task) async {
-                      //更新完后
-                      await UserService.updateAvatarUrl(task.staticUrl);
-                      userState.user.avatarUrl = task.staticUrl;
+                      //更新完后获取文件url
+                      var (_, staticUrl) = await FileApi.genGetFileUrl(task.fileId!);
+                      await UserService.updateAvatarUrl(staticUrl);
+
+                      userState.user.avatarUrl = staticUrl;
                       userState.notify();
                     },
                   ),

@@ -64,8 +64,6 @@ class _UserDetailPageState extends State<UserDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    var userState = Provider.of<UserState>(context);
-
     var colorScheme = Theme.of(context).colorScheme;
     return FutureBuilder(
       future: _futureBuilderFuture,
@@ -110,8 +108,9 @@ class _UserDetailPageState extends State<UserDetailPage> {
                             ),
                           ),
                         ),
+                        //todo 修复查看其他用户是头像显示的是自己的头像，未测试
                         flexibleSpace: FlexibleSpaceBar(
-                          background: buildProfileCard(userState.user),
+                          background: buildProfileCard(widget.user),
                         ),
                         bottom: PreferredSize(
                           //如果高度有问题就改这里的值

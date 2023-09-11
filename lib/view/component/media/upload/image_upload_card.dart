@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
@@ -6,20 +7,21 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
-import 'package:post_client/domain/task/upload_media_task.dart';
+import 'package:post_client/domain/task/single_upload_task.dart';
 import 'package:post_client/service/media/file_service.dart';
 import 'package:image/image.dart' as img;
 
 import '../../../../constant/media.dart';
+import '../../../../enums/upload_task.dart';
 import '../../../widget/dialog/confirm_alert_dialog.dart';
 import '../../show/show_snack_bar.dart';
 
 class ImageUploadCard extends StatefulWidget {
   const ImageUploadCard({required super.key, required this.task, this.onDeleteImage, this.onUpdateImage, this.enableDelete = true});
 
-  final UploadMediaTask task;
-  final Function(UploadMediaTask)? onDeleteImage;
-  final Function(UploadMediaTask)? onUpdateImage;
+  final SingleUploadTask task;
+  final Function(SingleUploadTask)? onDeleteImage;
+  final Function(SingleUploadTask)? onUpdateImage;
   final bool enableDelete;
 
   @override
@@ -30,15 +32,33 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
   final double imagePadding = 5.0;
   final double imageWidth = 100;
   Isolate? isolate;
-  late UploadMediaTask task;
+
+  late Future _futureBuilderFuture;
 
   @override
   void initState() {
-    task = widget.task;
     super.initState();
     //如果正在上传中
-    if (task.status == UploadTaskStatus.uploading.index) {
-      uploadImage(task);
+    if (widget.task.status == UploadTaskStatus.uploading) {
+      uploadImage(widget.task);
+    }
+    _futureBuilderFuture = getData();
+  }
+
+  Future getData() async {
+    return Future.wait([getImageUrl()]);
+  }
+
+  Future<void> getImageUrl() async {
+    try {
+      if (widget.task.fileId != null) {
+        var (url, staticUrl) = await FileService.genGetFileUrl(widget.task.fileId!);
+        widget.task.coverUrl = staticUrl;
+      }
+    } on DioException catch (e) {
+      log(e.toString());
+    } catch (e) {
+      log(e.toString());
     }
   }
 
@@ -50,103 +70,74 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
         image: FileImage(File(widget.task.srcPath!)),
         fit: BoxFit.cover,
       );
-    } else if (widget.task.staticUrl != null && widget.task.staticUrl!.isNotEmpty) {
+    } else if (widget.task.coverUrl != null) {
       decorationImage = DecorationImage(
-        image: NetworkImage(widget.task.staticUrl!),
+        image: NetworkImage(widget.task.coverUrl!),
         fit: BoxFit.cover,
       );
     }
 
-    return GestureDetector(
-      onTap: () async {
-        //打开file picker
-        FilePickerResult? result = await FilePicker.platform.pickFiles(
-          type: FileType.image,
-        );
-        if (result != null) {
-          RandomAccessFile? read;
-          try {
-            var file = result.files.single;
-            read = await File(result.files.single.path!).open();
-            var data = await read.read(16);
-            //消息接收器
-            widget.task.srcPath = file.path;
-            widget.task.totalSize = file.size;
-            widget.task.status = UploadTaskStatus.uploading.index;
-            widget.task.mediaType = MediaType.gallery;
-            widget.task.magicNumber = data;
-            uploadImage(task);
-          } catch (e) {
-            widget.task.clear();
-          } finally {
-            read?.close();
-          }
-          setState(() {});
+    return FutureBuilder(
+      future: _futureBuilderFuture,
+      builder: (BuildContext context, AsyncSnapshot snapShot) {
+        if (snapShot.connectionState == ConnectionState.done) {
+          return GestureDetector(
+            onTap: () async {
+              //打开file picker
+              FilePickerResult? result = await FilePicker.platform.pickFiles(
+                type: FileType.image,
+              );
+              if (result != null) {
+                RandomAccessFile? read;
+                try {
+                  var file = result.files.single;
+                  read = await File(result.files.single.path!).open();
+                  var data = await read.read(16);
+                  //消息接收器
+                  widget.task.srcPath = file.path;
+                  widget.task.totalSize = file.size;
+                  widget.task.private = false;
+                  widget.task.status = UploadTaskStatus.uploading;
+                  widget.task.mediaType = MediaType.gallery;
+                  uploadImage(widget.task);
+                } catch (e) {
+                  widget.task.clear();
+                } finally {
+                  read?.close();
+                }
+                setState(() {});
+              } else {
+                // User canceled the picker
+              }
+            },
+            onLongPress: widget.enableDelete
+                ? () async {
+                    await deleteImage();
+                  }
+                : null,
+            child: Container(
+              //上传成功前填充前景色为灰
+              foregroundDecoration: widget.task.status == UploadTaskStatus.finished ? null : BoxDecoration(color: Colors.grey.withAlpha(100)),
+              width: imageWidth,
+              height: imageWidth,
+              decoration: decorationImage == null
+                  ? null
+                  : BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                      image: decorationImage,
+                    ),
+              child: decorationImage == null ? const Icon(Icons.cloud_upload) : null,
+            ),
+          );
         } else {
-          // User canceled the picker
-        }
-      },
-      onLongPress: widget.enableDelete
-          ? () async {
-              await deleteImage();
-            }
-          : null,
-      child: Container(
-        //上传成功前填充前景色为灰
-        foregroundDecoration: widget.task.status == UploadTaskStatus.finished.index ? null : BoxDecoration(color: Colors.grey.withAlpha(100)),
-        width: imageWidth,
-        height: imageWidth,
-        decoration: decorationImage == null
-            ? null
-            : BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                image: decorationImage,
-              ),
-        child: decorationImage == null ? const Icon(Icons.cloud_upload) : null,
-      ),
-    );
-  }
-
-  void uploadThumb(UploadMediaTask task) async {}
-
-  void uploadImage(UploadMediaTask task) async {
-    print('开启上传图片任务：${widget.task.srcPath}');
-    //消息接收器
-    var receivePort = ReceivePort();
-    RootIsolateToken rootIsolateToken = RootIsolateToken.instance!;
-    receivePort.listen(
-      (msg) async {
-        if (msg is SendPort) {
-          msg.send([1, task.toJson()]);
-          msg.send([2, Global.user, Global.database!]);
-          msg.send([3, rootIsolateToken]);
-          //表示结束
-          msg.send(null);
-          //获取发送器
-        } else if (msg is List) {
-          //过程消息
-          switch (msg[0]) {
-            case 1: //task
-              task.copy(UploadMediaTask.fromJson(msg[1]));
-              break;
-          }
-        } else if (msg is FormatException) {
-          //上传出现异常
-          task.status = UploadTaskStatus.error.index;
-          task.statusMessage = msg.message;
-        } else if (msg == true) {
-          //上传结束
-          task.status = UploadTaskStatus.finished.index;
-          if (widget.onUpdateImage != null) {
-            await widget.onUpdateImage!(task);
-          }
-          setState(() {});
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          );
         }
       },
     );
-
-    isolate = await Isolate.spawn(FileService.startUploadIsolate, receivePort.sendPort);
-    isolate!.addOnExitListener(receivePort.sendPort);
   }
 
   Future<void> deleteImage() async {
@@ -174,6 +165,25 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
             Navigator.pop(context);
           },
         );
+      },
+    );
+  }
+
+  Future<void> uploadImage(SingleUploadTask task) async {
+    await FileService.doUploadFile(
+      task: widget.task,
+      onError: (task) {},
+      onSuccess: (task) async {
+        if (widget.onUpdateImage != null) {
+          await widget.onUpdateImage!(task);
+        }
+        var (link, staticUrl) = await FileService.genGetFileUrl(task.fileId!);
+        widget.task.coverUrl = staticUrl;
+        setState(() {});
+      },
+      onUpload: (task) {},
+      onAfterStart: (i) {
+        isolate = i;
       },
     );
   }

@@ -31,6 +31,25 @@ class FileApi {
   }
 
   //获取getUrl，文件下载
+  static Future<void> completePutFile(int fileId) async {
+    var r = await MediaHttpConfig.dio.post(
+      "/file/completePutFile",
+      data: {
+        "fileId": fileId,
+      },
+      options: MediaHttpConfig.options.copyWith(
+        extra: {
+          "noCache": true,
+          "withToken": true,
+        },
+      ),
+    );
+
+    //获取数据
+    return;
+  }
+
+  //获取getUrl，文件下载
   static Future<(String, String)> genGetFileUrl(int fileId) async {
     var r = await MediaHttpConfig.dio.post(
       "/file/genGetFileUrl",

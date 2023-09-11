@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:post_client/constant/media.dart';
 import 'package:post_client/service/media/album_service.dart';
 
-import '../../../domain/task/upload_media_task.dart';
+import '../../../domain/task/single_upload_task.dart';
+import '../../../enums/upload_task.dart';
+import '../../../service/media/file_service.dart';
 import '../../component/input/common_dropdown.dart';
 import '../../component/input/common_info_card.dart';
 import '../../component/show/show_snack_bar.dart';
@@ -16,7 +18,7 @@ class AlbumEditPage extends StatefulWidget {
 }
 
 class _AlbumEditPageState extends State<AlbumEditPage> {
-  UploadMediaTask coverUploadImage = UploadMediaTask();
+  SingleUploadTask coverUploadImage = SingleUploadTask();
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
@@ -61,16 +63,19 @@ class _AlbumEditPageState extends State<AlbumEditPage> {
                   //执行验证
                   if (formKey.currentState!.validate()) {
                     try {
-                      if (coverUploadImage.status != null && coverUploadImage.status != UploadTaskStatus.finished.index) {
+                      if (coverUploadImage.status != null && coverUploadImage.status != UploadTaskStatus.finished) {
                         ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                         return;
                       }
-                      var favorites = await AlbumService.createAlbum(
+                      var (_, staticUrl) = await FileService.genGetFileUrl(coverUploadImage.fileId!);
+
+                      var _ = await AlbumService.createAlbum(
                         titleController.text,
                         introductionController.text,
                         _selectedMedia.$1,
-                        coverUploadImage.staticUrl,
+                        staticUrl,
                       );
+
                       if (mounted) Navigator.pop(context);
                     } on Exception catch (e) {
                       ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");

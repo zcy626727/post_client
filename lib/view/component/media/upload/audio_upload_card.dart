@@ -1,25 +1,21 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
-import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/api/client/media/file_api.dart';
+import 'package:post_client/domain/task/multipart_upload_task.dart';
 import 'package:post_client/service/media/file_service.dart';
 import 'package:post_client/service/media/multipart_service.dart';
-import 'package:post_client/util/file_util.dart';
 
-import '../../../../config/global.dart';
-import '../../../../constant/media.dart';
-import '../../../../domain/task/upload_media_task.dart';
+import '../../../../enums/upload_task.dart';
 import '../../../widget/player/audio/common_audio_player_mini.dart';
 
 class AudioUploadCard extends StatefulWidget {
   const AudioUploadCard({required super.key, required this.task});
 
-  final UploadMediaTask task;
+  final MultipartUploadTask task;
 
   @override
   State<AudioUploadCard> createState() => _AudioUploadCardState();
@@ -45,7 +41,7 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
     try {
       if (widget.task.fileId != null) {
         var (url, _) = await FileService.genGetFileUrl(widget.task.fileId!);
-        widget.task.getUrl = url;
+        audioUrl = url;
       }
     } on DioException catch (e) {
       log(e.toString());
@@ -68,7 +64,7 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
             color: colorScheme.surface,
             child: Column(
               children: [
-                if (widget.task.status == UploadTaskStatus.uploading.index) //正在上传
+                if (widget.task.status == UploadTaskStatus.uploading) //正在上传
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                     height: 60,
@@ -110,9 +106,9 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
                     ),
                   ),
                 //上传完成
-                if (widget.task.getUrl != null) CommonAudioPlayerMini(audioUrl: widget.task.getUrl!),
+                if (audioUrl != null) CommonAudioPlayerMini(audioUrl: audioUrl!),
                 //选择音频或更换音频
-                if (widget.task.status != UploadTaskStatus.uploading.index)
+                if (widget.task.status != UploadTaskStatus.uploading)
                   Container(
                     margin: const EdgeInsets.only(top: 2),
                     color: colorScheme.primaryContainer,
@@ -136,10 +132,20 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
                             widget.task.clear();
                             widget.task.srcPath = file.path;
                             widget.task.totalSize = file.size;
-                            widget.task.status = UploadTaskStatus.uploading.index;
-                            widget.task.mediaType = MediaType.audio;
+                            widget.task.status = UploadTaskStatus.uploading;
                             widget.task.magicNumber = data;
-                            uploadAudio(widget.task);
+                            var task = widget.task;
+                            MultipartService.doUploadFile(
+                              task: task,
+                              onError: (task) {},
+                              onSuccess: (task) async {
+                                var (link, _) = await FileService.genGetFileUrl(task.fileId!);
+                                audioUrl = link;
+                                setState(() {});
+                              },
+                              onUpload: (task) {},
+                              onAfterStart: (task) {},
+                            );
                           } finally {
                             read?.close();
                           }
@@ -161,46 +167,5 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
         }
       },
     );
-  }
-
-  void uploadAudio(UploadMediaTask task) async {
-    print('开启上传音频任务：${widget.task.srcPath}');
-    //消息接收器
-    var receivePort = ReceivePort();
-    RootIsolateToken rootIsolateToken = RootIsolateToken.instance!;
-    receivePort.listen(
-      (msg) async {
-        if (msg is SendPort) {
-          msg.send([1, task.toJson()]);
-          msg.send([2, Global.user, Global.database!]);
-          msg.send([3, rootIsolateToken]);
-          //表示结束
-          msg.send(null);
-          //获取发送器
-        } else if (msg is List) {
-          //过程消息
-          switch (msg[0]) {
-            case 1: //task
-              task.copy(UploadMediaTask.fromJson(msg[1]));
-              setState(() {});
-              break;
-          }
-        } else if (msg is FormatException) {
-          //上传出现异常
-          task.status = UploadTaskStatus.error.index;
-          task.statusMessage = msg.message;
-        } else if (msg == true) {
-          //上传结束
-          task.status = UploadTaskStatus.finished.index;
-          var (link, staticUrl) = await FileApi.genGetFileUrl(task.fileId!);
-          task.getUrl = link;
-          task.staticUrl = staticUrl;
-          setState(() {});
-        }
-      },
-    );
-
-    isolate = await Isolate.spawn(MultipartService.startUploadIsolate, receivePort.sendPort);
-    isolate!.addOnExitListener(receivePort.sendPort);
   }
 }

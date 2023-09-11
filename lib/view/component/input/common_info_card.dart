@@ -4,13 +4,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constant/media.dart';
-import '../../../domain/task/upload_media_task.dart';
+import '../../../domain/task/single_upload_task.dart';
 import '../media/upload/image_upload_card.dart';
 
 class CommonInfoCard extends StatefulWidget {
   const CommonInfoCard({super.key, required this.coverUploadImage, required this.titleController, required this.introductionController, this.onRefresh});
 
-  final UploadMediaTask coverUploadImage;
+  final SingleUploadTask coverUploadImage;
   final TextEditingController titleController;
   final TextEditingController introductionController;
   final Function? onRefresh;

@@ -5,14 +5,16 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:post_client/config/post_config.dart';
-import 'package:post_client/domain/task/upload_media_task.dart';
+import 'package:post_client/domain/task/single_upload_task.dart';
 import 'package:post_client/view/component/media/upload/image_upload_card.dart';
 import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
 
 import '../../../constant/media.dart';
+import '../../../enums/upload_task.dart';
 import '../../../model/user/user.dart';
+import '../../../service/media/file_service.dart';
 import '../../../service/message/post_service.dart';
 import '../../component/quill/quill_editor.dart';
 
@@ -26,7 +28,7 @@ class PostEditPage extends StatefulWidget {
 class _PostEditPageState extends State<PostEditPage> {
   final QuillController _controller = QuillController.basic();
   final FocusNode focusNode = FocusNode();
-  var imageUploadTaskList = <UploadMediaTask>[];
+  var imageUploadTaskList = <SingleUploadTask>[];
 
   final double imagePadding = 5.0;
   final double imageWidth = 100;
@@ -92,14 +94,15 @@ class _PostEditPageState extends State<PostEditPage> {
                       if (!enablePush) {
                         enablePush = true;
                       }
-                      if (task.status != UploadTaskStatus.finished.index) {
+                      if (task.status != UploadTaskStatus.finished) {
                         ShowSnackBar.error(context: context, message: "图片没有上传完毕");
                         return;
                       }
-                      pictureUrlList.add(task.staticUrl!);
+                      var (_, staticUrl) = await FileService.genGetFileUrl(task.fileId!);
+                      pictureUrlList.add(staticUrl);
                     }
                     if (!enablePush) {
-                      ShowSnackBar.error(context: context, message: "没有内容啊");
+                      if (mounted) ShowSnackBar.error(context: context, message: "没有内容啊");
                       return;
                     }
                     var post = await PostService.createPost(null, null, content, pictureUrlList, targetUserIdList);
@@ -173,12 +176,10 @@ class _PostEditPageState extends State<PostEditPage> {
                       read = await File(file.path!).open();
                       var data = await read.read(16);
                       //消息接收器
-                      var task = UploadMediaTask.all(
+                      var task = SingleUploadTask.file(
                         srcPath: file.path,
-                        totalSize: file.size,
-                        status: UploadTaskStatus.uploading.index,
-                        mediaType: MediaType.gallery,
-                        magicNumber: data,
+                        private: false,
+                        status: UploadTaskStatus.uploading,
                       );
                       imageUploadTaskList.add(task);
                     } finally {

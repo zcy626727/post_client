@@ -1,14 +1,14 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/model/media/audio.dart';
 import 'package:post_client/view/component/media/upload/audio_upload_card.dart';
 import 'package:post_client/view/component/input/common_info_card.dart';
 
 import '../../../constant/media.dart';
-import '../../../domain/task/upload_media_task.dart';
+import '../../../domain/task/multipart_upload_task.dart';
+import '../../../domain/task/single_upload_task.dart';
+import '../../../enums/upload_task.dart';
 import '../../../service/media/audio_service.dart';
+import '../../../service/media/file_service.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
 
@@ -23,8 +23,8 @@ class AudioEditPage extends StatefulWidget {
 }
 
 class _AudioEditPageState extends State<AudioEditPage> {
-  UploadMediaTask audioUploadTask = UploadMediaTask();
-  UploadMediaTask coverUploadImage = UploadMediaTask();
+  MultipartUploadTask audioUploadTask = MultipartUploadTask();
+  SingleUploadTask coverUploadImage = SingleUploadTask();
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
@@ -36,12 +36,13 @@ class _AudioEditPageState extends State<AudioEditPage> {
     super.initState();
     if (widget.audio != null && widget.audio!.id != null) {
       isSave = true;
+      coverUploadImage.status = UploadTaskStatus.finished;
+      coverUploadImage.mediaType = MediaType.gallery;
+      coverUploadImage.coverUrl = widget.audio!.coverUrl;
+      audioUploadTask.fileId = widget.audio!.fileId;
+      audioUploadTask.status = UploadTaskStatus.finished;
       titleController.text = widget.audio!.title ?? "";
       introductionController.text = widget.audio!.introduction ?? "";
-      coverUploadImage.staticUrl = widget.audio!.coverUrl;
-      coverUploadImage.status = UploadTaskStatus.finished.index;
-      coverUploadImage.mediaType = MediaType.gallery;
-      audioUploadTask.fileId = widget.audio!.fileId;
     }
   }
 
@@ -85,17 +86,21 @@ class _AudioEditPageState extends State<AudioEditPage> {
                     ShowSnackBar.error(context: context, message: "还未上传音频");
                     return;
                   }
-                  if (audioUploadTask.status != UploadTaskStatus.finished.index) {
+                  if (audioUploadTask.status != UploadTaskStatus.finished) {
                     ShowSnackBar.error(context: context, message: "音频未上传完成，请稍后");
                     return;
                   }
                   String? coverUrl;
-                  if (coverUploadImage.status != null && coverUploadImage.status != UploadTaskStatus.finished.index) {
+                  if (coverUploadImage.status != null && coverUploadImage.status != UploadTaskStatus.finished) {
                     ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                     return;
                   }
 
-                  coverUrl = coverUploadImage.staticUrl;
+                  if(coverUploadImage.fileId!=null){
+                    var (link, _) = await FileService.genGetFileUrl(coverUploadImage.fileId!);
+                    coverUrl = link;
+                  }
+
                   //执行验证
                   if (formKey.currentState!.validate()) {
                     try {
@@ -132,7 +137,7 @@ class _AudioEditPageState extends State<AudioEditPage> {
                         //新建
                         var video = await AudioService.createAudio(
                           titleController.value.text,
-                          introductionController.value.text ?? "",
+                          introductionController.value.text,
                           audioUploadTask.fileId!,
                           coverUrl,
                           _withPost,

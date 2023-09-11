@@ -2,13 +2,16 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/domain/task/upload_media_task.dart';
+import 'package:post_client/domain/task/single_upload_task.dart';
 import 'package:post_client/model/media/video.dart';
 import 'package:post_client/service/media/video_service.dart';
 import 'package:post_client/view/component/input/common_info_card.dart';
 import 'package:post_client/view/component/media/upload/video_upload_card.dart';
 
 import '../../../constant/media.dart';
+import '../../../domain/task/multipart_upload_task.dart';
+import '../../../enums/upload_task.dart';
+import '../../../service/media/file_service.dart';
 import '../../component/media/upload/image_upload_card.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
@@ -24,8 +27,8 @@ class VideoEditPage extends StatefulWidget {
 }
 
 class _VideoEditPageState extends State<VideoEditPage> {
-  UploadMediaTask videoUploadTask = UploadMediaTask();
-  UploadMediaTask coverUploadImage = UploadMediaTask();
+  MultipartUploadTask videoUploadTask = MultipartUploadTask();
+  SingleUploadTask coverUploadImage = SingleUploadTask();
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
@@ -39,9 +42,9 @@ class _VideoEditPageState extends State<VideoEditPage> {
       isSave = true;
       titleController.text = widget.video!.title ?? "";
       introductionController.text = widget.video!.introduction ?? "";
-      coverUploadImage.staticUrl = widget.video!.coverUrl;
-      coverUploadImage.status = UploadTaskStatus.finished.index;
+      coverUploadImage.status = UploadTaskStatus.finished;
       coverUploadImage.mediaType = MediaType.gallery;
+      coverUploadImage.coverUrl = widget.video!.coverUrl;
       videoUploadTask.fileId = widget.video!.fileId;
     }
   }
@@ -88,16 +91,19 @@ class _VideoEditPageState extends State<VideoEditPage> {
                         ShowSnackBar.error(context: context, message: "还未上传视频");
                         return;
                       }
-                      if (videoUploadTask.status != UploadTaskStatus.finished.index) {
+                      if (videoUploadTask.status != UploadTaskStatus.finished) {
                         ShowSnackBar.error(context: context, message: "视频未上传完成，请稍后");
                         return;
                       }
-                      String? coverUrl;
-                      if (coverUploadImage.status != UploadTaskStatus.finished.index) {
+                      if (coverUploadImage.status != UploadTaskStatus.finished) {
                         ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                         return;
-                      } else {
-                        coverUrl = coverUploadImage.staticUrl;
+                      }
+
+                      String? coverUrl;
+                      if (coverUploadImage.fileId != null) {
+                        var (_, staticUrl) = await FileService.genGetFileUrl(coverUploadImage.fileId!);
+                        coverUrl = staticUrl;
                       }
 
                       if (isSave) {
@@ -167,24 +173,24 @@ class _VideoEditPageState extends State<VideoEditPage> {
                 introductionController: introductionController,
               ),
               if (!isSave)
-              Container(
-                color: colorScheme.surface,
-                child: ListTile(
-                  leading: Text(
-                    '同时发布动态',
-                    style: TextStyle(color: colorScheme.onSurface),
-                  ),
-                  trailing: Checkbox(
-                    fillColor: MaterialStateProperty.all(_withPost ? colorScheme.primary : colorScheme.onSurface),
-                    value: _withPost,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _withPost = value!;
-                      });
-                    },
+                Container(
+                  color: colorScheme.surface,
+                  child: ListTile(
+                    leading: Text(
+                      '同时发布动态',
+                      style: TextStyle(color: colorScheme.onSurface),
+                    ),
+                    trailing: Checkbox(
+                      fillColor: MaterialStateProperty.all(_withPost ? colorScheme.primary : colorScheme.onSurface),
+                      value: _withPost,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _withPost = value!;
+                        });
+                      },
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

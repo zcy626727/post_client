@@ -24,7 +24,7 @@ class _SignInPageState extends State<SignInPage> {
   RegExp phoneExp = RegExp(r'^((13\d)|(14\d)|(15\d)|(16\d)|(17\d)|(18\d)|(19\d))\d{8}$');
 
   String _phoneNumber = "18348542622";
-  String _password = "18348542622";
+  String _password = "1234567890";
   bool _signInIng = false;
 
   @override

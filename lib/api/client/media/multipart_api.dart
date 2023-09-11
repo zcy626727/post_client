@@ -6,7 +6,6 @@ class MultipartApi {
   //初始化上传任务
   static Future<MultipartInfo> initMultipartUpload(
     String md5,
-    bool private,
     int fileSize,
     List<int> magicNumber,
   ) async {
@@ -15,7 +14,7 @@ class MultipartApi {
       data: {
         "md5": md5,
         "fileSize": fileSize,
-        "private": private,
+        "private": true,
         "magicNumber": magicNumber,
       },
       options: MediaHttpConfig.options.copyWith(extra: {

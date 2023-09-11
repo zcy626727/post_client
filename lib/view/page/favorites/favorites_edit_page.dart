@@ -5,8 +5,10 @@ import 'package:post_client/view/component/input/common_dropdown.dart';
 import 'package:post_client/view/component/input/common_info_card.dart';
 
 import '../../../constant/media.dart';
-import '../../../domain/task/upload_media_task.dart';
+import '../../../domain/task/single_upload_task.dart';
+import '../../../enums/upload_task.dart';
 import '../../../service/favorites_service.dart';
+import '../../../service/media/file_service.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
 
@@ -21,7 +23,7 @@ class FavoritesEditPage extends StatefulWidget {
 }
 
 class _FavoritesEditPageState extends State<FavoritesEditPage> {
-  UploadMediaTask coverUploadImage = UploadMediaTask();
+  SingleUploadTask coverUploadImage = SingleUploadTask();
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final introductionController = TextEditingController();
@@ -35,8 +37,7 @@ class _FavoritesEditPageState extends State<FavoritesEditPage> {
       isSave = true;
       titleController.text = widget.favorites!.title ?? "";
       introductionController.text = widget.favorites!.introduction ?? "";
-      coverUploadImage.staticUrl = widget.favorites!.coverUrl;
-      coverUploadImage.status = UploadTaskStatus.finished.index;
+      coverUploadImage.status = UploadTaskStatus.finished;
       coverUploadImage.mediaType = MediaType.gallery;
     }
   }
@@ -80,16 +81,22 @@ class _FavoritesEditPageState extends State<FavoritesEditPage> {
                   //执行验证
                   if (formKey.currentState!.validate()) {
                     try {
-                      if (coverUploadImage.status != null && coverUploadImage.status != UploadTaskStatus.finished.index) {
+                      if (coverUploadImage.status != null && coverUploadImage.status != UploadTaskStatus.finished) {
                         ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                         return;
                       }
+
+                      String? coverUrl;
+                      if (coverUploadImage.fileId != null) {
+                        var (_, staticUrl) = await FileService.genGetFileUrl(coverUploadImage.fileId!);
+                        coverUrl = staticUrl;
+                      }
+
                       if (isSave) {
                         //保存
                         String? newTitle;
                         String? newIntroduction;
                         String? newCoverUrl;
-                        int? newFileId;
 
                         Favorites f = widget.favorites!;
 
@@ -101,8 +108,8 @@ class _FavoritesEditPageState extends State<FavoritesEditPage> {
                           newIntroduction = introductionController.value.text;
                           f.introduction = newIntroduction;
                         }
-                        if (coverUploadImage.staticUrl != widget.favorites!.coverUrl) {
-                          newCoverUrl = coverUploadImage.staticUrl;
+                        if (coverUrl != null && coverUrl != widget.favorites!.coverUrl) {
+                          newCoverUrl = coverUrl;
                           f.coverUrl = newCoverUrl;
                         }
                         await FavoritesService.updateFavoritesData(widget.favorites!.id!, widget.favorites!.sourceType!, newTitle, newIntroduction, newCoverUrl);
@@ -114,7 +121,7 @@ class _FavoritesEditPageState extends State<FavoritesEditPage> {
                         var favorites = await FavoritesService.createFavorites(
                           titleController.text,
                           introductionController.text,
-                          coverUploadImage.staticUrl,
+                          coverUrl,
                           _selectedSource.$1,
                         );
                       }

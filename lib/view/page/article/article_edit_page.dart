@@ -6,8 +6,10 @@ import 'package:post_client/model/media/article.dart';
 import 'package:post_client/view/component/input/common_info_card.dart';
 
 import '../../../constant/media.dart';
-import '../../../domain/task/upload_media_task.dart';
+import '../../../domain/task/single_upload_task.dart';
+import '../../../enums/upload_task.dart';
 import '../../../service/media/article_service.dart';
+import '../../../service/media/file_service.dart';
 import '../../component/quill/quill_editor.dart';
 import '../../component/quill/quill_tool_bar.dart';
 import '../../component/show/show_snack_bar.dart';
@@ -26,7 +28,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
   final QuillController _contentController = QuillController.basic();
   final FocusNode focusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
-  UploadMediaTask coverUploadImage = UploadMediaTask();
+  SingleUploadTask coverUploadImage = SingleUploadTask();
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
   bool _withPost = true;
@@ -40,8 +42,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
       isSave = true;
       titleController.text = widget.article!.title ?? "";
       introductionController.text = widget.article!.introduction ?? "";
-      coverUploadImage.staticUrl = widget.article!.coverUrl;
-      coverUploadImage.status = UploadTaskStatus.finished.index;
+      coverUploadImage.status = UploadTaskStatus.finished;
       coverUploadImage.mediaType = MediaType.gallery;
       _contentController.document = Document.fromJson(json.decode(widget.article!.content ?? ""));
     }
@@ -94,11 +95,13 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                         return;
                       }
                       String? coverUrl;
-                      if (coverUploadImage.status != null && coverUploadImage.status != UploadTaskStatus.finished.index) {
+                      if (coverUploadImage.status != null && coverUploadImage.status != UploadTaskStatus.finished) {
                         ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                         return;
                       }
-                      coverUrl = coverUploadImage.staticUrl;
+                      var (_, staticUrl) = await FileService.genGetFileUrl(coverUploadImage.fileId!);
+
+                      coverUrl = staticUrl;
 
                       if (isSave) {
                         //保存
@@ -130,7 +133,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                         }
                       } else {
                         //新建
-                        var article = await ArticleService.createArticle(
+                        var _ = await ArticleService.createArticle(
                           titleController.value.text,
                           introductionController.value.text,
                           content,

@@ -1,18 +1,14 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
-import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/util/unit.dart';
 
-import '../../../../api/client/media/file_api.dart';
-import '../../../../config/global.dart';
-import '../../../../constant/media.dart';
-import '../../../../domain/task/upload_media_task.dart';
+import '../../../../domain/task/multipart_upload_task.dart';
+import '../../../../enums/upload_task.dart';
 import '../../../../service/media/file_service.dart';
 import '../../../../service/media/multipart_service.dart';
 import '../../../widget/button/common_action_one_button.dart';
@@ -21,7 +17,7 @@ import '../../../widget/player/common_video_player.dart';
 class VideoUploadCard extends StatefulWidget {
   const VideoUploadCard({required super.key, required this.task});
 
-  final UploadMediaTask task;
+  final MultipartUploadTask task;
 
   @override
   State<VideoUploadCard> createState() => _VideoUploadCardState();
@@ -47,7 +43,7 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
     try {
       if (widget.task.fileId != null) {
         var (url, _) = await FileService.genGetFileUrl(widget.task.fileId!);
-        widget.task.getUrl = url;
+        videoUrl = url;
       }
     } on DioException catch (e) {
       log(e.toString());
@@ -70,7 +66,7 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
             color: colorScheme.surface,
             child: Column(
               children: [
-                if (widget.task.status == UploadTaskStatus.uploading.index) //正在上传
+                if (widget.task.status == UploadTaskStatus.uploading) //正在上传
                   SizedBox(
                     height: 130,
                     child: Column(
@@ -101,15 +97,15 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
                       ],
                     ),
                   ),
-                if (widget.task.getUrl != null)
+                if (videoUrl != null)
                   AspectRatio(
                     aspectRatio: 1.8,
                     child: Container(
                       color: colorScheme.background,
-                      child: CommonVideoPlayer(videoUrl: widget.task.getUrl!),
+                      child: CommonVideoPlayer(videoUrl: videoUrl!),
                     ),
                   ),
-                if (widget.task.status != UploadTaskStatus.uploading.index)
+                if (widget.task.status != UploadTaskStatus.uploading)
                   Container(
                     margin: const EdgeInsets.only(top: 2),
                     color: colorScheme.primaryContainer,
@@ -130,10 +126,19 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
                             widget.task.clear();
                             widget.task.srcPath = file.path;
                             widget.task.totalSize = file.size;
-                            widget.task.status = UploadTaskStatus.init.index;
-                            widget.task.mediaType = MediaType.audio;
-                            widget.task.magicNumber = data;
-                            uploadVideo(widget.task);
+                            widget.task.status = UploadTaskStatus.init;
+                            var task = widget.task;
+                            MultipartService.doUploadFile(
+                              task: task,
+                              onError: (task) {},
+                              onSuccess: (task) async {
+                                var (link, _) = await FileService.genGetFileUrl(task.fileId!);
+                                videoUrl = link;
+                                setState(() {});
+                              },
+                              onUpload: (task) {},
+                              onAfterStart: (task) {},
+                            );
                           } finally {
                             read?.close();
                           }
@@ -155,47 +160,5 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
         }
       },
     );
-  }
-
-  void uploadVideo(UploadMediaTask task) async {
-    print('开启上传音频任务：${widget.task.srcPath}');
-
-    //消息接收器
-    var receivePort = ReceivePort();
-    RootIsolateToken rootIsolateToken = RootIsolateToken.instance!;
-    receivePort.listen(
-      (msg) async {
-        if (msg is SendPort) {
-          msg.send([1, task.toJson()]);
-          msg.send([2, Global.user, Global.database!]);
-          msg.send([3, rootIsolateToken]);
-          //表示结束
-          msg.send(null);
-          //获取发送器
-        } else if (msg is List) {
-          //过程消息
-          switch (msg[0]) {
-            case 1: //task
-              task.copy(UploadMediaTask.fromJson(msg[1]));
-              setState(() {});
-              break;
-          }
-        } else if (msg is FormatException) {
-          //上传出现异常
-          task.status = UploadTaskStatus.error.index;
-          task.statusMessage = msg.message;
-        } else if (msg == true) {
-          //上传结束
-          task.status = UploadTaskStatus.finished.index;
-          var (link, staticUrl) = await FileApi.genGetFileUrl(task.fileId!);
-          task.getUrl = link;
-          task.staticUrl = staticUrl;
-          setState(() {});
-        }
-      },
-    );
-
-    isolate = await Isolate.spawn(MultipartService.startUploadIsolate, receivePort.sendPort);
-    isolate!.addOnExitListener(receivePort.sendPort);
   }
 }

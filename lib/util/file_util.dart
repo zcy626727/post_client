@@ -42,15 +42,15 @@ class FileUtil {
 
   //文件服务器
   //文件上传
-  static Future<bool> uploadFile(String urlPath, List<int> data) async {
+  static Future<bool> uploadFile(String urlPath, List<int> data, {ProgressCallback? onUpload}) async {
     var _ = await Dio().put(
       urlPath,
       data: Stream.fromIterable(data.map((e) => [e])),
+      onSendProgress: onUpload,
       options: Options(
         headers: {
           Headers.contentLengthHeader: data.length,
-          Headers.contentTypeHeader:
-              "multipart/form-data" //后加的，如果上传文件不一致可以考虑删除试试
+          Headers.contentTypeHeader: "multipart/form-data" //后加的，如果上传文件不一致可以考虑删除试试
         },
       ),
     );

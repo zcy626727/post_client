@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:post_client/api/client/media_http_config.dart';
-import 'package:post_client/domain/task/upload_media_task.dart';
+import 'package:post_client/domain/task/single_upload_task.dart';
 import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/model/media/media.dart';
 

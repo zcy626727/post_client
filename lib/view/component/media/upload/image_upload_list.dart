@@ -5,7 +5,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../constant/media.dart';
-import '../../../../domain/task/upload_media_task.dart';
+import '../../../../domain/task/multipart_upload_task.dart';
+import '../../../../domain/task/single_upload_task.dart';
+import '../../../../enums/upload_task.dart';
 import '../../../widget/dialog/confirm_alert_dialog.dart';
 import '../../show/show_snack_bar.dart';
 import 'image_upload_card.dart';
@@ -13,9 +15,9 @@ import 'image_upload_card.dart';
 class ImageUploadList extends StatefulWidget {
   const ImageUploadList({super.key, required this.imageUploadTaskList, required this.maxUploadNum, required this.onDeleteImage});
 
-  final List<UploadMediaTask> imageUploadTaskList;
+  final List<SingleUploadTask> imageUploadTaskList;
   final int maxUploadNum;
-  final Function(UploadMediaTask) onDeleteImage;
+  final Function(SingleUploadTask) onDeleteImage;
 
   @override
   State<ImageUploadList> createState() => _ImageUploadListState();
@@ -59,7 +61,11 @@ class _ImageUploadListState extends State<ImageUploadList> {
                       read = await File(result.files.single.path!).open();
                       var data = await read.read(16);
                       //消息接收器
-                      var task = UploadMediaTask.all(srcPath: file.path, totalSize: file.size, status: UploadTaskStatus.uploading.index, mediaType: MediaType.gallery, magicNumber: data);
+                      var task = SingleUploadTask.file(
+                        srcPath: file.path,
+                        private: false,
+                        status: UploadTaskStatus.uploading,
+                      );
                       widget.imageUploadTaskList.add(task);
                     } finally {
                       read?.close();
@@ -85,8 +91,9 @@ class _ImageUploadListState extends State<ImageUploadList> {
                 ),
               );
             } else {
+              //已经有图片了
               return ImageUploadCard(
-                key: ValueKey(widget.imageUploadTaskList[index].staticUrl),
+                key: ValueKey(widget.imageUploadTaskList[index]),
                 task: widget.imageUploadTaskList[index],
                 onDeleteImage: widget.onDeleteImage,
               );

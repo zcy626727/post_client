@@ -1,17 +1,13 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/config/constants.dart';
 import 'package:post_client/config/media_config.dart';
 import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/service/media/gallery_service.dart';
 import 'package:post_client/view/component/input/common_info_card.dart';
 
-import '../../../config/post_config.dart';
 import '../../../constant/media.dart';
-import '../../../domain/task/upload_media_task.dart';
-import '../../component/media/upload/image_upload_card.dart';
+import '../../../domain/task/single_upload_task.dart';
+import '../../../enums/upload_task.dart';
+import '../../../service/media/file_service.dart';
 import '../../component/media/upload/image_upload_list.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
@@ -27,8 +23,8 @@ class GalleryEditPage extends StatefulWidget {
 }
 
 class _GalleryEditPageState extends State<GalleryEditPage> {
-  var imageUploadTaskList = <UploadMediaTask>[];
-  UploadMediaTask coverUploadImage = UploadMediaTask();
+  var imageUploadTaskList = <SingleUploadTask>[];
+  SingleUploadTask coverUploadImage = SingleUploadTask();
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
@@ -45,15 +41,13 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
       isSave = true;
       titleController.text = widget.gallery!.title ?? "";
       introductionController.text = widget.gallery!.introduction ?? "";
-      coverUploadImage.staticUrl = widget.gallery!.coverUrl;
-      coverUploadImage.status = UploadTaskStatus.finished.index;
+      coverUploadImage.status = UploadTaskStatus.finished;
       coverUploadImage.mediaType = MediaType.gallery;
       if (widget.gallery!.thumbnailUrlList != null) {
         var len = widget.gallery!.thumbnailUrlList!.length;
         for (int i = 0; i < len; i++) {
-          var t = UploadMediaTask();
-          t.staticUrl = widget.gallery!.thumbnailUrlList![i];
-          t.status = UploadTaskStatus.finished.index;
+          var t = SingleUploadTask();
+          t.status = UploadTaskStatus.finished;
           t.fileId = widget.gallery!.fileIdList![i];
           imageUploadTaskList.add(t);
         }
@@ -107,13 +101,16 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                     try {
                       var fileIdList = <int>[];
                       var thumbnailUrlList = <String>[];
+
                       for (var task in imageUploadTaskList) {
                         fileIdList.add(task.fileId!);
-                        thumbnailUrlList.add(task.staticUrl!);
+                        thumbnailUrlList.add(task.coverUrl!);
                       }
+
                       var coverUrl = thumbnailUrlList[0];
-                      if (coverUploadImage.staticUrl != null) {
-                        coverUrl = coverUploadImage.staticUrl!;
+                      if (coverUploadImage.fileId != null) {
+                        var (_, staticUrl) = await FileService.genGetFileUrl(coverUploadImage.fileId!);
+                        coverUrl = staticUrl;
                       }
 
                       if (isSave) {
@@ -188,7 +185,7 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                 child: ImageUploadList(
                   imageUploadTaskList: imageUploadTaskList,
                   maxUploadNum: MediaConfig.maxGalleryUploadImageNum,
-                  onDeleteImage: (UploadMediaTask task) {
+                  onDeleteImage: (SingleUploadTask task) {
                     imageUploadTaskList.remove(task);
                   },
                 ),
