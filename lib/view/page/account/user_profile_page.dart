@@ -84,6 +84,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   margin: const EdgeInsets.symmetric(vertical: 5),
                   height: 80,
                   width: 80,
+                  color: Colors.grey,
                   child: ImageUploadCard(
                     key: ValueKey(Global.user.id),
                     task: _avatarTask,

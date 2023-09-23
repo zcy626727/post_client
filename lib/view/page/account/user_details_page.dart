@@ -207,7 +207,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   child: widget.user.id != null && widget.user.id == Global.user.id
                       ? OutlinedButton(
                           onPressed: () async {
-                            await Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfilePage()));
+                            await Navigator.push(context, MaterialPageRoute(builder: (context) => const UserProfilePage()));
                           },
                           child: const Text("编辑资料"))
                       : _follow == null

@@ -60,10 +60,20 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
 
+
     return FutureBuilder(
       future: _futureBuilderFuture,
       builder: (BuildContext context, AsyncSnapshot snapShot) {
         if (snapShot.connectionState == ConnectionState.done) {
+          int likeNum = widget.media.likeNum ?? 0;
+          if (likeNum == 0 && _mediaFeedback.like == true) {
+            likeNum = 1;
+          }
+
+          int dislikeNum = widget.media.dislikeNum ?? 0;
+          if (dislikeNum == 0 && _mediaFeedback.dislike == true) {
+            dislikeNum = 1;
+          }
           return Container(
             color: colorScheme.primary,
             margin: const EdgeInsets.symmetric(
@@ -77,7 +87,7 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
                   MediaFeedbackButton(
                     iconData: Icons.thumb_up_alt,
                     selected: _mediaFeedback.like ?? false,
-                    text: "${widget.media.likeNum ?? 0}",
+                    text: "$likeNum",
                     onPressed: () async {
                       if (Global.user.id == null) {
                         //显示登录页
@@ -97,7 +107,7 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
                   MediaFeedbackButton(
                     iconData: Icons.thumb_down_alt,
                     selected: _mediaFeedback.dislike ?? false,
-                    text: "${widget.media.dislikeNum ?? 0}",
+                    text: "$dislikeNum",
                     onPressed: () async {
                       if (Global.user.id == null) {
                         //显示登录页
@@ -176,7 +186,6 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
                     onPressed: () async {
                       if (Global.user.id == null) {
                         //todo 显示登录页
-
                       } else {
                         if (_mediaFeedback.share != true) {
                           _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, share: 1);
