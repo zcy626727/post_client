@@ -147,25 +147,34 @@ class AudioApi {
 
   static List<Audio> _parseAudioListWithUser(Response<dynamic> r) {
     Map<int, User> userMap = {};
-    for (var userJson in r.data['userList']) {
-      var user = User.fromJson(userJson);
-      userMap[user.id ?? 0] = user;
+    if (r.data['userList'] != null) {
+      for (var userJson in r.data['userList']) {
+        var user = User.fromJson(userJson);
+        userMap[user.id ?? 0] = user;
+      }
     }
+
     List<Audio> audioList = [];
-    for (var audioJson in r.data['audioList']) {
-      var audio = Audio.fromJson(audioJson);
-      audio.user = userMap[audio.userId];
-      audioList.add(audio);
+    if (r.data['audioList'] != null) {
+      for (var audioJson in r.data['audioList']) {
+        var audio = Audio.fromJson(audioJson);
+        audio.user = userMap[audio.userId];
+        audioList.add(audio);
+      }
     }
+
     return audioList;
   }
 
   static List<Audio> _parseAudio(Response<dynamic> r) {
     List<Audio> audioList = [];
-    for (var audioJson in r.data['audioList']) {
-      var audio = Audio.fromJson(audioJson);
-      audioList.add(audio);
+    if (r.data['audioList'] != null) {
+      for (var audioJson in r.data['audioList']) {
+        var audio = Audio.fromJson(audioJson);
+        audioList.add(audio);
+      }
     }
+
     return audioList;
   }
 }

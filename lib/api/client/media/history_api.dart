@@ -99,9 +99,11 @@ class HistoryApi {
       }),
     );
     List<History> historyList = [];
-    for (var historyJson in r.data['historyList']) {
-      var history = History.fromJson(historyJson);
-      historyList.add(history);
+    if (r.data['historyList'] != null) {
+      for (var historyJson in r.data['historyList']) {
+        var history = History.fromJson(historyJson);
+        historyList.add(history);
+      }
     }
     return historyList;
   }

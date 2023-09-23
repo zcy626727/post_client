@@ -45,8 +45,11 @@ class PostService {
     for (var post in postList) {
       post.user = user;
     }
-    await fillMedia(postList);
-    await fillFeedback(postList);
+    if (postList.isNotEmpty) {
+      await fillMedia(postList);
+      await fillFeedback(postList);
+    }
+
     return postList;
   }
 

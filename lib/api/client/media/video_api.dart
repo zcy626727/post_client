@@ -144,24 +144,30 @@ class VideoApi {
 
   static List<Video> _parseVideoListWithUser(Response<dynamic> r) {
     Map<int, User> userMap = {};
-    for (var userJson in r.data['userList']) {
-      var user = User.fromJson(userJson);
-      userMap[user.id ?? 0] = user;
+    if (r.data['userList'] != null) {
+      for (var userJson in r.data['userList']) {
+        var user = User.fromJson(userJson);
+        userMap[user.id ?? 0] = user;
+      }
     }
     List<Video> videoList = [];
-    for (var videoJson in r.data['videoList']) {
-      var video = Video.fromJson(videoJson);
-      video.user = userMap[video.userId];
-      videoList.add(video);
+    if (r.data['videoList'] != null) {
+      for (var videoJson in r.data['videoList']) {
+        var video = Video.fromJson(videoJson);
+        video.user = userMap[video.userId];
+        videoList.add(video);
+      }
     }
     return videoList;
   }
 
   static List<Video> _parseVideo(Response<dynamic> r) {
     List<Video> videoList = [];
-    for (var videoJson in r.data['videoList']) {
-      var video = Video.fromJson(videoJson);
-      videoList.add(video);
+    if (r.data['videoList'] != null) {
+      for (var videoJson in r.data['videoList']) {
+        var video = Video.fromJson(videoJson);
+        videoList.add(video);
+      }
     }
     return videoList;
   }

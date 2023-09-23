@@ -105,10 +105,13 @@ class ArticleApi {
       }),
     );
     List<Article> articleList = [];
-    for (var articleJson in r.data['articleList']) {
-      var article = Article.fromJson(articleJson);
-      articleList.add(article);
+    if (r.data['articleList'] != null) {
+      for (var articleJson in r.data['articleList']) {
+        var article = Article.fromJson(articleJson);
+        articleList.add(article);
+      }
     }
+
     return articleList;
   }
 
@@ -151,16 +154,22 @@ class ArticleApi {
 
   static List<Article> _parseArticleWithUser(Response<dynamic> r) {
     Map<int, User> userMap = {};
-    for (var userJson in r.data['userList']) {
-      var user = User.fromJson(userJson);
-      userMap[user.id ?? 0] = user;
+    if (r.data['userList'] != null) {
+      for (var userJson in r.data['userList']) {
+        var user = User.fromJson(userJson);
+        userMap[user.id ?? 0] = user;
+      }
     }
+
     List<Article> articleList = [];
-    for (var articleJson in r.data['articleList']) {
-      var article = Article.fromJson(articleJson);
-      article.user = userMap[article.userId];
-      articleList.add(article);
+    if (r.data['articleList'] != null) {
+      for (var articleJson in r.data['articleList']) {
+        var article = Article.fromJson(articleJson);
+        article.user = userMap[article.userId];
+        articleList.add(article);
+      }
     }
+
     return articleList;
   }
 }

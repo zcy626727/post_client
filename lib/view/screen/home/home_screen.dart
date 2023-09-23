@@ -13,6 +13,8 @@ import 'package:provider/provider.dart';
 import '../../../model/media/article.dart';
 import '../../../model/media/audio.dart';
 import '../../../model/media/video.dart';
+import '../../../model/message/feed_feedback.dart';
+import '../../../model/message/post.dart';
 import '../../../model/user/user.dart';
 import '../../../service/media/article_service.dart';
 import '../../../service/media/audio_service.dart';
@@ -21,6 +23,7 @@ import '../../../state/user_state.dart';
 import '../../component/media/list/article_list_tile.dart';
 import '../../component/media/list/audio_list_tile.dart';
 import '../../component/media/list/gallery_list_tile.dart';
+import '../../component/post/post_list_tile.dart';
 import '../../page/search/search_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -145,16 +148,29 @@ class _HomeScreenState extends State<HomeScreen> {
       child: TabBarView(
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          PostList(
+          CommonItemList<Post>(
             onLoad: (int page) async {
-              var postList = await PostService.getPostListRandom(20);
-
+              var postList = await  PostService.getPostListRandom(20);
               return postList;
             },
-            enableRefresh: true,
             itemName: "动态",
             itemHeight: null,
+            isGrip: false,
+            gripAspectRatio: 1,
             enableScrollbar: true,
+            itemBuilder: (ctx, post, postList, onFresh) {
+              return PostListTile(
+                key: ValueKey(post.id),
+                post: post,
+                onDeletePost: (deletedPost) {
+                  if (postList != null) {
+                    postList.remove(deletedPost);
+                    setState(() {});
+                  }
+                },
+                feedback: post.feedback ?? FeedFeedback(),
+              );
+            },
           ),
           CommonItemList<Gallery>(
             onLoad: (int page) async {

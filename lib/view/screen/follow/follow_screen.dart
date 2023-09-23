@@ -11,7 +11,11 @@ import 'package:post_client/view/page/account/user_details_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constant/post.dart';
+import '../../../model/message/feed_feedback.dart';
+import '../../../model/message/post.dart';
 import '../../../service/message/post_service.dart';
+import '../../component/post/post_list_tile.dart';
+import '../../widget/common_item_list.dart';
 
 class FollowScreen extends StatefulWidget {
   const FollowScreen({super.key});
@@ -124,16 +128,29 @@ class _FollowScreenState extends State<FollowScreen> {
                   ),
                 ),
                 Expanded(
-                  child: PostList(
-                    key: ValueKey(_sourceType),
+                  child: CommonItemList<Post>(
                     onLoad: (int page) async {
                       var postList = await PostService.getFolloweePostList(_sourceType, page, 20);
                       return postList;
                     },
-                    enableRefresh: true,
                     itemName: "动态",
                     itemHeight: null,
+                    isGrip: false,
+                    gripAspectRatio: 1,
                     enableScrollbar: true,
+                    itemBuilder: (ctx, post, postList, onFresh) {
+                      return PostListTile(
+                        key: ValueKey(post.id),
+                        post: post,
+                        onDeletePost: (deletedPost) {
+                          if (postList != null) {
+                            postList.remove(deletedPost);
+                            setState(() {});
+                          }
+                        },
+                        feedback: post.feedback ?? FeedFeedback(),
+                      );
+                    },
                   ),
                 ),
               ],

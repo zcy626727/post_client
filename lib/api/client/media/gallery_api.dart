@@ -148,25 +148,32 @@ class GalleryApi {
 
   static List<Gallery> _parseGalleryListWithUser(Response<dynamic> r) {
     Map<int, User> userMap = {};
-    for (var userJson in r.data['userList']) {
-      var user = User.fromJson(userJson);
-      userMap[user.id ?? 0] = user;
+    if (r.data['userList'] != null) {
+      for (var userJson in r.data['userList']) {
+        var user = User.fromJson(userJson);
+        userMap[user.id ?? 0] = user;
+      }
     }
     List<Gallery> galleryList = [];
-    for (var galleryJson in r.data['galleryList']) {
-      var gallery = Gallery.fromJson(galleryJson);
-      gallery.user = userMap[gallery.userId];
-      galleryList.add(gallery);
+    if (r.data['galleryList'] != null) {
+      for (var galleryJson in r.data['galleryList']) {
+        var gallery = Gallery.fromJson(galleryJson);
+        gallery.user = userMap[gallery.userId];
+        galleryList.add(gallery);
+      }
     }
     return galleryList;
   }
 
   static List<Gallery> _parseGallery(Response<dynamic> r) {
     List<Gallery> galleryList = [];
-    for (var galleryJson in r.data['galleryList']) {
-      var gallery = Gallery.fromJson(galleryJson);
-      galleryList.add(gallery);
+    if (r.data['galleryList'] != null) {
+      for (var galleryJson in r.data['galleryList']) {
+        var gallery = Gallery.fromJson(galleryJson);
+        galleryList.add(gallery);
+      }
     }
+
     return galleryList;
   }
 }

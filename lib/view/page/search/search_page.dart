@@ -11,6 +11,8 @@ import '../../../model/media/article.dart';
 import '../../../model/media/audio.dart';
 import '../../../model/media/gallery.dart';
 import '../../../model/media/video.dart';
+import '../../../model/message/feed_feedback.dart';
+import '../../../model/message/post.dart';
 import '../../../service/media/article_service.dart';
 import '../../../service/media/audio_service.dart';
 import '../../../service/media/gallery_service.dart';
@@ -20,6 +22,7 @@ import '../../component/media/list/audio_list_tile.dart';
 import '../../component/media/list/gallery_list_tile.dart';
 import '../../component/media/list/video_list_tile.dart';
 import '../../component/post/post_list.dart';
+import '../../component/post/post_list_tile.dart';
 import '../../widget/common_item_list.dart';
 
 class SearchPage extends StatefulWidget {
@@ -157,16 +160,29 @@ class _SearchPageState extends State<SearchPage> {
         key: ValueKey(DateTime.now()),
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          PostList(
+          CommonItemList<Post>(
             onLoad: (int page) async {
               var postList = await PostService.searchPost(_keyword, page, 20);
-
               return postList;
             },
-            enableRefresh: true,
             itemName: "动态",
             itemHeight: null,
+            isGrip: false,
+            gripAspectRatio: 1,
             enableScrollbar: true,
+            itemBuilder: (ctx, post, postList, onFresh) {
+              return PostListTile(
+                key: ValueKey(post.id),
+                post: post,
+                onDeletePost: (deletedPost) {
+                  if (postList != null) {
+                    postList.remove(deletedPost);
+                    setState(() {});
+                  }
+                },
+                feedback: post.feedback ?? FeedFeedback(),
+              );
+            },
           ),
           CommonItemList<Gallery>(
             onLoad: (int page) async {

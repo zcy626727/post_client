@@ -50,6 +50,8 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
 
   List<T>? _itemList;
 
+  bool noData = false;
+
   //当前页数
   int _page = 0;
 
@@ -70,6 +72,8 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
       var list = await widget.onLoad(_page);
       if (_itemList == null) {
         _itemList = list;
+      } else if (list.isEmpty) {
+        noData = true;
       } else {
         _itemList!.addAll(list);
       }
@@ -104,6 +108,8 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
         //获取
         _itemList!.addAll(list);
         _page++;
+      } else {
+        noData = true;
       }
       _refreshController.finishLoad();
       if (mounted) setState(() {});
@@ -149,7 +155,7 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
       footer: CupertinoFooter(backgroundColor: colorScheme.primaryContainer, foregroundColor: colorScheme.onPrimaryContainer),
       controller: _refreshController,
       onRefresh: _onRefresh,
-      onLoad: _onLoading,
+      onLoad: noData ? null : _onLoading,
       child: GridView.builder(
         controller: ScrollController(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -190,7 +196,7 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
       footer: CupertinoFooter(backgroundColor: colorScheme.primaryContainer, foregroundColor: colorScheme.onPrimaryContainer),
       controller: _refreshController,
       onRefresh: widget.enableRefresh ? _onRefresh : null,
-      onLoad: widget.enableLoad ? _onLoading : null,
+      onLoad: widget.enableLoad ? (noData ? null : _onLoading) : null,
       child: widget.enableScrollbar
           ? Scrollbar(
               child: ListView.builder(

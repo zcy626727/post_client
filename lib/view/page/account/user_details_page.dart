@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
+import 'package:post_client/model/message/post.dart';
 import 'package:post_client/model/user/follow.dart';
 import 'package:post_client/service/user/follow_service.dart';
 import 'package:post_client/state/user_state.dart';
@@ -17,6 +18,7 @@ import '../../../model/media/article.dart';
 import '../../../model/media/audio.dart';
 import '../../../model/media/gallery.dart';
 import '../../../model/media/video.dart';
+import '../../../model/message/feed_feedback.dart';
 import '../../../model/user/user.dart';
 import '../../../service/media/article_service.dart';
 import '../../../service/media/audio_service.dart';
@@ -27,6 +29,7 @@ import '../../component/media/list/article_list_tile.dart';
 import '../../component/media/list/audio_list_tile.dart';
 import '../../component/media/list/gallery_list_tile.dart';
 import '../../component/media/list/video_list_tile.dart';
+import '../../component/post/post_list_tile.dart';
 
 class UserDetailPage extends StatefulWidget {
   const UserDetailPage({Key? key, required this.user}) : super(key: key);
@@ -259,15 +262,39 @@ class _UserDetailPageState extends State<UserDetailPage> {
       child: TabBarView(
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          PostList(
+          // PostList(
+          //   onLoad: (int page) async {
+          //     var postList = await PostService.getPostListByUserId(widget.user, page, 20);
+          //     return postList;
+          //   },
+          //   enableRefresh: true,
+          //   itemName: "动态",
+          //   itemHeight: null,
+          //   enableScrollbar: true,
+          // ),
+          CommonItemList<Post>(
             onLoad: (int page) async {
               var postList = await PostService.getPostListByUserId(widget.user, page, 20);
               return postList;
             },
-            enableRefresh: true,
             itemName: "动态",
             itemHeight: null,
+            isGrip: false,
+            gripAspectRatio: 1,
             enableScrollbar: true,
+            itemBuilder: (ctx, post, postList, onFresh) {
+              return PostListTile(
+                key: ValueKey(post.id),
+                post: post,
+                onDeletePost: (deletedPost) {
+                  if (postList != null) {
+                    postList.remove(deletedPost);
+                    setState(() {});
+                  }
+                },
+                feedback: post.feedback ?? FeedFeedback(),
+              );
+            },
           ),
           CommonItemList<Gallery>(
             onLoad: (int page) async {

@@ -81,10 +81,13 @@ class PostApi {
       }),
     );
     List<Post> postList = [];
-    for (var postJson in r.data['postList']) {
-      var post = Post.fromJson(postJson);
-      postList.add(post);
+    if (r.data['postList'] != null) {
+      for (var postJson in r.data['postList']) {
+        var post = Post.fromJson(postJson);
+        postList.add(post);
+      }
     }
+
     return postList;
   }
 
@@ -168,16 +171,22 @@ class PostApi {
 
   static List<Post> _parsePostListWithUser(Response<dynamic> r) {
     Map<int, User> userMap = {};
-    for (var userJson in r.data['userList']) {
-      var user = User.fromJson(userJson);
-      userMap[user.id ?? 0] = user;
+    if (r.data['userList'] != null) {
+      for (var userJson in r.data['userList']) {
+        var user = User.fromJson(userJson);
+        userMap[user.id ?? 0] = user;
+      }
     }
+
     List<Post> postList = [];
-    for (var postJson in r.data['postList']) {
-      var post = Post.fromJson(postJson);
-      post.user = userMap[post.userId];
-      postList.add(post);
+    if (r.data['postList'] != null) {
+      for (var postJson in r.data['postList']) {
+        var post = Post.fromJson(postJson);
+        post.user = userMap[post.userId];
+        postList.add(post);
+      }
     }
+
     return postList;
   }
 
