@@ -102,7 +102,7 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
                     aspectRatio: 1.8,
                     child: Container(
                       color: colorScheme.background,
-                      child: CommonVideoPlayer(videoUrl: videoUrl!),
+                      child: CommonMediaPlayer(videoUrl: videoUrl!),
                     ),
                   ),
                 if (widget.task.status != UploadTaskStatus.uploading)

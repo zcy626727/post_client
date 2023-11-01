@@ -1,66 +1,65 @@
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 
-class CommonVideoPlayer extends StatefulWidget {
-  const CommonVideoPlayer({Key? key, required this.videoUrl}) : super(key: key);
+class CommonMediaPlayer extends StatefulWidget {
+  const CommonMediaPlayer({Key? key, required this.videoUrl, this.play = false}) : super(key: key);
 
   final String videoUrl;
+  final bool play;
 
   @override
-  State<CommonVideoPlayer> createState() => _CommonVideoPlayerState();
+  State<CommonMediaPlayer> createState() => _CommonMediaPlayerState();
 }
 
-class _CommonVideoPlayerState extends State<CommonVideoPlayer> {
-  late VideoPlayerController _videoPlayerController;
-  late Future<void> _initializeVideoPlayerFuture;
+class _CommonMediaPlayerState extends State<CommonMediaPlayer> {
+  late final player = Player();
+  late final controller = VideoController(player);
 
-  late final ChewieController _chewieController;
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
-    _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      autoPlay: false,
-      looping: false,
-    );
-    _initializeVideoPlayerFuture = _videoPlayerController.initialize();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _videoPlayerController.pause();
-    _videoPlayerController.dispose();
-    _chewieController.dispose();
+    player.open(Media(widget.videoUrl), play: widget.play);
   }
 
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
-    return FutureBuilder(
-      future: _initializeVideoPlayerFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Container(
-            color: colorScheme.background,
-            child: AspectRatio(
-              aspectRatio: _videoPlayerController.value.aspectRatio,
-              child: Chewie(
-                controller: _chewieController,
-              ),
-            ),
-          );
-        } else {
-          return const Center(
-            child: SizedBox(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-      },
+    return MaterialDesktopVideoControlsTheme(
+      normal: MaterialDesktopVideoControlsThemeData(
+        buttonBarButtonSize: 24.0,
+        buttonBarButtonColor: Colors.white,
+        bottomButtonBar: [
+          MaterialDesktopSkipPreviousButton(),
+          MaterialDesktopPlayOrPauseButton(),
+          MaterialDesktopSkipNextButton(),
+          MaterialDesktopVolumeButton(),
+          MaterialDesktopPositionIndicator(),
+          Spacer(),
+          // MaterialDesktopCustomButton(
+          //   onPressed: () {
+          //     debugPrint('Custom "Settings" button pressed.');
+          //   },
+          //   icon: const Icon(Icons.settings),
+          // ),
+          MaterialDesktopFullscreenButton(),
+        ],
+      ),
+      fullscreen: const MaterialDesktopVideoControlsThemeData(
+        // Modify theme options:
+        displaySeekBar: false,
+        automaticallyImplySkipNextButton: false,
+        automaticallyImplySkipPreviousButton: false,
+      ),
+      child: Video(
+        controller: controller,
+      ),
     );
   }
 }

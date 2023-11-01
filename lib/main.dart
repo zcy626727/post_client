@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:post_client/state/screen_state.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/theme/color_schemes.g.dart';
@@ -12,6 +13,8 @@ import 'package:provider/provider.dart';
 import 'config/global.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
   //初始化全局变量后启动项目
   Global.init().then((e) => runApp(MultiProvider(
           //声明全局状态信息

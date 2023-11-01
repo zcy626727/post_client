@@ -127,7 +127,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                           ? const Center(
                               child: Text("视频加载失败"),
                             )
-                          : CommonVideoPlayer(key: ValueKey(videoUrl), videoUrl: videoUrl!),
+                          : CommonMediaPlayer(key: ValueKey(videoUrl), videoUrl: videoUrl!),
                     ),
                   ),
                   ListTile(

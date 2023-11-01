@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/service/media/gallery_service.dart';
 import 'package:post_client/service/media/video_service.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/component/media/list/video_list_tile.dart';
-import 'package:post_client/view/component/post/post_list.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:post_client/view/widget/player/common_video_player.dart';
 import 'package:provider/provider.dart';
@@ -135,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget buildDesktop() {
     return Container(
-      child: CommonVideoPlayer(videoUrl: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"),
+      child: CommonMediaPlayer(videoUrl: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"),
       // child: CommonAudioPlayerMini(audioUrl: "http://downsc.chinaz.net/Files/DownLoad/sound1/201906/11582.mp3"),
       // child: CommonAudioPlayerMini2(audioUrl: "http://archlinux:9000/file/public/3d234c392d1a5100214dcebf97c3991b"),
       // child: CommonAudioPlayerMini2(audioUrl: "http://192.168.239.148:9000/file/public/4444"),

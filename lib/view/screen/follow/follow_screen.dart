@@ -6,7 +6,6 @@ import 'package:post_client/model/user/user.dart';
 import 'package:post_client/service/user/follow_service.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
-import 'package:post_client/view/component/post/post_list.dart';
 import 'package:post_client/view/page/account/user_details_page.dart';
 import 'package:provider/provider.dart';
 

@@ -21,7 +21,6 @@ import '../../component/media/list/article_list_tile.dart';
 import '../../component/media/list/audio_list_tile.dart';
 import '../../component/media/list/gallery_list_tile.dart';
 import '../../component/media/list/video_list_tile.dart';
-import '../../component/post/post_list.dart';
 import '../../component/post/post_list_tile.dart';
 import '../../widget/common_item_list.dart';
 

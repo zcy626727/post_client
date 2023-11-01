@@ -154,8 +154,8 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
       header: MaterialHeader(backgroundColor: colorScheme.primaryContainer, color: colorScheme.onPrimaryContainer),
       footer: CupertinoFooter(backgroundColor: colorScheme.primaryContainer, foregroundColor: colorScheme.onPrimaryContainer),
       controller: _refreshController,
-      onRefresh: _onRefresh,
-      onLoad: noData ? null : _onLoading,
+      onRefresh: widget.enableRefresh ? _onRefresh : null,
+      onLoad: widget.enableLoad ? (noData ? null : _onLoading) : null,
       child: GridView.builder(
         controller: ScrollController(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

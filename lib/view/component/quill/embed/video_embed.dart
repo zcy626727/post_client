@@ -29,7 +29,7 @@ class MyVideoEmbedBuilder implements EmbedBuilder {
       elevation: 0,
       child: AspectRatio(
         aspectRatio: 3 / 2,
-        child: CommonVideoPlayer(videoUrl: videoUrl),
+        child: CommonMediaPlayer(videoUrl: videoUrl),
       ),
     );
   }

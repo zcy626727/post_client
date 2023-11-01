@@ -7,7 +7,6 @@ import 'package:post_client/model/message/post.dart';
 import 'package:post_client/model/user/follow.dart';
 import 'package:post_client/service/user/follow_service.dart';
 import 'package:post_client/state/user_state.dart';
-import 'package:post_client/view/component/post/post_list.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/page/account/user_profile_page.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
