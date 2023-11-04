@@ -8,8 +8,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
 import 'package:post_client/domain/task/single_upload_task.dart';
-import 'package:post_client/service/media/file_service.dart';
+import 'package:post_client/service/media/file_url_service.dart';
 import 'package:image/image.dart' as img;
+import 'package:post_client/service/media/upload_service.dart';
 
 import '../../../../constant/media.dart';
 import '../../../../enums/upload_task.dart';
@@ -45,6 +46,12 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
     _futureBuilderFuture = getData();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    isolate?.kill();
+  }
+
   Future getData() async {
     return Future.wait([getImageUrl()]);
   }
@@ -52,7 +59,7 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
   Future<void> getImageUrl() async {
     try {
       if (widget.task.fileId != null) {
-        var (url, staticUrl) = await FileService.genGetFileUrl(widget.task.fileId!);
+        var (url, staticUrl) = await FileUrlService.genGetFileUrl(widget.task.fileId!);
         widget.task.coverUrl = staticUrl;
       }
     } on DioException catch (e) {
@@ -170,14 +177,14 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
   }
 
   Future<void> uploadImage(SingleUploadTask task) async {
-    await FileService.doUploadFile(
+    await SingleUploadService.doUploadFile(
       task: widget.task,
       onError: (task) {},
       onSuccess: (task) async {
         if (widget.onUpdateImage != null) {
           await widget.onUpdateImage!(task);
         }
-        var (link, staticUrl) = await FileService.genGetFileUrl(task.fileId!);
+        var (link, staticUrl) = await FileUrlService.genGetFileUrl(task.fileId!);
         widget.task.coverUrl = staticUrl;
         setState(() {});
       },

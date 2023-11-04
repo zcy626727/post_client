@@ -9,8 +9,8 @@ import 'package:post_client/util/unit.dart';
 
 import '../../../../domain/task/multipart_upload_task.dart';
 import '../../../../enums/upload_task.dart';
-import '../../../../service/media/file_service.dart';
-import '../../../../service/media/multipart_service.dart';
+import '../../../../service/media/file_url_service.dart';
+import '../../../../service/media/upload_service.dart';
 import '../../../widget/button/common_action_one_button.dart';
 import '../../../widget/player/common_video_player.dart';
 
@@ -28,11 +28,22 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
 
   late Future _futureBuilderFuture;
   String? videoUrl;
+  late MultipartUploadTask task;
+
+  //用于过滤上一个上传任务的残留数据
+  int updateIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    task = widget.task;
     _futureBuilderFuture = getData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    isolate?.kill();
   }
 
   Future getData() async {
@@ -41,8 +52,8 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
 
   Future<void> getVideoUrl() async {
     try {
-      if (widget.task.fileId != null) {
-        var (url, _) = await FileService.genGetFileUrl(widget.task.fileId!);
+      if (task.fileId != null) {
+        var (url, _) = await FileUrlService.genGetFileUrl(task.fileId!);
         videoUrl = url;
       }
     } on DioException catch (e) {
@@ -66,32 +77,91 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
             color: colorScheme.surface,
             child: Column(
               children: [
-                if (widget.task.status == UploadTaskStatus.uploading) //正在上传
+                if (task.status != UploadTaskStatus.uploading && task.status != UploadTaskStatus.init)
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 4),
+                    color: colorScheme.primaryContainer,
+                    width: double.infinity,
+                    height: 45,
+                    child: TextButton(
+                      onPressed: () async {
+                        FilePickerResult? result = await FilePicker.platform.pickFiles(
+                          type: FileType.video,
+                        );
+                        if (result != null) {
+                          try {
+                            var file = result.files.single;
+                            videoUrl = null;
+                            //消息接收器
+                            task.clear();
+                            task.srcPath = file.path;
+                            task.totalSize = file.size;
+                            task.status = UploadTaskStatus.init;
+                            var currentFileIndex = updateIndex;
+
+                            MultipartUploadService.doUploadFile(
+                              task: task,
+                              onError: (task) {},
+                              onSuccess: (task) async {
+                                var (link, _) = await FileUrlService.genGetFileUrl(task.fileId!);
+                                videoUrl = link;
+                                setState(() {});
+                              },
+                              onUpload: (newTask) {
+                                if (currentFileIndex != updateIndex) {
+                                  print('残留');
+                                  return;
+                                } else {
+                                  print('更新');
+                                  task.copy(newTask);
+                                  setState(() {});
+                                }
+                              },
+                              onAfterStart: (taskIsolate) {
+                                isolate = taskIsolate;
+                              },
+                            );
+                          } finally {}
+                          setState(() {});
+                        }
+                      },
+                      child: Text(task.status == UploadTaskStatus.finished ? "切换视频" : "选择视频"),
+                    ),
+                  ),
+                if (task.status == UploadTaskStatus.uploading || task.status == UploadTaskStatus.init) //正在上传
                   SizedBox(
                     height: 130,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          widget.task.srcPath!,
+                          task.srcPath!,
                           maxLines: 1,
                         ),
                         //上传进度
                         LinearProgressIndicator(
-                          value: widget.task.uploadedSize / widget.task.totalSize!,
+                          value: task.uploadedSize / task.totalSize!,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text("上传中......"),
-                            Text("${UnitUtil.convertByteUnits(widget.task.uploadedSize)}/${UnitUtil.convertByteUnits(widget.task.totalSize)}"),
+                            Text(task.statusMessage ?? "读取文件"),
+                            Text("${UnitUtil.convertByteUnits(task.uploadedSize)}/${UnitUtil.convertByteUnits(task.totalSize)}"),
                           ],
                         ),
                         //取消上传
-                        const SizedBox(
+                        SizedBox(
                           width: 100,
                           child: CommonActionOneButton(
                             title: "取消上传",
+                            onTap: () {
+                              //关闭上传线程
+                              isolate?.kill();
+                              task.clear();
+                              videoUrl = null;
+                              updateIndex++;
+                              setState(() {});
+                            },
                           ),
                         )
                       ],
@@ -102,52 +172,9 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
                     aspectRatio: 1.8,
                     child: Container(
                       color: colorScheme.background,
-                      child: CommonMediaPlayer(videoUrl: videoUrl!),
+                      child: CommonVideoPlayer(videoUrl: videoUrl!),
                     ),
                   ),
-                if (widget.task.status != UploadTaskStatus.uploading)
-                  Container(
-                    margin: const EdgeInsets.only(top: 2),
-                    color: colorScheme.primaryContainer,
-                    width: double.infinity,
-                    height: 45,
-                    child: TextButton(
-                      onPressed: () async {
-                        FilePickerResult? result = await FilePicker.platform.pickFiles(
-                          type: FileType.video,
-                        );
-                        if (result != null) {
-                          RandomAccessFile? read;
-                          try {
-                            var file = result.files.single;
-                            read = await File(result.files.single.path!).open();
-                            var data = await read.read(16);
-                            //消息接收器
-                            widget.task.clear();
-                            widget.task.srcPath = file.path;
-                            widget.task.totalSize = file.size;
-                            widget.task.status = UploadTaskStatus.init;
-                            var task = widget.task;
-                            MultipartService.doUploadFile(
-                              task: task,
-                              onError: (task) {},
-                              onSuccess: (task) async {
-                                var (link, _) = await FileService.genGetFileUrl(task.fileId!);
-                                videoUrl = link;
-                                setState(() {});
-                              },
-                              onUpload: (task) {},
-                              onAfterStart: (task) {},
-                            );
-                          } finally {
-                            read?.close();
-                          }
-                          setState(() {});
-                        }
-                      },
-                      child: Text(widget.task.fileId == null ? "选择视频" : "切换视频"),
-                    ),
-                  )
               ],
             ),
           );

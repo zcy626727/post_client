@@ -4,14 +4,16 @@ import 'dart:isolate';
 
 import 'package:flutter/services.dart';
 
+import '../../api/client/media/file_api.dart';
 import '../../api/client/media/multipart_api.dart';
 import '../../config/file_config.dart';
 import '../../config/global.dart';
 import '../../domain/task/multipart_upload_task.dart';
+import '../../domain/task/single_upload_task.dart';
 import '../../enums/upload_task.dart';
 import '../../util/file_util.dart';
 
-class MultipartService {
+class MultipartUploadService {
   static Future<void> doUploadFile({
     //上传任务
     required MultipartUploadTask task,
@@ -41,7 +43,7 @@ class MultipartService {
           //上传中消息
           switch (msg[0]) {
             case 1: //task
-              task.copy(MultipartUploadTask.fromJson(msg[1]));
+              task.copyField(MultipartUploadTask.fromJson(msg[1]));
               await onUpload(task);
               break;
           }
@@ -60,7 +62,7 @@ class MultipartService {
       },
     );
 
-    var isolate = await Isolate.spawn(MultipartService.startUploadIsolate, receivePort.sendPort);
+    var isolate = await Isolate.spawn(MultipartUploadService._startUploadIsolate, receivePort.sendPort);
     isolate.addOnExitListener(receivePort.sendPort);
     await onAfterStart(isolate);
   }
@@ -76,7 +78,7 @@ class MultipartService {
   // 发送消息格式
   // sendPort，通过类型识别即可
   // 1:task
-  static Future<void> startUploadIsolate(SendPort sendPort) async {
+  static Future<void> _startUploadIsolate(SendPort sendPort) async {
     try {
       var receivePort = ReceivePort();
       //发送sendPort
@@ -109,16 +111,16 @@ class MultipartService {
       //文件上传时通过task发送任务信息，用于更新任务信息
       //初始化，确保文件计算好md5、后台初创建了上传任务
       log("初始化...");
-      await initMultipartUpload(task, sendPort);
+      await _initMultipartUpload(task, sendPort);
       log("初始化完成");
       //进行上传
       //上传分片过程中要将任务持久化到数据库
       log("上传中...");
-      await doMultipartUpload(task, sendPort);
+      await _doMultipartUpload(task, sendPort);
       log("上传完成");
       //完成上传
       log("合并中...");
-      await completeMultipartUpload(task, sendPort);
+      await _completeMultipartUpload(task, sendPort);
       log("合并完成");
       sendPort.send(true);
     } catch (e) {
@@ -133,7 +135,7 @@ class MultipartService {
     }
   }
 
-  static Future<void> initMultipartUpload(
+  static Future<void> _initMultipartUpload(
     MultipartUploadTask task,
     SendPort sendPort,
   ) async {
@@ -155,7 +157,6 @@ class MultipartService {
         //初始化阶段
         task.statusMessage = "恢复上传";
         task.status = UploadTaskStatus.init;
-
         sendPort.send([1, task.toJson()]);
 
         //校验是否和原文件一致
@@ -180,11 +181,8 @@ class MultipartService {
       //初始化上传
       var multipartInfo = await MultipartApi.initMultipartUpload(task.md5!, fileStat.size, task.magicNumber!);
 
-      task.uploadedSize = multipartInfo.uploadedPartNum ?? 0 * multipartInfo.partSize!;
+      task.uploadedSize = (multipartInfo.uploadedPartNum ?? 0) * multipartInfo.partSize!;
       task.fileId = multipartInfo.fileId;
-
-      task.statusMessage = "开始上传";
-      sendPort.send([1, task.toJson()]);
     } catch (e) {
       rethrow;
     } finally {
@@ -192,7 +190,7 @@ class MultipartService {
     }
   }
 
-  static Future<void> doMultipartUpload(MultipartUploadTask task, SendPort sendPort) async {
+  static Future<void> _doMultipartUpload(MultipartUploadTask task, SendPort sendPort) async {
     task.statusMessage = "正在上传";
     task.status = UploadTaskStatus.uploading;
     sendPort.send([1, task.toJson()]);
@@ -215,18 +213,34 @@ class MultipartService {
         for (var url in urlList) {
           //读取数据
           var len = await access.readInto(buffer);
+          var preUploadedSize = task.uploadedSize;
           //上传
           if (len < buffer.length) {
             //读取到最后一个
-            await FileUtil.uploadFile(url, buffer.sublist(0, len));
+            await FileUtil.uploadFile(
+              url,
+              buffer.sublist(0, len),
+              onUpload: (count, total) {
+                if (count % (1024 * 1024) == 0) {
+                  task.uploadedSize = preUploadedSize+count;
+                  sendPort.send([1, task.toJson()]);
+                }
+              },
+            );
           } else {
-            await FileUtil.uploadFile(url, buffer);
+            await FileUtil.uploadFile(
+              url,
+              buffer,
+              onUpload: (count, total) {
+                if (count % (1024 * 1024) == 0) {
+                  task.uploadedSize = preUploadedSize+count;
+                  sendPort.send([1, task.toJson()]);
+                }
+              },
+            );
           }
           //用于通知已上传分片数
           uploadedPartNum++;
-          //每次上传一个分片后发送task状态
-          task.uploadedSize = task.uploadedSize + len;
-          sendPort.send([1, task.toJson()]);
         }
         //获取url和上传任务状态
         (multipartInfo, urlList) = await MultipartApi.getUploadUrl(task.fileId!, Global.urlCount, uploadedPartNum);
@@ -242,7 +256,7 @@ class MultipartService {
     }
   }
 
-  static Future<void> completeMultipartUpload(MultipartUploadTask task, SendPort sendPort) async {
+  static Future<void> _completeMultipartUpload(MultipartUploadTask task, SendPort sendPort) async {
     task.statusMessage = "整合中";
     sendPort.send([1, task.toJson()]);
 
@@ -251,5 +265,130 @@ class MultipartService {
     task.statusMessage = "上传完毕";
     task.status = UploadTaskStatus.finished;
     sendPort.send([1, task.toJson()]);
+  }
+}
+
+class SingleUploadService {
+  static Future<Isolate> doUploadFile({
+    //上传任务
+    required SingleUploadTask task,
+    //上传出错
+    required Function(SingleUploadTask) onError,
+    //上传成功
+    required Function(SingleUploadTask) onSuccess,
+    //上传中更新状态
+    required Function(SingleUploadTask) onUpload,
+    //上传开始后
+    required Function(Isolate) onAfterStart,
+    ReceivePort? receivePort,
+  }) async {
+    receivePort ??= ReceivePort();
+
+    RootIsolateToken rootIsolateToken = RootIsolateToken.instance!;
+    receivePort.listen(
+      (msg) async {
+        if (msg is SendPort) {
+          msg.send([1, task.toJson()]);
+          msg.send([2, Global.user, Global.database!]);
+          msg.send([3, rootIsolateToken]);
+          msg.send(null);
+          //获取发送器
+        } else if (msg is List) {
+          //过程消息
+          switch (msg[0]) {
+            case 1: //task
+              task.copyField(SingleUploadTask.fromJson(msg[1]));
+              await onUpload(task);
+              break;
+          }
+        } else if (msg is FormatException) {
+          //上传出现异常
+          task.status = UploadTaskStatus.error;
+          task.statusMessage = msg.message;
+          await onError(task);
+        } else if (msg == true) {
+          //上传结束
+          task.status = UploadTaskStatus.finished;
+          await onSuccess(task);
+        }
+      },
+    );
+
+    var isolate = await Isolate.spawn(SingleUploadService._startUploadIsolate, receivePort.sendPort);
+    isolate.addOnExitListener(receivePort.sendPort);
+    onAfterStart(isolate);
+    return isolate;
+  }
+
+  static Future<void> _startUploadIsolate(SendPort sendPort) async {
+    var receivePort = ReceivePort();
+    //发送sendPort
+    sendPort.send(receivePort.sendPort);
+    //任务
+    late SingleUploadTask task;
+    //交换数据，初始化
+    await for (var msg in receivePort) {
+      if (msg == null) {
+        //退出
+        break;
+      } else if (msg is List) {
+        switch (msg[0]) {
+          case 1: //获取状态，用于之后修改状态和发送最新状态
+            task = SingleUploadTask.fromJson(msg[1]);
+            break;
+          case 2: //复制主线程环境：数据库、用户信息
+            Global.copyEnv(msg[1], msg[2]);
+            break;
+          case 3:
+            //调用数据库等操作必须初始化
+            BackgroundIsolateBinaryMessenger.ensureInitialized(msg[1]);
+        }
+      }
+    }
+
+    RandomAccessFile? read;
+    try {
+      //读取文件
+      final file = File(task.srcPath!);
+      read = await file.open();
+      var data = await read.read(16);
+
+      //计算md5
+      var md5 = await FileUtil.getFileChecksum(file);
+      if (md5 == null) {
+        return;
+      }
+      task.md5 = md5;
+      task.status = UploadTaskStatus.uploading;
+      sendPort.send([1, task.toJson()]);
+
+      //获取文件上传链接
+      var (putUrl, fileId) = await FileApi.genPutFileUrl(md5, task.private ?? true, data);
+      task.fileId = fileId;
+      sendPort.send([1, task.toJson()]);
+
+      if (putUrl.isNotEmpty) {
+        var data = await file.readAsBytes();
+        //上传文件
+        await FileUtil.uploadFile(
+          putUrl,
+          data,
+          onUpload: (count, total) {
+            if (count % (1024 * 1024) == 0) {
+              task.uploadedSize = count;
+              task.totalSize = total;
+              sendPort.send([1, task.toJson()]);
+            }
+          },
+        );
+
+        await FileApi.completePutFile(fileId);
+      }
+
+      task.status = UploadTaskStatus.finished;
+      sendPort.send(true);
+    } catch (e) {
+      rethrow;
+    } finally {}
   }
 }

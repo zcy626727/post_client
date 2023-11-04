@@ -6,10 +6,13 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/domain/task/multipart_upload_task.dart';
-import 'package:post_client/service/media/file_service.dart';
-import 'package:post_client/service/media/multipart_service.dart';
+import 'package:post_client/domain/task/single_upload_task.dart';
+import 'package:post_client/service/media/file_url_service.dart';
+import 'package:post_client/service/media/upload_service.dart';
 
+import '../../../../domain/task/upload_task.dart';
 import '../../../../enums/upload_task.dart';
+import '../../../../util/unit.dart';
 import '../../../widget/player/audio/common_audio_player_mini.dart';
 
 class AudioUploadCard extends StatefulWidget {
@@ -25,12 +28,21 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
   Isolate? isolate;
 
   late Future _futureBuilderFuture;
+  late MultipartUploadTask task;
   String? audioUrl;
+  int updateIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    task = widget.task;
     _futureBuilderFuture = getData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    isolate?.kill();
   }
 
   Future getData() async {
@@ -39,8 +51,8 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
 
   Future<void> getAudioUrl() async {
     try {
-      if (widget.task.fileId != null) {
-        var (url, _) = await FileService.genGetFileUrl(widget.task.fileId!);
+      if (task.fileId != null) {
+        var (url, _) = await FileUrlService.genGetFileUrl(task.fileId!);
         audioUrl = url;
       }
     } on DioException catch (e) {
@@ -64,7 +76,7 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
             color: colorScheme.surface,
             child: Column(
               children: [
-                if (widget.task.status == UploadTaskStatus.uploading) //正在上传
+                if (task.status == UploadTaskStatus.uploading || task.status == UploadTaskStatus.init) //正在上传
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                     height: 60,
@@ -76,18 +88,18 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
-                                widget.task.srcPath!,
+                                task.srcPath!,
                                 maxLines: 1,
                               ),
                               //上传进度
                               LinearProgressIndicator(
-                                value: widget.task.uploadedSize / widget.task.totalSize!,
+                                value: task.uploadedSize / task.totalSize!,
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text("正在上传"),
-                                  Text("${widget.task.uploadedSize}/${widget.task.totalSize!}"),
+                                  Text("${UnitUtil.convertByteUnits(task.uploadedSize)}/${UnitUtil.convertByteUnits(task.totalSize)}"),
                                 ],
                               ),
                             ],
@@ -97,7 +109,14 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
                         Container(
                           margin: const EdgeInsets.only(left: 3),
                           child: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              //关闭上传线程
+                              isolate?.kill();
+                              task.clear();
+                              audioUrl = null;
+                              updateIndex++;
+                              setState(() {});
+                            },
                             icon: const Icon(Icons.stop),
                             splashRadius: 25,
                           ),
@@ -108,7 +127,7 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
                 //上传完成
                 if (audioUrl != null) CommonAudioPlayerMini(audioUrl: audioUrl!),
                 //选择音频或更换音频
-                if (widget.task.status != UploadTaskStatus.uploading)
+                if (task.status != UploadTaskStatus.uploading && task.status != UploadTaskStatus.init)
                   Container(
                     margin: const EdgeInsets.only(top: 2),
                     color: colorScheme.primaryContainer,
@@ -123,36 +142,41 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
                         );
 
                         if (result != null) {
-                          RandomAccessFile? read;
                           try {
                             var file = result.files.single;
-                            read = await File(result.files.single.path!).open();
-                            var data = await read.read(16);
+
+                            task.clear();
                             //消息接收器
-                            widget.task.clear();
-                            widget.task.srcPath = file.path;
-                            widget.task.totalSize = file.size;
-                            widget.task.status = UploadTaskStatus.uploading;
-                            widget.task.magicNumber = data;
-                            var task = widget.task;
-                            MultipartService.doUploadFile(
+                            audioUrl = null;
+                            task.srcPath = file.path;
+                            task.totalSize = file.size;
+                            var currentFileIndex = updateIndex;
+
+                            MultipartUploadService.doUploadFile(
                               task: task,
                               onError: (task) {},
                               onSuccess: (task) async {
-                                var (link, _) = await FileService.genGetFileUrl(task.fileId!);
+                                var (link, _) = await FileUrlService.genGetFileUrl(task.fileId!);
                                 audioUrl = link;
                                 setState(() {});
                               },
-                              onUpload: (task) {},
+                              onUpload: (task) {
+                                if (currentFileIndex != updateIndex) {
+                                  print('残留');
+                                  return;
+                                } else {
+                                  task.copy(task);
+                                  setState(() {});
+                                }
+
+                              },
                               onAfterStart: (task) {},
                             );
-                          } finally {
-                            read?.close();
-                          }
+                          } finally {}
                           setState(() {});
                         }
                       },
-                      child: Text(widget.task.fileId == null ? "选择音频" : "切换音频"),
+                      child: Text(task.fileId == null ? "选择音频" : "切换音频"),
                     ),
                   )
               ],

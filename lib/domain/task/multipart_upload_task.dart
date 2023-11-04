@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:post_client/domain/task/upload_task.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../config/global.dart';
@@ -9,23 +10,10 @@ import '../../enums/upload_task.dart';
 part 'multipart_upload_task.g.dart';
 
 @JsonSerializable()
-class MultipartUploadTask {
-  int? id;
-  String? srcPath; //文件原路径
-  int? totalSize; //文件/文件夹下的文件的大小
-  int uploadedSize = 0; //进度
-  String? md5; //文件的MD5，文件夹为0
-  int? status; //上传状态
-  String? statusMessage; //状态
-  DateTime? createTime;
-  int? fileId;
-  bool? private;
-
-
+class MultipartUploadTask extends UploadTask {
   @JsonKey(includeFromJson: false, includeToJson: false)
   List<int>? magicNumber;
 
-  //额外业务信息
   int? userId; //上传状态
   String? fileName; //文件名
   int? mediaType;
@@ -33,44 +21,28 @@ class MultipartUploadTask {
   MultipartUploadTask();
 
   MultipartUploadTask.file({
-    required this.srcPath,
+    required srcPath,
     this.fileName,
     this.userId,
-    this.private,
-    this.status = UploadTaskStatus.uploading,
-    this.uploadedSize = 0,
-  });
+    private,
+    status = UploadTaskStatus.uploading,
+  }) : super(private: private, status: status, srcPath: srcPath);
 
   void copy(MultipartUploadTask task) {
-    id = task.id;
-    fileName = task.fileName;
-    srcPath = task.srcPath;
-    uploadedSize = task.uploadedSize;
-    totalSize = task.totalSize;
-    status = task.status;
-    createTime = task.createTime;
-    statusMessage = task.statusMessage;
-    md5 = task.md5;
-    fileId = task.fileId;
+    super.copyField(task);
     magicNumber = task.magicNumber;
-    private = task.private;
     mediaType = task.mediaType;
+    fileName = task.fileName;
+    userId = task.userId;
   }
 
+  @override
   void clear() {
-    id = null;
-    fileName = null;
-    srcPath = null;
-    uploadedSize = 0;
-    totalSize = null;
-    status = null;
-    createTime = null;
-    statusMessage = null;
-    md5 = null;
-    fileId = null;
+    super.clear();
     magicNumber = null;
-    private = null;
     mediaType = null;
+    fileName = null;
+    userId = null;
   }
 
   factory MultipartUploadTask.fromJson(Map<String, dynamic> json) => _$MultipartUploadTaskFromJson(json);

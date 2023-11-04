@@ -10,7 +10,7 @@ import '../../../constant/media.dart';
 import '../../../model/media/audio.dart';
 import '../../../model/media/media_feedback.dart';
 import '../../../model/message/comment.dart';
-import '../../../service/media/file_service.dart';
+import '../../../service/media/file_url_service.dart';
 import '../../../service/media/history_service.dart';
 import '../../component/feedback/media_feedback_bar.dart';
 import '../../component/media/media_more_button.dart';
@@ -45,7 +45,7 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
 
   Future<void> getAudioUrl() async {
     try {
-      var (url, _) = await FileService.genGetFileUrl(widget.audio.fileId!);
+      var (url, _) = await FileUrlService.genGetFileUrl(widget.audio.fileId!);
       audioUrl = url;
     } on DioException catch (e) {
       log(e.toString());

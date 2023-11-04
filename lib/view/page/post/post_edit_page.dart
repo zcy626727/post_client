@@ -14,7 +14,7 @@ import 'package:post_client/view/widget/button/common_action_one_button.dart';
 import '../../../constant/media.dart';
 import '../../../enums/upload_task.dart';
 import '../../../model/user/user.dart';
-import '../../../service/media/file_service.dart';
+import '../../../service/media/file_url_service.dart';
 import '../../../service/message/post_service.dart';
 import '../../component/quill/quill_editor.dart';
 
@@ -98,7 +98,7 @@ class _PostEditPageState extends State<PostEditPage> {
                         ShowSnackBar.error(context: context, message: "图片没有上传完毕");
                         return;
                       }
-                      var (_, staticUrl) = await FileService.genGetFileUrl(task.fileId!);
+                      var (_, staticUrl) = await FileUrlService.genGetFileUrl(task.fileId!);
                       pictureUrlList.add(staticUrl);
                     }
                     if (!enablePush) {

@@ -4,7 +4,7 @@ import 'package:post_client/service/media/album_service.dart';
 
 import '../../../domain/task/single_upload_task.dart';
 import '../../../enums/upload_task.dart';
-import '../../../service/media/file_service.dart';
+import '../../../service/media/file_url_service.dart';
 import '../../component/input/common_dropdown.dart';
 import '../../component/input/common_info_card.dart';
 import '../../component/show/show_snack_bar.dart';
@@ -67,7 +67,7 @@ class _AlbumEditPageState extends State<AlbumEditPage> {
                         ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                         return;
                       }
-                      var (_, staticUrl) = await FileService.genGetFileUrl(coverUploadImage.fileId!);
+                      var (_, staticUrl) = await FileUrlService.genGetFileUrl(coverUploadImage.fileId!);
 
                       var _ = await AlbumService.createAlbum(
                         titleController.text,

@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:post_client/model/media/history.dart';
-import 'package:post_client/service/media/file_service.dart';
+import 'package:post_client/service/media/file_url_service.dart';
 import 'package:post_client/view/widget/player/common_video_player.dart';
 
 import '../../../constant/media.dart';
@@ -44,7 +44,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
 
   Future<void> getVideoUrl() async {
     try {
-      var (url, _) = await FileService.genGetFileUrl(widget.video.fileId!);
+      var (url, _) = await FileUrlService.genGetFileUrl(widget.video.fileId!);
       videoUrl = url;
     } on DioException catch (e) {
       log(e.toString());
@@ -127,7 +127,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                           ? const Center(
                               child: Text("视频加载失败"),
                             )
-                          : CommonMediaPlayer(key: ValueKey(videoUrl), videoUrl: videoUrl!),
+                          : CommonVideoPlayer(key: ValueKey(videoUrl), videoUrl: videoUrl!),
                     ),
                   ),
                   ListTile(

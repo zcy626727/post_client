@@ -7,7 +7,7 @@ import 'package:post_client/view/component/input/common_info_card.dart';
 import '../../../constant/media.dart';
 import '../../../domain/task/single_upload_task.dart';
 import '../../../enums/upload_task.dart';
-import '../../../service/media/file_service.dart';
+import '../../../service/media/file_url_service.dart';
 import '../../component/media/upload/image_upload_list.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
@@ -109,7 +109,7 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
 
                       var coverUrl = thumbnailUrlList[0];
                       if (coverUploadImage.fileId != null) {
-                        var (_, staticUrl) = await FileService.genGetFileUrl(coverUploadImage.fileId!);
+                        var (_, staticUrl) = await FileUrlService.genGetFileUrl(coverUploadImage.fileId!);
                         coverUrl = staticUrl;
                       }
 

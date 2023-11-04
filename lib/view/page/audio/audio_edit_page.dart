@@ -8,7 +8,7 @@ import '../../../domain/task/multipart_upload_task.dart';
 import '../../../domain/task/single_upload_task.dart';
 import '../../../enums/upload_task.dart';
 import '../../../service/media/audio_service.dart';
-import '../../../service/media/file_service.dart';
+import '../../../service/media/file_url_service.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
 
@@ -97,7 +97,7 @@ class _AudioEditPageState extends State<AudioEditPage> {
                   }
 
                   if(coverUploadImage.fileId!=null){
-                    var (link, _) = await FileService.genGetFileUrl(coverUploadImage.fileId!);
+                    var (link, _) = await FileUrlService.genGetFileUrl(coverUploadImage.fileId!);
                     coverUrl = link;
                   }
 

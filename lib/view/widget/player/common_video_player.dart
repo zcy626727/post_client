@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-class CommonMediaPlayer extends StatefulWidget {
-  const CommonMediaPlayer({Key? key, required this.videoUrl, this.play = false}) : super(key: key);
+class CommonVideoPlayer extends StatefulWidget {
+  const CommonVideoPlayer({Key? key, required this.videoUrl, this.play = false}) : super(key: key);
 
   final String videoUrl;
   final bool play;
 
   @override
-  State<CommonMediaPlayer> createState() => _CommonMediaPlayerState();
+  State<CommonVideoPlayer> createState() => _CommonVideoPlayerState();
 }
 
-class _CommonMediaPlayerState extends State<CommonMediaPlayer> {
+class _CommonVideoPlayerState extends State<CommonVideoPlayer> {
   late final player = Player();
   late final controller = VideoController(player);
 

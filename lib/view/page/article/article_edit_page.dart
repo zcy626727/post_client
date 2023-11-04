@@ -9,7 +9,7 @@ import '../../../constant/media.dart';
 import '../../../domain/task/single_upload_task.dart';
 import '../../../enums/upload_task.dart';
 import '../../../service/media/article_service.dart';
-import '../../../service/media/file_service.dart';
+import '../../../service/media/file_url_service.dart';
 import '../../component/quill/quill_editor.dart';
 import '../../component/quill/quill_tool_bar.dart';
 import '../../component/show/show_snack_bar.dart';
@@ -99,7 +99,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                         ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                         return;
                       }
-                      var (_, staticUrl) = await FileService.genGetFileUrl(coverUploadImage.fileId!);
+                      var (_, staticUrl) = await FileUrlService.genGetFileUrl(coverUploadImage.fileId!);
 
                       coverUrl = staticUrl;
 
