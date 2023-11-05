@@ -12,11 +12,14 @@ import 'package:post_client/model/media/audio.dart';
 import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/model/media/video.dart';
 import 'package:post_client/model/message/feed_feedback.dart';
+import 'package:post_client/service/media/album_service.dart';
 import 'package:post_client/service/media/gallery_service.dart';
 import 'package:post_client/service/media/media_service.dart';
 import 'package:post_client/service/message/feed_service.dart';
 import 'package:post_client/view/component/comment/comment_list_tile.dart';
+import 'package:post_client/view/page/album/album_edit_page.dart';
 
+import '../../../config/global.dart';
 import '../../../model/message/comment.dart';
 import '../../../model/message/post.dart';
 import '../../component/media/list/article_list_tile.dart';
@@ -24,12 +27,15 @@ import '../../component/media/list/audio_list_tile.dart';
 import '../../component/media/list/gallery_list_tile.dart';
 import '../../component/media/list/video_list_tile.dart';
 import '../../component/post/post_list_tile.dart';
+import '../../component/show/show_snack_bar.dart';
+import '../../widget/dialog/confirm_alert_dialog.dart';
 import '../comment/reply_page.dart';
 
 class AlbumSourceListPage extends StatefulWidget {
-  const AlbumSourceListPage({super.key, required this.album});
+  const AlbumSourceListPage({super.key, required this.album, this.onDelete});
 
   final Album album;
+  final Function(Album)? onDelete;
 
   @override
   State<AlbumSourceListPage> createState() => _AlbumSourceListPageState();
@@ -58,11 +64,8 @@ class _AlbumSourceListPageState extends State<AlbumSourceListPage> {
         case MediaType.gallery:
           galleryList = await GalleryService.getGalleryListByAlbumId(albumUserId: widget.album.userId!, albumId: widget.album.id!, pageSize: PageConfig.commonPageSize);
         case MediaType.audio:
-
         case MediaType.video:
-
         case MediaType.article:
-
       }
     } on DioException catch (e) {
       log(e.toString());
@@ -102,7 +105,87 @@ class _AlbumSourceListPageState extends State<AlbumSourceListPage> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              actions: const [],
+              actions: [
+                Container(
+                  margin: const EdgeInsets.only(right: 5),
+                  child: PopupMenuButton<String>(
+                    splashRadius: 20,
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        if (Global.user.id == widget.album.userId)
+                          PopupMenuItem(
+                            height: 35,
+                            value: 'delete',
+                            child: Text(
+                              '删除',
+                              style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
+                            ),
+                          ),
+                        if (Global.user.id == widget.album.userId)
+                          PopupMenuItem(
+                            height: 35,
+                            value: 'edit',
+                            child: Text(
+                              '编辑',
+                              style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
+                            ),
+                          ),
+                      ];
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: BorderSide(
+                        width: 1,
+                        color: colorScheme.onSurface.withAlpha(30),
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                    color: colorScheme.surface,
+                    onSelected: (value) async {
+                      switch (value) {
+                        case "delete":
+                          await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ConfirmAlertDialog(
+                                text: "是否确定删除？",
+                                onConfirm: () async {
+                                  try {
+                                    await AlbumService.deleteUserAlbumById(widget.album.id!);
+                                    if (widget.onDelete != null) {
+                                      widget.onDelete!(widget.album);
+                                    }
+                                  } on DioException catch (e) {
+                                    if (mounted) ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
+                                  } finally {
+                                    if (mounted) Navigator.pop(context);
+                                  }
+                                },
+                                onCancel: () {
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                          );
+                          break;
+                        case "edit":
+                          if (mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AlbumEditPage(
+                                  album: widget.album,
+                                ),
+                              ),
+                            );
+                          }
+                          break;
+                      }
+                    },
+                    child: Icon(Icons.more_horiz, color: colorScheme.onSurface),
+                  ),
+                )
+              ],
             ),
             body: Container(
               color: colorScheme.background,

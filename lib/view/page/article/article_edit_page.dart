@@ -44,7 +44,10 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
       introductionController.text = widget.article!.introduction ?? "";
       coverUploadImage.status = UploadTaskStatus.finished;
       coverUploadImage.mediaType = MediaType.gallery;
-      _contentController.document = Document.fromJson(json.decode(widget.article!.content ?? ""));
+      coverUploadImage.coverUrl = widget.article!.coverUrl;
+      if (widget.article!.content != null && widget.article!.content!.isNotEmpty) {
+        _contentController.document = Document.fromJson(json.decode(widget.article!.content!));
+      }
     }
   }
 
@@ -94,14 +97,10 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                         ShowSnackBar.error(context: context, message: "内容为空");
                         return;
                       }
-                      String? coverUrl;
                       if (coverUploadImage.status != null && coverUploadImage.status != UploadTaskStatus.finished) {
                         ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                         return;
                       }
-                      var (_, staticUrl) = await FileUrlService.genGetFileUrl(coverUploadImage.fileId!);
-
-                      coverUrl = staticUrl;
 
                       if (isSave) {
                         //保存
@@ -123,8 +122,8 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                           newContent = content;
                           media.content = newContent;
                         }
-                        if (coverUrl != widget.article!.coverUrl) {
-                          newCoverUrl = coverUrl;
+                        if (widget.article!.coverUrl!=null) {
+                          newCoverUrl = widget.article!.coverUrl!;
                           media.coverUrl = newCoverUrl;
                         }
                         await ArticleService.updateArticleData(
@@ -143,14 +142,14 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                           titleController.value.text,
                           introductionController.value.text,
                           content,
-                          coverUrl,
+                          widget.article!.coverUrl,
                           _withPost,
                         );
                       }
 
                       if (mounted) Navigator.pop(context);
                     } on Exception catch (e) {
-                      ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
+                      if (mounted) ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
                     }
                     //加载
                     setState(() {});

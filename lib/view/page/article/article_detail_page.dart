@@ -51,6 +51,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
 
       //如果不存在则直接创建
       controller.document = Document.fromJson(json.decode(article.content ?? ""));
+      widget.article.content = article.content;
     } on DioException catch (e) {
       log(e.toString());
     } catch (e) {

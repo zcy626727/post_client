@@ -222,7 +222,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                                   _follow = await FollowService.followUser(widget.user.id!);
                                   setState(() {});
                                 } on Exception catch (e) {
-                                  ShowSnackBar.exception(context: context, e: e);
+                                  if (mounted) ShowSnackBar.exception(context: context, e: e);
                                 }
                                 return false;
                               },

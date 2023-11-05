@@ -13,17 +13,25 @@ class AlbumService {
     return album;
   }
 
-  static Future<void> deleteAlbum(
+  static Future<void> deleteUserAlbumById(
     String albumId,
   ) async {
     await AlbumApi.deleteUserAlbumById(albumId);
   }
 
-  static Future<Album> getAlbumById(
-    String albumId,
-  ) async {
-    var album = await AlbumApi.getAlbumByIdWithMedia(albumId);
-    return album;
+
+  static Future<void> updateGalleryData({
+    required String albumId,
+    String? title,
+    String? introduction,
+    String? coverUrl,
+  }) async {
+    await AlbumApi.updateAlbumInfo(
+      albumId: albumId,
+      coverUrl: coverUrl,
+      title: title,
+      introduction: introduction,
+    );
   }
 
   static Future<List<Album>> getUserAlbumList(

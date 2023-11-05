@@ -30,6 +30,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     if (Global.user.alreadyLogin()) {
       _avatarTask.status = UploadTaskStatus.finished;
       _usernameController.text = Global.user.name ?? "";
+      _avatarTask.coverUrl = Global.user.avatarUrl;
     }
   }
 

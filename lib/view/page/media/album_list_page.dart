@@ -101,7 +101,7 @@ class _AlbumListPageState extends State<AlbumListPage> {
                       case "create":
                         var album = await Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const AlbumEditPage()),
+                          MaterialPageRoute(builder: (context) => AlbumEditPage()),
                         );
                         //todo 创建成功返回album，然后根据条件添加到列表
                         break;
@@ -146,7 +146,15 @@ class _AlbumListPageState extends State<AlbumListPage> {
                       isGrip: false,
                       enableScrollbar: true,
                       itemBuilder: (ctx, album, albumList, onFresh) {
-                        return AlbumListTile(album: album);
+                        return AlbumListTile(
+                          album: album,
+                          onDelete: (a) {
+                            if (albumList != null) {
+                              albumList.remove(a);
+                              setState(() {});
+                            }
+                          },
+                        );
                       },
                     ),
                   ),

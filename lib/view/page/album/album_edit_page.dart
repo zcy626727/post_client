@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/constant/media.dart';
+import 'package:post_client/model/media/album.dart';
 import 'package:post_client/service/media/album_service.dart';
 
 import '../../../domain/task/single_upload_task.dart';
@@ -11,7 +12,9 @@ import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
 
 class AlbumEditPage extends StatefulWidget {
-  const AlbumEditPage({super.key});
+  const AlbumEditPage({super.key, this.album});
+
+  final Album? album;
 
   @override
   State<AlbumEditPage> createState() => _AlbumEditPageState();
@@ -24,6 +27,18 @@ class _AlbumEditPageState extends State<AlbumEditPage> {
   final introductionController = TextEditingController(text: "");
   bool _isPublic = false;
   (int, String) _selectedMedia = MediaType.option[0];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.album != null && widget.album!.id != null) {
+      coverUploadImage.status = UploadTaskStatus.finished;
+      coverUploadImage.mediaType = MediaType.gallery;
+      coverUploadImage.coverUrl = widget.album!.coverUrl;
+      titleController.text = widget.album!.title ?? "";
+      introductionController.text = widget.album!.introduction ?? "";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +62,7 @@ class _AlbumEditPageState extends State<AlbumEditPage> {
           ),
         ),
         title: Text(
-          "创建合集",
+          "编辑合集",
           style: TextStyle(color: colorScheme.onSurface),
         ),
         actions: [
@@ -79,8 +94,7 @@ class _AlbumEditPageState extends State<AlbumEditPage> {
 
                       if (mounted) Navigator.pop(context);
                     } on Exception catch (e) {
-
-                     if(mounted) ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
+                      if (mounted) ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
                     }
                     //加载
                     setState(() {});

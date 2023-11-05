@@ -43,12 +43,14 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
       introductionController.text = widget.gallery!.introduction ?? "";
       coverUploadImage.status = UploadTaskStatus.finished;
       coverUploadImage.mediaType = MediaType.gallery;
+      coverUploadImage.coverUrl = widget.gallery!.coverUrl;
       if (widget.gallery!.thumbnailUrlList != null) {
         var len = widget.gallery!.thumbnailUrlList!.length;
         for (int i = 0; i < len; i++) {
           var t = SingleUploadTask();
           t.status = UploadTaskStatus.finished;
           t.fileId = widget.gallery!.fileIdList![i];
+          t.coverUrl = widget.gallery!.thumbnailUrlList![i];
           imageUploadTaskList.add(t);
         }
       }

@@ -51,56 +51,25 @@ class AlbumApi {
     );
   }
 
-  static Future<void> addMediaToAlbum(
-    String albumId,
-    int mediaType,
-    String mediaId,
-  ) async {
-    await MediaHttpConfig.dio.post(
-      "/album/addMediaToAlbum",
+  static Future<void> updateAlbumInfo({
+    required String albumId,
+    String? title,
+    String? introduction,
+    String? coverUrl,
+  }) async {
+    var r = await MediaHttpConfig.dio.post(
+      "/album/updateAlbumInfo",
       data: {
         "albumId": albumId,
-        "mediaType": mediaType,
-        "mediaId": mediaId,
+        "title": title,
+        "introduction": introduction,
+        "coverUrl": coverUrl,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
       }),
     );
-  }
-
-  static Future<Album> getAlbumByIdWithMedia(
-    String albumId,
-  ) async {
-    var r = await MediaHttpConfig.dio.get(
-      "/album/getAlbumByIdWithMedia",
-      queryParameters: {
-        "albumId": albumId,
-      },
-      options: MediaHttpConfig.options.copyWith(extra: {
-        "noCache": false,
-        "withToken": true,
-      }),
-    );
-    var album = Album.fromJson(r.data['album']);
-    var mediaList = <Media>[];
-
-    for (var mediaJson in r.data['mediaList']) {
-      switch (album.mediaType) {
-        case MediaType.gallery:
-          mediaList.add(Gallery.fromJson(mediaJson));
-        case MediaType.audio:
-          mediaList.add(Audio.fromJson(mediaJson));
-        case MediaType.article:
-          mediaList.add(Article.fromJson(mediaJson));
-        case MediaType.video:
-          mediaList.add(Video.fromJson(mediaJson));
-      }
-    }
-    album.mediaList = mediaList;
-
-    return album;
   }
 
   static Future<List<Album>> getUserAlbumList(
