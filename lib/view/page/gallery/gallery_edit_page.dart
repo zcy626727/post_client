@@ -143,7 +143,14 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                           newThumbnailUrlList = thumbnailUrlList;
                           media.thumbnailUrlList = newThumbnailUrlList;
                         }
-                        await GalleryService.updateGalleryData(widget.gallery!.id!, newTitle, newIntroduction, newFileIdList, newThumbnailUrlList, newCoverUrl);
+                        await GalleryService.updateGalleryData(
+                          mediaId: widget.gallery!.id!,
+                          title: newTitle,
+                          introduction: newIntroduction,
+                          fileIdList: newFileIdList,
+                          thumbnailUrlList: newThumbnailUrlList,
+                          coverUrl: newCoverUrl,
+                        );
                         if (widget.onUpdateMedia != null) {
                           widget.onUpdateMedia!(media);
                         }

@@ -30,13 +30,14 @@ class ArticleApi {
     return Article.fromJson(r.data['article']);
   }
 
-  static Future<void> updateArticleData(
-    String mediaId,
+  static Future<void> updateArticleData({
+    required String mediaId,
     String? title,
     String? introduction,
     String? content,
     String? coverUrl,
-  ) async {
+    String? albumId,
+  }) async {
     if (title == null && introduction == null && content == null && coverUrl == null) {
       return;
     }
@@ -48,6 +49,7 @@ class ArticleApi {
         "introduction": introduction,
         "content": content,
         "coverUrl": coverUrl,
+        "albumId": albumId,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -104,15 +106,38 @@ class ArticleApi {
         "withToken": false,
       }),
     );
-    List<Article> articleList = [];
-    if (r.data['articleList'] != null) {
-      for (var articleJson in r.data['articleList']) {
-        var article = Article.fromJson(articleJson);
-        articleList.add(article);
-      }
+
+    return _parseArticleList(r);
+  }
+
+  static Future<(List<Article>, User?)> getArticleListByAlbumId({
+    required int albumUserId,
+    required String albumId,
+    required int pageIndex,
+    required int pageSize,
+  }) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/article/getArticleListByAlbumId",
+      queryParameters: {
+        "albumUserId": albumUserId,
+        "albumId": albumId,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": false,
+        "withToken": false,
+      }),
+    );
+
+    User? user;
+    if (r.data['user'] != null) {
+      user = User.fromJson(r.data['user']);
     }
 
-    return articleList;
+    var articleList = _parseArticleList(r);
+
+    return (articleList, user);
   }
 
   static Future<List<Article>> getArticleListRandom(
@@ -166,6 +191,18 @@ class ArticleApi {
       for (var articleJson in r.data['articleList']) {
         var article = Article.fromJson(articleJson);
         article.user = userMap[article.userId];
+        articleList.add(article);
+      }
+    }
+
+    return articleList;
+  }
+
+  static List<Article> _parseArticleList(Response<dynamic> r) {
+    List<Article> articleList = [];
+    if (r.data['articleList'] != null) {
+      for (var articleJson in r.data['articleList']) {
+        var article = Article.fromJson(articleJson);
         articleList.add(article);
       }
     }

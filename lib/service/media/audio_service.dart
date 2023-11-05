@@ -14,14 +14,22 @@ class AudioService {
     return audio;
   }
 
-  static Future<void> updateAudioData(
-    String mediaId,
+  static Future<void> updateAudioData({
+    required String mediaId,
     String? title,
     String? introduction,
     int? fileId,
     String? coverUrl,
-  ) async {
-    await AudioApi.updateAudioData(mediaId, title, introduction, fileId, coverUrl);
+    String? albumId,
+  }) async {
+    await AudioApi.updateAudioData(
+      mediaId:mediaId,
+      title:title,
+      introduction:introduction,
+      fileId:fileId,
+      coverUrl:coverUrl,
+      albumId: albumId,
+    );
   }
 
   static Future<void> deleteAudio(
@@ -44,6 +52,24 @@ class AudioService {
     int pageSize,
   ) async {
     var audioList = await AudioApi.getAudioListByUserId(user.id!, pageIndex, pageSize);
+    for (var audio in audioList) {
+      audio.user = user;
+    }
+    return audioList;
+  }
+
+  static Future<List<Audio>> getAudioListByAlbumId({
+    required int albumUserId,
+    required String albumId,
+    int pageIndex = 0,
+    required int pageSize,
+  }) async {
+    var (audioList, user) = await AudioApi.getAudioListByAlbumId(
+      albumUserId: albumUserId,
+      albumId: albumId,
+      pageIndex: pageIndex,
+      pageSize: pageSize,
+    );
     for (var audio in audioList) {
       audio.user = user;
     }

@@ -127,7 +127,13 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                           newCoverUrl = coverUrl;
                           media.coverUrl = newCoverUrl;
                         }
-                        await ArticleService.updateArticleData(widget.article!.id!, newTitle, newIntroduction, newContent, newCoverUrl);
+                        await ArticleService.updateArticleData(
+                          mediaId: widget.article!.id!,
+                          title: newTitle,
+                          introduction: newIntroduction,
+                          content: newContent,
+                          coverUrl: newCoverUrl,
+                        );
                         if (widget.onUpdateMedia != null) {
                           widget.onUpdateMedia!(media);
                         }

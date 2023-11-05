@@ -32,14 +32,15 @@ class GalleryApi {
     return Gallery.fromJson(r.data['gallery']);
   }
 
-  static Future<void> updateGalleryData(
-    String mediaId,
+  static Future<void> updateGalleryData({
+    required String mediaId,
     String? title,
     String? introduction,
     List<int>? fileIdList,
     List<String>? thumbnailUrlList,
     String? coverUrl,
-  ) async {
+    String? albumId,
+  }) async {
     var r = await MediaHttpConfig.dio.post(
       "/gallery/updateGalleryData",
       data: {
@@ -49,6 +50,7 @@ class GalleryApi {
         "fileIdList": fileIdList,
         "thumbnailUrlList": thumbnailUrlList,
         "coverUrl": coverUrl,
+        "albumId": albumId,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -106,7 +108,37 @@ class GalleryApi {
       }),
     );
 
-    return _parseGallery(r);
+    return _parseGalleryList(r);
+  }
+
+  static Future<(List<Gallery>, User?)> getGalleryListByAlbumId({
+    required int albumUserId,
+    required String albumId,
+    required int pageIndex,
+    required int pageSize,
+  }) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/gallery/getGalleryListByAlbumId",
+      queryParameters: {
+        "albumUserId": albumUserId,
+        "albumId": albumId,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": false,
+        "withToken": false,
+      }),
+    );
+
+    User? user;
+    if (r.data['user'] != null) {
+      user = User.fromJson(r.data['user']);
+    }
+
+    var galleryList = _parseGalleryList(r);
+
+    return (galleryList, user);
   }
 
   static Future<List<Gallery>> getGalleryListRandom(
@@ -165,7 +197,7 @@ class GalleryApi {
     return galleryList;
   }
 
-  static List<Gallery> _parseGallery(Response<dynamic> r) {
+  static List<Gallery> _parseGalleryList(Response<dynamic> r) {
     List<Gallery> galleryList = [];
     if (r.data['galleryList'] != null) {
       for (var galleryJson in r.data['galleryList']) {

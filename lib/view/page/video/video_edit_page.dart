@@ -131,7 +131,7 @@ class _VideoEditPageState extends State<VideoEditPage> {
                           newFileId = videoUploadTask.fileId!;
                           media.fileId = newFileId;
                         }
-                        await VideoService.updateVideoData(widget.video!.id!, newTitle, newIntroduction, newFileId, coverUrl);
+                        await VideoService.updateVideoData(mediaId: widget.video!.id!, title: newTitle, introduction: newIntroduction, fileId: newFileId, coverUrl: coverUrl);
                         if (widget.onUpdateMedia != null) {
                           widget.onUpdateMedia!(media);
                         }

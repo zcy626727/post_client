@@ -44,7 +44,7 @@ class _CommonDropdownState extends State<CommonDropdown> {
                     (e) => DropdownMenuItem(
                       value: e,
                       child: Container(
-                        color: colorScheme.surface,
+                        color: Colors.transparent,
                         alignment: Alignment.centerLeft,
                         child: Text(
                           e.$2,

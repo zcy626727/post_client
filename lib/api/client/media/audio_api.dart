@@ -30,13 +30,14 @@ class AudioApi {
     return Audio.fromJson(r.data['audio']);
   }
 
-  static Future<void> updateAudioData(
-    String mediaId,
+  static Future<void> updateAudioData({
+    required String mediaId,
     String? title,
     String? introduction,
     int? fileId,
     String? coverUrl,
-  ) async {
+    String? albumId,
+  }) async {
     if (title == null && introduction == null && fileId == null && coverUrl == null) {
       return;
     }
@@ -105,7 +106,37 @@ class AudioApi {
       }),
     );
 
-    return _parseAudio(r);
+    return _parseAudioList(r);
+  }
+
+  static Future<(List<Audio>, User?)> getAudioListByAlbumId({
+    required int albumUserId,
+    required String albumId,
+    required int pageIndex,
+    required int pageSize,
+  }) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/audio/getAudioListByAlbumId",
+      queryParameters: {
+        "albumUserId": albumUserId,
+        "albumId": albumId,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": false,
+        "withToken": false,
+      }),
+    );
+
+    User? user;
+    if (r.data['user'] != null) {
+      user = User.fromJson(r.data['user']);
+    }
+
+    var audioList = _parseAudioList(r);
+
+    return (audioList, user);
   }
 
   static Future<List<Audio>> getAudioListRandom(
@@ -166,7 +197,7 @@ class AudioApi {
     return audioList;
   }
 
-  static List<Audio> _parseAudio(Response<dynamic> r) {
+  static List<Audio> _parseAudioList(Response<dynamic> r) {
     List<Audio> audioList = [];
     if (r.data['audioList'] != null) {
       for (var audioJson in r.data['audioList']) {

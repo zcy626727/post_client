@@ -30,13 +30,14 @@ class VideoApi {
     return Video.fromJson(r.data['video']);
   }
 
-  static Future<void> updateVideoData(
-    String mediaId,
+  static Future<void> updateVideoData({
+    required String mediaId,
     String? title,
     String? introduction,
     int? fileId,
     String? coverUrl,
-  ) async {
+    String? albumId,
+  }) async {
     var r = await MediaHttpConfig.dio.post(
       "/video/updateVideoData",
       data: {
@@ -45,6 +46,7 @@ class VideoApi {
         "introduction": introduction,
         "fileId": fileId,
         "coverUrl": coverUrl,
+        "albumId": albumId,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -102,7 +104,37 @@ class VideoApi {
       }),
     );
 
-    return _parseVideo(r);
+    return _parseVideoList(r);
+  }
+
+  static Future<(List<Video>, User?)> getVideoListByAlbumId({
+    required int albumUserId,
+    required String albumId,
+    required int pageIndex,
+    required int pageSize,
+  }) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/video/getVideoListByAlbumId",
+      queryParameters: {
+        "albumUserId": albumUserId,
+        "albumId": albumId,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": false,
+        "withToken": false,
+      }),
+    );
+
+    User? user;
+    if (r.data['user'] != null) {
+      user = User.fromJson(r.data['user']);
+    }
+
+    var audioList = _parseVideoList(r);
+
+    return (audioList, user);
   }
 
   static Future<List<Video>> getVideoListRandom(
@@ -161,7 +193,7 @@ class VideoApi {
     return videoList;
   }
 
-  static List<Video> _parseVideo(Response<dynamic> r) {
+  static List<Video> _parseVideoList(Response<dynamic> r) {
     List<Video> videoList = [];
     if (r.data['videoList'] != null) {
       for (var videoJson in r.data['videoList']) {

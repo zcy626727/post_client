@@ -14,14 +14,15 @@ class VideoService {
     return video;
   }
 
-  static Future<void> updateVideoData(
-    String mediaId,
+  static Future<void> updateVideoData({
+    required String mediaId,
     String? title,
     String? introduction,
     int? fileId,
     String? coverUrl,
-  ) async {
-    await VideoApi.updateVideoData(mediaId, title, introduction, fileId, coverUrl);
+    String? albumId,
+  }) async {
+    await VideoApi.updateVideoData(mediaId: mediaId, title: title, introduction: introduction, fileId: fileId, coverUrl: coverUrl, albumId: albumId);
   }
 
   static Future<void> deleteVideo(
@@ -44,6 +45,24 @@ class VideoService {
     int pageSize,
   ) async {
     var videoList = await VideoApi.getVideoListByUserId(user.id!, pageIndex, pageSize);
+    for (var video in videoList) {
+      video.user = user;
+    }
+    return videoList;
+  }
+
+  static Future<List<Video>> getVideoListByAlbumId({
+    required int albumUserId,
+    required String albumId,
+    int pageIndex = 0,
+    required int pageSize,
+  }) async {
+    var (videoList, user) = await VideoApi.getVideoListByAlbumId(
+      albumUserId: albumUserId,
+      albumId: albumId,
+      pageIndex: pageIndex,
+      pageSize: pageSize,
+    );
     for (var video in videoList) {
       video.user = user;
     }

@@ -96,7 +96,7 @@ class _AudioEditPageState extends State<AudioEditPage> {
                     return;
                   }
 
-                  if(coverUploadImage.fileId!=null){
+                  if (coverUploadImage.fileId != null) {
                     var (link, _) = await FileUrlService.genGetFileUrl(coverUploadImage.fileId!);
                     coverUrl = link;
                   }
@@ -129,7 +129,13 @@ class _AudioEditPageState extends State<AudioEditPage> {
                           newCoverUrl = coverUrl;
                           media.coverUrl = newCoverUrl;
                         }
-                        await AudioService.updateAudioData(widget.audio!.id!, newTitle, newIntroduction, newFileId, newCoverUrl);
+                        await AudioService.updateAudioData(
+                          mediaId: widget.audio!.id!,
+                          title: newTitle,
+                          introduction: newIntroduction,
+                          fileId: newFileId,
+                          coverUrl: newCoverUrl,
+                        );
                         if (widget.onUpdateMedia != null) {
                           await widget.onUpdateMedia!(media);
                         }

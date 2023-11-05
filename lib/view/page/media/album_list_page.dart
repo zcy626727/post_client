@@ -111,7 +111,7 @@ class _AlbumListPageState extends State<AlbumListPage> {
               ],
             ),
             body: Container(
-              color: colorScheme.surface,
+              color: colorScheme.background,
               child: Column(
                 children: [
                   Container(

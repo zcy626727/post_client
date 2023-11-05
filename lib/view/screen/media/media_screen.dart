@@ -4,12 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/model/media/album.dart';
 import 'package:post_client/model/user/user.dart';
+import 'package:post_client/service/media/album_service.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/component/media/list/album_list_tile.dart';
 import 'package:post_client/view/page/media/album_list_page.dart';
-import 'package:post_client/view/page/history/history_list_page.dart';
-import 'package:post_client/view/page/media/watch_later_list_page.dart';
+import 'package:post_client/view/page/media/history_list_page.dart';
 import 'package:post_client/view/widget/common_header_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -36,10 +36,10 @@ class _MediaScreenState extends State<MediaScreen> {
   }
 
   Future getData() async {
-    return Future.wait([getAlbum()]);
+    return Future.wait([getAlbumList()]);
   }
 
-  Future<void> getAlbum() async {
+  Future<void> getAlbumList() async {
     if (Global.user.id == null) {
       return;
     }
@@ -101,20 +101,20 @@ class _MediaScreenState extends State<MediaScreen> {
                         );
                       }
                     }),
-                // buildItemButton(
-                //     iconData: Icons.album,
-                //     text: "我的合集",
-                //     onPress: () {
-                //       if (Global.user.id == null) {
-                //         //显示登录页
-                //         Navigator.pushNamed(context, "login");
-                //       } else {
-                //         Navigator.push(
-                //           context,
-                //           MaterialPageRoute(builder: (context) => const AlbumListPage()),
-                //         );
-                //       }
-                //     }),
+                buildItemButton(
+                    iconData: Icons.album,
+                    text: "我的合集",
+                    onPress: () {
+                      if (Global.user.id == null) {
+                        //显示登录页
+                        Navigator.pushNamed(context, "login");
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const AlbumListPage()),
+                        );
+                      }
+                    }),
                 buildItemButton(
                     iconData: Icons.history,
                     text: "历史记录",
@@ -129,22 +129,21 @@ class _MediaScreenState extends State<MediaScreen> {
                         );
                       }
                     }),
-                // buildItemButton(
-                //     iconData: Icons.watch_later_outlined,
-                //     text: "稍后再看",
-                //     onPress: () {
-                //       if (Global.user.id == null) {
-                //         //显示登录页
-                //         Navigator.pushNamed(context, "login");
-                //       } else {
-                //         Navigator.push(
-                //           context,
-                //           MaterialPageRoute(builder: (context) => const WatchLaterListPage()),
-                //         );
-                //       }
-                //     }),
-                Container(width: 95),
-                Container(width: 95),
+                buildItemButton(
+                    iconData: Icons.watch_later_outlined,
+                    text: "缓存列表",
+                    onPress: () {
+                      if (Global.user.id == null) {
+                        //显示登录页
+                        Navigator.pushNamed(context, "login");
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const DownloadListPage()),
+                        );
+                      }
+                    }),
+                // Container(width: 95),
               ],
             ),
           ),
@@ -170,25 +169,25 @@ class _MediaScreenState extends State<MediaScreen> {
           //   ),
           // ),
           //todo 订阅合集
-          // Expanded(
-          //   child: Container(
-          //     margin: const EdgeInsets.only(top: 2),
-          //     color: colorScheme.surface,
-          //     child: Column(
-          //       children: [
-          //         const CommonHeaderBar(title: "订阅合集"),
-          //         Expanded(
-          //           child: ListView.builder(
-          //             itemBuilder: (ctx, index) {
-          //               return AlbumListTile(album: _albumList[index]);
-          //             },
-          //             itemCount: _albumList.length,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(top: 2),
+              color: colorScheme.surface,
+              child: Column(
+                children: [
+                  const CommonHeaderBar(title: "订阅合集"),
+                  Expanded(
+                    child: ListView.builder(
+                      itemBuilder: (ctx, index) {
+                        return AlbumListTile(album: _albumList[index]);
+                      },
+                      itemCount: _albumList.length,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

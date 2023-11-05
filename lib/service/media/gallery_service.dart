@@ -16,15 +16,24 @@ class GalleryService {
     return gallery;
   }
 
-  static Future<void> updateGalleryData(
-    String mediaId,
+  static Future<void> updateGalleryData({
+    required String mediaId,
     String? title,
     String? introduction,
     List<int>? fileIdList,
     List<String>? thumbnailUrlList,
     String? coverUrl,
-  ) async {
-    await GalleryApi.updateGalleryData(mediaId, title, introduction, fileIdList, thumbnailUrlList, coverUrl);
+    String? albumId,
+  }) async {
+    await GalleryApi.updateGalleryData(
+      thumbnailUrlList: thumbnailUrlList,
+      coverUrl: coverUrl,
+      mediaId: mediaId,
+      title: title,
+      introduction: introduction,
+      fileIdList: fileIdList,
+      albumId: albumId
+    );
   }
 
   static Future<void> deleteGallery(
@@ -47,6 +56,24 @@ class GalleryService {
     int pageSize,
   ) async {
     var galleryList = await GalleryApi.getGalleryListByUserId(user.id!, pageIndex, pageSize);
+    for (var gallery in galleryList) {
+      gallery.user = user;
+    }
+    return galleryList;
+  }
+
+  static Future<List<Gallery>> getGalleryListByAlbumId({
+    required int albumUserId,
+    required String albumId,
+    int pageIndex = 0,
+    required int pageSize,
+  }) async {
+    var (galleryList, user) = await GalleryApi.getGalleryListByAlbumId(
+      albumUserId: albumUserId,
+      albumId: albumId,
+      pageIndex: pageIndex,
+      pageSize: pageSize,
+    );
     for (var gallery in galleryList) {
       gallery.user = user;
     }

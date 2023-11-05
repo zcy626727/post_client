@@ -15,14 +15,22 @@ class ArticleService {
     return article;
   }
 
-  static Future<void> updateArticleData(
-    String mediaId,
+  static Future<void> updateArticleData({
+    required String mediaId,
     String? title,
     String? introduction,
     String? content,
     String? coverUrl,
-  ) async {
-    await ArticleApi.updateArticleData(mediaId, title, introduction, content, coverUrl);
+    String? albumId,
+  }) async {
+    await ArticleApi.updateArticleData(
+      mediaId: mediaId,
+      title: title,
+      introduction: introduction,
+      content: content,
+      coverUrl: coverUrl,
+      albumId: albumId,
+    );
   }
 
   static Future<void> deleteArticle(
@@ -45,6 +53,24 @@ class ArticleService {
     int pageSize,
   ) async {
     var articleList = await ArticleApi.getArticleListByUserId(user.id!, pageIndex, pageSize);
+    for (var article in articleList) {
+      article.user = user;
+    }
+    return articleList;
+  }
+
+  static Future<List<Article>> getAudioListByAlbumId({
+    required int albumUserId,
+    required String albumId,
+    int pageIndex = 0,
+    required int pageSize,
+  }) async {
+    var (articleList, user) = await ArticleApi.getArticleListByAlbumId(
+      albumUserId: albumUserId,
+      albumId: albumId,
+      pageIndex: pageIndex,
+      pageSize: pageSize,
+    );
     for (var article in articleList) {
       article.user = user;
     }

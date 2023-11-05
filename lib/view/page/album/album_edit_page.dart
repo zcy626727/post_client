@@ -29,6 +29,7 @@ class _AlbumEditPageState extends State<AlbumEditPage> {
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: colorScheme.background,
       appBar: AppBar(
         toolbarHeight: 50,
@@ -78,7 +79,8 @@ class _AlbumEditPageState extends State<AlbumEditPage> {
 
                       if (mounted) Navigator.pop(context);
                     } on Exception catch (e) {
-                      ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
+
+                     if(mounted) ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
                     }
                     //加载
                     setState(() {});

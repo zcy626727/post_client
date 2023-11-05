@@ -43,7 +43,7 @@ class MultipartUploadService {
           //上传中消息
           switch (msg[0]) {
             case 1: //task
-              task.copyField(MultipartUploadTask.fromJson(msg[1]));
+              task.copy(MultipartUploadTask.fromJson(msg[1]));
               await onUpload(task);
               break;
           }
@@ -269,7 +269,7 @@ class MultipartUploadService {
 }
 
 class SingleUploadService {
-  static Future<Isolate> doUploadFile({
+  static Future<void> doUploadFile({
     //上传任务
     required SingleUploadTask task,
     //上传出错
@@ -297,7 +297,7 @@ class SingleUploadService {
           //过程消息
           switch (msg[0]) {
             case 1: //task
-              task.copyField(SingleUploadTask.fromJson(msg[1]));
+              task.copy(SingleUploadTask.fromJson(msg[1]));
               await onUpload(task);
               break;
           }
@@ -317,7 +317,6 @@ class SingleUploadService {
     var isolate = await Isolate.spawn(SingleUploadService._startUploadIsolate, receivePort.sendPort);
     isolate.addOnExitListener(receivePort.sendPort);
     onAfterStart(isolate);
-    return isolate;
   }
 
   static Future<void> _startUploadIsolate(SendPort sendPort) async {
