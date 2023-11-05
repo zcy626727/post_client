@@ -33,13 +33,10 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
   final introductionController = TextEditingController(text: "");
   bool _withPost = true;
 
-  bool isSave = false;
-
   @override
   void initState() {
     super.initState();
     if (widget.article != null && widget.article!.id != null) {
-      isSave = true;
       titleController.text = widget.article!.title ?? "";
       introductionController.text = widget.article!.introduction ?? "";
       coverUploadImage.status = UploadTaskStatus.finished;
@@ -84,7 +81,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
             width: 70,
             child: Center(
               child: CommonActionOneButton(
-                title: isSave ? "保存" : "发布",
+                title: widget.article != null ? "保存" : "发布",
                 height: 30,
                 onTap: () async {
                   formKey.currentState?.save();
@@ -97,35 +94,36 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                         ShowSnackBar.error(context: context, message: "内容为空");
                         return;
                       }
-                      if (coverUploadImage.status != null && coverUploadImage.status != UploadTaskStatus.finished) {
+                      if (coverUploadImage.status != UploadTaskStatus.finished) {
                         ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                         return;
                       }
 
-                      if (isSave) {
+                      if (widget.article != null) {
                         //保存
                         String? newTitle;
                         String? newIntroduction;
                         String? newCoverUrl;
                         String? newContent;
-                        Article media = widget.article!;
 
                         if (titleController.value.text != widget.article!.title) {
                           newTitle = titleController.value.text;
-                          media.title = newTitle;
+                          widget.article!.title = newTitle;
                         }
                         if (introductionController.value.text != widget.article!.introduction) {
                           newIntroduction = introductionController.value.text;
-                          media.introduction = newIntroduction;
+                          widget.article!.introduction = newIntroduction;
                         }
                         if (content != widget.article!.content) {
                           newContent = content;
-                          media.content = newContent;
+                          widget.article!.content = newContent;
                         }
-                        if (widget.article!.coverUrl!=null) {
-                          newCoverUrl = widget.article!.coverUrl!;
-                          media.coverUrl = newCoverUrl;
+                        if (widget.article!.coverUrl != coverUploadImage.coverUrl) {
+                          newCoverUrl = coverUploadImage.coverUrl;
+                          widget.article!.coverUrl = newCoverUrl;
                         }
+                        if (newTitle == null && newIntroduction == null && newCoverUrl == null && newContent == null) throw const FormatException("未做修改");
+
                         await ArticleService.updateArticleData(
                           mediaId: widget.article!.id!,
                           title: newTitle,
@@ -134,7 +132,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                           coverUrl: newCoverUrl,
                         );
                         if (widget.onUpdateMedia != null) {
-                          widget.onUpdateMedia!(media);
+                          widget.onUpdateMedia!(widget.article!);
                         }
                       } else {
                         //新建
@@ -177,7 +175,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                         titleController: titleController,
                         introductionController: introductionController,
                       ),
-                      if (!isSave)
+                      if (widget.article == null)
                         Container(
                           color: colorScheme.surface,
                           padding: const EdgeInsets.symmetric(horizontal: 1),

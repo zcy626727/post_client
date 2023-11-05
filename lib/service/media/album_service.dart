@@ -20,7 +20,7 @@ class AlbumService {
   }
 
 
-  static Future<void> updateGalleryData({
+  static Future<void> updateAlbumInfo({
     required String albumId,
     String? title,
     String? introduction,

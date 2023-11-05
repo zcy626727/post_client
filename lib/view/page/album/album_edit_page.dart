@@ -12,9 +12,10 @@ import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
 
 class AlbumEditPage extends StatefulWidget {
-  const AlbumEditPage({super.key, this.album});
+  const AlbumEditPage({super.key, this.album, this.onUpdate});
 
   final Album? album;
+  final Function(Album)? onUpdate;
 
   @override
   State<AlbumEditPage> createState() => _AlbumEditPageState();
@@ -25,7 +26,6 @@ class _AlbumEditPageState extends State<AlbumEditPage> {
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
-  bool _isPublic = false;
   (int, String) _selectedMedia = MediaType.option[0];
 
   @override
@@ -83,14 +83,43 @@ class _AlbumEditPageState extends State<AlbumEditPage> {
                         ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                         return;
                       }
-                      var (_, staticUrl) = await FileUrlService.genGetFileUrl(coverUploadImage.fileId!);
 
-                      var _ = await AlbumService.createAlbum(
-                        titleController.text,
-                        introductionController.text,
-                        _selectedMedia.$1,
-                        staticUrl,
-                      );
+                      if (widget.album != null) {
+                        //保存
+
+                        String? newTitle;
+                        String? newIntroduction;
+                        String? newCoverUrl;
+
+                        if (titleController.value.text != widget.album!.title) {
+                          newTitle = titleController.value.text;
+                          widget.album!.title = newTitle;
+                        }
+                        if (introductionController.value.text != widget.album!.introduction) {
+                          newIntroduction = introductionController.value.text;
+                          widget.album!.introduction = newIntroduction;
+                        }
+                        if (coverUploadImage.coverUrl != widget.album!.coverUrl) {
+                          newCoverUrl = coverUploadImage.coverUrl;
+                        }
+                        if (newTitle == null && newIntroduction == null && newCoverUrl == null) throw const FormatException("未做修改");
+                        await AlbumService.updateAlbumInfo(
+                          albumId: widget.album!.id!,
+                          title: newTitle,
+                          introduction: newIntroduction,
+                          coverUrl: newCoverUrl,
+                        );
+                        if (widget.onUpdate != null) {
+                          widget.onUpdate!(widget.album!);
+                        }
+                      } else {
+                        var _ = await AlbumService.createAlbum(
+                          titleController.text,
+                          introductionController.text,
+                          _selectedMedia.$1,
+                          coverUploadImage.coverUrl,
+                        );
+                      }
 
                       if (mounted) Navigator.pop(context);
                     } on Exception catch (e) {

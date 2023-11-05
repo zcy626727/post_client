@@ -91,7 +91,7 @@ class _MediaMoreButtonState extends State<MediaMoreButton> {
                       Navigator.pop(context);
                       await widget.onDeleteMedia(widget.media);
                     } on DioException catch (e) {
-                      ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
+                      if (mounted) ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
                     } finally {}
                   },
                   onCancel: () {
@@ -104,13 +104,13 @@ class _MediaMoreButtonState extends State<MediaMoreButton> {
           case "edit":
             Media m = widget.media;
             if (m is Article) {
-              await Navigator.push(context, MaterialPageRoute(builder: (context) => ArticleEditPage(article: m, onUpdateMedia: (article) => widget.onUpdateMedia(article))));
+              if (mounted) await Navigator.push(context, MaterialPageRoute(builder: (context) => ArticleEditPage(article: m, onUpdateMedia: (article) => widget.onUpdateMedia(article))));
             } else if (m is Gallery) {
-              await Navigator.push(context, MaterialPageRoute(builder: (context) => GalleryEditPage(gallery: m, onUpdateMedia: (gallery) => widget.onUpdateMedia(gallery))));
+              if (mounted) await Navigator.push(context, MaterialPageRoute(builder: (context) => GalleryEditPage(gallery: m, onUpdateMedia: (gallery) => widget.onUpdateMedia(gallery))));
             } else if (m is Audio) {
-              await Navigator.push(context, MaterialPageRoute(builder: (context) => AudioEditPage(audio: m, onUpdateMedia: (audio) => widget.onUpdateMedia(audio))));
+              if (mounted) await Navigator.push(context, MaterialPageRoute(builder: (context) => AudioEditPage(audio: m, onUpdateMedia: (audio) => widget.onUpdateMedia(audio))));
             } else if (m is Video) {
-              await Navigator.push(context, MaterialPageRoute(builder: (context) => VideoEditPage(video: m, onUpdateMedia: (video) => widget.onUpdateMedia(video))));
+              if (mounted) await Navigator.push(context, MaterialPageRoute(builder: (context) => VideoEditPage(video: m, onUpdateMedia: (video) => widget.onUpdateMedia(video))));
             }
             await widget.onUpdateMedia(widget.media);
             break;

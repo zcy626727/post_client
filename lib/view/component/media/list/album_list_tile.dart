@@ -33,8 +33,11 @@ class _AlbumListTileState extends State<AlbumListTile> {
                 album: widget.album,
                 onDelete: (a) {
                   if (widget.onDelete != null) widget.onDelete!(a);
-
                   if (mounted) Navigator.pop(context);
+                },
+                onUpdate: (a) {
+                  widget.album.copyAlbum(a);
+                  setState(() {});
                 },
               ),
             ),

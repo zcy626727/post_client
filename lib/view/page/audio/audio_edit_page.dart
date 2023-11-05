@@ -29,13 +29,11 @@ class _AudioEditPageState extends State<AudioEditPage> {
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
   bool _withPost = true;
-  bool isSave = false;
 
   @override
   void initState() {
     super.initState();
     if (widget.audio != null && widget.audio!.id != null) {
-      isSave = true;
       coverUploadImage.status = UploadTaskStatus.finished;
       coverUploadImage.mediaType = MediaType.gallery;
       coverUploadImage.coverUrl = widget.audio!.coverUrl;
@@ -78,7 +76,7 @@ class _AudioEditPageState extends State<AudioEditPage> {
             width: 70,
             child: Center(
               child: CommonActionOneButton(
-                title: isSave ? "保存" : "发布",
+                title: widget.audio != null ? "保存" : "发布",
                 height: 30,
                 onTap: () async {
                   formKey.currentState?.save();
@@ -90,21 +88,15 @@ class _AudioEditPageState extends State<AudioEditPage> {
                     ShowSnackBar.error(context: context, message: "音频未上传完成，请稍后");
                     return;
                   }
-                  String? coverUrl;
-                  if (coverUploadImage.status != null && coverUploadImage.status != UploadTaskStatus.finished) {
+                  if (coverUploadImage.status != UploadTaskStatus.finished) {
                     ShowSnackBar.error(context: context, message: "封面未上传完成，请稍后");
                     return;
-                  }
-
-                  if (coverUploadImage.fileId != null) {
-                    var (link, _) = await FileUrlService.genGetFileUrl(coverUploadImage.fileId!);
-                    coverUrl = link;
                   }
 
                   //执行验证
                   if (formKey.currentState!.validate()) {
                     try {
-                      if (isSave) {
+                      if (widget.audio != null) {
                         //保存
                         String? newTitle;
                         String? newIntroduction;
@@ -125,10 +117,12 @@ class _AudioEditPageState extends State<AudioEditPage> {
                           newFileId = audioUploadTask.fileId!;
                           media.fileId = newFileId;
                         }
-                        if (coverUrl != widget.audio!.coverUrl) {
-                          newCoverUrl = coverUrl;
+                        if (coverUploadImage.coverUrl != widget.audio!.coverUrl) {
+                          newCoverUrl = coverUploadImage.coverUrl;
                           media.coverUrl = newCoverUrl;
                         }
+                        if (newTitle == null && newIntroduction == null && newCoverUrl == null && newFileId == null) throw const FormatException("未做修改");
+
                         await AudioService.updateAudioData(
                           mediaId: widget.audio!.id!,
                           title: newTitle,
@@ -141,11 +135,11 @@ class _AudioEditPageState extends State<AudioEditPage> {
                         }
                       } else {
                         //新建
-                        var video = await AudioService.createAudio(
+                        var audio = await AudioService.createAudio(
                           titleController.value.text,
                           introductionController.value.text,
                           audioUploadTask.fileId!,
-                          coverUrl,
+                          coverUploadImage.coverUrl,
                           _withPost,
                         );
                       }
@@ -176,7 +170,7 @@ class _AudioEditPageState extends State<AudioEditPage> {
                 titleController: titleController,
                 introductionController: introductionController,
               ),
-              if (!isSave)
+              if (widget.audio == null)
                 Container(
                   color: colorScheme.surface,
                   child: ListTile(

@@ -32,10 +32,11 @@ import '../../widget/dialog/confirm_alert_dialog.dart';
 import '../comment/reply_page.dart';
 
 class AlbumSourceListPage extends StatefulWidget {
-  const AlbumSourceListPage({super.key, required this.album, this.onDelete});
+  const AlbumSourceListPage({super.key, required this.album, this.onDelete,this.onUpdate});
 
   final Album album;
   final Function(Album)? onDelete;
+  final Function(Album)? onUpdate;
 
   @override
   State<AlbumSourceListPage> createState() => _AlbumSourceListPageState();
@@ -175,6 +176,13 @@ class _AlbumSourceListPageState extends State<AlbumSourceListPage> {
                               MaterialPageRoute(
                                 builder: (context) => AlbumEditPage(
                                   album: widget.album,
+                                  onUpdate: (a){
+                                    widget.album.copyAlbum(a);
+                                    if (widget.onUpdate != null) {
+                                      widget.onUpdate!(widget.album);
+                                    }
+                                    setState(() {});
+                                  },
                                 ),
                               ),
                             );

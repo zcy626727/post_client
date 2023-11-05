@@ -33,19 +33,18 @@ class _VideoEditPageState extends State<VideoEditPage> {
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
   bool _withPost = true;
-  bool isSave = false;
 
   @override
   void initState() {
     super.initState();
     if (widget.video != null && widget.video!.id != null) {
-      isSave = true;
       titleController.text = widget.video!.title ?? "";
       introductionController.text = widget.video!.introduction ?? "";
       coverUploadImage.status = UploadTaskStatus.finished;
       coverUploadImage.mediaType = MediaType.gallery;
       coverUploadImage.coverUrl = widget.video!.coverUrl;
       videoUploadTask.fileId = widget.video!.fileId;
+      videoUploadTask.status = UploadTaskStatus.finished;
     }
   }
 
@@ -80,7 +79,7 @@ class _VideoEditPageState extends State<VideoEditPage> {
             width: 70,
             child: Center(
               child: CommonActionOneButton(
-                title: isSave ? "保存" : "发布",
+                title: widget.video != null ? "保存" : "发布",
                 height: 30,
                 onTap: () async {
                   formKey.currentState?.save();
@@ -100,13 +99,7 @@ class _VideoEditPageState extends State<VideoEditPage> {
                         return;
                       }
 
-                      String? coverUrl;
-                      if (coverUploadImage.fileId != null) {
-                        var (_, staticUrl) = await FileUrlService.genGetFileUrl(coverUploadImage.fileId!);
-                        coverUrl = staticUrl;
-                      }
-
-                      if (isSave) {
+                      if (widget.video != null) {
                         //保存
                         String? newTitle;
                         String? newIntroduction;
@@ -123,15 +116,17 @@ class _VideoEditPageState extends State<VideoEditPage> {
                           newIntroduction = introductionController.value.text;
                           media.introduction = newIntroduction;
                         }
-                        if (coverUrl != widget.video!.coverUrl) {
-                          newCoverUrl = coverUrl;
+                        if (coverUploadImage.coverUrl != widget.video!.coverUrl) {
+                          newCoverUrl = coverUploadImage.coverUrl;
                           media.coverUrl = newCoverUrl;
                         }
                         if (videoUploadTask.fileId! != widget.video!.fileId) {
                           newFileId = videoUploadTask.fileId!;
                           media.fileId = newFileId;
                         }
-                        await VideoService.updateVideoData(mediaId: widget.video!.id!, title: newTitle, introduction: newIntroduction, fileId: newFileId, coverUrl: coverUrl);
+                        if (newTitle == null && newIntroduction == null && newCoverUrl == null && newFileId == null) throw const FormatException("未做修改");
+
+                        await VideoService.updateVideoData(mediaId: widget.video!.id!, title: newTitle, introduction: newIntroduction, fileId: newFileId, coverUrl: newCoverUrl);
                         if (widget.onUpdateMedia != null) {
                           widget.onUpdateMedia!(media);
                         }
@@ -141,7 +136,7 @@ class _VideoEditPageState extends State<VideoEditPage> {
                           titleController.value.text,
                           introductionController.value.text,
                           videoUploadTask.fileId!,
-                          coverUrl,
+                          coverUploadImage.coverUrl,
                           _withPost,
                         );
                       }
@@ -172,7 +167,7 @@ class _VideoEditPageState extends State<VideoEditPage> {
                 titleController: titleController,
                 introductionController: introductionController,
               ),
-              if (!isSave)
+              if (widget.video == null)
                 Container(
                   color: colorScheme.surface,
                   child: ListTile(

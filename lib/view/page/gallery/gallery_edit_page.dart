@@ -32,13 +32,10 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
   final double imageWidth = 100;
   bool _withPost = true;
 
-  bool isSave = false;
-
   @override
   void initState() {
     super.initState();
     if (widget.gallery != null && widget.gallery!.id != null) {
-      isSave = true;
       titleController.text = widget.gallery!.title ?? "";
       introductionController.text = widget.gallery!.introduction ?? "";
       coverUploadImage.status = UploadTaskStatus.finished;
@@ -90,7 +87,7 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
             width: 70,
             child: Center(
               child: CommonActionOneButton(
-                title: isSave ? "保存" : "发布",
+                title: widget.gallery != null ? "保存" : "发布",
                 height: 30,
                 onTap: () async {
                   formKey.currentState?.save();
@@ -109,14 +106,13 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                         thumbnailUrlList.add(task.coverUrl!);
                       }
 
-                      var coverUrl = thumbnailUrlList[0];
-                      if (coverUploadImage.fileId != null) {
-                        var (_, staticUrl) = await FileUrlService.genGetFileUrl(coverUploadImage.fileId!);
-                        coverUrl = staticUrl;
+                      if (coverUploadImage.coverUrl == null) {
+                        //未选择封面，填充封面
+                        coverUploadImage.coverUrl = thumbnailUrlList[0];
+                        coverUploadImage.status = UploadTaskStatus.finished;
                       }
 
-                      if (isSave) {
-                        //保存
+                      if (widget.gallery != null) {
                         String? newTitle;
                         String? newIntroduction;
                         String? newCoverUrl;
@@ -133,8 +129,8 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                           newIntroduction = introductionController.value.text;
                           media.introduction = newIntroduction;
                         }
-                        if (coverUrl != widget.gallery!.coverUrl) {
-                          newCoverUrl = coverUrl;
+                        if (coverUploadImage.coverUrl != widget.gallery!.coverUrl) {
+                          newCoverUrl = coverUploadImage.coverUrl;
                           media.coverUrl = newCoverUrl;
                         }
                         if (fileIdList != widget.gallery!.fileIdList) {
@@ -145,6 +141,10 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                           newThumbnailUrlList = thumbnailUrlList;
                           media.thumbnailUrlList = newThumbnailUrlList;
                         }
+                        if (newTitle == null && newIntroduction == null && fileIdList == null && newCoverUrl == null && newFileIdList == null && newThumbnailUrlList == null) {
+                          throw const FormatException("未做修改");
+                        }
+
                         await GalleryService.updateGalleryData(
                           mediaId: widget.gallery!.id!,
                           title: newTitle,
@@ -163,14 +163,14 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                           introductionController.value.text,
                           fileIdList,
                           thumbnailUrlList,
-                          coverUrl,
+                          coverUploadImage.coverUrl!,
                           _withPost,
                         );
                       }
 
                       if (mounted) Navigator.pop(context);
                     } on Exception catch (e) {
-                      ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
+                      if (mounted) ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
                     }
                     //加载
                     setState(() {});
@@ -207,7 +207,7 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                   setState(() {});
                 },
               ),
-              if (!isSave)
+              if (widget.gallery == null)
                 Container(
                   color: colorScheme.surface,
                   child: ListTile(
