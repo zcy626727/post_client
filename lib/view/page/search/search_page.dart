@@ -3,9 +3,12 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/constant/source.dart';
+import 'package:post_client/model/media/album.dart';
 import 'package:post_client/model/user/user.dart';
+import 'package:post_client/service/media/album_service.dart';
 import 'package:post_client/service/message/post_service.dart';
 import 'package:post_client/service/user/user_service.dart';
+import 'package:post_client/view/component/media/list/album_list_tile.dart';
 
 import '../../../model/media/article.dart';
 import '../../../model/media/audio.dart';
@@ -68,6 +71,7 @@ class _SearchPageState extends State<SearchPage> {
         title: Container(
           padding: const EdgeInsets.only(top: 5, bottom: 5),
           child: CupertinoSearchTextField(
+            style: TextStyle(color: colorScheme.onBackground),
             borderRadius: const BorderRadius.all(Radius.circular(20)),
             prefixInsets: const EdgeInsets.only(left: 10, top: 3),
             onChanged: (value) {
@@ -109,7 +113,7 @@ class _SearchPageState extends State<SearchPage> {
     var colorScheme = Theme.of(context).colorScheme;
 
     return DefaultTabController(
-      length: 6,
+      length: 7,
       child: Container(
         color: colorScheme.surface,
         child: Column(
@@ -123,6 +127,7 @@ class _SearchPageState extends State<SearchPage> {
                 buildTab("视频"),
                 buildTab("音频"),
                 buildTab("文章"),
+                buildTab("合集"),
                 buildTab("用户"),
               ],
             ),
@@ -288,6 +293,36 @@ class _SearchPageState extends State<SearchPage> {
               );
             },
           ),
+          CommonItemList<Album>(
+            onLoad: (int page) async {
+              var userList = await AlbumService.searchAlbum(_keyword, page, 20);
+              return userList;
+            },
+            itemName: "合集",
+            itemHeight: null,
+            isGrip: false,
+            enableScrollbar: true,
+            itemBuilder: (ctx, album, albumList, onFresh) {
+              return Container(
+                color: colorScheme.surface,
+                margin: const EdgeInsets.only(top: 2),
+                child: AlbumListTile(
+                  key: ValueKey(album.id),
+                  album: album,
+                  onUpdateAlbum: (a) {
+                    album.copyAlbum(a);
+                    setState(() {});
+                  },
+                  onDeleteAlbum: (a) {
+                    if (albumList != null) {
+                      albumList.remove(a);
+                      setState(() {});
+                    }
+                  },
+                ),
+              );
+            },
+          ),
           CommonItemList<User>(
             onLoad: (int page) async {
               var userList = await UserService.searchUser(_keyword, page, 20);
@@ -313,6 +348,7 @@ class _SearchPageState extends State<SearchPage> {
               );
             },
           ),
+
         ],
       ),
     );

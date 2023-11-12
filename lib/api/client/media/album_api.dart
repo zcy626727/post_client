@@ -159,7 +159,7 @@ class AlbumApi {
   ) async {
     var r = await MediaHttpConfig.dio.get(
       "/album/searchAlbum",
-      data: {
+      queryParameters: {
         "title": title,
         "page": page,
         "pageSize": pageSize,
