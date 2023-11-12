@@ -5,13 +5,14 @@ import '../../../model/user/user.dart';
 import '../media_http_config.dart';
 
 class AudioApi {
-  static Future<Audio> createAudio(
-    String title,
-    String introduction,
-    int fileId,
+  static Future<Audio> createAudio({
+    required String title,
+    required String introduction,
+    required int fileId,
     String? coverUrl,
-    bool withPost,
-  ) async {
+    required bool withPost,
+    String? albumId,
+  }) async {
     var r = await MediaHttpConfig.dio.post(
       "/audio/createAudio",
       data: {
@@ -20,6 +21,7 @@ class AudioApi {
         "fileId": fileId,
         "coverUrl": coverUrl,
         "withPost": withPost,
+        "albumId": albumId,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

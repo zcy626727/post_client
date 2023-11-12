@@ -13,17 +13,21 @@ import 'package:post_client/view/widget/button/common_action_one_button.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:provider/provider.dart';
 
+import '../../../config/page_config.dart';
+import '../../../model/media/album.dart';
 import '../../../model/media/article.dart';
 import '../../../model/media/audio.dart';
 import '../../../model/media/gallery.dart';
 import '../../../model/media/video.dart';
 import '../../../model/message/feed_feedback.dart';
 import '../../../model/user/user.dart';
+import '../../../service/media/album_service.dart';
 import '../../../service/media/article_service.dart';
 import '../../../service/media/audio_service.dart';
 import '../../../service/media/gallery_service.dart';
 import '../../../service/media/video_service.dart';
 import '../../../service/message/post_service.dart';
+import '../../component/media/list/album_list_tile.dart';
 import '../../component/media/list/article_list_tile.dart';
 import '../../component/media/list/audio_list_tile.dart';
 import '../../component/media/list/gallery_list_tile.dart';
@@ -73,7 +77,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
         if (snapShot.connectionState == ConnectionState.done) {
           return Scaffold(
             body: DefaultTabController(
-              length: 5,
+              length: 6,
               child: NestedScrollView(
                 headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
@@ -110,7 +114,6 @@ class _UserDetailPageState extends State<UserDetailPage> {
                             ),
                           ),
                         ),
-                        //todo 修复查看其他用户是头像显示的是自己的头像，未测试
                         flexibleSpace: FlexibleSpaceBar(
                           background: buildProfileCard(widget.user),
                         ),
@@ -128,6 +131,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                                 buildTab("视频"),
                                 buildTab("音频"),
                                 buildTab("文章"),
+                                buildTab("合集"),
                               ],
                             ),
                           ),
@@ -261,16 +265,6 @@ class _UserDetailPageState extends State<UserDetailPage> {
       child: TabBarView(
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          // PostList(
-          //   onLoad: (int page) async {
-          //     var postList = await PostService.getPostListByUserId(widget.user, page, 20);
-          //     return postList;
-          //   },
-          //   enableRefresh: true,
-          //   itemName: "动态",
-          //   itemHeight: null,
-          //   enableScrollbar: true,
-          // ),
           CommonItemList<Post>(
             onLoad: (int page) async {
               var postList = await PostService.getPostListByUserId(widget.user, page, 20);
@@ -390,6 +384,32 @@ class _UserDetailPageState extends State<UserDetailPage> {
                 onDeleteMedia: (a) {
                   if (articleList != null) {
                     articleList.remove(a);
+                    setState(() {});
+                  }
+                },
+              );
+            },
+          ),
+          CommonItemList<Album>(
+            onLoad: (int pageIndex) async {
+              var albumList = await AlbumService.getAlbumListByUserId(Global.user, pageIndex, PageConfig.commonPageSize);
+              return albumList;
+            },
+            itemName: "合集",
+            itemHeight: null,
+            isGrip: false,
+            enableScrollbar: true,
+            itemBuilder: (ctx, album, albumList, onFresh) {
+              return AlbumListTile(
+                key: ValueKey(album.id),
+                album: album,
+                onUpdateAlbum: (a) {
+                  album.copyAlbum(a);
+                  setState(() {});
+                },
+                onDeleteAlbum: (a) {
+                  if (albumList != null) {
+                    albumList.remove(a);
                     setState(() {});
                   }
                 },

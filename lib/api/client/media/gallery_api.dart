@@ -6,13 +6,13 @@ import '../media_http_config.dart';
 
 class GalleryApi {
   static Future<Gallery> createGallery(
-    String title,
-    String introduction,
-    List<int> fileIdList,
-    List<String> thumbnailUrlList,
-    String coverUrl,
-    bool withPost,
-  ) async {
+      {required String title,
+      required String introduction,
+      required List<int> fileIdList,
+      required List<String> thumbnailUrlList,
+      required String coverUrl,
+      required bool withPost,
+      String? albumId}) async {
     var r = await MediaHttpConfig.dio.post(
       "/gallery/createGallery",
       data: {
@@ -22,6 +22,7 @@ class GalleryApi {
         "thumbnailUrlList": thumbnailUrlList,
         "coverUrl": coverUrl,
         "withPost": withPost,
+        "albumId": albumId,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

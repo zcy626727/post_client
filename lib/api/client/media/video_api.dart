@@ -5,13 +5,14 @@ import '../../../model/user/user.dart';
 import '../media_http_config.dart';
 
 class VideoApi {
-  static Future<Video> createVideo(
-    String title,
-    String introduction,
-    int fileId,
+  static Future<Video> createVideo({
+    required String title,
+    required String introduction,
+    required int fileId,
     String? coverUrl,
-    bool withPost,
-  ) async {
+    required bool withPost,
+    String? albumId,
+  }) async {
     var r = await MediaHttpConfig.dio.post(
       "/video/createVideo",
       data: {
@@ -20,6 +21,7 @@ class VideoApi {
         "fileId": fileId,
         "coverUrl": coverUrl,
         "withPost": withPost,
+        "albumId": albumId,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

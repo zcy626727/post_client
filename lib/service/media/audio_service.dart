@@ -3,14 +3,22 @@ import '../../model/media/audio.dart';
 import '../../model/user/user.dart';
 
 class AudioService {
-  static Future<Audio> createAudio(
-    String title,
-    String introduction,
-    int fileId,
+  static Future<Audio> createAudio({
+    required String title,
+    required String introduction,
+    required int fileId,
     String? coverUrl,
-    bool withPost,
-  ) async {
-    var audio = await AudioApi.createAudio(title, introduction, fileId, coverUrl, withPost);
+    required bool withPost,
+    String? albumId,
+  }) async {
+    var audio = await AudioApi.createAudio(
+      title: title,
+      introduction: introduction,
+      fileId: fileId,
+      coverUrl: coverUrl,
+      withPost: withPost,
+      albumId: albumId,
+    );
     return audio;
   }
 
@@ -23,11 +31,11 @@ class AudioService {
     String? albumId,
   }) async {
     await AudioApi.updateAudioData(
-      mediaId:mediaId,
-      title:title,
-      introduction:introduction,
-      fileId:fileId,
-      coverUrl:coverUrl,
+      mediaId: mediaId,
+      title: title,
+      introduction: introduction,
+      fileId: fileId,
+      coverUrl: coverUrl,
       albumId: albumId,
     );
   }

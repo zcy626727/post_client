@@ -84,66 +84,67 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
       );
     }
 
-    return FutureBuilder(
-      future: _futureBuilderFuture,
-      builder: (BuildContext context, AsyncSnapshot snapShot) {
-        if (snapShot.connectionState == ConnectionState.done) {
-          return GestureDetector(
-            onTap: () async {
-              //打开file picker
-              FilePickerResult? result = await FilePicker.platform.pickFiles(
-                type: FileType.image,
-              );
-              if (result != null) {
-                RandomAccessFile? read;
-                try {
-                  var file = result.files.single;
-                  read = await File(result.files.single.path!).open();
-                  var data = await read.read(16);
-                  //消息接收器
-                  widget.task.srcPath = file.path;
-                  widget.task.totalSize = file.size;
-                  widget.task.private = false;
-                  widget.task.status = UploadTaskStatus.uploading;
-                  widget.task.mediaType = MediaType.gallery;
-                  uploadImage(widget.task);
-                } catch (e) {
-                  widget.task.clear();
-                } finally {
-                  read?.close();
-                }
-                setState(() {});
-              } else {
-                // User canceled the picker
-              }
-            },
-            onLongPress: widget.enableDelete
-                ? () async {
-                    await deleteImage();
+    return Container(
+      foregroundDecoration: widget.task.status == UploadTaskStatus.finished ? null : BoxDecoration(color: Colors.grey.withAlpha(100)),
+      width: imageWidth,
+      height: imageWidth,
+      child: FutureBuilder(
+        future: _futureBuilderFuture,
+        builder: (BuildContext context, AsyncSnapshot snapShot) {
+          if (snapShot.connectionState == ConnectionState.done) {
+            return GestureDetector(
+              onTap: () async {
+                //打开file picker
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  type: FileType.image,
+                );
+                if (result != null) {
+                  RandomAccessFile? read;
+                  try {
+                    var file = result.files.single;
+                    read = await File(result.files.single.path!).open();
+                    var data = await read.read(16);
+                    //消息接收器
+                    widget.task.srcPath = file.path;
+                    widget.task.totalSize = file.size;
+                    widget.task.private = false;
+                    widget.task.status = UploadTaskStatus.uploading;
+                    widget.task.mediaType = MediaType.gallery;
+                    uploadImage(widget.task);
+                  } catch (e) {
+                    widget.task.clear();
+                  } finally {
+                    read?.close();
                   }
-                : null,
-            child: Container(
-              //上传成功前填充前景色为灰
-              foregroundDecoration: widget.task.status == UploadTaskStatus.finished ? null : BoxDecoration(color: Colors.grey.withAlpha(100)),
-              width: imageWidth,
-              height: imageWidth,
-              decoration: decorationImage == null
-                  ? null
-                  : BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      image: decorationImage,
-                    ),
-              child: decorationImage == null ? const Icon(Icons.cloud_upload) : null,
-            ),
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          );
-        }
-      },
+                  setState(() {});
+                } else {
+                  // User canceled the picker
+                }
+              },
+              onLongPress: widget.enableDelete
+                  ? () async {
+                await deleteImage();
+              }
+                  : null,
+              child: Container(
+                decoration: decorationImage == null
+                    ? null
+                    : BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  image: decorationImage,
+                ),
+                child: decorationImage == null ? const Icon(Icons.cloud_upload) : null,
+              ),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -160,9 +161,9 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
                 await widget.onDeleteImage!(widget.task);
               }
             } on DioException catch (e) {
-              ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
+              if (mounted) ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
             } finally {
-              Navigator.pop(context);
+              if (mounted) Navigator.pop(context);
             }
             if (isolate != null) {
               isolate!.kill();

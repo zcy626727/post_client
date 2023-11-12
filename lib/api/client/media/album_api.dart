@@ -72,6 +72,22 @@ class AlbumApi {
     );
   }
 
+  static Future<Album> getAlbumById(
+    String albumId,
+  ) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/album/getAlbumById",
+      queryParameters: {
+        "albumId": albumId,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": false,
+        "withToken": false,
+      }),
+    );
+    return Album.fromJson(r.data['album']);
+  }
+
   static Future<List<Album>> getUserAlbumList(
     int userId,
     int mediaType,
@@ -97,6 +113,43 @@ class AlbumApi {
       albumList.add(album);
     }
     return albumList;
+  }
+
+  static Future<List<Album>> getAlbumListRandom(
+    int pageSize,
+  ) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/album/getAlbumListRandom",
+      queryParameters: {
+        "pageSize": pageSize,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": false,
+        "withToken": false,
+      }),
+    );
+    return _parseAlbumListWithUser(r);
+  }
+
+  static Future<List<Album>> getAlbumListByUserId(
+    int userId,
+    int pageIndex,
+    int pageSize,
+  ) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/album/getAlbumListByUserId",
+      queryParameters: {
+        "targetUserId": userId,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": false,
+        "withToken": false,
+      }),
+    );
+
+    return _parseAlbumList(r);
   }
 
   static Future<List<Album>> searchAlbum(
@@ -130,6 +183,15 @@ class AlbumApi {
     for (var albumJson in r.data['albumList']) {
       var album = Album.fromJson(albumJson);
       album.user = userMap[album.userId];
+      albumList.add(album);
+    }
+    return albumList;
+  }
+
+  static List<Album> _parseAlbumList(Response<dynamic> r) {
+    List<Album> albumList = [];
+    for (var albumJson in r.data['albumList']) {
+      var album = Album.fromJson(albumJson);
       albumList.add(album);
     }
     return albumList;

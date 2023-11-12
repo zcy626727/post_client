@@ -5,13 +5,14 @@ import 'package:post_client/model/user/user.dart';
 import '../media_http_config.dart';
 
 class ArticleApi {
-  static Future<Article> createArticle(
-    String title,
-    String introduction,
-    String content,
+  static Future<Article> createArticle({
+    required String title,
+    required String introduction,
+    required String content,
     String? coverUrl,
-    bool withPost,
-  ) async {
+    required bool withPost,
+    String? albumId,
+  }) async {
     var r = await MediaHttpConfig.dio.post(
       "/article/createArticle",
       data: {
@@ -20,6 +21,7 @@ class ArticleApi {
         "content": content,
         "coverUrl": coverUrl,
         "withPost": withPost,
+        "albumId": albumId,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
@@ -38,9 +40,6 @@ class ArticleApi {
     String? coverUrl,
     String? albumId,
   }) async {
-    if (title == null && introduction == null && content == null && coverUrl == null) {
-      return;
-    }
     var r = await MediaHttpConfig.dio.post(
       "/article/updateArticleData",
       data: {

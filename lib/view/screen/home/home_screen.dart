@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:post_client/config/page_config.dart';
+import 'package:post_client/model/media/album.dart';
 import 'package:post_client/model/media/gallery.dart';
+import 'package:post_client/service/media/album_service.dart';
 import 'package:post_client/service/media/gallery_service.dart';
 import 'package:post_client/service/media/video_service.dart';
 import 'package:post_client/util/responsive.dart';
+import 'package:post_client/view/component/media/list/album_list_tile.dart';
 import 'package:post_client/view/component/media/list/video_list_tile.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 import 'package:post_client/view/widget/player/common_video_player.dart';
@@ -78,11 +82,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Container(
                               margin: const EdgeInsets.only(top: 3),
-                              child: Icon(Icons.search,color: colorScheme.onSurface.withAlpha(100),size: 18,),
+                              child: Icon(
+                                Icons.search,
+                                color: colorScheme.onSurface.withAlpha(100),
+                                size: 18,
+                              ),
                             ),
                             Text(
                               "搜索",
-                              style: TextStyle(color: colorScheme.onSurface.withAlpha(100),fontSize: 16),
+                              style: TextStyle(color: colorScheme.onSurface.withAlpha(100), fontSize: 16),
                             )
                           ],
                         ),
@@ -111,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ];
         },
         body: DefaultTabController(
-          length: 5,
+          length: 6,
           child: Column(
             children: [
               Divider(
@@ -148,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           CommonItemList<Post>(
             onLoad: (int page) async {
-              var postList = await  PostService.getPostListRandom(20);
+              var postList = await PostService.getPostListRandom(20);
               return postList;
             },
             itemName: "动态",
@@ -172,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           CommonItemList<Gallery>(
             onLoad: (int page) async {
-              var galleryList = await GalleryService.getGalleryListRandom(20);
+              var galleryList = await GalleryService.getGalleryListRandom(PageConfig.commonPageSize);
               return galleryList;
             },
             itemName: "图片",
@@ -199,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           CommonItemList<Video>(
             onLoad: (int page) async {
-              var videoList = await VideoService.getVideoListRandom(20);
+              var videoList = await VideoService.getVideoListRandom(PageConfig.commonPageSize);
               return videoList;
             },
             itemName: "视频",
@@ -225,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           CommonItemList<Audio>(
             onLoad: (int page) async {
-              var audioList = await AudioService.getAudioListRandom(20);
+              var audioList = await AudioService.getAudioListRandom(PageConfig.commonPageSize);
               return audioList;
             },
             itemName: "音频",
@@ -251,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           CommonItemList<Article>(
             onLoad: (int page) async {
-              var articleList = await ArticleService.getArticleListRandom(20);
+              var articleList = await ArticleService.getArticleListRandom(PageConfig.commonPageSize);
               return articleList;
             },
             itemName: "文章",
@@ -269,6 +277,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 onDeleteMedia: (a) {
                   if (articleList != null) {
                     articleList.remove(a);
+                    setState(() {});
+                  }
+                },
+              );
+            },
+          ),
+          CommonItemList<Album>(
+            onLoad: (int page) async {
+              var albumList = await AlbumService.getAlbumListRandom(PageConfig.commonPageSize);
+              return albumList;
+            },
+            itemName: "合集",
+            itemHeight: null,
+            isGrip: false,
+            enableScrollbar: true,
+            itemBuilder: (ctx, album, albumList, onFresh) {
+              return AlbumListTile(
+                key: ValueKey(album.id),
+                album: album,
+                onUpdateAlbum: (a) {
+                  album.copyAlbum(a);
+                  setState(() {});
+                },
+                onDeleteAlbum: (a) {
+                  if (albumList != null) {
+                    albumList.remove(a);
                     setState(() {});
                   }
                 },
@@ -330,6 +364,7 @@ class _HomeScreenTabBarState extends State<HomeScreenTabBar> {
             tabBuild(2, Icons.video_collection_sharp, "视频"),
             tabBuild(3, Icons.audiotrack, "音频"),
             tabBuild(4, Icons.article, "文章"),
+            tabBuild(5, Icons.album, "合集"),
           ]),
     );
   }

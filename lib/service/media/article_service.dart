@@ -4,14 +4,22 @@ import '../../api/client/media/article_api.dart';
 import '../../model/user/user.dart';
 
 class ArticleService {
-  static Future<Article> createArticle(
-    String title,
-    String introduction,
-    String content,
+  static Future<Article> createArticle({
+    required String title,
+    required String introduction,
+    required String content,
     String? coverUrl,
-    bool withPost,
-  ) async {
-    var article = await ArticleApi.createArticle(title, introduction, content, coverUrl, withPost);
+    required bool withPost,
+    String? albumId,
+  }) async {
+    var article = await ArticleApi.createArticle(
+      title: title,
+      introduction: introduction,
+      content: content,
+      coverUrl: coverUrl,
+      withPost: withPost,
+      albumId: albumId,
+    );
     return article;
   }
 
@@ -59,7 +67,7 @@ class ArticleService {
     return articleList;
   }
 
-  static Future<List<Article>> getAudioListByAlbumId({
+  static Future<List<Article>> getArticleListByAlbumId({
     required int albumUserId,
     required String albumId,
     int pageIndex = 0,

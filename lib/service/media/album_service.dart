@@ -19,6 +19,12 @@ class AlbumService {
     await AlbumApi.deleteUserAlbumById(albumId);
   }
 
+  static Future<Album> getAlbumById(
+    String albumId,
+  ) async {
+    var album = await AlbumApi.getAlbumById(albumId);
+    return album;
+  }
 
   static Future<void> updateAlbumInfo({
     required String albumId,
@@ -41,6 +47,25 @@ class AlbumService {
     int pageSize,
   ) async {
     var albumList = await AlbumApi.getUserAlbumList(user.id!, mediaType, pageIndex, pageSize);
+    for (var album in albumList) {
+      album.user = user;
+    }
+    return albumList;
+  }
+
+  static Future<List<Album>> getAlbumListRandom(
+    int pageSize,
+  ) async {
+    var albumList = await AlbumApi.getAlbumListRandom(pageSize);
+    return albumList;
+  }
+
+  static Future<List<Album>> getAlbumListByUserId(
+    User user,
+    int pageIndex,
+    int pageSize,
+  ) async {
+    var albumList = await AlbumApi.getAlbumListByUserId(user.id!, pageIndex, pageSize);
     for (var album in albumList) {
       album.user = user;
     }

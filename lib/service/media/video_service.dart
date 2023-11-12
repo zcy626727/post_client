@@ -3,14 +3,22 @@ import '../../model/media/video.dart';
 import '../../model/user/user.dart';
 
 class VideoService {
-  static Future<Video> createVideo(
-    String title,
-    String introduction,
-    int fileId,
+  static Future<Video> createVideo({
+    required String title,
+    required String introduction,
+    required int fileId,
     String? coverUrl,
-    bool withPost,
-  ) async {
-    var video = await VideoApi.createVideo(title, introduction, fileId, coverUrl, withPost);
+    required bool withPost,
+    String? albumId,
+  }) async {
+    var video = await VideoApi.createVideo(
+      title: title,
+      introduction: introduction,
+      fileId: fileId,
+      coverUrl: coverUrl,
+      withPost: withPost,
+      albumId: albumId,
+    );
     return video;
   }
 

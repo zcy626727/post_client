@@ -23,6 +23,8 @@ class ConfirmAlertDialog extends StatelessWidget {
           height: 35,
           onLeftTap: onCancel,
           onRightTap: onConfirm,
+          rightTextColor: colorScheme.onPrimary,
+          backgroundRightColor: colorScheme.primary,
         )
       ],
     );

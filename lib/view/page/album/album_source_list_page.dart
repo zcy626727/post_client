@@ -13,8 +13,11 @@ import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/model/media/video.dart';
 import 'package:post_client/model/message/feed_feedback.dart';
 import 'package:post_client/service/media/album_service.dart';
+import 'package:post_client/service/media/article_service.dart';
+import 'package:post_client/service/media/audio_service.dart';
 import 'package:post_client/service/media/gallery_service.dart';
 import 'package:post_client/service/media/media_service.dart';
+import 'package:post_client/service/media/video_service.dart';
 import 'package:post_client/service/message/feed_service.dart';
 import 'package:post_client/view/component/comment/comment_list_tile.dart';
 import 'package:post_client/view/page/album/album_edit_page.dart';
@@ -32,7 +35,7 @@ import '../../widget/dialog/confirm_alert_dialog.dart';
 import '../comment/reply_page.dart';
 
 class AlbumSourceListPage extends StatefulWidget {
-  const AlbumSourceListPage({super.key, required this.album, this.onDelete,this.onUpdate});
+  const AlbumSourceListPage({super.key, required this.album, this.onDelete, this.onUpdate});
 
   final Album album;
   final Function(Album)? onDelete;
@@ -65,8 +68,11 @@ class _AlbumSourceListPageState extends State<AlbumSourceListPage> {
         case MediaType.gallery:
           galleryList = await GalleryService.getGalleryListByAlbumId(albumUserId: widget.album.userId!, albumId: widget.album.id!, pageSize: PageConfig.commonPageSize);
         case MediaType.audio:
+          audioList = await AudioService.getAudioListByAlbumId(albumUserId: widget.album.userId!, albumId: widget.album.id!, pageSize: PageConfig.commonPageSize);
         case MediaType.video:
+          videoList = await VideoService.getVideoListByAlbumId(albumUserId: widget.album.userId!, albumId: widget.album.id!, pageSize: PageConfig.commonPageSize);
         case MediaType.article:
+          articleList = await ArticleService.getArticleListByAlbumId(albumUserId: widget.album.userId!, albumId: widget.album.id!, pageSize: PageConfig.commonPageSize);
       }
     } on DioException catch (e) {
       log(e.toString());
@@ -176,7 +182,7 @@ class _AlbumSourceListPageState extends State<AlbumSourceListPage> {
                               MaterialPageRoute(
                                 builder: (context) => AlbumEditPage(
                                   album: widget.album,
-                                  onUpdate: (a){
+                                  onUpdate: (a) {
                                     widget.album.copyAlbum(a);
                                     if (widget.onUpdate != null) {
                                       widget.onUpdate!(widget.album);

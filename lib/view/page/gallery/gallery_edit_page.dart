@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/media_config.dart';
 import 'package:post_client/model/media/gallery.dart';
@@ -7,7 +10,10 @@ import 'package:post_client/view/component/input/common_info_card.dart';
 import '../../../constant/media.dart';
 import '../../../domain/task/single_upload_task.dart';
 import '../../../enums/upload_task.dart';
+import '../../../model/media/album.dart';
+import '../../../service/media/album_service.dart';
 import '../../../service/media/file_url_service.dart';
+import '../../component/input/media_info_card.dart';
 import '../../component/media/upload/image_upload_list.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
@@ -23,6 +29,8 @@ class GalleryEditPage extends StatefulWidget {
 }
 
 class _GalleryEditPageState extends State<GalleryEditPage> {
+  late Future _futureBuilderFuture;
+
   var imageUploadTaskList = <SingleUploadTask>[];
   SingleUploadTask coverUploadImage = SingleUploadTask();
   final formKey = GlobalKey<FormState>();
@@ -31,10 +39,13 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
   final double imagePadding = 5.0;
   final double imageWidth = 100;
   bool _withPost = true;
+  Album? _selectedAlbum;
 
   @override
   void initState() {
     super.initState();
+    _futureBuilderFuture = getData();
+
     if (widget.gallery != null && widget.gallery!.id != null) {
       titleController.text = widget.gallery!.title ?? "";
       introductionController.text = widget.gallery!.introduction ?? "";
@@ -54,182 +65,211 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
     }
   }
 
+  Future getData() async {
+    return Future.wait([getAlbum()]);
+  }
+
+  Future<void> getAlbum() async {
+    if (widget.gallery == null || widget.gallery!.albumId == null) return;
+    try {
+      _selectedAlbum = await AlbumService.getAlbumById(widget.gallery!.albumId!);
+    } on DioException catch (e) {
+      log(e.toString());
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      backgroundColor: colorScheme.background,
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        toolbarHeight: 50,
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: colorScheme.surface,
-        leading: IconButton(
-          splashRadius: 20,
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            color: colorScheme.onBackground,
-          ),
-        ),
-        title: Text(
-          "编辑图片",
-          style: TextStyle(color: colorScheme.onSurface),
-        ),
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 5),
-            height: 30,
-            width: 70,
-            child: Center(
-              child: CommonActionOneButton(
-                title: widget.gallery != null ? "保存" : "发布",
-                height: 30,
-                onTap: () async {
-                  formKey.currentState?.save();
-                  if (imageUploadTaskList.isEmpty) {
-                    ShowSnackBar.error(context: context, message: "还未上传图片");
-                    return;
-                  }
-                  //执行验证
-                  if (formKey.currentState!.validate()) {
-                    try {
-                      var fileIdList = <int>[];
-                      var thumbnailUrlList = <String>[];
-
-                      for (var task in imageUploadTaskList) {
-                        fileIdList.add(task.fileId!);
-                        thumbnailUrlList.add(task.coverUrl!);
-                      }
-
-                      if (coverUploadImage.coverUrl == null) {
-                        //未选择封面，填充封面
-                        coverUploadImage.coverUrl = thumbnailUrlList[0];
-                        coverUploadImage.status = UploadTaskStatus.finished;
-                      }
-
-                      if (widget.gallery != null) {
-                        String? newTitle;
-                        String? newIntroduction;
-                        String? newCoverUrl;
-                        List<int>? newFileIdList;
-                        List<String>? newThumbnailUrlList;
-
-                        Gallery media = widget.gallery!;
-
-                        if (titleController.value.text != widget.gallery!.title) {
-                          newTitle = titleController.value.text;
-                          media.title = newTitle;
-                        }
-                        if (introductionController.value.text != widget.gallery!.introduction) {
-                          newIntroduction = introductionController.value.text;
-                          media.introduction = newIntroduction;
-                        }
-                        if (coverUploadImage.coverUrl != widget.gallery!.coverUrl) {
-                          newCoverUrl = coverUploadImage.coverUrl;
-                          media.coverUrl = newCoverUrl;
-                        }
-                        if (fileIdList != widget.gallery!.fileIdList) {
-                          newFileIdList = fileIdList;
-                          media.fileIdList = newFileIdList;
-                        }
-                        if (thumbnailUrlList != widget.gallery!.thumbnailUrlList) {
-                          newThumbnailUrlList = thumbnailUrlList;
-                          media.thumbnailUrlList = newThumbnailUrlList;
-                        }
-                        if (newTitle == null && newIntroduction == null && fileIdList == null && newCoverUrl == null && newFileIdList == null && newThumbnailUrlList == null) {
-                          throw const FormatException("未做修改");
-                        }
-
-                        await GalleryService.updateGalleryData(
-                          mediaId: widget.gallery!.id!,
-                          title: newTitle,
-                          introduction: newIntroduction,
-                          fileIdList: newFileIdList,
-                          thumbnailUrlList: newThumbnailUrlList,
-                          coverUrl: newCoverUrl,
-                        );
-                        if (widget.onUpdateMedia != null) {
-                          widget.onUpdateMedia!(media);
-                        }
-                      } else {
-                        //新建
-                        var gallery = await GalleryService.createGallery(
-                          titleController.value.text,
-                          introductionController.value.text,
-                          fileIdList,
-                          thumbnailUrlList,
-                          coverUploadImage.coverUrl!,
-                          _withPost,
-                        );
-                      }
-
-                      if (mounted) Navigator.pop(context);
-                    } on Exception catch (e) {
-                      if (mounted) ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
-                    }
-                    //加载
-                    setState(() {});
-                  }
+    return FutureBuilder(
+      future: _futureBuilderFuture,
+      builder: (BuildContext context, AsyncSnapshot snapShot) {
+        if (snapShot.connectionState == ConnectionState.done) {
+          return Scaffold(
+            backgroundColor: colorScheme.background,
+            resizeToAvoidBottomInset: true,
+            appBar: AppBar(
+              toolbarHeight: 50,
+              centerTitle: true,
+              elevation: 0,
+              backgroundColor: colorScheme.surface,
+              leading: IconButton(
+                splashRadius: 20,
+                onPressed: () {
+                  Navigator.of(context).pop();
                 },
-                backgroundColor: colorScheme.primary,
-                textColor: colorScheme.onPrimary,
-              ),
-            ),
-          )
-        ],
-      ),
-      body: SafeArea(
-        child: Form(
-          key: formKey,
-          child: ListView(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 1),
-                color: colorScheme.surface,
-                child: ImageUploadList(
-                  imageUploadTaskList: imageUploadTaskList,
-                  maxUploadNum: MediaConfig.maxGalleryUploadImageNum,
-                  onDeleteImage: (SingleUploadTask task) {
-                    imageUploadTaskList.remove(task);
-                  },
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: colorScheme.onBackground,
                 ),
               ),
-              CommonInfoCard(
-                coverUploadImage: coverUploadImage,
-                titleController: titleController,
-                introductionController: introductionController,
-                onRefresh: () {
-                  setState(() {});
-                },
+              title: Text(
+                "编辑图片",
+                style: TextStyle(color: colorScheme.onSurface),
               ),
-              if (widget.gallery == null)
+              actions: [
                 Container(
-                  color: colorScheme.surface,
-                  child: ListTile(
-                    leading: Text(
-                      '同时发布动态',
-                      style: TextStyle(color: colorScheme.onSurface),
-                    ),
-                    trailing: Checkbox(
-                      fillColor: MaterialStateProperty.all(_withPost ? colorScheme.primary : colorScheme.onSurface),
-                      value: _withPost,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _withPost = value!;
-                        });
+                  margin: const EdgeInsets.only(right: 5),
+                  height: 30,
+                  width: 70,
+                  child: Center(
+                    child: CommonActionOneButton(
+                      title: widget.gallery != null ? "保存" : "发布",
+                      height: 30,
+                      onTap: () async {
+                        formKey.currentState?.save();
+                        if (imageUploadTaskList.isEmpty) {
+                          ShowSnackBar.error(context: context, message: "还未上传图片");
+                          return;
+                        }
+                        //执行验证
+                        if (formKey.currentState!.validate()) {
+                          try {
+                            var fileIdList = <int>[];
+                            var thumbnailUrlList = <String>[];
+
+                            for (var task in imageUploadTaskList) {
+                              if (task.status != UploadTaskStatus.finished) {
+                                throw const FormatException("图片列表还未上传完成");
+                              }
+                              fileIdList.add(task.fileId!);
+                              thumbnailUrlList.add(task.coverUrl!);
+                            }
+
+                            if (coverUploadImage.coverUrl == null) {
+                              //未选择封面，填充封面
+                              coverUploadImage.coverUrl = thumbnailUrlList[0];
+                              coverUploadImage.status = UploadTaskStatus.finished;
+                            }
+
+                            if (widget.gallery != null) {
+                              String? newTitle;
+                              String? newIntroduction;
+                              String? newCoverUrl;
+                              List<int>? newFileIdList;
+                              List<String>? newThumbnailUrlList;
+
+                              Gallery media = widget.gallery!;
+
+                              if (titleController.value.text != widget.gallery!.title) {
+                                newTitle = titleController.value.text;
+                                media.title = newTitle;
+                              }
+                              if (introductionController.value.text != widget.gallery!.introduction) {
+                                newIntroduction = introductionController.value.text;
+                                media.introduction = newIntroduction;
+                              }
+                              if (coverUploadImage.coverUrl != widget.gallery!.coverUrl) {
+                                newCoverUrl = coverUploadImage.coverUrl;
+                                media.coverUrl = newCoverUrl;
+                              }
+                              if (fileIdList != widget.gallery!.fileIdList) {
+                                newFileIdList = fileIdList;
+                                media.fileIdList = newFileIdList;
+                              }
+                              if (thumbnailUrlList != widget.gallery!.thumbnailUrlList) {
+                                newThumbnailUrlList = thumbnailUrlList;
+                                media.thumbnailUrlList = newThumbnailUrlList;
+                              }
+                              if (newTitle == null && newIntroduction == null && fileIdList == null && newCoverUrl == null && newFileIdList == null && newThumbnailUrlList == null) {
+                                throw const FormatException("未做修改");
+                              }
+
+                              await GalleryService.updateGalleryData(
+                                mediaId: widget.gallery!.id!,
+                                title: newTitle,
+                                introduction: newIntroduction,
+                                fileIdList: newFileIdList,
+                                thumbnailUrlList: newThumbnailUrlList,
+                                coverUrl: newCoverUrl,
+                                albumId: _selectedAlbum?.id,
+                              );
+                              if (widget.onUpdateMedia != null) {
+                                widget.onUpdateMedia!(media);
+                              }
+                            } else {
+                              //新建
+                              var gallery = await GalleryService.createGallery(
+                                title: titleController.value.text,
+                                introduction: introductionController.value.text,
+                                fileIdList: fileIdList,
+                                thumbnailUrlList: thumbnailUrlList,
+                                coverUrl: coverUploadImage.coverUrl!,
+                                withPost: _withPost,
+                                albumId: _selectedAlbum?.id,
+                              );
+                            }
+
+                            if (mounted) Navigator.pop(context);
+                          } on Exception catch (e) {
+                            if (mounted) ShowSnackBar.exception(context: context, e: e, defaultValue: "创建文件失败");
+                          }
+                          //加载
+                          setState(() {});
+                        }
                       },
+                      backgroundColor: colorScheme.primary,
+                      textColor: colorScheme.onPrimary,
                     ),
                   ),
+                )
+              ],
+            ),
+            body: SafeArea(
+              child: Form(
+                key: formKey,
+                child: ListView(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 1),
+                      color: colorScheme.surface,
+                      child: ImageUploadList(
+                        imageUploadTaskList: imageUploadTaskList,
+                        maxUploadNum: MediaConfig.maxGalleryUploadImageNum,
+                        onDeleteImage: (SingleUploadTask task) {
+                          imageUploadTaskList.remove(task);
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                    MediaInfoCard(
+                      coverUploadImage: coverUploadImage,
+                      titleController: titleController,
+                      introductionController: introductionController,
+                      onWithPost: (withPost) {
+                        setState(() {
+                          _withPost = withPost;
+                        });
+                      },
+                      onSelectedAlbum: (album) {
+                        _selectedAlbum = album;
+                      },
+                      onClearAlbum: (){
+                        _selectedAlbum = null;
+                      },
+                      mediaType: MediaType.gallery,
+                      initAlbum: _selectedAlbum,
+
+                    ),
+                  ],
                 ),
-            ],
-          ),
-        ),
-      ),
+              ),
+            ),
+          );
+        } else {
+          return Container(
+            color: colorScheme.background,
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 }

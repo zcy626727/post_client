@@ -4,15 +4,24 @@ import '../../api/client/media/gallery_api.dart';
 import '../../model/user/user.dart';
 
 class GalleryService {
-  static Future<Gallery> createGallery(
-    String title,
-    String introduction,
-    List<int> fileIdList,
-    List<String> thumbnailUrlList,
-    String coverUrl,
-    bool withPost,
-  ) async {
-    var gallery = await GalleryApi.createGallery(title, introduction, fileIdList, thumbnailUrlList, coverUrl, withPost);
+  static Future<Gallery> createGallery({
+    required String title,
+    required String introduction,
+    required List<int> fileIdList,
+    required List<String> thumbnailUrlList,
+    required String coverUrl,
+    required bool withPost,
+    String? albumId,
+  }) async {
+    var gallery = await GalleryApi.createGallery(
+      title: title,
+      introduction: introduction,
+      fileIdList: fileIdList,
+      thumbnailUrlList: thumbnailUrlList,
+      coverUrl: coverUrl,
+      withPost: withPost,
+      albumId: albumId,
+    );
     return gallery;
   }
 
@@ -25,15 +34,7 @@ class GalleryService {
     String? coverUrl,
     String? albumId,
   }) async {
-    await GalleryApi.updateGalleryData(
-      thumbnailUrlList: thumbnailUrlList,
-      coverUrl: coverUrl,
-      mediaId: mediaId,
-      title: title,
-      introduction: introduction,
-      fileIdList: fileIdList,
-      albumId: albumId
-    );
+    await GalleryApi.updateGalleryData(thumbnailUrlList: thumbnailUrlList, coverUrl: coverUrl, mediaId: mediaId, title: title, introduction: introduction, fileIdList: fileIdList, albumId: albumId);
   }
 
   static Future<void> deleteGallery(

@@ -148,7 +148,7 @@ class _AlbumListPageState extends State<AlbumListPage> {
                       itemBuilder: (ctx, album, albumList, onFresh) {
                         return AlbumListTile(
                           album: album,
-                          onDelete: (a) {
+                          onDeleteAlbum: (a) {
                             if (albumList != null) {
                               albumList.remove(a);
                               setState(() {});

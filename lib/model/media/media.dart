@@ -5,6 +5,7 @@ class Media {
   String? coverUrl;
   DateTime? createTime;
   String? introduction;
+  String? albumId;
 
   int? likeNum;
   int? dislikeNum;
@@ -15,6 +16,7 @@ class Media {
     id = newMedia.id;
     userId = newMedia.userId;
     title = newMedia.title;
+    albumId = newMedia.albumId;
     coverUrl = newMedia.coverUrl;
     createTime = newMedia.createTime;
     introduction = newMedia.introduction;

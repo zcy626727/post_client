@@ -6,10 +6,11 @@ import 'package:post_client/model/media/album.dart';
 import 'package:post_client/view/page/album/album_source_list_page.dart';
 
 class AlbumListTile extends StatefulWidget {
-  const AlbumListTile({super.key, required this.album, this.onDelete});
+  const AlbumListTile({super.key, required this.album, this.onDeleteAlbum, this.onUpdateAlbum});
 
   final Album album;
-  final Function(Album)? onDelete;
+  final Function(Album)? onDeleteAlbum;
+  final Function(Album)? onUpdateAlbum;
 
   @override
   State<AlbumListTile> createState() => _AlbumListTileState();
@@ -32,7 +33,7 @@ class _AlbumListTileState extends State<AlbumListTile> {
               builder: (context) => AlbumSourceListPage(
                 album: widget.album,
                 onDelete: (a) {
-                  if (widget.onDelete != null) widget.onDelete!(a);
+                  if (widget.onDeleteAlbum != null) widget.onDeleteAlbum!(a);
                   if (mounted) Navigator.pop(context);
                 },
                 onUpdate: (a) {
