@@ -5,14 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:post_client/config/media_config.dart';
 import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/service/media/gallery_service.dart';
-import 'package:post_client/view/component/input/common_info_card.dart';
 
 import '../../../constant/media.dart';
 import '../../../domain/task/single_upload_task.dart';
 import '../../../enums/upload_task.dart';
 import '../../../model/media/album.dart';
 import '../../../service/media/album_service.dart';
-import '../../../service/media/file_url_service.dart';
 import '../../component/input/media_info_card.dart';
 import '../../component/media/upload/image_upload_list.dart';
 import '../../component/show/show_snack_bar.dart';
@@ -151,6 +149,7 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                               String? newCoverUrl;
                               List<int>? newFileIdList;
                               List<String>? newThumbnailUrlList;
+                              bool isAlbumChange = false;
 
                               Gallery media = widget.gallery!;
 
@@ -174,7 +173,11 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                                 newThumbnailUrlList = thumbnailUrlList;
                                 media.thumbnailUrlList = newThumbnailUrlList;
                               }
-                              if (newTitle == null && newIntroduction == null && fileIdList == null && newCoverUrl == null && newFileIdList == null && newThumbnailUrlList == null) {
+                              if (widget.gallery!.albumId != _selectedAlbum?.id) {
+                                widget.gallery!.albumId = _selectedAlbum?.id;
+                                isAlbumChange = true;
+                              }
+                              if (newTitle == null && newIntroduction == null && fileIdList == null && newCoverUrl == null && newFileIdList == null && newThumbnailUrlList == null && !isAlbumChange) {
                                 throw const FormatException("未做修改");
                               }
 
@@ -240,19 +243,16 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                       titleController: titleController,
                       introductionController: introductionController,
                       onWithPost: (withPost) {
-                        setState(() {
-                          _withPost = withPost;
-                        });
+                        _withPost = withPost;
                       },
                       onSelectedAlbum: (album) {
                         _selectedAlbum = album;
                       },
-                      onClearAlbum: (){
+                      onClearAlbum: () {
                         _selectedAlbum = null;
                       },
                       mediaType: MediaType.gallery,
                       initAlbum: _selectedAlbum,
-
                     ),
                   ],
                 ),

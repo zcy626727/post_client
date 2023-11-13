@@ -1,16 +1,13 @@
 import 'dart:developer';
-import 'dart:io';
 import 'dart:isolate';
 
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/domain/task/multipart_upload_task.dart';
-import 'package:post_client/domain/task/single_upload_task.dart';
 import 'package:post_client/service/media/file_url_service.dart';
 import 'package:post_client/service/media/upload_service.dart';
 
-import '../../../../domain/task/upload_task.dart';
 import '../../../../enums/upload_task.dart';
 import '../../../../util/unit.dart';
 import '../../../widget/player/audio/common_audio_player_mini.dart';
@@ -90,6 +87,7 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
                               Text(
                                 task.srcPath!,
                                 maxLines: 1,
+                                style: TextStyle(color: colorScheme.onSurface),
                               ),
                               //上传进度
                               LinearProgressIndicator(
@@ -98,8 +96,11 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text("正在上传"),
-                                  Text("${UnitUtil.convertByteUnits(task.uploadedSize)}/${UnitUtil.convertByteUnits(task.totalSize)}"),
+                                  Text("正在上传", style: TextStyle(color: colorScheme.onSurface)),
+                                  Text(
+                                    "${UnitUtil.convertByteUnits(task.uploadedSize)}/${UnitUtil.convertByteUnits(task.totalSize)}",
+                                    style: TextStyle(color: colorScheme.onSurface),
+                                  ),
                                 ],
                               ),
                             ],
@@ -117,7 +118,10 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
                               updateIndex++;
                               setState(() {});
                             },
-                            icon: const Icon(Icons.stop),
+                            icon: Icon(
+                              Icons.stop,
+                              color: colorScheme.onSurface,
+                            ),
                             splashRadius: 25,
                           ),
                         )
@@ -168,7 +172,6 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
                                   task.copy(task);
                                   setState(() {});
                                 }
-
                               },
                               onAfterStart: (task) {},
                             );

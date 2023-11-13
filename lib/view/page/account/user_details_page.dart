@@ -3,23 +3,13 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
-import 'package:post_client/model/message/post.dart';
 import 'package:post_client/model/user/follow.dart';
 import 'package:post_client/service/user/follow_service.dart';
-import 'package:post_client/state/user_state.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/page/account/user_profile_page.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
-import 'package:post_client/view/widget/common_item_list.dart';
-import 'package:provider/provider.dart';
 
 import '../../../config/page_config.dart';
-import '../../../model/media/album.dart';
-import '../../../model/media/article.dart';
-import '../../../model/media/audio.dart';
-import '../../../model/media/gallery.dart';
-import '../../../model/media/video.dart';
-import '../../../model/message/feed_feedback.dart';
 import '../../../model/user/user.dart';
 import '../../../service/media/album_service.dart';
 import '../../../service/media/article_service.dart';
@@ -27,12 +17,7 @@ import '../../../service/media/audio_service.dart';
 import '../../../service/media/gallery_service.dart';
 import '../../../service/media/video_service.dart';
 import '../../../service/message/post_service.dart';
-import '../../component/media/list/album_list_tile.dart';
-import '../../component/media/list/article_list_tile.dart';
-import '../../component/media/list/audio_list_tile.dart';
-import '../../component/media/list/gallery_list_tile.dart';
-import '../../component/media/list/video_list_tile.dart';
-import '../../component/post/post_list_tile.dart';
+import '../list/source_tab_bar_view.dart';
 
 class UserDetailPage extends StatefulWidget {
   const UserDetailPage({Key? key, required this.user}) : super(key: key);
@@ -262,161 +247,31 @@ class _UserDetailPageState extends State<UserDetailPage> {
     return Container(
       color: colorScheme.background,
       padding: const EdgeInsets.only(left: 1, right: 1, top: 1),
-      child: TabBarView(
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          CommonItemList<Post>(
-            onLoad: (int page) async {
-              var postList = await PostService.getPostListByUserId(widget.user, page, 20);
-              return postList;
-            },
-            itemName: "动态",
-            itemHeight: null,
-            isGrip: false,
-            gripAspectRatio: 1,
-            enableScrollbar: true,
-            itemBuilder: (ctx, post, postList, onFresh) {
-              return PostListTile(
-                key: ValueKey(post.id),
-                post: post,
-                onDeletePost: (deletedPost) {
-                  if (postList != null) {
-                    postList.remove(deletedPost);
-                    setState(() {});
-                  }
-                },
-                feedback: post.feedback ?? FeedFeedback(),
-              );
-            },
-          ),
-          CommonItemList<Gallery>(
-            onLoad: (int page) async {
-              var galleryList = await GalleryService.getGalleryListByUserId(widget.user, page, 20);
-              return galleryList;
-            },
-            itemName: "图片",
-            itemHeight: null,
-            isGrip: true,
-            gripAspectRatio: 1,
-            enableScrollbar: true,
-            itemBuilder: (ctx, gallery, galleryList, onFresh) {
-              return GalleryListTile(
-                gallery: gallery,
-                onUpdateMedia: (a) {
-                  gallery.copyGallery(a);
-                  setState(() {});
-                },
-                onDeleteMedia: (a) {
-                  if (galleryList != null) {
-                    galleryList.remove(gallery);
-                    setState(() {});
-                  }
-                },
-              );
-            },
-          ),
-          CommonItemList<Video>(
-            onLoad: (int page) async {
-              var videoList = await VideoService.getVideoListByUserId(widget.user, page, 20);
-              return videoList;
-            },
-            itemName: "视频",
-            itemHeight: null,
-            isGrip: false,
-            enableScrollbar: true,
-            itemBuilder: (ctx, video, videoList, onFresh) {
-              return VideoListTile(
-                video: video,
-                onUpdateMedia: (a) {
-                  video.copyGallery(a);
-                  setState(() {});
-                },
-                onDeleteMedia: (a) {
-                  if (videoList != null) {
-                    videoList.remove(video);
-                    setState(() {});
-                  }
-                },
-              );
-            },
-          ),
-          CommonItemList<Audio>(
-            onLoad: (int page) async {
-              var audioList = await AudioService.getAudioListByUserId(widget.user, page, 20);
-              return audioList;
-            },
-            itemName: "音频",
-            itemHeight: null,
-            isGrip: false,
-            enableScrollbar: true,
-            itemBuilder: (ctx, audio, audioList, onFresh) {
-              return AudioListTile(
-                audio: audio,
-                onUpdateMedia: (a) {
-                  audio.copyAudio(a);
-                  setState(() {});
-                },
-                onDeleteMedia: (a) {
-                  if (audioList != null) {
-                    audioList.remove(audio);
-                    setState(() {});
-                  }
-                },
-              );
-            },
-          ),
-          CommonItemList<Article>(
-            onLoad: (int page) async {
-              var articleList = await ArticleService.getArticleListByUserId(widget.user, page, 20);
-              return articleList;
-            },
-            itemName: "文章",
-            itemHeight: null,
-            isGrip: false,
-            enableScrollbar: true,
-            itemBuilder: (ctx, article, articleList, onFresh) {
-              return ArticleListTile(
-                article: article,
-                onUpdateMedia: (a) {
-                  article.copyArticle(a);
-                  setState(() {});
-                },
-                onDeleteMedia: (a) {
-                  if (articleList != null) {
-                    articleList.remove(a);
-                    setState(() {});
-                  }
-                },
-              );
-            },
-          ),
-          CommonItemList<Album>(
-            onLoad: (int pageIndex) async {
-              var albumList = await AlbumService.getAlbumListByUserId(Global.user, pageIndex, PageConfig.commonPageSize);
-              return albumList;
-            },
-            itemName: "合集",
-            itemHeight: null,
-            isGrip: false,
-            enableScrollbar: true,
-            itemBuilder: (ctx, album, albumList, onFresh) {
-              return AlbumListTile(
-                key: ValueKey(album.id),
-                album: album,
-                onUpdateAlbum: (a) {
-                  album.copyAlbum(a);
-                  setState(() {});
-                },
-                onDeleteAlbum: (a) {
-                  if (albumList != null) {
-                    albumList.remove(a);
-                    setState(() {});
-                  }
-                },
-              );
-            },
-          ),
-        ],
+      child: SourceTabBarView(
+        onLoadPost: (pageIndex) async {
+          var postList = await PostService.getPostListByUserId(widget.user, pageIndex, 20);
+          return postList;
+        },
+        onLoadGallery: (pageIndex) async {
+          var galleryList = await GalleryService.getGalleryListByUserId(widget.user, pageIndex, 20);
+          return galleryList;
+        },
+        onLoadVideo: (pageIndex) async {
+          var videoList = await VideoService.getVideoListByUserId(widget.user, pageIndex, 20);
+          return videoList;
+        },
+        onLoadAudio: (pageIndex) async {
+          var audioList = await AudioService.getAudioListByUserId(widget.user, pageIndex, 20);
+          return audioList;
+        },
+        onLoadArticle: (pageIndex) async {
+          var articleList = await ArticleService.getArticleListByUserId(widget.user, pageIndex, 20);
+          return articleList;
+        },
+        onLoadAlbum: (pageIndex) async {
+          var albumList = await AlbumService.getAlbumListByUserId(widget.user, pageIndex, PageConfig.commonPageSize);
+          return albumList;
+        },
       ),
     );
   }

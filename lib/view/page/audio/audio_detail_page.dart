@@ -8,12 +8,12 @@ import 'package:post_client/view/widget/player/audio/common_audio_player_mini.da
 
 import '../../../constant/media.dart';
 import '../../../model/media/audio.dart';
-import '../../../model/media/media_feedback.dart';
 import '../../../model/message/comment.dart';
 import '../../../service/media/file_url_service.dart';
 import '../../../service/media/history_service.dart';
 import '../../component/feedback/media_feedback_bar.dart';
 import '../../component/media/media_more_button.dart';
+import '../album/album_in_media.dart';
 import '../comment/comment_page.dart';
 
 class AudioDetailPage extends StatefulWidget {
@@ -29,6 +29,7 @@ class AudioDetailPage extends StatefulWidget {
 
 class _AudioDetailPageState extends State<AudioDetailPage> {
   late Future _futureBuilderFuture;
+  Audio audio = Audio();
   String? audioUrl;
 
   late History history;
@@ -36,6 +37,7 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
   @override
   void initState() {
     super.initState();
+    audio.copyAudio(widget.audio);
     _futureBuilderFuture = getData();
   }
 
@@ -96,7 +98,7 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
               ),
               actions: [
                 MediaMoreButton(
-                  media: widget.audio,
+                  media: audio,
                   onDeleteMedia: (media) async {
                     Navigator.of(context).pop();
                     if (widget.onDeleteMedia != null) {
@@ -104,11 +106,11 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
                     }
                   },
                   onUpdateMedia: (media) async {
-                    widget.audio.copyAudio(media as Audio);
+                    audio.copyAudio(media as Audio);
+                    await getAudioUrl();
                     if (widget.onUpdateMedia != null) {
                       await widget.onUpdateMedia!(media);
                     }
-                    await getAudioUrl();
                     setState(() {});
                   },
                 ),
@@ -122,9 +124,9 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
                   ListTile(
                     contentPadding: const EdgeInsets.only(left: 3, right: 3),
                     visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-                    leading: CircleAvatar(radius: 18, backgroundImage: NetworkImage(widget.audio.user!.avatarUrl!)),
+                    leading: CircleAvatar(radius: 18, backgroundImage: NetworkImage(audio.user!.avatarUrl!)),
                     title: Text(
-                      widget.audio.title!,
+                      audio.title!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -133,7 +135,7 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
                       ),
                     ),
                     subtitle: Text(
-                      DateFormat("yyyy-MM-dd").format(widget.audio.createTime!),
+                      DateFormat("yyyy-MM-dd").format(audio.createTime!),
                       style: TextStyle(
                         color: colorScheme.onSurface,
                       ),
@@ -142,15 +144,26 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                     child: Text(
-                      widget.audio.introduction!,
+                      audio.introduction!,
                       style: TextStyle(fontSize: 15, color: colorScheme.onSurface),
                     ),
                   ),
-                  CommonAudioPlayerMini(key: ValueKey(audioUrl),audioUrl: audioUrl!),
+                  CommonAudioPlayerMini(key: ValueKey(audioUrl), audioUrl: audioUrl!),
+                  if (audio.hasAlbum())
+                    AlbumInMedia(
+                      albumId: audio.albumId!,
+                      onChangeMedia: (media) async {
+                        audio = media as Audio;
+                        var (url, _) = await FileUrlService.genGetFileUrl(audio.fileId!);
+                        audioUrl = url;
+                        setState(() {});
+                      },
+                    ),
                   MediaFeedbackBar(
+                    key: ValueKey(audio.id),
                     mediaType: MediaType.audio,
-                    mediaId: widget.audio.id!,
-                    media: widget.audio,
+                    mediaId: audio.id!,
+                    media: audio,
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 5),
@@ -161,11 +174,12 @@ class _AudioDetailPageState extends State<AudioDetailPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => CommentPage(
-                                    commentParentType: CommentParentType.audio,
-                                    commentParentId: widget.audio.id!,
-                                    parentUserId: widget.audio.userId!,
-                                  ),),
+                            builder: (context) => CommentPage(
+                              commentParentType: CommentParentType.audio,
+                              commentParentId: audio.id!,
+                              parentUserId: audio.userId!,
+                            ),
+                          ),
                         );
                       },
                       child: const Text("查看评论"),

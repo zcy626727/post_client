@@ -7,14 +7,12 @@ import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:post_client/model/media/album.dart';
 import 'package:post_client/model/media/article.dart';
 import 'package:post_client/service/media/album_service.dart';
-import 'package:post_client/view/component/input/common_info_card.dart';
 import 'package:post_client/view/component/input/media_info_card.dart';
 
 import '../../../constant/media.dart';
 import '../../../domain/task/single_upload_task.dart';
 import '../../../enums/upload_task.dart';
 import '../../../service/media/article_service.dart';
-import '../../../service/media/file_url_service.dart';
 import '../../component/quill/quill_editor.dart';
 import '../../component/quill/quill_tool_bar.dart';
 import '../../component/show/show_snack_bar.dart';
@@ -210,9 +208,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                           titleController: titleController,
                           introductionController: introductionController,
                           onWithPost: (withPost) {
-                            setState(() {
-                              _withPost = withPost;
-                            });
+                            _withPost = withPost;
                           },
                           onSelectedAlbum: (album) {
                             _selectedAlbum = album;

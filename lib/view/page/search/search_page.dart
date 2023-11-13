@@ -1,31 +1,14 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/constant/source.dart';
-import 'package:post_client/model/media/album.dart';
-import 'package:post_client/model/user/user.dart';
 import 'package:post_client/service/media/album_service.dart';
 import 'package:post_client/service/message/post_service.dart';
 import 'package:post_client/service/user/user_service.dart';
-import 'package:post_client/view/component/media/list/album_list_tile.dart';
 
-import '../../../model/media/article.dart';
-import '../../../model/media/audio.dart';
-import '../../../model/media/gallery.dart';
-import '../../../model/media/video.dart';
-import '../../../model/message/feed_feedback.dart';
-import '../../../model/message/post.dart';
 import '../../../service/media/article_service.dart';
 import '../../../service/media/audio_service.dart';
 import '../../../service/media/gallery_service.dart';
 import '../../../service/media/video_service.dart';
-import '../../component/media/list/article_list_tile.dart';
-import '../../component/media/list/audio_list_tile.dart';
-import '../../component/media/list/gallery_list_tile.dart';
-import '../../component/media/list/video_list_tile.dart';
-import '../../component/post/post_list_tile.dart';
-import '../../widget/common_item_list.dart';
+import '../list/source_tab_bar_view.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -160,196 +143,35 @@ class _SearchPageState extends State<SearchPage> {
     return Container(
       color: colorScheme.background,
       padding: const EdgeInsets.only(left: 1, right: 1, top: 1),
-      child: TabBarView(
-        key: ValueKey(DateTime.now()),
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          CommonItemList<Post>(
-            onLoad: (int page) async {
-              var postList = await PostService.searchPost(_keyword, page, 20);
-              return postList;
-            },
-            itemName: "动态",
-            itemHeight: null,
-            isGrip: false,
-            gripAspectRatio: 1,
-            enableScrollbar: true,
-            itemBuilder: (ctx, post, postList, onFresh) {
-              return PostListTile(
-                key: ValueKey(post.id),
-                post: post,
-                onDeletePost: (deletedPost) {
-                  if (postList != null) {
-                    postList.remove(deletedPost);
-                    setState(() {});
-                  }
-                },
-                feedback: post.feedback ?? FeedFeedback(),
-              );
-            },
-          ),
-          CommonItemList<Gallery>(
-            onLoad: (int page) async {
-              var galleryList = await GalleryService.searchGallery(_keyword, page, 20);
-              return galleryList;
-            },
-            itemName: "图片",
-            itemHeight: null,
-            isGrip: true,
-            gripAspectRatio: 1,
-            enableScrollbar: true,
-            itemBuilder: (ctx, gallery, galleryList, onFresh) {
-              return GalleryListTile(
-                key: ValueKey(gallery.id),
-                gallery: gallery,
-                onUpdateMedia: (a) {
-                  gallery.copyGallery(a);
-                  setState(() {});
-                },
-                onDeleteMedia: (a) {
-                  if (galleryList != null) {
-                    galleryList.remove(a);
-                    setState(() {});
-                  }
-                },
-              );
-            },
-          ),
-          CommonItemList<Video>(
-            onLoad: (int page) async {
-              var videoList = await VideoService.searchVideo(_keyword, page, 20);
-              return videoList;
-            },
-            itemName: "视频",
-            itemHeight: null,
-            isGrip: false,
-            enableScrollbar: true,
-            itemBuilder: (ctx, video, videoList, onFresh) {
-              return VideoListTile(
-                key: ValueKey(video.id),
-                video: video,
-                onUpdateMedia: (v) {
-                  video.copyGallery(v);
-                  setState(() {});
-                },
-                onDeleteMedia: (v) {
-                  if (videoList != null) {
-                    videoList.remove(v);
-                    setState(() {});
-                  }
-                },
-              );
-            },
-          ),
-          CommonItemList<Audio>(
-            onLoad: (int page) async {
-              var audioList = await AudioService.searchAudio(_keyword, page, 20);
-              return audioList;
-            },
-            itemName: "音频",
-            itemHeight: null,
-            isGrip: false,
-            enableScrollbar: true,
-            itemBuilder: (ctx, audio, audioList, onFresh) {
-              return AudioListTile(
-                key: ValueKey(audio.id),
-                audio: audio,
-                onUpdateMedia: (a) {
-                  audio.copyAudio(a);
-                  setState(() {});
-                },
-                onDeleteMedia: (a) {
-                  if (audioList != null) {
-                    audioList.remove(a);
-                    setState(() {});
-                  }
-                },
-              );
-            },
-          ),
-          CommonItemList<Article>(
-            onLoad: (int page) async {
-              var articleList = await ArticleService.searchArticle(_keyword, page, 20);
-              return articleList;
-            },
-            itemName: "文章",
-            itemHeight: null,
-            isGrip: false,
-            enableScrollbar: true,
-            itemBuilder: (ctx, article, articleList, onFresh) {
-              return ArticleListTile(
-                key: ValueKey(article.id),
-                article: article,
-                onUpdateMedia: (a) {
-                  article.copyArticle(a);
-                  setState(() {});
-                },
-                onDeleteMedia: (a) {
-                  if (articleList != null) {
-                    articleList.remove(a);
-                    setState(() {});
-                  }
-                },
-              );
-            },
-          ),
-          CommonItemList<Album>(
-            onLoad: (int page) async {
-              var userList = await AlbumService.searchAlbum(_keyword, page, 20);
-              return userList;
-            },
-            itemName: "合集",
-            itemHeight: null,
-            isGrip: false,
-            enableScrollbar: true,
-            itemBuilder: (ctx, album, albumList, onFresh) {
-              return Container(
-                color: colorScheme.surface,
-                margin: const EdgeInsets.only(top: 2),
-                child: AlbumListTile(
-                  key: ValueKey(album.id),
-                  album: album,
-                  onUpdateAlbum: (a) {
-                    album.copyAlbum(a);
-                    setState(() {});
-                  },
-                  onDeleteAlbum: (a) {
-                    if (albumList != null) {
-                      albumList.remove(a);
-                      setState(() {});
-                    }
-                  },
-                ),
-              );
-            },
-          ),
-          CommonItemList<User>(
-            onLoad: (int page) async {
-              var userList = await UserService.searchUser(_keyword, page, 20);
-              return userList;
-            },
-            itemName: "用户",
-            itemHeight: null,
-            isGrip: false,
-            enableScrollbar: true,
-            itemBuilder: (ctx, user, userList, onFresh) {
-              return Container(
-                color: colorScheme.surface,
-                margin: const EdgeInsets.only(top: 2),
-                child: ListTile(
-                  key: ValueKey(user.id),
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(user.avatarUrl ?? ""),
-                  ),
-                  onTap: () {},
-                  title: Text(user.name ?? ""),
-                  subtitle: Text(""),
-                ),
-              );
-            },
-          ),
-
-        ],
+      child: SourceTabBarView(
+        onLoadPost: (pageIndex) async {
+          var postList = await PostService.searchPost(_keyword, pageIndex, 20);
+          return postList;
+        },
+        onLoadGallery: (pageIndex) async {
+          var galleryList = await GalleryService.searchGallery(_keyword, pageIndex, 20);
+          return galleryList;
+        },
+        onLoadVideo: (pageIndex) async {
+          var videoList = await VideoService.searchVideo(_keyword, pageIndex, 20);
+          return videoList;
+        },
+        onLoadAudio: (pageIndex) async {
+          var audioList = await AudioService.searchAudio(_keyword, pageIndex, 20);
+          return audioList;
+        },
+        onLoadArticle: (pageIndex) async {
+          var articleList = await ArticleService.searchArticle(_keyword, pageIndex, 20);
+          return articleList;
+        },
+        onLoadAlbum: (pageIndex) async {
+          var userList = await AlbumService.searchAlbum(_keyword, pageIndex, 20);
+          return userList;
+        },
+        onLoadUser: (pageIndex) async {
+          var userList = await UserService.searchUser(_keyword, pageIndex, 20);
+          return userList;
+        },
       ),
     );
   }

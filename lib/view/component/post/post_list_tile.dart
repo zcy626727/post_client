@@ -61,8 +61,8 @@ class _PostListTileState extends State<PostListTile> {
     return Container(
       // boundary needed for web
       color: colorScheme.surface,
-      margin: const EdgeInsets.only(top: 2),
-      padding: const EdgeInsets.only(left: 3.0, right: 3.0),
+      margin: const EdgeInsets.only(bottom: 1),
+      padding: const EdgeInsets.only(left: 6.0, right: 6.0),
       child: Column(
         children: [
           // 用户信息
@@ -268,12 +268,9 @@ class _PostListTileState extends State<PostListTile> {
         isInner: true,
       );
     } else if (media is Gallery) {
-      mediaCard = Container(
-        height: 200,
-        child: GalleryListTile(
-          gallery: media,
-          isInner: true,
-        ),
+      mediaCard = GalleryListTile(
+        gallery: media,
+        isInner: true,
       );
     } else if (media is Video) {
       mediaCard = VideoListTile(
@@ -285,7 +282,7 @@ class _PostListTileState extends State<PostListTile> {
       onDoubleTap: () {},
       child: Container(
         color: colorScheme.primaryContainer,
-        padding: const EdgeInsets.only(left: 2, right: 2, top: 2),
+        padding: const EdgeInsets.only(left: 2, right: 2, top: 2, bottom: 2),
         width: double.infinity,
         child: mediaCard,
       ),

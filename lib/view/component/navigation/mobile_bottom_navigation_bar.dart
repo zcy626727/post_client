@@ -4,7 +4,6 @@ import 'package:post_client/view/page/audio/audio_edit_page.dart';
 import 'package:post_client/view/page/post/post_edit_page.dart';
 import 'package:post_client/view/page/video/video_edit_page.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
-import 'package:post_client/view/widget/button/common_action_two_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../../state/screen_state.dart';
@@ -69,18 +68,21 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                               color: colorScheme.surface,
-                              height: 200,
+                              height: 220,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
-                                      buildUploadItem(title: "图片", iconData: Icons.image_outlined, onTap: () {
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const GalleryEditPage()),
+                                      buildUploadItem(
+                                          title: "图片",
+                                          iconData: Icons.image_outlined,
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => const GalleryEditPage()),
                                         );
                                       }),
                                       buildUploadItem(title: "视频", iconData: Icons.video_file_outlined, onTap: () {
@@ -182,14 +184,18 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
 
   Widget buildUploadItem({required String title, required IconData iconData, required VoidCallback onTap}) {
     var colorScheme = Theme.of(context).colorScheme;
+
     return Expanded(
       child: SizedBox(
-        height: 60,
+        height: 80,
         child: TextButton(
           onPressed: onTap,
           child: Column(
             children: [
-              Icon(iconData),
+              CircleAvatar(
+                backgroundColor: colorScheme.primaryContainer,
+                child: Icon(iconData),
+              ),
               Text(
                 title,
                 style: TextStyle(color: colorScheme.onSurface),

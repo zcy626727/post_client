@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/model/media/audio.dart';
 import 'package:post_client/view/component/media/upload/audio_upload_card.dart';
-import 'package:post_client/view/component/input/common_info_card.dart';
 
 import '../../../constant/media.dart';
 import '../../../domain/task/multipart_upload_task.dart';
@@ -13,7 +12,6 @@ import '../../../enums/upload_task.dart';
 import '../../../model/media/album.dart';
 import '../../../service/media/album_service.dart';
 import '../../../service/media/audio_service.dart';
-import '../../../service/media/file_url_service.dart';
 import '../../component/input/media_info_card.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
@@ -132,6 +130,7 @@ class _AudioEditPageState extends State<AudioEditPage> {
                               String? newIntroduction;
                               String? newCoverUrl;
                               int? newFileId;
+                              bool isAlbumChange = false;
 
                               Audio media = widget.audio!;
 
@@ -151,7 +150,11 @@ class _AudioEditPageState extends State<AudioEditPage> {
                                 newCoverUrl = coverUploadImage.coverUrl;
                                 media.coverUrl = newCoverUrl;
                               }
-                              if (newTitle == null && newIntroduction == null && newCoverUrl == null && newFileId == null) throw const FormatException("未做修改");
+                              if (widget.audio!.albumId != _selectedAlbum?.id) {
+                                widget.audio!.albumId = _selectedAlbum?.id;
+                                isAlbumChange = true;
+                              }
+                              if (newTitle == null && newIntroduction == null && newCoverUrl == null && newFileId == null && !isAlbumChange) throw const FormatException("未做修改");
 
                               await AudioService.updateAudioData(
                                 mediaId: widget.audio!.id!,
@@ -201,14 +204,12 @@ class _AudioEditPageState extends State<AudioEditPage> {
                       titleController: titleController,
                       introductionController: introductionController,
                       onWithPost: (withPost) {
-                        setState(() {
-                          _withPost = withPost;
-                        });
+                        _withPost = withPost;
                       },
                       onSelectedAlbum: (album) {
                         _selectedAlbum = album;
                       },
-                      onClearAlbum: (){
+                      onClearAlbum: () {
                         _selectedAlbum = null;
                       },
                       mediaType: MediaType.audio,
@@ -231,6 +232,5 @@ class _AudioEditPageState extends State<AudioEditPage> {
         }
       },
     );
-
   }
 }

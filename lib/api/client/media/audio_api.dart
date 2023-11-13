@@ -40,9 +40,6 @@ class AudioApi {
     String? coverUrl,
     String? albumId,
   }) async {
-    if (title == null && introduction == null && fileId == null && coverUrl == null) {
-      return;
-    }
     var r = await MediaHttpConfig.dio.post(
       "/audio/updateAudioData",
       data: {
@@ -51,6 +48,7 @@ class AudioApi {
         "introduction": introduction,
         "fileId": fileId,
         "coverUrl": coverUrl,
+        "albumId": albumId,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,

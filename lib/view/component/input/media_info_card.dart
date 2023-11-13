@@ -64,6 +64,7 @@ class _MediaInfoCardState extends State<MediaInfoCard> {
               ),
               trailing: Checkbox(
                 fillColor: MaterialStateProperty.all(_withPost ? colorScheme.primary : colorScheme.onSurface),
+                checkColor: colorScheme.onPrimary,
                 value: _withPost,
                 onChanged: (bool? value) {
                   setState(() {

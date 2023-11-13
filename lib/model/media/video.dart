@@ -14,7 +14,7 @@ class Video extends Media {
 
   Video();
 
-  void copyGallery(Video video) {
+  void copyVideo(Video video) {
     super.copy(video);
     fileId = video.fileId;
     user = video.user;

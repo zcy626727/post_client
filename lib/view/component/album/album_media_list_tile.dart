@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/domain/favorites_source.dart';
 
-class AlbumSourceListTile extends StatelessWidget {
-  const AlbumSourceListTile({super.key, required this.favoritesSource});
+class AlbumMediaListTile extends StatelessWidget {
+  const AlbumMediaListTile({super.key, required this.favoritesSource});
 
   final FavoritesSource favoritesSource;
 

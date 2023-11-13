@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:post_client/model/media/history.dart';
@@ -14,6 +13,7 @@ import '../../../model/message/comment.dart';
 import '../../../service/media/history_service.dart';
 import '../../component/feedback/media_feedback_bar.dart';
 import '../../component/media/media_more_button.dart';
+import '../album/album_in_media.dart';
 import '../comment/comment_page.dart';
 
 class VideoDetailPage extends StatefulWidget {
@@ -31,10 +31,12 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
   late Future _futureBuilderFuture;
   String? videoUrl;
   late History history;
+  Video video = Video();
 
   @override
   void initState() {
     super.initState();
+    video.copyVideo(widget.video);
     _futureBuilderFuture = getData();
   }
 
@@ -95,7 +97,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
               ),
               actions: [
                 MediaMoreButton(
-                  media: widget.video,
+                  media: video,
                   onDeleteMedia: (media) async {
                     Navigator.of(context).pop();
                     if (widget.onDeleteMedia != null) {
@@ -103,7 +105,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                     }
                   },
                   onUpdateMedia: (media) async {
-                    widget.video.copyGallery(media as Video);
+                    video.copyVideo(media as Video);
                     if (widget.onUpdateMedia != null) {
                       await widget.onUpdateMedia!(media);
                     }
@@ -133,9 +135,9 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                   ListTile(
                     contentPadding: const EdgeInsets.only(left: 3, right: 3),
                     visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-                    leading: CircleAvatar(radius: 18, backgroundImage: NetworkImage(widget.video.user!.avatarUrl!)),
+                    leading: CircleAvatar(radius: 18, backgroundImage: NetworkImage(video.user!.avatarUrl!)),
                     title: Text(
-                      widget.video.title!,
+                      video.title!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -144,7 +146,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                       ),
                     ),
                     subtitle: Text(
-                      DateFormat("yyyy-MM-dd").format(widget.video.createTime!),
+                      DateFormat("yyyy-MM-dd").format(video.createTime!),
                       style: TextStyle(
                         color: colorScheme.onSurface,
                       ),
@@ -153,14 +155,25 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                     child: Text(
-                      widget.video.introduction!,
+                      video.introduction!,
                       style: TextStyle(fontSize: 15, color: colorScheme.onSurface),
                     ),
                   ),
+                  if (video.hasAlbum())
+                    AlbumInMedia(
+                      albumId: video.albumId!,
+                      onChangeMedia: (media) async {
+                        var newVideo = media as Video;
+                        video = newVideo;
+                        var (url, _) = await FileUrlService.genGetFileUrl(video.fileId!);
+                        videoUrl = url;
+                        setState(() {});
+                      },
+                    ),
                   MediaFeedbackBar(
                     mediaType: MediaType.video,
-                    mediaId: widget.video.id!,
-                    media: widget.video,
+                    mediaId: video.id!,
+                    media: video,
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 5),
@@ -173,8 +186,8 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                           MaterialPageRoute(
                             builder: (context) => CommentPage(
                               commentParentType: CommentParentType.video,
-                              commentParentId: widget.video.id!,
-                              parentUserId: widget.video.userId!,
+                              commentParentId: video.id!,
+                              parentUserId: video.userId!,
                             ),
                           ),
                         );

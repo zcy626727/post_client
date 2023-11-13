@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:post_client/constant/media.dart';
 import 'package:post_client/model/media/gallery.dart';
+import 'package:post_client/service/media/gallery_service.dart';
 import 'package:post_client/view/page/comment/comment_page.dart';
 
 import '../../../model/media/history.dart';
@@ -12,6 +13,7 @@ import '../../../model/message/comment.dart';
 import '../../../service/media/history_service.dart';
 import '../../component/feedback/media_feedback_bar.dart';
 import '../../component/media/media_more_button.dart';
+import '../album/album_in_media.dart';
 
 class GalleryDetailPage extends StatefulWidget {
   const GalleryDetailPage({super.key, required this.gallery, this.onDeleteMedia, this.onUpdateMedia});
@@ -27,6 +29,7 @@ class GalleryDetailPage extends StatefulWidget {
 class _GalleryDetailPageState extends State<GalleryDetailPage> {
   late Future _futureBuilderFuture;
   late History history;
+  Gallery gallery = Gallery();
 
   @override
   void initState() {
@@ -35,7 +38,18 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
   }
 
   Future getData() async {
-    return Future.wait([getHistory()]);
+    return Future.wait([getHistory(), getGallery()]);
+  }
+
+  Future<void> getGallery() async {
+    try {
+      gallery = await GalleryService.getGalleryById(widget.gallery.id!);
+      gallery.user = widget.gallery.user;
+    } on DioException catch (e) {
+      log(e.toString());
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   Future<void> getHistory() async {
@@ -80,7 +94,7 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
               ),
               actions: [
                 MediaMoreButton(
-                  media: widget.gallery,
+                  media: gallery,
                   onDeleteMedia: (media) {
                     Navigator.of(context).pop();
                     if (widget.onDeleteMedia != null) {
@@ -88,7 +102,7 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
                     }
                   },
                   onUpdateMedia: (media) {
-                    widget.gallery.copyGallery(media as Gallery);
+                    gallery.copyGallery(media as Gallery);
                     if (widget.onUpdateMedia != null) {
                       widget.onUpdateMedia!(media);
                     }
@@ -103,18 +117,18 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
               padding: const EdgeInsets.only(left: 3, right: 3, top: 1),
               child: ListView(
                 children: [
-                  ...List<Image>.generate(widget.gallery.thumbnailUrlList!.length, (index) {
+                  ...List<Image>.generate(gallery.thumbnailUrlList!.length, (index) {
                     return Image(
-                      image: NetworkImage(widget.gallery.thumbnailUrlList![index]),
+                      image: NetworkImage(gallery.thumbnailUrlList![index]),
                       fit: BoxFit.fitWidth,
                     );
                   }),
                   ListTile(
                     contentPadding: const EdgeInsets.only(left: 3, right: 3),
                     visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-                    leading: CircleAvatar(radius: 18, backgroundImage: NetworkImage(widget.gallery.user!.avatarUrl!)),
+                    leading: CircleAvatar(radius: 18, backgroundImage: NetworkImage(gallery.user!.avatarUrl!)),
                     title: Text(
-                      widget.gallery.title!,
+                      gallery.title!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -123,7 +137,7 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
                       ),
                     ),
                     subtitle: Text(
-                      DateFormat("yyyy-MM-dd").format(widget.gallery.createTime!),
+                      DateFormat("yyyy-MM-dd").format(gallery.createTime!),
                       style: TextStyle(
                         color: colorScheme.onSurface,
                       ),
@@ -132,14 +146,24 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                     child: Text(
-                      widget.gallery.introduction!,
+                      gallery.introduction!,
                       style: TextStyle(fontSize: 15, color: colorScheme.onSurface),
                     ),
                   ),
+                  if (gallery.hasAlbum())
+                    AlbumInMedia(
+                      albumId: gallery.albumId!,
+                      onChangeMedia: (media) {
+                        var newGallery = media as Gallery;
+                        newGallery.user = gallery.user;
+                        gallery = newGallery;
+                        setState(() {});
+                      },
+                    ),
                   MediaFeedbackBar(
                     mediaType: MediaType.gallery,
-                    mediaId: widget.gallery.id!,
-                    media: widget.gallery,
+                    mediaId: gallery.id!,
+                    media: gallery,
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 5),
@@ -151,9 +175,9 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => CommentPage(
-                                    commentParentType: CommentParentType.gallery,
-                                    commentParentId: widget.gallery.id!,
-                                    parentUserId: widget.gallery.userId!,
+                                commentParentType: CommentParentType.gallery,
+                                    commentParentId: gallery.id!,
+                                    parentUserId: gallery.userId!,
                                   )),
                         );
                       },

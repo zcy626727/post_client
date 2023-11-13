@@ -29,9 +29,11 @@ class _VideoListTileState extends State<VideoListTile> {
     var colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 2),
+      margin: widget.isInner ? null : const EdgeInsets.only(bottom: 1),
+      padding: EdgeInsets.zero,
       color: colorScheme.surface,
       child: TextButton(
+        style: ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.zero)),
         onPressed: () {
           Navigator.push(
             context,
@@ -51,6 +53,7 @@ class _VideoListTileState extends State<VideoListTile> {
           children: [
             SizedBox(
               height: 200,
+              width: double.infinity,
               child: Stack(
                 children: [
                   Image(
@@ -135,7 +138,7 @@ class _VideoListTileState extends State<VideoListTile> {
                               onConfirm: () async {
                                 try {
                                   await VideoService.deleteVideo(widget.video.id!);
-                                  if(widget.onDeleteMedia!=null){
+                                  if (widget.onDeleteMedia != null) {
                                     widget.onDeleteMedia!(widget.video);
                                   }
                                 } on DioException catch (e) {

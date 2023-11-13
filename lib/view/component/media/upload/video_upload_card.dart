@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 import 'dart:isolate';
 
 import 'package:dio/dio.dart';
@@ -137,6 +136,7 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
                         Text(
                           task.srcPath!,
                           maxLines: 1,
+                          style: TextStyle(color: colorScheme.onSurface),
                         ),
                         //上传进度
                         LinearProgressIndicator(
@@ -145,8 +145,11 @@ class _VideoUploadCardState extends State<VideoUploadCard> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(task.statusMessage ?? "读取文件"),
-                            Text("${UnitUtil.convertByteUnits(task.uploadedSize)}/${UnitUtil.convertByteUnits(task.totalSize)}"),
+                            Text(task.statusMessage ?? "读取文件", style: TextStyle(color: colorScheme.onSurface)),
+                            Text(
+                              "${UnitUtil.convertByteUnits(task.uploadedSize)}/${UnitUtil.convertByteUnits(task.totalSize)}",
+                              style: TextStyle(color: colorScheme.onSurface),
+                            ),
                           ],
                         ),
                         //取消上传

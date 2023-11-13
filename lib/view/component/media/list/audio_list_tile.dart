@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/view/page/audio/audio_detail_page.dart';
 
-import '../../../../config/global.dart';
 import '../../../../model/media/audio.dart';
 
 class AudioListTile extends StatefulWidget {
@@ -22,7 +21,7 @@ class _AudioListTileState extends State<AudioListTile> {
     var colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 2),
+      margin: widget.isInner ? null : const EdgeInsets.only(bottom: 1),
       color: colorScheme.surface,
       // height: 100,
       child: GestureDetector(

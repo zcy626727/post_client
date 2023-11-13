@@ -22,7 +22,7 @@ class _ArticleListTileState extends State<ArticleListTile> {
 
     return GestureDetector(
       child: Container(
-        margin: const EdgeInsets.only(bottom: 2.0),
+        margin: widget.isInner ? null : const EdgeInsets.only(bottom: 1),
         color: colorScheme.surface,
         height: 100,
         child: Row(

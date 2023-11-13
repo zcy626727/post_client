@@ -5,11 +5,12 @@ class SourceType {
   static const audio = 3;
   static const video = 4;
 
-  //合集
   static const comment = 5;
 
   //动态
   static const post = 6;
+
+  static const album = 7;
 
   static const option = [
     (SourceType.post, "动态"),
@@ -18,7 +19,7 @@ class SourceType {
     (SourceType.video, "视频"),
     (SourceType.gallery, "图片"),
     (SourceType.article, "文章"),
-
+    (SourceType.album, "合集"),
   ];
 }
 

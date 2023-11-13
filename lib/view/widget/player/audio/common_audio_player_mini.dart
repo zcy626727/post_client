@@ -1,6 +1,5 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 
 import 'audio_manager.dart';
 import 'notifiers/play_button_notifier.dart';
@@ -63,6 +62,7 @@ class _CommonAudioPlayerMiniState extends State<CommonAudioPlayerMini> {
                       icon: const Icon(Icons.play_arrow),
                       splashRadius: 10,
                       iconSize: 32.0,
+                      color: colorScheme.onSecondaryContainer,
                       onPressed: _pageManager.play,
                     );
                   case ButtonState.playing:
@@ -70,6 +70,7 @@ class _CommonAudioPlayerMiniState extends State<CommonAudioPlayerMini> {
                       icon: const Icon(Icons.pause),
                       splashRadius: 10,
                       iconSize: 32.0,
+                      color: colorScheme.onSecondaryContainer,
                       onPressed: _pageManager.pause,
                     );
                 }

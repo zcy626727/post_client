@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:post_client/config/constants.dart';
 import 'package:post_client/model/media/album.dart';
 import 'package:post_client/view/page/album/album_source_list_page.dart';
 
@@ -22,7 +20,7 @@ class _AlbumListTileState extends State<AlbumListTile> {
     var colorScheme = Theme.of(context).colorScheme;
     return Container(
       color: colorScheme.surface,
-      margin: const EdgeInsets.only(top: 2),
+      margin: const EdgeInsets.only(bottom: 1),
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       height: 110,
       child: TextButton(

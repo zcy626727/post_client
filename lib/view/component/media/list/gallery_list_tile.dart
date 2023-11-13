@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/view/page/gallery/gallery_detail_page.dart';
+
+import '../../../../config/constants.dart';
 
 class GalleryListTile extends StatefulWidget {
   const GalleryListTile({super.key, required this.gallery, this.isInner = false, this.onDeleteMedia, this.onUpdateMedia});
@@ -34,20 +35,16 @@ class _GalleryListTileState extends State<GalleryListTile> {
           ),
         );
       },
-      child: Container(
-        color: colorScheme.surface,
-        margin: const EdgeInsets.only(top: 2),
+      child: SizedBox(
+        height: 200,
         child: Stack(
-          fit: StackFit.loose,
           children: [
-            Container(
+            Image(
               width: double.infinity,
-              height: double.infinity,
-              color: colorScheme.surface,
-              child: Image(
-                image: NetworkImage(widget.gallery.coverUrl!),
-                fit: BoxFit.cover,
+              image: NetworkImage(
+                widget.gallery.coverUrl == null || widget.gallery.coverUrl!.isEmpty ? testImageUrl : widget.gallery.coverUrl!,
               ),
+              fit: BoxFit.cover,
             ),
             if (widget.isInner)
               SizedBox(

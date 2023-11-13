@@ -9,6 +9,7 @@ import 'package:post_client/service/media/history_service.dart';
 import 'package:post_client/view/component/feedback/media_feedback_bar.dart';
 import 'package:post_client/view/component/media/media_more_button.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
+import 'package:post_client/view/page/album/album_in_media.dart';
 
 import '../../../constant/media.dart';
 import '../../../model/media/article.dart';
@@ -34,6 +35,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   final FocusNode focusNode = FocusNode();
 
   late History history;
+  late Article article;
 
   @override
   void initState() {
@@ -47,11 +49,11 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
 
   Future<void> getArticle() async {
     try {
-      var article = await ArticleService.getArticleById(widget.article.id!);
-
+      article = await ArticleService.getArticleById(widget.article.id!);
+      article.user = widget.article.user;
       //如果不存在则直接创建
       controller.document = Document.fromJson(json.decode(article.content ?? ""));
-      widget.article.content = article.content;
+      article.content = article.content;
     } on DioException catch (e) {
       log(e.toString());
     } catch (e) {
@@ -100,7 +102,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
               ),
               actions: [
                 MediaMoreButton(
-                  media: widget.article,
+                  media: article,
                   onDeleteMedia: (media) {
                     Navigator.of(context).pop();
                     if (widget.onDeleteMedia != null) {
@@ -108,7 +110,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                     }
                   },
                   onUpdateMedia: (media) {
-                    widget.article.copyArticle(media as Article);
+                    article.copyArticle(media as Article);
                     if (widget.onUpdateMedia != null) {
                       widget.onUpdateMedia!(media);
                     }
@@ -123,20 +125,38 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
               padding: const EdgeInsets.only(left: 3, right: 3),
               child: ListView(
                 children: [
-                  if (widget.article.coverUrl != null && widget.article.coverUrl!.isNotEmpty) Image(image: NetworkImage(widget.article.coverUrl!)),
+                  if (article.coverUrl != null && article.coverUrl!.isNotEmpty)
+                    Image(
+                      height: 100,
+                      image: NetworkImage(article.coverUrl!),
+                      fit: BoxFit.cover,
+                    ),
+                  if (article.hasAlbum())
+                    Container(
+                      margin: const EdgeInsets.only(top: 2, bottom: 1),
+                      child: AlbumInMedia(
+                        albumId: article.albumId!,
+                        onChangeMedia: (media) {
+                          var newArticle = media as Article;
+                          newArticle.user = article.user;
+                          article = newArticle;
+                          setState(() {});
+                        },
+                      ),
+                    ),
                   Container(
                     margin: const EdgeInsets.only(left: 5, right: 5),
                     child: Text(
-                      widget.article.title!,
+                      article.title!,
                       style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: colorScheme.onSurface),
                     ),
                   ),
                   ListTile(
                     contentPadding: const EdgeInsets.only(left: 3, right: 3),
                     visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-                    leading: CircleAvatar(radius: 18, backgroundImage: NetworkImage(widget.article.user!.avatarUrl!)),
+                    leading: CircleAvatar(radius: 18, backgroundImage: NetworkImage(article.user!.avatarUrl!)),
                     title: Text(
-                      widget.article.title!,
+                      article.title!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -145,7 +165,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                       ),
                     ),
                     subtitle: Text(
-                      DateFormat("yyyy-MM-dd").format(widget.article.createTime!),
+                      DateFormat("yyyy-MM-dd").format(article.createTime!),
                       style: TextStyle(
                         color: colorScheme.onSurface,
                       ),
@@ -154,8 +174,8 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                   buildText(),
                   MediaFeedbackBar(
                     mediaType: MediaType.article,
-                    mediaId: widget.article.id!,
-                    media: widget.article,
+                    mediaId: article.id!,
+                    media: article,
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 5),
@@ -168,8 +188,8 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                           MaterialPageRoute(
                             builder: (context) => CommentPage(
                               commentParentType: CommentParentType.article,
-                              commentParentId: widget.article.id!,
-                              parentUserId: widget.article.userId!,
+                              commentParentId: article.id!,
+                              parentUserId: article.userId!,
                             ),
                           ),
                         );

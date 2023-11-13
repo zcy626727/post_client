@@ -1,23 +1,18 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/domain/task/single_upload_task.dart';
 import 'package:post_client/model/media/album.dart';
 import 'package:post_client/model/media/video.dart';
 import 'package:post_client/service/media/video_service.dart';
-import 'package:post_client/view/component/input/common_info_card.dart';
 import 'package:post_client/view/component/media/upload/video_upload_card.dart';
 
 import '../../../constant/media.dart';
 import '../../../domain/task/multipart_upload_task.dart';
 import '../../../enums/upload_task.dart';
 import '../../../service/media/album_service.dart';
-import '../../../service/media/file_url_service.dart';
 import '../../component/input/media_info_card.dart';
-import '../../component/media/upload/image_upload_card.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
 
@@ -134,6 +129,7 @@ class _VideoEditPageState extends State<VideoEditPage> {
                               String? newIntroduction;
                               String? newCoverUrl;
                               int? newFileId;
+                              bool isAlbumChange = false;
 
                               Video media = widget.video!;
 
@@ -153,7 +149,11 @@ class _VideoEditPageState extends State<VideoEditPage> {
                                 newFileId = videoUploadTask.fileId!;
                                 media.fileId = newFileId;
                               }
-                              if (newTitle == null && newIntroduction == null && newCoverUrl == null && newFileId == null) throw const FormatException("未做修改");
+                              if (widget.video!.albumId != _selectedAlbum?.id) {
+                                widget.video!.albumId = _selectedAlbum?.id;
+                                isAlbumChange = true;
+                              }
+                              if (newTitle == null && newIntroduction == null && newCoverUrl == null && newFileId == null && !isAlbumChange) throw const FormatException("未做修改");
 
                               await VideoService.updateVideoData(
                                 mediaId: widget.video!.id!,
@@ -204,14 +204,12 @@ class _VideoEditPageState extends State<VideoEditPage> {
                       titleController: titleController,
                       introductionController: introductionController,
                       onWithPost: (withPost) {
-                        setState(() {
-                          _withPost = withPost;
-                        });
+                        _withPost = withPost;
                       },
                       onSelectedAlbum: (album) {
                         _selectedAlbum = album;
                       },
-                      onClearAlbum: (){
+                      onClearAlbum: () {
                         _selectedAlbum = null;
                       },
                       mediaType: MediaType.video,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 
 import 'media_quill_embeds.dart';
 
@@ -55,7 +54,15 @@ class PostQuillEditor extends StatelessWidget {
 }
 
 class ArticleQuillEditor extends StatelessWidget {
-  const ArticleQuillEditor({Key? key, required this.controller, this.placeholder, this.maxHeight, this.minHeight, required this.focusNode, this.readOnly = false}) : super(key: key);
+  const ArticleQuillEditor({
+    Key? key,
+    required this.controller,
+    this.placeholder,
+    this.maxHeight,
+    this.minHeight,
+    required this.focusNode,
+    this.readOnly = false,
+  }) : super(key: key);
 
   final QuillController controller;
   final double? maxHeight;
@@ -81,7 +88,7 @@ class ArticleQuillEditor extends StatelessWidget {
         scrollController: ScrollController(),
         scrollable: true,
         padding: EdgeInsets.zero,
-        showCursor: true,
+        showCursor: !readOnly,
         autoFocus: false,
         readOnly: readOnly,
         expands: false,
