@@ -4,13 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/model/media/album.dart';
 import 'package:post_client/model/user/user.dart';
-import 'package:post_client/service/media/album_service.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
-import 'package:post_client/view/component/media/list/album_list_tile.dart';
 import 'package:post_client/view/page/media/album_list_page.dart';
 import 'package:post_client/view/page/media/history_list_page.dart';
-import 'package:post_client/view/widget/common_header_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../../../config/global.dart';
@@ -169,25 +166,25 @@ class _MediaScreenState extends State<MediaScreen> {
           //   ),
           // ),
           //todo 订阅合集
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.only(top: 2),
-              color: colorScheme.surface,
-              child: Column(
-                children: [
-                  const CommonHeaderBar(title: "订阅合集"),
-                  Expanded(
-                    child: ListView.builder(
-                      itemBuilder: (ctx, index) {
-                        return AlbumListTile(album: _albumList[index]);
-                      },
-                      itemCount: _albumList.length,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // Expanded(
+          //   child: Container(
+          //     margin: const EdgeInsets.only(top: 2),
+          //     color: colorScheme.surface,
+          //     child: Column(
+          //       children: [
+          //         const CommonHeaderBar(title: "订阅合集"),
+          //         Expanded(
+          //           child: ListView.builder(
+          //             itemBuilder: (ctx, index) {
+          //               return AlbumListTile(album: _albumList[index]);
+          //             },
+          //             itemCount: _albumList.length,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:intl/intl.dart';
+import 'package:post_client/config/constants.dart';
 import 'package:post_client/config/global.dart';
 import 'package:post_client/model/media/gallery.dart';
 import 'package:post_client/model/message/feed_feedback.dart';
@@ -98,7 +99,7 @@ class _PostListTileState extends State<PostListTile> {
         child: CircleAvatar(
           radius: 18,
           backgroundImage: NetworkImage(
-            widget.post.user!.avatarUrl!,
+            widget.post.user == null ? testImageUrl : widget.post.user!.avatarUrl!,
           ),
         ),
       ),

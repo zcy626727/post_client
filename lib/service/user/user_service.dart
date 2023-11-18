@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 
 import '../../api/client/user/user_api.dart';
-import '../../api/client/user_http_config.dart';
 import '../../config/global.dart';
 import '../../model/user/user.dart';
 
@@ -24,6 +23,7 @@ class UserService {
     var user = await UserApi.signInByToken(phoneNumber);
     //最新登录时间
     user.lastLoginTime = DateTime.now();
+    user.phoneNumber = phoneNumber;
     if (kIsWeb) {
     } else {
       //插入或更新到数据库

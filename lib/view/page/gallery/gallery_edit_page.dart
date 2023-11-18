@@ -242,9 +242,11 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                       coverUploadImage: coverUploadImage,
                       titleController: titleController,
                       introductionController: introductionController,
-                      onWithPost: (withPost) {
-                        _withPost = withPost;
-                      },
+                      onWithPost: widget.gallery != null
+                          ? null
+                          : (withPost) {
+                              _withPost = withPost;
+                            },
                       onSelectedAlbum: (album) {
                         _selectedAlbum = album;
                       },

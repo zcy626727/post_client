@@ -203,9 +203,11 @@ class _AudioEditPageState extends State<AudioEditPage> {
                       coverUploadImage: coverUploadImage,
                       titleController: titleController,
                       introductionController: introductionController,
-                      onWithPost: (withPost) {
-                        _withPost = withPost;
-                      },
+                      onWithPost: widget.audio != null
+                          ? null
+                          : (withPost) {
+                              _withPost = withPost;
+                            },
                       onSelectedAlbum: (album) {
                         _selectedAlbum = album;
                       },

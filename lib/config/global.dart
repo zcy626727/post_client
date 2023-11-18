@@ -58,8 +58,6 @@ class Global {
 
     //搜索sqlite
     log("初始化完毕");
-
-
   }
 
   static initApi() async {
@@ -112,8 +110,7 @@ class Global {
     if (user.token != null && user.phoneNumber != null) {
       //根据token尝试登录
       try {
-        user = await UserService.signInByToken(user.phoneNumber!)
-            .timeout(const Duration(seconds: 1));
+        user = await UserService.signInByToken(user.phoneNumber!).timeout(const Duration(seconds: 1));
       } on DioException catch (e) {
         //http错误
         if (e.response != null) {
@@ -127,6 +124,8 @@ class Global {
       } catch (e) {
         return "认证失败";
       }
+    } else {
+      user = User();
     }
 
     return null;

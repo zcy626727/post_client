@@ -154,6 +154,7 @@ class _AudioUploadCardState extends State<AudioUploadCard> {
                             audioUrl = null;
                             task.srcPath = file.path;
                             task.totalSize = file.size;
+                            task.status = UploadTaskStatus.init;
                             var currentFileIndex = updateIndex;
 
                             MultipartUploadService.doUploadFile(

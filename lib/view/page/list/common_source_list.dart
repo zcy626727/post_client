@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:post_client/constant/media.dart';
 import 'package:post_client/constant/source.dart';
 import 'package:post_client/view/component/comment/comment_list_tile.dart';
+import 'package:post_client/view/component/post/post_list_tile.dart';
 
 import '../../../model/media/album.dart';
 import '../../../model/media/article.dart';
@@ -10,6 +11,7 @@ import '../../../model/media/gallery.dart';
 import '../../../model/media/media.dart';
 import '../../../model/media/video.dart';
 import '../../../model/message/comment.dart';
+import '../../../model/message/feed_feedback.dart';
 import '../../../model/message/post.dart';
 import '../../../model/user/user.dart';
 import '../../component/media/list/album_list_tile.dart';
@@ -76,40 +78,30 @@ class _CommonSourceListState extends State<CommonSourceList> {
     var colorScheme = Theme.of(context).colorScheme;
 
     return switch (sourceType) {
-      SourceType.post => CommonItemList<Gallery>(
-          onLoad: widget.onLoadGallery!,
-          itemName: "图片",
+      SourceType.post => CommonItemList<Post>(
+          onLoad: widget.onLoadPost!,
+          itemName: "评论",
           itemHeight: null,
-          isGrip: true,
+          isGrip: false,
           gripAspectRatio: 1,
           enableScrollbar: true,
-          itemBuilder: (ctx, gallery, galleryList, onFresh) {
-            return GalleryListTile(
-              key: ValueKey(gallery.id),
-              gallery: gallery,
-              onUpdateMedia: (m) {
-                if (m.id == gallery.id) {
-                  gallery.copyGallery(m);
-                  setState(() {});
-                } else {
-                  if (MediaUtils.updateMediaInList(galleryList, m)) {
-                    setState(() {});
-                  }
-                }
+          itemBuilder: (ctx, post, postList, onFresh) {
+            return PostListTile(
+              key: ValueKey(post.id),
+              post: post,
+              onDeletePost: (Post post) {
+                postList?.remove(post);
+                setState(() {});
               },
-              onDeleteMedia: (m) {
-                if (MediaUtils.deleteMediaInList(galleryList, m)) {
-                  setState(() {});
-                }
-              },
+              feedback: post.feedback ?? FeedFeedback(),
             );
           },
         ),
       SourceType.comment => CommonItemList<Comment>(
-          onLoad: widget.onLoadComment!,
-          itemName: "图片",
+        onLoad: widget.onLoadComment!,
+          itemName: "评论",
           itemHeight: null,
-          isGrip: true,
+          isGrip: false,
           gripAspectRatio: 1,
           enableScrollbar: true,
           itemBuilder: (ctx, comment, commentList, onFresh) {
@@ -187,6 +179,35 @@ class _CommonSourceListState extends State<CommonSourceList> {
               },
               onDeleteMedia: (m) {
                 if (MediaUtils.deleteMediaInList(audioList, m)) {
+                  setState(() {});
+                }
+              },
+            );
+          },
+        ),
+      SourceType.gallery => CommonItemList<Gallery>(
+          onLoad: widget.onLoadGallery!,
+          itemName: "图片",
+          itemHeight: null,
+          isGrip: true,
+          gripAspectRatio: 1,
+          enableScrollbar: true,
+          itemBuilder: (ctx, gallery, galleryList, onFresh) {
+            return GalleryListTile(
+              key: ValueKey(gallery.id),
+              gallery: gallery,
+              onUpdateMedia: (m) {
+                if (m.id == gallery.id) {
+                  gallery.copyGallery(m);
+                  setState(() {});
+                } else {
+                  if (MediaUtils.updateMediaInList(galleryList, m)) {
+                    setState(() {});
+                  }
+                }
+              },
+              onDeleteMedia: (m) {
+                if (MediaUtils.deleteMediaInList(galleryList, m)) {
                   setState(() {});
                 }
               },

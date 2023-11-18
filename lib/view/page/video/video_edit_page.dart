@@ -203,9 +203,11 @@ class _VideoEditPageState extends State<VideoEditPage> {
                       coverUploadImage: coverUploadImage,
                       titleController: titleController,
                       introductionController: introductionController,
-                      onWithPost: (withPost) {
-                        _withPost = withPost;
-                      },
+                      onWithPost: widget.video != null
+                          ? null
+                          : (withPost) {
+                              _withPost = withPost;
+                            },
                       onSelectedAlbum: (album) {
                         _selectedAlbum = album;
                       },

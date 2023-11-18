@@ -1,7 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/view/page/account/user_details_page.dart';
 import 'package:provider/provider.dart';
@@ -161,21 +159,21 @@ class MobileAccountDrawerPage extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(user.formatId(), style: TextStyle(color: colorScheme.onSurface.withAlpha(160))),
-          const SizedBox(height: 4),
-          SizedBox(
-            height: 20,
-            child: Chip(
-              backgroundColor: Colors.deepOrange[300],
-              padding: const EdgeInsets.only(bottom: 3, left: 4, right: 4),
-              // labelPadding: EdgeInsets.zero,
-              visualDensity: const VisualDensity(vertical: -4, horizontal: -4),
-              label: const Text(
-                'lv 6',
-                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.white),
-              ),
-            ),
-          ),
-          const SizedBox(height: 5),
+          // const SizedBox(height: 4),
+          // SizedBox(
+          //   height: 20,
+          //   child: Chip(
+          //     backgroundColor: Colors.deepOrange[300],
+          //     padding: const EdgeInsets.only(bottom: 3, left: 4, right: 4),
+          //     // labelPadding: EdgeInsets.zero,
+          //     visualDensity: const VisualDensity(vertical: -4, horizontal: -4),
+          //     label: const Text(
+          //       'lv 6',
+          //       style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.white),
+          //     ),
+          //   ),
+          // ),
+          // const SizedBox(height: 5),
           //
           Expanded(
             child: Container(

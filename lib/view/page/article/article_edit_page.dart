@@ -207,13 +207,15 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                           coverUploadImage: coverUploadImage,
                           titleController: titleController,
                           introductionController: introductionController,
-                          onWithPost: (withPost) {
-                            _withPost = withPost;
-                          },
+                          onWithPost: widget.article != null
+                              ? null
+                              : (withPost) {
+                                  _withPost = withPost;
+                                },
                           onSelectedAlbum: (album) {
                             _selectedAlbum = album;
                           },
-                          onClearAlbum: (){
+                          onClearAlbum: () {
                             _selectedAlbum = null;
                           },
                           mediaType: MediaType.article,
