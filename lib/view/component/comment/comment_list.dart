@@ -10,6 +10,7 @@ import 'package:post_client/model/message/comment.dart';
 import 'package:post_client/service/message/comment_service.dart';
 import 'package:post_client/view/component/input/comment_text_field.dart';
 import 'package:post_client/view/component/quill/quill_tool_bar.dart';
+import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/page/comment/reply_page.dart';
 
 import '../../../model/user/user.dart';
@@ -143,6 +144,11 @@ class _CommentListState extends State<CommentList> {
                 controller: _controller,
                 focusNode: _focusNode,
                 onSubmit: () async {
+                  if (_controller.document.isEmpty()) {
+                    ShowSnackBar.error(context: context, message: "内容为空");
+                    return;
+                  }
+
                   var content = jsonEncode(_controller.document.toDelta().toJson());
                   var delta = _controller.document.toDelta().toList();
                   List<int> targetUserIdList = <int>[];

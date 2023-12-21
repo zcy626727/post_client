@@ -33,20 +33,25 @@ class MobileAccountDrawerPage extends StatelessWidget {
                   height: 1,
                   color: colorScheme.outline,
                 ),
+                const SizedBox(height: 5),
                 Expanded(
                   child: ListView(
                     padding: EdgeInsets.zero,
                     children: [
-                      // if (isLogin)
-                      //   MobileDrawerItem(
-                      //     leading: Icon(
-                      //       Icons.hive_outlined,
-                      //       color: colorScheme.onBackground,
-                      //       size: 23,
-                      //     ),
-                      //     title: "我的分区",
-                      //     onPress: () {},
-                      //   ),
+                      if (isLogin)
+                        MobileDrawerItem(
+                          leading: Icon(
+                            Icons.insert_comment_outlined,
+                            color: colorScheme.onBackground,
+                            size: 23,
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_right,
+                            color: colorScheme.onBackground,
+                          ),
+                          title: "我的评论",
+                          onPress: () {},
+                        ),
                       if (isLogin)
                         MobileDrawerItem(
                           leading: Icon(
@@ -76,37 +81,14 @@ class MobileAccountDrawerPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       //功能按钮导航
-                      if (isLogin)
-                        IconButton(
-                          splashRadius: 30,
-                          iconSize: 29,
-                          icon: Icon(Icons.star, color: colorScheme.onSurface),
-                          onPressed: () {},
-                        ),
-                      if (!isLogin) const SizedBox(),
+                      const SizedBox(),
                       //亮暗模式
                       LightDarkSwitch(
                         isLarge: !isLogin,
                         width: isLogin ? 40 : 130,
                       ),
                       //钱包
-                      if (isLogin)
-                        IconButton(
-                          splashRadius: 30,
-                          iconSize: 29,
-                          icon: Icon(Icons.apps, color: colorScheme.onSurface),
-                          onPressed: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) {
-                            //       return const MobileServicePage();
-                            //     },
-                            //   ),
-                            // );
-                          },
-                        ),
-                      if (!isLogin) const SizedBox()
+                      const SizedBox()
                     ],
                   ),
                 ),
@@ -216,20 +198,30 @@ class MobileDrawerItem extends StatelessWidget {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return SizedBox(
-      height: 50,
-      child: ListTile(
-        horizontalTitleGap: -4.0,
-        title: Text(
-          title,
-          style: TextStyle(fontSize: 15, color: colorScheme.onBackground),
+      height: 45,
+      child: TextButton(
+        onPressed: onPress,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  if (leading != null) leading!,
+                  if (leading != null) const SizedBox(width: 15),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 3),
+                    child: Text(
+                      title,
+                      style: TextStyle(fontSize: 15, color: colorScheme.onBackground),
+                    ),
+                  )
+                ],
+              ),
+              if (trailing != null) trailing!,
+            ],
+          ),
         ),
-        leading: leading,
-        onTap: onPress,
-        trailing: trailing ??
-            Icon(
-              Icons.arrow_right,
-              color: colorScheme.onBackground,
-            ),
       ),
     );
   }

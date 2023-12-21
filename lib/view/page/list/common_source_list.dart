@@ -80,7 +80,7 @@ class _CommonSourceListState extends State<CommonSourceList> {
     return switch (sourceType) {
       SourceType.post => CommonItemList<Post>(
           onLoad: widget.onLoadPost!,
-          itemName: "评论",
+          itemName: "动态",
           itemHeight: null,
           isGrip: false,
           gripAspectRatio: 1,

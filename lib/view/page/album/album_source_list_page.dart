@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:post_client/config/page_config.dart';
 import 'package:post_client/model/media/album.dart';
 import 'package:post_client/service/media/album_service.dart';
@@ -72,12 +73,6 @@ class _AlbumSourceListPageState extends State<AlbumSourceListPage> {
                   Icons.arrow_back,
                   color: colorScheme.onBackground,
                 ),
-              ),
-              title: Text(
-                '合集：${widget.album.title ?? "未知名称"}',
-                style: TextStyle(color: colorScheme.onSurface),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
               actions: [
                 Container(
@@ -168,42 +163,165 @@ class _AlbumSourceListPageState extends State<AlbumSourceListPage> {
                 )
               ],
             ),
-            body: Container(
-              color: colorScheme.background,
-              child: CommonSourceList(
-                mediaType: widget.album.mediaType,
-                onLoadAudio: (pageIndex) async {
-                  return await AudioService.getAudioListByAlbumId(
-                    albumUserId: widget.album.userId!,
-                    albumId: widget.album.id!,
-                    pageSize: PageConfig.commonPageSize,
-                    pageIndex: pageIndex,
-                  );
-                },
-                onLoadVideo: (pageIndex) async {
-                  return await VideoService.getVideoListByAlbumId(
-                    albumUserId: widget.album.userId!,
-                    albumId: widget.album.id!,
-                    pageSize: PageConfig.commonPageSize,
-                    pageIndex: pageIndex,
-                  );
-                },
-                onLoadGallery: (pageIndex) async {
-                  return await GalleryService.getGalleryListByAlbumId(
-                    albumUserId: widget.album.userId!,
-                    albumId: widget.album.id!,
-                    pageIndex: pageIndex,
-                    pageSize: PageConfig.commonPageSize,
-                  );
-                },
-                onLoadArticle: (pageIndex) async {
-                  return await ArticleService.getArticleListByAlbumId(
-                    albumUserId: widget.album.userId!,
-                    albumId: widget.album.id!,
-                    pageIndex: pageIndex,
-                    pageSize: PageConfig.commonPageSize,
-                  );
-                },
+            body: NestedScrollView(
+              headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverToBoxAdapter(
+                    child: Container(
+                      height: 100,
+                      color: colorScheme.surface,
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      child: Row(
+                        children: [
+                          //图片
+                          Container(
+                            width: 150,
+                            height: double.infinity,
+                            color: colorScheme.primaryContainer,
+                            child: widget.album.coverUrl != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Image(
+                                      image: NetworkImage(widget.album.coverUrl!),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Icon(
+                                    Icons.album_outlined,
+                                    size: 70,
+                                    color: colorScheme.onPrimaryContainer,
+                                  ),
+                          ),
+                          //
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  //专辑标题
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        widget.album.title ?? "已失效",
+                                        style: TextStyle(
+                                          color: colorScheme.onSurface.withAlpha(200),
+                                          fontSize: 18,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(bottom: 5),
+                                        child: Text(
+                                          widget.album.introduction ?? "已失效",
+                                          style: TextStyle(color: colorScheme.onSurface.withAlpha(170)),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  //用户
+                                  if (widget.album.user != null)
+                                    Row(
+                                      children: [
+                                        ClipOval(
+                                          child: Image.network(
+                                            widget.album.user!.avatarUrl!,
+                                            width: 32,
+                                            height: 32,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              widget.album.user!.name ?? "未知用户",
+                                              style: TextStyle(color: colorScheme.onSurface.withAlpha(200), fontSize: 12),
+                                            ),
+                                            Text(
+                                              DateFormat("yyyy-MM-dd").format(widget.album.createTime!),
+                                              style: TextStyle(color: colorScheme.onSurface.withAlpha(150), fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ];
+              },
+              body: Column(
+                children: [
+                  Container(
+                    color: colorScheme.surface,
+                    margin: const EdgeInsets.only(top: 1, bottom: 1),
+                    height: 40,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(onPressed: () {}, icon: const Icon(Icons.sort)),
+                        Row(
+                          children: [
+                            IconButton(onPressed: () {}, icon: const Icon(Icons.folder_special)),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      color: colorScheme.background,
+                      child: CommonSourceList(
+                        mediaType: widget.album.mediaType,
+                        onLoadAudio: (pageIndex) async {
+                          return await AudioService.getAudioListByAlbumId(
+                            albumUserId: widget.album.userId!,
+                            albumId: widget.album.id!,
+                            pageSize: PageConfig.commonPageSize,
+                            pageIndex: pageIndex,
+                          );
+                        },
+                        onLoadVideo: (pageIndex) async {
+                          return await VideoService.getVideoListByAlbumId(
+                            albumUserId: widget.album.userId!,
+                            albumId: widget.album.id!,
+                            pageSize: PageConfig.commonPageSize,
+                            pageIndex: pageIndex,
+                          );
+                        },
+                        onLoadGallery: (pageIndex) async {
+                          return await GalleryService.getGalleryListByAlbumId(
+                            albumUserId: widget.album.userId!,
+                            albumId: widget.album.id!,
+                            pageIndex: pageIndex,
+                            pageSize: PageConfig.commonPageSize,
+                          );
+                        },
+                        onLoadArticle: (pageIndex) async {
+                          return await ArticleService.getArticleListByAlbumId(
+                            albumUserId: widget.album.userId!,
+                            albumId: widget.album.id!,
+                            pageIndex: pageIndex,
+                            pageSize: PageConfig.commonPageSize,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           );
