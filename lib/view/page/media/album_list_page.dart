@@ -3,14 +3,12 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
-import 'package:post_client/domain/task/single_upload_task.dart';
 import 'package:post_client/model/media/album.dart';
 import 'package:post_client/service/media/album_service.dart';
 import 'package:post_client/view/component/media/list/album_list_tile.dart';
 import 'package:post_client/view/page/album/album_edit_page.dart';
 
 import '../../../constant/media.dart';
-import '../../../constant/source.dart';
 import '../../widget/common_item_list.dart';
 
 class AlbumListPage extends StatefulWidget {
@@ -101,7 +99,7 @@ class _AlbumListPageState extends State<AlbumListPage> {
                       case "create":
                         var album = await Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => AlbumEditPage()),
+                          MaterialPageRoute(builder: (context) => const AlbumEditPage()),
                         );
                         //todo 创建成功返回album，然后根据条件添加到列表
                         break;

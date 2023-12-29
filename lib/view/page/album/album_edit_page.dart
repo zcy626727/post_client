@@ -5,7 +5,6 @@ import 'package:post_client/service/media/album_service.dart';
 
 import '../../../domain/task/single_upload_task.dart';
 import '../../../enums/upload_task.dart';
-import '../../../service/media/file_url_service.dart';
 import '../../component/input/common_dropdown.dart';
 import '../../component/input/common_info_card.dart';
 import '../../component/show/show_snack_bar.dart';
@@ -101,6 +100,7 @@ class _AlbumEditPageState extends State<AlbumEditPage> {
                         }
                         if (coverUploadImage.coverUrl != widget.album!.coverUrl) {
                           newCoverUrl = coverUploadImage.coverUrl;
+                          widget.album!.coverUrl = newCoverUrl;
                         }
                         if (newTitle == null && newIntroduction == null && newCoverUrl == null) throw const FormatException("未做修改");
                         await AlbumService.updateAlbumInfo(

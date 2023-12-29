@@ -2,16 +2,21 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:post_client/config/page_config.dart';
 import 'package:post_client/model/favorites.dart';
 import 'package:post_client/service/media/media_service.dart';
 import 'package:post_client/service/message/feed_service.dart';
+import 'package:post_client/view/page/favorites/favorites_edit_page.dart';
 
 import '../list/common_source_list.dart';
 
 class FavoritesSourceListPage extends StatefulWidget {
-  const FavoritesSourceListPage({super.key, required this.favorites});
+  const FavoritesSourceListPage({super.key, required this.favorites, this.onUpdate, this.onDelete});
 
   final Favorites favorites;
+
+  final Function(Favorites)? onUpdate;
+  final Function(Favorites)? onDelete;
 
   @override
   State<FavoritesSourceListPage> createState() => _FavoritesSourceListPageState();
@@ -128,11 +133,32 @@ class _FavoritesSourceListPageState extends State<FavoritesSourceListPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        IconButton(onPressed: () {}, icon: const Icon(Icons.sort)),
+                        // IconButton(splashRadius: 10, onPressed: () {}, icon: const Icon(Icons.sort)),
+                        const SizedBox(),
                         Row(
                           children: [
-                            IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
-                            IconButton(onPressed: () {}, icon: const Icon(Icons.folder_special)),
+                            IconButton(
+                              splashRadius: 10,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FavoritesEditPage(
+                                      favorites: widget.favorites,
+                                      onUpdate: (f) {
+                                        widget.favorites.copyFavorites(f);
+                                        if (widget.onUpdate != null) {
+                                          widget.onUpdate!(widget.favorites);
+                                        }
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: const Icon(Icons.edit),
+                            ),
+                            // IconButton(splashRadius: 10, onPressed: () {}, icon: const Icon(Icons.folder_special)),
                           ],
                         )
                       ],
@@ -142,27 +168,27 @@ class _FavoritesSourceListPageState extends State<FavoritesSourceListPage> {
                     child: CommonSourceList(
                       sourceType: widget.favorites.sourceType,
                       onLoadPost: (pageIndex) async {
-                        var result = await FeedService.getFeedListByIdList(postIdList: widget.favorites.sourceIdList);
+                        var result = await FeedService.getFeedListByIdList(postIdList: widget.favorites.sourceIdList, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$1;
                       },
                       onLoadComment: (pageIndex) async {
-                        var result = await FeedService.getFeedListByIdList(commentIdList: widget.favorites.sourceIdList);
+                        var result = await FeedService.getFeedListByIdList(commentIdList: widget.favorites.sourceIdList, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$2;
                       },
                       onLoadAudio: (pageIndex) async {
-                        var result = await MediaService.getMediaListByIdList(audioIdList: widget.favorites.sourceIdList);
+                        var result = await MediaService.getMediaListByIdList(audioIdList: widget.favorites.sourceIdList, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$2;
                       },
                       onLoadVideo: (pageIndex) async {
-                        var result = await MediaService.getMediaListByIdList(videoIdList: widget.favorites.sourceIdList!);
+                        var result = await MediaService.getMediaListByIdList(videoIdList: widget.favorites.sourceIdList, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$4;
                       },
                       onLoadGallery: (pageIndex) async {
-                        var result = await MediaService.getMediaListByIdList(galleryIdList: widget.favorites.sourceIdList);
+                        var result = await MediaService.getMediaListByIdList(galleryIdList: widget.favorites.sourceIdList, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$3;
                       },
                       onLoadArticle: (pageIndex) async {
-                        var result = await MediaService.getMediaListByIdList(articleIdList: widget.favorites.sourceIdList!);
+                        var result = await MediaService.getMediaListByIdList(articleIdList: widget.favorites.sourceIdList, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$1;
                       },
                     ),

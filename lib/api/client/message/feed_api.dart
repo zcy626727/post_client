@@ -32,8 +32,8 @@ class FeedApi {
     var r = await MessageHttpConfig.dio.get(
       "/feed/getFeedListByIdList",
       queryParameters: {
-        "postIdList": postIdList??[],
-        "commentIdList": commentIdList??[],
+        "postIdList": postIdList ?? [],
+        "commentIdList": commentIdList ?? [],
       },
       options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,

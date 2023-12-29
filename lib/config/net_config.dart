@@ -11,9 +11,9 @@ class NetConfig{
   int maxCount;
 
   //用户服务
-  static String userApiUrl = 'http://192.168.177.148:26101';
+  static String userApiUrl = 'http://192.168.2.108:26101';
 
-  static String messageApiUrl = 'http://192.168.177.148:26111';
+  static String messageApiUrl = 'http://192.168.2.108:26111';
 
-  static String mediaApiUrl = 'http://192.168.177.148:26121';
+  static String mediaApiUrl = 'http://192.168.2.108:26121';
 }

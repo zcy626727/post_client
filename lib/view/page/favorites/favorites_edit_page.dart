@@ -27,7 +27,7 @@ class _FavoritesEditPageState extends State<FavoritesEditPage> {
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final introductionController = TextEditingController();
-  (int, String) _selectedSource = SourceType.option[0];
+  (int, String) _selectedSource = SourceType.favoritesSourceOption[0];
   bool isSave = false;
 
   @override
@@ -167,7 +167,7 @@ class _FavoritesEditPageState extends State<FavoritesEditPage> {
                     _selectedSource = value;
                   });
                 },
-                options: SourceType.option,
+                options: SourceType.favoritesSourceOption,
               ),
           ],
         ),

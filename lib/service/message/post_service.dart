@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
 import 'package:post_client/model/message/feed_feedback.dart';
-import 'package:post_client/service/source_service.dart';
 
 import '../../api/client/media/media_api.dart';
 import '../../api/client/message/post_api.dart';
@@ -57,8 +55,10 @@ class PostService {
     int pageSize,
   ) async {
     var postList = await PostApi.getPostListRandom(pageSize);
-    await fillMedia(postList);
-    await fillFeedback(postList);
+    if (postList.isNotEmpty) {
+      await fillMedia(postList);
+      await fillFeedback(postList);
+    }
     return postList;
   }
 
