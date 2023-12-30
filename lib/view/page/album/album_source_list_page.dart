@@ -5,11 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:post_client/config/page_config.dart';
 import 'package:post_client/model/media/album.dart';
+import 'package:post_client/model/media/follow_album.dart';
 import 'package:post_client/service/media/album_service.dart';
 import 'package:post_client/service/media/article_service.dart';
 import 'package:post_client/service/media/audio_service.dart';
+import 'package:post_client/service/media/follow_album_service.dart';
 import 'package:post_client/service/media/gallery_service.dart';
 import 'package:post_client/service/media/video_service.dart';
+import 'package:post_client/util/entity_utils.dart';
 import 'package:post_client/view/page/album/album_edit_page.dart';
 import 'package:post_client/view/page/list/common_source_list.dart';
 
@@ -29,6 +32,7 @@ class AlbumSourceListPage extends StatefulWidget {
 }
 
 class _AlbumSourceListPageState extends State<AlbumSourceListPage> {
+  FollowAlbum? followAlbum;
   late Future _futureBuilderFuture;
 
   @override
@@ -38,11 +42,16 @@ class _AlbumSourceListPageState extends State<AlbumSourceListPage> {
   }
 
   Future getData() async {
-    return Future.wait([getDataList()]);
+    return Future.wait([getFollowAlbum()]);
   }
 
-  Future<void> getDataList() async {
-    try {} on DioException catch (e) {
+  //获取合集关注情况
+  Future<void> getFollowAlbum() async {
+    try {
+      if (widget.album.id != null) {
+        followAlbum = await FollowAlbumService.getFollowAlbum(albumId: widget.album.id!);
+      }
+    } on DioException catch (e) {
       log(e.toString());
     } catch (e) {
       log(e.toString());
@@ -180,17 +189,17 @@ class _AlbumSourceListPageState extends State<AlbumSourceListPage> {
                             color: colorScheme.primaryContainer,
                             child: widget.album.coverUrl != null
                                 ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: Image(
-                                      image: NetworkImage(widget.album.coverUrl!),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
+                              borderRadius: BorderRadius.circular(5),
+                              child: Image(
+                                image: NetworkImage(widget.album.coverUrl!),
+                                fit: BoxFit.cover,
+                              ),
+                            )
                                 : Icon(
-                                    Icons.album_outlined,
-                                    size: 70,
-                                    color: colorScheme.onPrimaryContainer,
-                                  ),
+                              Icons.album_outlined,
+                              size: 70,
+                              color: colorScheme.onPrimaryContainer,
+                            ),
                           ),
                           //
                           Expanded(
@@ -275,7 +284,25 @@ class _AlbumSourceListPageState extends State<AlbumSourceListPage> {
                         IconButton(onPressed: () {}, icon: const Icon(Icons.sort)),
                         Row(
                           children: [
-                            IconButton(onPressed: () {}, icon: const Icon(Icons.folder_special)),
+                            IconButton(
+                              color: (followAlbum == null || EntityUtil.idIsEmpty(followAlbum!.id)) ? null : Colors.red,
+                              onPressed: () async {
+                                try {
+                                  if (followAlbum == null || EntityUtil.idIsEmpty(followAlbum!.id)) {
+                                    //关注
+                                    followAlbum = await FollowAlbumService.followAlbum(albumId: widget.album.id!);
+                                  } else {
+                                    //取消关注
+                                    await FollowAlbumService.unfollowAlbum(followAlbumId: followAlbum!.id!);
+                                    followAlbum = null;
+                                  }
+                                  setState(() {});
+                                } on Exception catch (e) {
+                                  if (mounted) ShowSnackBar.exception(context: context, e: e, defaultValue: "操作失败");
+                                }
+                              },
+                              icon: const Icon(Icons.folder_special),
+                            ),
                           ],
                         )
                       ],
