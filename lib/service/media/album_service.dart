@@ -80,4 +80,12 @@ class AlbumService {
     var albumList = await AlbumApi.searchAlbum(title, page, pageSize);
     return albumList;
   }
+
+  static Future<List<Album>> getUserFollowAlbumList({
+    int pageIndex = 0,
+    int pageSize = 20,
+  }) async {
+    var albumList = await AlbumApi.getUserFollowAlbumList(pageIndex: pageIndex, pageSize: pageSize);
+    return albumList;
+  }
 }

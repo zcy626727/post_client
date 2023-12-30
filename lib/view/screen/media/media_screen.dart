@@ -11,8 +11,8 @@ import 'package:post_client/view/page/media/history_list_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../config/global.dart';
-import '../../page/media/download_list_page.dart';
 import '../../page/media/favorites_list_page.dart';
+import '../../page/media/follow_album_list_page.dart';
 
 class MediaScreen extends StatefulWidget {
   const MediaScreen({super.key});
@@ -127,19 +127,34 @@ class _MediaScreenState extends State<MediaScreen> {
                       }
                     }),
                 buildItemButton(
-                    iconData: Icons.watch_later_outlined,
-                    text: "缓存列表",
+                    iconData: Icons.album,
+                    text: "订阅合集",
                     onPress: () {
                       if (Global.user.id == null) {
                         //显示登录页
-                        Navigator.pushNamed(context, "login");
+                        Navigator.pushNamed(context, "followAlbum");
                       } else {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const DownloadListPage()),
+                          MaterialPageRoute(builder: (context) => const FollowAlbumListPage()),
                         );
                       }
                     }),
+
+                // buildItemButton(
+                //     iconData: Icons.watch_later_outlined,
+                //     text: "缓存列表",
+                //     onPress: () {
+                //       if (Global.user.id == null) {
+                //         //显示登录页
+                //         Navigator.pushNamed(context, "login");
+                //       } else {
+                //         Navigator.push(
+                //           context,
+                //           MaterialPageRoute(builder: (context) => const DownloadListPage()),
+                //         );
+                //       }
+                //     }),
                 // Container(width: 95),
               ],
             ),

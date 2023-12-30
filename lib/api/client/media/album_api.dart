@@ -1,14 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:post_client/api/client/media_http_config.dart';
-import 'package:post_client/domain/task/single_upload_task.dart';
-import 'package:post_client/model/media/gallery.dart';
-import 'package:post_client/model/media/media.dart';
 
-import '../../../constant/media.dart';
 import '../../../model/media/album.dart';
-import '../../../model/media/article.dart';
-import '../../../model/media/audio.dart';
-import '../../../model/media/video.dart';
 import '../../../model/user/user.dart';
 
 class AlbumApi {
@@ -149,6 +142,24 @@ class AlbumApi {
       }),
     );
 
+    return _parseAlbumList(r);
+  }
+
+  static Future<List<Album>> getUserFollowAlbumList({
+    int pageIndex = 0,
+    int pageSize = 20,
+  }) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/followAlbum/getUserFollowAlbumList",
+      queryParameters: {
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
     return _parseAlbumList(r);
   }
 
