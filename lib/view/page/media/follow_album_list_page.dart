@@ -136,7 +136,7 @@ class _FollowAlbumListPageState extends State<FollowAlbumListPage> {
                     child: CommonItemList<Album>(
                       key: ValueKey(_mediaType),
                       onLoad: (int page) async {
-                        var commentList = await AlbumService.getUserFollowAlbumList(pageIndex: page, pageSize: PageConfig.commonPageSize);
+                        var commentList = await AlbumService.getUserFollowAlbumList(pageIndex: page, pageSize: PageConfig.commonPageSize, withUser: true);
                         return commentList;
                       },
                       itemName: "合集",

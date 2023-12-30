@@ -148,19 +148,21 @@ class AlbumApi {
   static Future<List<Album>> getUserFollowAlbumList({
     int pageIndex = 0,
     int pageSize = 20,
+    required bool withUser,
   }) async {
     var r = await MediaHttpConfig.dio.get(
       "/followAlbum/getUserFollowAlbumList",
       queryParameters: {
         "pageIndex": pageIndex,
         "pageSize": pageSize,
+        "withUser": withUser,
       },
       options: MediaHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
       }),
     );
-    return _parseAlbumList(r);
+    return _parseAlbumListWithUser(r);
   }
 
   static Future<List<Album>> searchAlbum(
@@ -186,15 +188,19 @@ class AlbumApi {
 
   static List<Album> _parseAlbumListWithUser(Response<dynamic> r) {
     Map<int, User> userMap = {};
-    for (var userJson in r.data['userList']) {
-      var user = User.fromJson(userJson);
-      userMap[user.id ?? 0] = user;
+    if (r.data['userList'] != null) {
+      for (var userJson in r.data['userList']) {
+        var user = User.fromJson(userJson);
+        userMap[user.id ?? 0] = user;
+      }
     }
     List<Album> albumList = [];
-    for (var albumJson in r.data['albumList']) {
-      var album = Album.fromJson(albumJson);
-      album.user = userMap[album.userId];
-      albumList.add(album);
+    if (r.data['albumList'] != null) {
+      for (var albumJson in r.data['albumList']) {
+        var album = Album.fromJson(albumJson);
+        album.user = userMap[album.userId];
+        albumList.add(album);
+      }
     }
     return albumList;
   }

@@ -84,8 +84,9 @@ class AlbumService {
   static Future<List<Album>> getUserFollowAlbumList({
     int pageIndex = 0,
     int pageSize = 20,
+    required bool withUser,
   }) async {
-    var albumList = await AlbumApi.getUserFollowAlbumList(pageIndex: pageIndex, pageSize: pageSize);
+    var albumList = await AlbumApi.getUserFollowAlbumList(pageIndex: pageIndex, pageSize: pageSize, withUser: withUser);
     return albumList;
   }
 }
