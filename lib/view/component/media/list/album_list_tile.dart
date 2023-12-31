@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:post_client/model/media/album.dart';
+import 'package:post_client/util/entity_utils.dart';
+import 'package:post_client/util/time.dart';
 import 'package:post_client/view/page/album/album_source_list_page.dart';
 
 class AlbumListTile extends StatefulWidget {
@@ -25,22 +27,24 @@ class _AlbumListTileState extends State<AlbumListTile> {
       height: 110,
       child: TextButton(
         onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AlbumSourceListPage(
-                album: widget.album,
-                onDelete: (a) {
-                  if (widget.onDeleteAlbum != null) widget.onDeleteAlbum!(a);
-                  if (mounted) Navigator.pop(context);
-                },
-                onUpdate: (a) {
-                  widget.album.copyAlbum(a);
-                  setState(() {});
-                },
+          if (!EntityUtil.idIsEmpty(widget.album.id)) {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AlbumSourceListPage(
+                  album: widget.album,
+                  onDelete: (a) {
+                    if (widget.onDeleteAlbum != null) widget.onDeleteAlbum!(a);
+                    if (mounted) Navigator.pop(context);
+                  },
+                  onUpdate: (a) {
+                    widget.album.copyAlbum(a);
+                    setState(() {});
+                  },
+                ),
               ),
-            ),
-          );
+            );
+          }
         },
         child: Row(
           children: [
@@ -108,7 +112,7 @@ class _AlbumListTileState extends State<AlbumListTile> {
                                 style: TextStyle(color: colorScheme.onSurface.withAlpha(200), fontSize: 12),
                               ),
                               Text(
-                                DateFormat("yyyy-MM-dd").format(widget.album.createTime!),
+                                widget.album.createTime == null ? DateTimeUtil.unknownTimeFormat() : DateFormat("yyyy-MM-dd").format(widget.album.createTime!),
                                 style: TextStyle(color: colorScheme.onSurface.withAlpha(150), fontSize: 10),
                               ),
                             ],

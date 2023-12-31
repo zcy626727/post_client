@@ -4,8 +4,9 @@ import 'package:post_client/model/media/follow_album.dart';
 class FollowAlbumService {
   static Future<FollowAlbum> followAlbum({
     required String albumId,
+    int? mediaType,
   }) async {
-    var followAlbum = await FollowAlbumApi.followAlbum(albumId: albumId);
+    var followAlbum = await FollowAlbumApi.followAlbum(albumId: albumId, mediaType: mediaType);
     return followAlbum;
   }
 
@@ -21,5 +22,15 @@ class FollowAlbumService {
   }) async {
     var followAlbum = await FollowAlbumApi.getFollowAlbum(albumId: albumId);
     return followAlbum;
+  }
+
+  static Future<List<FollowAlbum>> getUserFollowAlbumList({
+    int pageIndex = 0,
+    int pageSize = 20,
+    int? mediaType,
+    required bool withUser,
+  }) async {
+    var followAlbumList = await FollowAlbumApi.getUserFollowAlbumList(pageIndex: pageIndex, pageSize: pageSize, withUser: withUser, mediaType: mediaType);
+    return followAlbumList;
   }
 }

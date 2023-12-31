@@ -25,4 +25,8 @@ class DateTimeUtil {
       return "00:00";
     }
   }
+
+  static String unknownTimeFormat() {
+    return "--";
+  }
 }

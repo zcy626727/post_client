@@ -3,13 +3,14 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/page_config.dart';
+import 'package:post_client/model/media/follow_album.dart';
+import 'package:post_client/service/media/follow_album_service.dart';
+import 'package:post_client/util/entity_utils.dart';
 
 import '../../../constant/media.dart';
 import '../../../model/media/album.dart';
-import '../../../service/media/album_service.dart';
 import '../../component/media/list/album_list_tile.dart';
 import '../../widget/common_item_list.dart';
-import '../album/album_edit_page.dart';
 
 class FollowAlbumListPage extends StatefulWidget {
   const FollowAlbumListPage({super.key});
@@ -69,44 +70,6 @@ class _FollowAlbumListPageState extends State<FollowAlbumListPage> {
                 "合集",
                 style: TextStyle(color: colorScheme.onSurface),
               ),
-              actions: [
-                PopupMenuButton<String>(
-                  itemBuilder: (BuildContext context) {
-                    return [
-                      PopupMenuItem(
-                        height: 35,
-                        value: 'create',
-                        child: Text(
-                          '创建合集',
-                          style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
-                        ),
-                      ),
-                    ];
-                  },
-                  icon: Icon(Icons.more_horiz, color: colorScheme.onSurface),
-                  splashRadius: 20,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: BorderSide(
-                      width: 1,
-                      color: colorScheme.onSurface.withAlpha(30),
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                  color: colorScheme.surface,
-                  onSelected: (value) async {
-                    switch (value) {
-                      case "create":
-                        var album = await Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const AlbumEditPage()),
-                        );
-                        //todo 创建成功返回album，然后根据条件添加到列表
-                        break;
-                    }
-                  },
-                ),
-              ],
             ),
             body: Container(
               color: colorScheme.background,
@@ -133,25 +96,26 @@ class _FollowAlbumListPageState extends State<FollowAlbumListPage> {
                     ),
                   ),
                   Expanded(
-                    child: CommonItemList<Album>(
+                    child: CommonItemList<FollowAlbum>(
                       key: ValueKey(_mediaType),
                       onLoad: (int page) async {
-                        var commentList = await AlbumService.getUserFollowAlbumList(pageIndex: page, pageSize: PageConfig.commonPageSize, withUser: true);
-                        return commentList;
+                        var followAlbum = await FollowAlbumService.getUserFollowAlbumList(pageIndex: page, pageSize: PageConfig.commonPageSize, mediaType: _mediaType, withUser: true);
+                        return followAlbum;
                       },
                       itemName: "合集",
                       itemHeight: null,
                       isGrip: false,
                       enableScrollbar: true,
-                      itemBuilder: (ctx, album, albumList, onFresh) {
+                      itemBuilder: (ctx, followAlbum, albumList, onFresh) {
+                        //找不到该专辑，判定为失效
+                        if (followAlbum.album == null || EntityUtil.idIsEmpty(followAlbum.album!.id)) {
+                          var a = Album();
+                          a.id = followAlbum.albumId;
+                          a.user = followAlbum.user;
+                          followAlbum.album = a;
+                        }
                         return AlbumListTile(
-                          album: album,
-                          onDeleteAlbum: (a) {
-                            if (albumList != null) {
-                              albumList.remove(a);
-                              setState(() {});
-                            }
-                          },
+                          album: followAlbum.album!,
                         );
                       },
                     ),

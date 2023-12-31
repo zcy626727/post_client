@@ -99,20 +99,6 @@ class _MediaScreenState extends State<MediaScreen> {
                       }
                     }),
                 buildItemButton(
-                    iconData: Icons.album,
-                    text: "我的合集",
-                    onPress: () {
-                      if (Global.user.id == null) {
-                        //显示登录页
-                        Navigator.pushNamed(context, "login");
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const AlbumListPage()),
-                        );
-                      }
-                    }),
-                buildItemButton(
                     iconData: Icons.history,
                     text: "历史记录",
                     onPress: () {
@@ -128,6 +114,21 @@ class _MediaScreenState extends State<MediaScreen> {
                     }),
                 buildItemButton(
                     iconData: Icons.album,
+                    text: "我的合集",
+                    onPress: () {
+                      if (Global.user.id == null) {
+                        //显示登录页
+                        Navigator.pushNamed(context, "login");
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const AlbumListPage()),
+                        );
+                      }
+                    }),
+
+                buildItemButton(
+                    iconData: Icons.album_outlined,
                     text: "订阅合集",
                     onPress: () {
                       if (Global.user.id == null) {

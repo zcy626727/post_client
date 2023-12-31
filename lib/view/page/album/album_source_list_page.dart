@@ -189,17 +189,17 @@ class _AlbumSourceListPageState extends State<AlbumSourceListPage> {
                             color: colorScheme.primaryContainer,
                             child: widget.album.coverUrl != null
                                 ? ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: Image(
-                                image: NetworkImage(widget.album.coverUrl!),
-                                fit: BoxFit.cover,
-                              ),
-                            )
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Image(
+                                      image: NetworkImage(widget.album.coverUrl!),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
                                 : Icon(
-                              Icons.album_outlined,
-                              size: 70,
-                              color: colorScheme.onPrimaryContainer,
-                            ),
+                                    Icons.album_outlined,
+                                    size: 70,
+                                    color: colorScheme.onPrimaryContainer,
+                                  ),
                           ),
                           //
                           Expanded(
@@ -290,7 +290,7 @@ class _AlbumSourceListPageState extends State<AlbumSourceListPage> {
                                 try {
                                   if (followAlbum == null || EntityUtil.idIsEmpty(followAlbum!.id)) {
                                     //关注
-                                    followAlbum = await FollowAlbumService.followAlbum(albumId: widget.album.id!);
+                                    followAlbum = await FollowAlbumService.followAlbum(albumId: widget.album.id!, mediaType: widget.album.mediaType);
                                   } else {
                                     //取消关注
                                     await FollowAlbumService.unfollowAlbum(followAlbumId: followAlbum!.id!);

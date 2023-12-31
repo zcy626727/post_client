@@ -145,26 +145,6 @@ class AlbumApi {
     return _parseAlbumList(r);
   }
 
-  static Future<List<Album>> getUserFollowAlbumList({
-    int pageIndex = 0,
-    int pageSize = 20,
-    required bool withUser,
-  }) async {
-    var r = await MediaHttpConfig.dio.get(
-      "/followAlbum/getUserFollowAlbumList",
-      queryParameters: {
-        "pageIndex": pageIndex,
-        "pageSize": pageSize,
-        "withUser": withUser,
-      },
-      options: MediaHttpConfig.options.copyWith(extra: {
-        "noCache": true,
-        "withToken": true,
-      }),
-    );
-    return _parseAlbumListWithUser(r);
-  }
-
   static Future<List<Album>> searchAlbum(
     String title,
     int page,

@@ -7,21 +7,16 @@ class AlbumService {
     String title,
     String introduction,
     int mediaType,
-    String? coverUrl,
-  ) async {
+    String? coverUrl,) async {
     var album = await AlbumApi.createAlbum(title, introduction, mediaType, coverUrl);
     return album;
   }
 
-  static Future<void> deleteUserAlbumById(
-    String albumId,
-  ) async {
+  static Future<void> deleteUserAlbumById(String albumId,) async {
     await AlbumApi.deleteUserAlbumById(albumId);
   }
 
-  static Future<Album> getAlbumById(
-    String albumId,
-  ) async {
+  static Future<Album> getAlbumById(String albumId,) async {
     var album = await AlbumApi.getAlbumById(albumId);
     return album;
   }
@@ -40,12 +35,10 @@ class AlbumService {
     );
   }
 
-  static Future<List<Album>> getUserAlbumList(
-    User user,
-    int mediaType,
-    int pageIndex,
-    int pageSize,
-  ) async {
+  static Future<List<Album>> getUserAlbumList(User user,
+      int mediaType,
+      int pageIndex,
+      int pageSize,) async {
     var albumList = await AlbumApi.getUserAlbumList(user.id!, mediaType, pageIndex, pageSize);
     for (var album in albumList) {
       album.user = user;
@@ -53,18 +46,14 @@ class AlbumService {
     return albumList;
   }
 
-  static Future<List<Album>> getAlbumListRandom(
-    int pageSize,
-  ) async {
+  static Future<List<Album>> getAlbumListRandom(int pageSize,) async {
     var albumList = await AlbumApi.getAlbumListRandom(pageSize);
     return albumList;
   }
 
-  static Future<List<Album>> getAlbumListByUserId(
-    User user,
-    int pageIndex,
-    int pageSize,
-  ) async {
+  static Future<List<Album>> getAlbumListByUserId(User user,
+      int pageIndex,
+      int pageSize,) async {
     var albumList = await AlbumApi.getAlbumListByUserId(user.id!, pageIndex, pageSize);
     for (var album in albumList) {
       album.user = user;
@@ -72,21 +61,11 @@ class AlbumService {
     return albumList;
   }
 
-  static Future<List<Album>> searchAlbum(
-    String title,
-    int page,
-    int pageSize,
-  ) async {
+  static Future<List<Album>> searchAlbum(String title,
+      int page,
+      int pageSize,) async {
     var albumList = await AlbumApi.searchAlbum(title, page, pageSize);
     return albumList;
   }
 
-  static Future<List<Album>> getUserFollowAlbumList({
-    int pageIndex = 0,
-    int pageSize = 20,
-    required bool withUser,
-  }) async {
-    var albumList = await AlbumApi.getUserFollowAlbumList(pageIndex: pageIndex, pageSize: pageSize, withUser: withUser);
-    return albumList;
-  }
 }

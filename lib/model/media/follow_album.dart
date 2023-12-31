@@ -1,6 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:post_client/model/media/album.dart';
 
+import '../user/user.dart';
+
 part 'follow_album.g.dart';
 
 @JsonSerializable()
@@ -9,8 +11,11 @@ class FollowAlbum {
   String? albumId;
   int? userId;
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(includeFromJson: true, includeToJson: false)
   Album? album;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  User? user;
 
   FollowAlbum();
 
