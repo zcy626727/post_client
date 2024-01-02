@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:post_client/model/user/user.dart';
 
 part 'favorites.g.dart';
 
@@ -11,7 +12,9 @@ class Favorites {
   String? coverUrl;
   DateTime? createTime;
   int? sourceType;
-  List<String>? sourceIdList;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  User? user;
 
   Favorites();
 
@@ -23,7 +26,6 @@ class Favorites {
     coverUrl = newFavorites.coverUrl;
     createTime = newFavorites.createTime;
     sourceType = newFavorites.sourceType;
-    sourceIdList = newFavorites.sourceIdList;
   }
 
   factory Favorites.fromJson(Map<String, dynamic> json) => _$FavoritesFromJson(json);

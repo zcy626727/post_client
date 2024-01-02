@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/model/favorites.dart';
 import 'package:post_client/service/favorites_service.dart';
+import 'package:post_client/service/user/favorites_source_service.dart';
+import 'package:post_client/util/entity_utils.dart';
 import 'package:post_client/view/component/favorites/select_favorites_list_tile.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 
@@ -20,11 +22,22 @@ class SelectFavoritesDialog extends StatefulWidget {
 class _SelectFavoritesDialogState extends State<SelectFavoritesDialog> {
   late Future _futureBuilderFuture;
   Map<Favorites, bool> changeFavoritesMap = {};
+  Map<String, bool> sourceInFavoritesIdMap = {};
 
-  Future<void> loadFavoritesList() async {}
+  Future<void> loadFavoritesSourceList() async {
+    var favoritesSourceList = await FavoritesSourceService.getFavoritesSourceListBySourceId(
+      sourceId: widget.sourceId,
+      sourceType: widget.sourceType,
+    );
+    for (var fs in favoritesSourceList) {
+      if (EntityUtil.idIsEmpty(fs.favoritesId)) {
+        sourceInFavoritesIdMap[fs.favoritesId!] = true;
+      }
+    }
+  }
 
   Future getData() async {
-    return Future.wait([loadFavoritesList()]);
+    return Future.wait([loadFavoritesSourceList()]);
   }
 
   @override
@@ -74,6 +87,7 @@ class _SelectFavoritesDialogState extends State<SelectFavoritesDialog> {
                 return SelectFavoritesListTile(
                     favorites: favorites,
                     sourceId: widget.sourceId,
+                    sourceInFavoritesIdMap: sourceInFavoritesIdMap,
                     onChanged: (value) {
                       //这样会将所有选择过的favorites都加入map
                       changeFavoritesMap[favorites] = value;
@@ -90,14 +104,14 @@ class _SelectFavoritesDialogState extends State<SelectFavoritesDialog> {
           backgroundRightColor: colorScheme.primary,
           rightTextColor: colorScheme.onPrimary,
           onRightTap: () async {
-            //todo 这里遍历changeFavoritesMap，根据其中的idList是否包含sourceId来划分成两个数组，添加和移除
+            //这里遍历changeFavoritesMap，根据其中的idList是否包含sourceId来划分成两个数组，添加和移除
             List<String> addFavoritesIdList = [];
             List<String> removeFavoritesIdList = [];
             changeFavoritesMap.forEach((favorites, selected) {
-              bool isContains = false;
-              if (favorites.sourceIdList != null) {
-                isContains = favorites.sourceIdList!.contains(widget.sourceId);
-              }
+              bool isContains = sourceInFavoritesIdMap[favorites.id] ?? false;
+              // if (favorites.sourceIdList != null) {
+              //   isContains = favorites.sourceIdList!.contains(widget.sourceId);
+              // }
               if (selected) {
                 //选中，
                 //只有最开始是未选中的才有效
@@ -118,7 +132,7 @@ class _SelectFavoritesDialogState extends State<SelectFavoritesDialog> {
               sourceId: widget.sourceId,
               sourceType: widget.sourceType,
             );
-            await widget.onConfirm(addFavoritesIdList.length-removeFavoritesIdList.length);
+            await widget.onConfirm(addFavoritesIdList.length - removeFavoritesIdList.length);
           },
         )
       ],

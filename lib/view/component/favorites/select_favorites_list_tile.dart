@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:post_client/model/favorites.dart';
 
 class SelectFavoritesListTile extends StatefulWidget {
-  const SelectFavoritesListTile({super.key, required this.favorites, required this.sourceId, required this.onChanged});
+  const SelectFavoritesListTile({
+    super.key,
+    required this.favorites,
+    required this.sourceId,
+    required this.onChanged,
+    required this.sourceInFavoritesIdMap,
+  });
 
   final Favorites favorites;
+  final Map<String, bool> sourceInFavoritesIdMap;
 
   //当前资源的id
   final String sourceId;
@@ -23,13 +30,7 @@ class _SelectFavoritesListTileState extends State<SelectFavoritesListTile> {
   @override
   void initState() {
     super.initState();
-    if(widget.favorites.sourceIdList!=null){
-      length = widget.favorites.sourceIdList!.length;
-      if (widget.favorites.sourceIdList!.contains(widget.sourceId)) {
-        _selected = true;
-      }
-    }
-
+    _selected = widget.sourceInFavoritesIdMap[widget.favorites.id] ?? false;
   }
 
   @override
@@ -40,7 +41,6 @@ class _SelectFavoritesListTileState extends State<SelectFavoritesListTile> {
       color: colorScheme.primaryContainer,
       child: ListTile(
         title: Text(widget.favorites.title ?? ""),
-        subtitle: Text("$length 个内容"),
         visualDensity: const VisualDensity(vertical: -4),
         trailing: Checkbox(
             value: _selected,

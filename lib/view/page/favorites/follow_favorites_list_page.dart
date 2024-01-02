@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/constant/source.dart';
+import 'package:post_client/model/follow_favorites.dart';
+import 'package:post_client/service/user/follow_favorites_service.dart';
 import 'package:post_client/view/component/favorites/favorites_list_tile.dart';
-import 'package:post_client/view/page/favorites/favorites_edit_page.dart';
 
 import '../../../model/favorites.dart';
-import '../../../service/favorites_service.dart';
+import '../../../util/entity_utils.dart';
 import '../../widget/common_item_list.dart';
 
-class FavoritesListPage extends StatefulWidget {
-  const FavoritesListPage({super.key});
+class FollowFavoritesListPage extends StatefulWidget {
+  const FollowFavoritesListPage({super.key});
 
   @override
-  State<FavoritesListPage> createState() => _FavoritesListPageState();
+  State<FollowFavoritesListPage> createState() => _FollowFavoritesListPageState();
 }
 
-class _FavoritesListPageState extends State<FavoritesListPage> {
+class _FollowFavoritesListPageState extends State<FollowFavoritesListPage> {
   int _sourceType = SourceType.post;
 
   @override
@@ -46,44 +47,6 @@ class _FavoritesListPageState extends State<FavoritesListPage> {
           "收藏",
           style: TextStyle(color: colorScheme.onSurface),
         ),
-        actions: [
-          PopupMenuButton<String>(
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem(
-                  height: 35,
-                  value: 'create',
-                  child: Text(
-                    '新建收藏夹',
-                    style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
-                  ),
-                ),
-              ];
-            },
-            icon: Icon(Icons.more_horiz, color: colorScheme.onSurface),
-            splashRadius: 20,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-              side: BorderSide(
-                width: 1,
-                color: colorScheme.onSurface.withAlpha(30),
-                style: BorderStyle.solid,
-              ),
-            ),
-            color: colorScheme.surface,
-            onSelected: (value) async {
-              switch (value) {
-                case "create":
-                  var post = await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const FavoritesEditPage()),
-                  );
-                  //todo 创建成功返回post，然后根据条件添加到列表
-                  break;
-              }
-            },
-          ),
-        ],
       ),
       body: Container(
         color: colorScheme.background,
@@ -111,26 +74,25 @@ class _FavoritesListPageState extends State<FavoritesListPage> {
               ),
             ),
             Expanded(
-              child: CommonItemList<Favorites>(
+              child: CommonItemList<FollowFavorites>(
                 key: ValueKey(_sourceType),
                 onLoad: (int page) async {
-                  var favoritesList = await FavoritesService.getUserFavoritesList(_sourceType, page, 20);
-                  return favoritesList;
+                  var followFavoritesList = await FollowFavoritesService.getUserFollowFavoritesList(sourceType: _sourceType, withUser: true);
+                  return followFavoritesList;
                 },
                 itemName: "合集",
                 isGrip: false,
                 enableScrollbar: true,
-                itemBuilder: (ctx, favorites, favoritesList, onFresh) {
+                itemBuilder: (ctx, ff, ffList, onFresh) {
+                  //找不到该收藏夹，判定为失效
+                  if (ff.favorites == null || EntityUtil.idIsEmpty(ff.favorites!.id)) {
+                    var f = Favorites();
+                    f.id = ff.favoritesId;
+                    f.user = ff.user;
+                    ff.favorites = f;
+                  }
                   return FavoritesListTile(
-                    favorites: favorites,
-                    onDelete: (f) {
-                      favoritesList?.remove(favorites);
-                      setState(() {});
-                    },
-                    onUpdate: (f) {
-                      favorites.copyFavorites(f);
-                      setState(() {});
-                    },
+                    favorites: ff.favorites!,
                   );
                 },
               ),

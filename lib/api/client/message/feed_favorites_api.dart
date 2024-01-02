@@ -1,4 +1,10 @@
+import 'package:dio/dio.dart';
+
 import '../../../model/favorites.dart';
+import '../../../model/message/comment.dart';
+import '../../../model/message/post.dart';
+import '../../../model/user/user.dart';
+import '../media_http_config.dart';
 import '../message_http_config.dart';
 
 class FeedFavoritesApi {
@@ -26,12 +32,10 @@ class FeedFavoritesApi {
     return Favorites.fromJson(r.data['favorites']);
   }
 
-  static Future<void> updateFavoritesData(
-    String favoritesId,
-    String? title,
-    String? introduction,
-    String? coverUrl,
-  ) async {
+  static Future<void> updateFavoritesData(String favoritesId,
+      String? title,
+      String? introduction,
+      String? coverUrl,) async {
     if (title == null && introduction == null && coverUrl == null) {
       return;
     }
@@ -50,9 +54,7 @@ class FeedFavoritesApi {
     );
   }
 
-  static Future<void> deleteUserFavoritesById(
-    String favoritesId,
-  ) async {
+  static Future<void> deleteUserFavoritesById(String favoritesId,) async {
     await MessageHttpConfig.dio.post(
       "/feedFavorites/deleteUserFavoritesById",
       data: {
@@ -86,11 +88,9 @@ class FeedFavoritesApi {
     );
   }
 
-  static Future<List<Favorites>> getUserFavoritesList(
-    int sourceType,
-    int pageIndex,
-    int pageSize,
-  ) async {
+  static Future<List<Favorites>> getUserFavoritesList(int sourceType,
+      int pageIndex,
+      int pageSize,) async {
     var r = await MessageHttpConfig.dio.get(
       "/feedFavorites/getUserFavoritesList",
       queryParameters: {
@@ -112,5 +112,54 @@ class FeedFavoritesApi {
       }
     }
     return favoritesList;
+  }
+
+  static Future<(List<Post>, List<Comment>)> getSourceListByFavoritesId({
+    required String favoritesId,
+    required int pageIndex,
+    required int pageSize,
+  }) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/mediaFavorites/getSourceListByFavoritesId",
+      queryParameters: {
+        "sourceType": favoritesId,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": false,
+        "withToken": true,
+      }),
+    );
+    return _parseFeedList(r);
+  }
+
+  static (List<Post>, List<Comment>) _parseFeedList(Response<dynamic> r) {
+    Map<int, User> userMap = {};
+    if (r.data['userList'] != null) {
+      for (var userJson in r.data['userList']) {
+        var user = User.fromJson(userJson);
+        userMap[user.id!] = user;
+      }
+    }
+
+    List<Post> postList = [];
+    if (r.data['postList'] != null) {
+      for (var postJson in r.data['postList']) {
+        var post = Post.fromJson(postJson);
+        post.user = userMap[post.userId];
+        postList.add(post);
+      }
+    }
+
+    List<Comment> commentList = [];
+    if (r.data['commentList'] != null) {
+      for (var audioJson in r.data['commentList']) {
+        var comment = Comment.fromJson(audioJson);
+        comment.user = userMap[comment.userId];
+        commentList.add(comment);
+      }
+    }
+    return (postList, commentList);
   }
 }

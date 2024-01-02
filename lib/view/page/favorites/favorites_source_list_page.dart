@@ -4,10 +4,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/page_config.dart';
 import 'package:post_client/model/favorites.dart';
-import 'package:post_client/service/media/media_service.dart';
-import 'package:post_client/service/message/feed_service.dart';
+import 'package:post_client/model/follow_favorites.dart';
+import 'package:post_client/service/favorites_service.dart';
+import 'package:post_client/service/user/follow_favorites_service.dart';
 import 'package:post_client/view/page/favorites/favorites_edit_page.dart';
 
+import '../../../config/global.dart';
+import '../../../util/entity_utils.dart';
+import '../../component/show/show_snack_bar.dart';
+import '../../widget/dialog/confirm_alert_dialog.dart';
 import '../list/common_source_list.dart';
 
 class FavoritesSourceListPage extends StatefulWidget {
@@ -24,6 +29,7 @@ class FavoritesSourceListPage extends StatefulWidget {
 
 class _FavoritesSourceListPageState extends State<FavoritesSourceListPage> {
   late Future _futureBuilderFuture;
+  FollowFavorites? followFavorites;
 
   @override
   void initState() {
@@ -32,11 +38,15 @@ class _FavoritesSourceListPageState extends State<FavoritesSourceListPage> {
   }
 
   Future getData() async {
-    return Future.wait([getDataList()]);
+    return Future.wait([getFollowFavorites()]);
   }
 
-  Future<void> getDataList() async {
-    try {} on DioException catch (e) {
+  Future<void> getFollowFavorites() async {
+    try {
+      if (widget.favorites.id != null) {
+        followFavorites = await FollowFavoritesService.getFollowFavorites(favoritesId: widget.favorites.id!, sourceType: widget.favorites.sourceType!);
+      }
+    } on DioException catch (e) {
       log(e.toString());
     } catch (e) {
       log(e.toString());
@@ -68,7 +78,94 @@ class _FavoritesSourceListPageState extends State<FavoritesSourceListPage> {
                   color: colorScheme.onBackground,
                 ),
               ),
-              actions: const [],
+              actions: [
+                Container(
+                  margin: const EdgeInsets.only(right: 10),
+                  child: PopupMenuButton<String>(
+                    splashRadius: 20,
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        if (Global.user.id == widget.favorites.userId)
+                          PopupMenuItem(
+                            height: 35,
+                            value: 'delete',
+                            child: Text(
+                              '删除',
+                              style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
+                            ),
+                          ),
+                        if (Global.user.id == widget.favorites.userId)
+                          PopupMenuItem(
+                            height: 35,
+                            value: 'edit',
+                            child: Text(
+                              '编辑',
+                              style: TextStyle(color: colorScheme.onBackground.withAlpha(200), fontSize: 14),
+                            ),
+                          ),
+                      ];
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: BorderSide(
+                        width: 1,
+                        color: colorScheme.onSurface.withAlpha(30),
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                    color: colorScheme.surface,
+                    onSelected: (value) async {
+                      switch (value) {
+                        case "delete":
+                          await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ConfirmAlertDialog(
+                                text: "是否确定删除？",
+                                onConfirm: () async {
+                                  try {
+                                    await FavoritesService.deleteUserFavoritesById(widget.favorites.id!, widget.favorites.sourceType!);
+                                    if (widget.onDelete != null) {
+                                      widget.onDelete!(widget.favorites);
+                                    }
+                                  } on DioException catch (e) {
+                                    if (mounted) ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
+                                  } finally {
+                                    if (mounted) Navigator.pop(context);
+                                  }
+                                },
+                                onCancel: () {
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                          );
+                          break;
+                        case "edit":
+                          if (mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FavoritesEditPage(
+                                  favorites: widget.favorites,
+                                  onUpdate: (f) {
+                                    widget.favorites.copyFavorites(f);
+                                    if (widget.onUpdate != null) {
+                                      widget.onUpdate!(widget.favorites);
+                                    }
+                                    setState(() {});
+                                  },
+                                ),
+                              ),
+                            );
+                          }
+                          break;
+                      }
+                    },
+                    child: Icon(Icons.more_horiz, color: colorScheme.onSurface),
+                  ),
+                )
+              ],
             ),
             body: NestedScrollView(
               headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -138,26 +235,25 @@ class _FavoritesSourceListPageState extends State<FavoritesSourceListPage> {
                         Row(
                           children: [
                             IconButton(
-                              splashRadius: 10,
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => FavoritesEditPage(
-                                      favorites: widget.favorites,
-                                      onUpdate: (f) {
-                                        widget.favorites.copyFavorites(f);
-                                        if (widget.onUpdate != null) {
-                                          widget.onUpdate!(widget.favorites);
-                                        }
-                                        setState(() {});
-                                      },
-                                    ),
-                                  ),
-                                );
+                              color: (followFavorites == null || EntityUtil.idIsEmpty(followFavorites!.id)) ? null : Colors.red,
+                              onPressed: () async {
+                                try {
+                                  if (followFavorites == null || EntityUtil.idIsEmpty(followFavorites!.id)) {
+                                    //关注
+                                    followFavorites = await FollowFavoritesService.followFavorites(favoritesId: widget.favorites.id!, sourceType: widget.favorites.sourceType!);
+                                  } else {
+                                    //取消关注
+                                    await FollowFavoritesService.unfollowFavorites(followFavoritesId: followFavorites!.id!, sourceType: widget.favorites.sourceType!);
+                                    followFavorites = null;
+                                  }
+                                  setState(() {});
+                                } on Exception catch (e) {
+                                  if (mounted) ShowSnackBar.exception(context: context, e: e, defaultValue: "操作失败");
+                                }
                               },
-                              icon: const Icon(Icons.edit),
+                              icon: const Icon(Icons.folder_special),
                             ),
+
                             // IconButton(splashRadius: 10, onPressed: () {}, icon: const Icon(Icons.folder_special)),
                           ],
                         )
@@ -168,27 +264,27 @@ class _FavoritesSourceListPageState extends State<FavoritesSourceListPage> {
                     child: CommonSourceList(
                       sourceType: widget.favorites.sourceType,
                       onLoadPost: (pageIndex) async {
-                        var result = await FeedService.getFeedListByIdList(postIdList: widget.favorites.sourceIdList, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
+                        var result = await FavoritesService.getFeedListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$1;
                       },
                       onLoadComment: (pageIndex) async {
-                        var result = await FeedService.getFeedListByIdList(commentIdList: widget.favorites.sourceIdList, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
+                        var result = await FavoritesService.getFeedListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$2;
                       },
                       onLoadAudio: (pageIndex) async {
-                        var result = await MediaService.getMediaListByIdList(audioIdList: widget.favorites.sourceIdList, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
+                        var result = await FavoritesService.getMediaListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$2;
                       },
                       onLoadVideo: (pageIndex) async {
-                        var result = await MediaService.getMediaListByIdList(videoIdList: widget.favorites.sourceIdList, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
+                        var result = await FavoritesService.getMediaListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$4;
                       },
                       onLoadGallery: (pageIndex) async {
-                        var result = await MediaService.getMediaListByIdList(galleryIdList: widget.favorites.sourceIdList, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
+                        var result = await FavoritesService.getMediaListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$3;
                       },
                       onLoadArticle: (pageIndex) async {
-                        var result = await MediaService.getMediaListByIdList(articleIdList: widget.favorites.sourceIdList, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
+                        var result = await FavoritesService.getMediaListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$1;
                       },
                     ),

@@ -11,7 +11,8 @@ import 'package:post_client/view/page/media/history_list_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../config/global.dart';
-import '../../page/media/favorites_list_page.dart';
+import '../../page/favorites/favorites_list_page.dart';
+import '../../page/favorites/follow_favorites_list_page.dart';
 import '../../page/media/follow_album_list_page.dart';
 
 class MediaScreen extends StatefulWidget {
@@ -85,7 +86,7 @@ class _MediaScreenState extends State<MediaScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 buildItemButton(
-                    iconData: Icons.collections_bookmark,
+                    iconData: Icons.star_border_purple500,
                     text: "我的收藏",
                     onPress: () {
                       if (Global.user.id == null) {
@@ -99,8 +100,8 @@ class _MediaScreenState extends State<MediaScreen> {
                       }
                     }),
                 buildItemButton(
-                    iconData: Icons.history,
-                    text: "历史记录",
+                    iconData: Icons.star,
+                    text: "订阅收藏",
                     onPress: () {
                       if (Global.user.id == null) {
                         //显示登录页
@@ -108,7 +109,7 @@ class _MediaScreenState extends State<MediaScreen> {
                       } else {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const HistoryListPage()),
+                          MaterialPageRoute(builder: (context) => const FollowFavoritesListPage()),
                         );
                       }
                     }),
@@ -126,7 +127,6 @@ class _MediaScreenState extends State<MediaScreen> {
                         );
                       }
                     }),
-
                 buildItemButton(
                     iconData: Icons.album_outlined,
                     text: "订阅合集",
@@ -141,9 +141,31 @@ class _MediaScreenState extends State<MediaScreen> {
                         );
                       }
                     }),
-
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(bottom: 5),
+            color: colorScheme.surface,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                buildItemButton(
+                    iconData: Icons.history,
+                    text: "历史记录",
+                    onPress: () {
+                      if (Global.user.id == null) {
+                        //显示登录页
+                        Navigator.pushNamed(context, "login");
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const HistoryListPage()),
+                        );
+                      }
+                    }),
                 // buildItemButton(
-                //     iconData: Icons.watch_later_outlined,
+                //     iconData: Icons.download,
                 //     text: "缓存列表",
                 //     onPress: () {
                 //       if (Global.user.id == null) {
@@ -156,32 +178,13 @@ class _MediaScreenState extends State<MediaScreen> {
                 //         );
                 //       }
                 //     }),
-                // Container(width: 95),
+                Container(width: 90),
+                Container(width: 90),
+                Container(width: 90),
               ],
             ),
           ),
-          // Container(
-          //   padding: const EdgeInsets.only(bottom: 5),
-          //   color: colorScheme.surface,
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //     children: [
-          //       buildItemButton(
-          //           iconData: Icons.download,
-          //           text: "缓存列表",
-          //           onPress: () {
-          //             Navigator.push(
-          //               context,
-          //               MaterialPageRoute(builder: (context) => const DownloadListPage()),
-          //             );
-          //           }),
-          //       Container(width: 85),
-          //       Container(width: 85),
-          //       Container(width: 85),
-          //     ],
-          //   ),
-          // ),
-          //todo 订阅合集
+          // todo 订阅合集
           // Expanded(
           //   child: Container(
           //     margin: const EdgeInsets.only(top: 2),

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:post_client/domain/favorites_source.dart';
+import 'package:post_client/model/media/media.dart';
+
+import '../../../model/favorites_source.dart';
 
 class AlbumMediaListTile extends StatelessWidget {
-  const AlbumMediaListTile({super.key, required this.favoritesSource});
+  const AlbumMediaListTile({super.key, required this.favoritesSource, required this.media});
 
   final FavoritesSource favoritesSource;
+  final Media media;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,7 @@ class AlbumMediaListTile extends StatelessWidget {
                     height: double.infinity,
                     color: colorScheme.surface,
                     child: Image(
-                      image: NetworkImage(favoritesSource.coverUrl!),
+                      image: NetworkImage(media.coverUrl!),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -62,7 +65,7 @@ class AlbumMediaListTile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          favoritesSource.title ?? "已失效",
+                          media.title ?? "已失效",
                           style: TextStyle(color: colorScheme.onSurface.withAlpha(200), fontSize: 20, fontWeight: FontWeight.w600),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

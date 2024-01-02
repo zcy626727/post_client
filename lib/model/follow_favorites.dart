@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:post_client/model/user/user.dart';
 
 import 'favorites.dart';
 
@@ -10,12 +11,15 @@ class FollowFavorites {
   String? favoritesId;
   int? userId;
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(includeFromJson: true, includeToJson: false)
   Favorites? favorites;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  User? user;
 
   FollowFavorites();
 
-  void copyFollowAlbum(FollowFavorites followFavorites) {
+  void copyFollowFavorites(FollowFavorites followFavorites) {
     id = followFavorites.id;
     favoritesId = followFavorites.favoritesId;
     userId = followFavorites.userId;

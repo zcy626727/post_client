@@ -1,8 +1,14 @@
 import 'package:post_client/api/client/message/feed_favorites_api.dart';
 import 'package:post_client/constant/source.dart';
+import 'package:post_client/model/message/comment.dart';
+import 'package:post_client/model/message/post.dart';
 
 import '../api/client/media/media_favorites_api.dart';
 import '../model/favorites.dart';
+import '../model/media/article.dart';
+import '../model/media/audio.dart';
+import '../model/media/gallery.dart';
+import '../model/media/video.dart';
 
 class FavoritesService {
   static Future<Favorites> createFavorites(
@@ -89,5 +95,29 @@ class FavoritesService {
       default:
         return await MediaFavoritesApi.getUserFavoritesList(sourceType, pageIndex, pageSize);
     }
+  }
+
+  static Future<(List<Article>, List<Audio>, List<Gallery>, List<Video>)> getMediaListByFavoritesId({
+    required String favoritesId,
+    required int pageIndex,
+    required int pageSize,
+  }) async {
+    return await MediaFavoritesApi.getSourceListByFavoritesId(
+      favoritesId: favoritesId,
+      pageIndex: pageIndex,
+      pageSize: pageSize,
+    );
+  }
+
+  static Future<(List<Post>, List<Comment>)> getFeedListByFavoritesId({
+    required String favoritesId,
+    required int pageIndex,
+    required int pageSize,
+  }) async {
+    return await FeedFavoritesApi.getSourceListByFavoritesId(
+      favoritesId: favoritesId,
+      pageIndex: pageIndex,
+      pageSize: pageSize,
+    );
   }
 }

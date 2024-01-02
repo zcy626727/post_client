@@ -1,4 +1,11 @@
+import 'package:dio/dio.dart';
+
 import '../../../model/favorites.dart';
+import '../../../model/media/article.dart';
+import '../../../model/media/audio.dart';
+import '../../../model/media/gallery.dart';
+import '../../../model/media/video.dart';
+import '../../../model/user/user.dart';
 import '../media_http_config.dart';
 
 class MediaFavoritesApi {
@@ -26,12 +33,10 @@ class MediaFavoritesApi {
     return Favorites.fromJson(r.data['favorites']);
   }
 
-  static Future<void> updateFavoritesData(
-    String favoritesId,
-    String? title,
-    String? introduction,
-    String? coverUrl,
-  ) async {
+  static Future<void> updateFavoritesData(String favoritesId,
+      String? title,
+      String? introduction,
+      String? coverUrl,) async {
     if (title == null && introduction == null && coverUrl == null) {
       return;
     }
@@ -50,9 +55,7 @@ class MediaFavoritesApi {
     );
   }
 
-  static Future<void> deleteUserFavoritesById(
-    String favoritesId,
-  ) async {
+  static Future<void> deleteUserFavoritesById(String favoritesId,) async {
     await MediaHttpConfig.dio.post(
       "/mediaFavorites/deleteUserFavoritesById",
       data: {
@@ -86,11 +89,9 @@ class MediaFavoritesApi {
     );
   }
 
-  static Future<List<Favorites>> getUserFavoritesList(
-    int sourceType,
-    int pageIndex,
-    int pageSize,
-  ) async {
+  static Future<List<Favorites>> getUserFavoritesList(int sourceType,
+      int pageIndex,
+      int pageSize,) async {
     var r = await MediaHttpConfig.dio.get(
       "/mediaFavorites/getUserFavoritesList",
       queryParameters: {
@@ -110,5 +111,72 @@ class MediaFavoritesApi {
       favoritesList.add(favorites);
     }
     return favoritesList;
+  }
+
+  static Future<(List<Article>, List<Audio>, List<Gallery>, List<Video>)> getSourceListByFavoritesId({
+    required String favoritesId,
+    required int pageIndex,
+    required int pageSize,
+  }) async {
+    var r = await MediaHttpConfig.dio.get(
+      "/mediaFavorites/getSourceListByFavoritesId",
+      queryParameters: {
+        "sourceType": favoritesId,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
+      },
+      options: MediaHttpConfig.options.copyWith(extra: {
+        "noCache": false,
+        "withToken": true,
+      }),
+    );
+    return _parseMediaList(r);
+  }
+
+  static (List<Article>, List<Audio>, List<Gallery>, List<Video>) _parseMediaList(Response<dynamic> r) {
+    Map<int, User> userMap = {};
+    if (r.data['userList'] != null) {
+      for (var userJson in r.data['userList']) {
+        var user = User.fromJson(userJson);
+        userMap[user.id!] = user;
+      }
+    }
+
+    List<Article> articleList = [];
+    if (r.data['articleList'] != null) {
+      for (var articleJson in r.data['articleList']) {
+        var article = Article.fromJson(articleJson);
+        article.user = userMap[article.userId];
+        articleList.add(article);
+      }
+    }
+
+    List<Audio> audioList = [];
+    if (r.data['audioList'] != null) {
+      for (var audioJson in r.data['audioList']) {
+        var audio = Audio.fromJson(audioJson);
+        audio.user = userMap[audio.userId];
+        audioList.add(audio);
+      }
+    }
+
+    List<Gallery> galleryList = [];
+    if (r.data['galleryList'] != null) {
+      for (var galleryJson in r.data['galleryList']) {
+        var gallery = Gallery.fromJson(galleryJson);
+        gallery.user = userMap[gallery.userId];
+        galleryList.add(gallery);
+      }
+    }
+
+    List<Video> videoList = [];
+    if (r.data['videoList'] != null) {
+      for (var videoJson in r.data['videoList']) {
+        var video = Video.fromJson(videoJson);
+        video.user = userMap[video.userId];
+        videoList.add(video);
+      }
+    }
+    return (articleList, audioList, galleryList, videoList);
   }
 }
