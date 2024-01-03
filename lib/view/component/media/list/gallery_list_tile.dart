@@ -41,6 +41,7 @@ class _GalleryListTileState extends State<GalleryListTile> {
           children: [
             Image(
               width: double.infinity,
+              height: 200,
               image: NetworkImage(
                 widget.gallery.coverUrl == null || widget.gallery.coverUrl!.isEmpty ? testImageUrl : widget.gallery.coverUrl!,
               ),

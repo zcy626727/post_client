@@ -236,6 +236,7 @@ class _FavoritesSourceListPageState extends State<FavoritesSourceListPage> {
                           children: [
                             IconButton(
                               color: (followFavorites == null || EntityUtil.idIsEmpty(followFavorites!.id)) ? null : Colors.red,
+                              splashRadius: 5,
                               onPressed: () async {
                                 try {
                                   if (followFavorites == null || EntityUtil.idIsEmpty(followFavorites!.id)) {

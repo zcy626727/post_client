@@ -9,6 +9,8 @@ import '../model/media/article.dart';
 import '../model/media/audio.dart';
 import '../model/media/gallery.dart';
 import '../model/media/video.dart';
+import 'message/comment_service.dart';
+import 'message/post_service.dart';
 
 class FavoritesService {
   static Future<Favorites> createFavorites(
@@ -114,10 +116,21 @@ class FavoritesService {
     required int pageIndex,
     required int pageSize,
   }) async {
-    return await FeedFavoritesApi.getSourceListByFavoritesId(
+    var (postList, commentList) = await FeedFavoritesApi.getSourceListByFavoritesId(
       favoritesId: favoritesId,
       pageIndex: pageIndex,
       pageSize: pageSize,
     );
+
+    if (postList.isNotEmpty) {
+      await PostService.fillMedia(postList);
+      await PostService.fillFeedback(postList);
+    }
+
+    if (commentList.isNotEmpty) {
+      await CommentService.fillFeedback(commentList);
+    }
+
+    return (postList, commentList);
   }
 }

@@ -38,6 +38,7 @@ class _SelectFavoritesListTileState extends State<SelectFavoritesListTile> {
     var colorScheme = Theme.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.only(top: 2),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       color: colorScheme.primaryContainer,
       child: ListTile(
         title: Text(widget.favorites.title ?? ""),

@@ -33,10 +33,12 @@ class MediaFavoritesApi {
     return Favorites.fromJson(r.data['favorites']);
   }
 
-  static Future<void> updateFavoritesData(String favoritesId,
-      String? title,
-      String? introduction,
-      String? coverUrl,) async {
+  static Future<void> updateFavoritesData(
+    String favoritesId,
+    String? title,
+    String? introduction,
+    String? coverUrl,
+  ) async {
     if (title == null && introduction == null && coverUrl == null) {
       return;
     }
@@ -55,7 +57,9 @@ class MediaFavoritesApi {
     );
   }
 
-  static Future<void> deleteUserFavoritesById(String favoritesId,) async {
+  static Future<void> deleteUserFavoritesById(
+    String favoritesId,
+  ) async {
     await MediaHttpConfig.dio.post(
       "/mediaFavorites/deleteUserFavoritesById",
       data: {
@@ -89,9 +93,11 @@ class MediaFavoritesApi {
     );
   }
 
-  static Future<List<Favorites>> getUserFavoritesList(int sourceType,
-      int pageIndex,
-      int pageSize,) async {
+  static Future<List<Favorites>> getUserFavoritesList(
+    int sourceType,
+    int pageIndex,
+    int pageSize,
+  ) async {
     var r = await MediaHttpConfig.dio.get(
       "/mediaFavorites/getUserFavoritesList",
       queryParameters: {
@@ -115,6 +121,7 @@ class MediaFavoritesApi {
 
   static Future<(List<Article>, List<Audio>, List<Gallery>, List<Video>)> getSourceListByFavoritesId({
     required String favoritesId,
+    bool withUser = true,
     required int pageIndex,
     required int pageSize,
   }) async {
@@ -122,6 +129,7 @@ class MediaFavoritesApi {
       "/mediaFavorites/getSourceListByFavoritesId",
       queryParameters: {
         "sourceType": favoritesId,
+        "withUser": withUser,
         "pageIndex": pageIndex,
         "pageSize": pageSize,
       },
@@ -130,10 +138,10 @@ class MediaFavoritesApi {
         "withToken": true,
       }),
     );
-    return _parseMediaList(r);
+    return _parseMediaListWithUser(r);
   }
 
-  static (List<Article>, List<Audio>, List<Gallery>, List<Video>) _parseMediaList(Response<dynamic> r) {
+  static (List<Article>, List<Audio>, List<Gallery>, List<Video>) _parseMediaListWithUser(Response<dynamic> r) {
     Map<int, User> userMap = {};
     if (r.data['userList'] != null) {
       for (var userJson in r.data['userList']) {

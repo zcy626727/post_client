@@ -125,7 +125,7 @@ class FollowFavoritesApi {
       );
       return _parseFollowFavoritesListWithUser(r);
     } else {
-      var r = await MediaHttpConfig.dio.get(
+      var r = await MessageHttpConfig.dio.get(
         "/followFavorites/getUserFollowFavoritesList",
         queryParameters: {
           "pageIndex": pageIndex,
@@ -133,7 +133,7 @@ class FollowFavoritesApi {
           "withUser": withUser,
           "sourceType": sourceType,
         },
-        options: MediaHttpConfig.options.copyWith(extra: {
+        options: MessageHttpConfig.options.copyWith(extra: {
           "noCache": true,
           "withToken": true,
         }),

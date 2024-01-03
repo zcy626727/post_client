@@ -30,7 +30,7 @@ class _SelectFavoritesDialogState extends State<SelectFavoritesDialog> {
       sourceType: widget.sourceType,
     );
     for (var fs in favoritesSourceList) {
-      if (EntityUtil.idIsEmpty(fs.favoritesId)) {
+      if (!EntityUtil.idIsEmpty(fs.favoritesId)) {
         sourceInFavoritesIdMap[fs.favoritesId!] = true;
       }
     }
@@ -126,7 +126,7 @@ class _SelectFavoritesDialogState extends State<SelectFavoritesDialog> {
                 }
               }
             });
-            FavoritesService.updateMediaInFavorites(
+            await FavoritesService.updateMediaInFavorites(
               addFavoritesIdList: addFavoritesIdList,
               removeFavoritesIdList: removeFavoritesIdList,
               sourceId: widget.sourceId,

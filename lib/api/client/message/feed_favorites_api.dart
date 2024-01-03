@@ -4,7 +4,6 @@ import '../../../model/favorites.dart';
 import '../../../model/message/comment.dart';
 import '../../../model/message/post.dart';
 import '../../../model/user/user.dart';
-import '../media_http_config.dart';
 import '../message_http_config.dart';
 
 class FeedFavoritesApi {
@@ -32,10 +31,12 @@ class FeedFavoritesApi {
     return Favorites.fromJson(r.data['favorites']);
   }
 
-  static Future<void> updateFavoritesData(String favoritesId,
-      String? title,
-      String? introduction,
-      String? coverUrl,) async {
+  static Future<void> updateFavoritesData(
+    String favoritesId,
+    String? title,
+    String? introduction,
+    String? coverUrl,
+  ) async {
     if (title == null && introduction == null && coverUrl == null) {
       return;
     }
@@ -54,7 +55,9 @@ class FeedFavoritesApi {
     );
   }
 
-  static Future<void> deleteUserFavoritesById(String favoritesId,) async {
+  static Future<void> deleteUserFavoritesById(
+    String favoritesId,
+  ) async {
     await MessageHttpConfig.dio.post(
       "/feedFavorites/deleteUserFavoritesById",
       data: {
@@ -88,9 +91,11 @@ class FeedFavoritesApi {
     );
   }
 
-  static Future<List<Favorites>> getUserFavoritesList(int sourceType,
-      int pageIndex,
-      int pageSize,) async {
+  static Future<List<Favorites>> getUserFavoritesList(
+    int sourceType,
+    int pageIndex,
+    int pageSize,
+  ) async {
     var r = await MessageHttpConfig.dio.get(
       "/feedFavorites/getUserFavoritesList",
       queryParameters: {
@@ -116,17 +121,19 @@ class FeedFavoritesApi {
 
   static Future<(List<Post>, List<Comment>)> getSourceListByFavoritesId({
     required String favoritesId,
+    bool withUser = true,
     required int pageIndex,
     required int pageSize,
   }) async {
-    var r = await MediaHttpConfig.dio.get(
-      "/mediaFavorites/getSourceListByFavoritesId",
+    var r = await MessageHttpConfig.dio.get(
+      "/feedFavorites/getSourceListByFavoritesId",
       queryParameters: {
-        "sourceType": favoritesId,
+        "favoritesId": favoritesId,
+        "withUser": withUser,
         "pageIndex": pageIndex,
         "pageSize": pageSize,
       },
-      options: MediaHttpConfig.options.copyWith(extra: {
+      options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": false,
         "withToken": true,
       }),
