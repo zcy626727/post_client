@@ -3,15 +3,15 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/domain/task/single_upload_task.dart';
-import 'package:post_client/model/media/album.dart';
-import 'package:post_client/model/media/video.dart';
-import 'package:post_client/service/media/video_service.dart';
+import 'package:post_client/model/post/album.dart';
+import 'package:post_client/model/post/video.dart';
+import 'package:post_client/service/post/video_service.dart';
 import 'package:post_client/view/component/media/upload/video_upload_card.dart';
 
-import '../../../constant/media.dart';
+import '../../../constant/source.dart';
 import '../../../domain/task/multipart_upload_task.dart';
 import '../../../enums/upload_task.dart';
-import '../../../service/media/album_service.dart';
+import '../../../service/post/album_service.dart';
 import '../../component/input/media_info_card.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
@@ -46,7 +46,7 @@ class _VideoEditPageState extends State<VideoEditPage> {
       titleController.text = widget.video!.title ?? "";
       introductionController.text = widget.video!.introduction ?? "";
       coverUploadImage.status = UploadTaskStatus.finished;
-      coverUploadImage.mediaType = MediaType.gallery;
+      coverUploadImage.mediaType = SourceType.gallery;
       coverUploadImage.coverUrl = widget.video!.coverUrl;
       videoUploadTask.fileId = widget.video!.fileId;
       videoUploadTask.status = UploadTaskStatus.finished;
@@ -214,7 +214,7 @@ class _VideoEditPageState extends State<VideoEditPage> {
                       onClearAlbum: () {
                         _selectedAlbum = null;
                       },
-                      mediaType: MediaType.video,
+                      mediaType: SourceType.video,
                       initAlbum: _selectedAlbum,
                     ),
                   ],

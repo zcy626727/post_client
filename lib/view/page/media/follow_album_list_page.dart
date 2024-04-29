@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/page_config.dart';
-import 'package:post_client/model/media/follow_album.dart';
-import 'package:post_client/service/media/follow_album_service.dart';
+import 'package:post_client/model/post/follow_album.dart';
+import 'package:post_client/service/post/follow_album_service.dart';
 import 'package:post_client/util/entity_utils.dart';
 
-import '../../../constant/media.dart';
-import '../../../model/media/album.dart';
+import '../../../constant/source.dart';
+import '../../../model/post/album.dart';
 import '../../component/media/list/album_list_tile.dart';
 import '../../widget/common_item_list.dart';
 
@@ -85,13 +85,13 @@ class _FollowAlbumListPageState extends State<FollowAlbumListPage> {
                       children: [
                         buildSourceTypeItem("全部", 0),
                         const SizedBox(width: 5),
-                        buildSourceTypeItem("音频", MediaType.audio),
+                        buildSourceTypeItem("音频", SourceType.audio),
                         const SizedBox(width: 5),
-                        buildSourceTypeItem("文章", MediaType.article),
+                        buildSourceTypeItem("文章", SourceType.article),
                         const SizedBox(width: 5),
-                        buildSourceTypeItem("视频", MediaType.video),
+                        buildSourceTypeItem("视频", SourceType.video),
                         const SizedBox(width: 5),
-                        buildSourceTypeItem("图片", MediaType.gallery),
+                        buildSourceTypeItem("图片", SourceType.gallery),
                       ],
                     ),
                   ),

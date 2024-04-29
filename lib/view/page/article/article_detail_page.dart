@@ -5,17 +5,17 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:intl/intl.dart';
-import 'package:post_client/service/media/history_service.dart';
 import 'package:post_client/view/component/feedback/media_feedback_bar.dart';
 import 'package:post_client/view/component/media/media_more_button.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
 import 'package:post_client/view/page/album/album_in_media.dart';
 
-import '../../../constant/media.dart';
-import '../../../model/media/article.dart';
-import '../../../model/media/history.dart';
-import '../../../model/message/comment.dart';
-import '../../../service/media/article_service.dart';
+import '../../../constant/source.dart';
+import '../../../model/post/article.dart';
+import '../../../model/post/comment.dart';
+import '../../../model/post/history.dart';
+import '../../../service/post/article_service.dart';
+import '../../../service/post/history_service.dart';
 import '../comment/comment_page.dart';
 
 class ArticleDetailPage extends StatefulWidget {
@@ -64,7 +64,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
   Future<void> getHistory() async {
     try {
       //获取或创建历史
-      history = await HistoryService.getOrCreateHistoryByMedia(widget.article.id!, MediaType.article);
+      history = await HistoryService.getOrCreateHistoryByMedia(widget.article.id!, SourceType.article);
     } on DioException catch (e) {
       log(e.toString());
     } catch (e) {
@@ -173,7 +173,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                   ),
                   buildText(),
                   MediaFeedbackBar(
-                    mediaType: MediaType.article,
+                    mediaType: SourceType.article,
                     mediaId: article.id!,
                     media: article,
                   ),

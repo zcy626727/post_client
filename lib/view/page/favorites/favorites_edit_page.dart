@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/constant/source.dart';
-import 'package:post_client/model/favorites.dart';
+import 'package:post_client/model/post/favorites.dart';
 import 'package:post_client/view/component/input/common_dropdown.dart';
 import 'package:post_client/view/component/input/common_info_card.dart';
 
-import '../../../constant/media.dart';
 import '../../../domain/task/single_upload_task.dart';
 import '../../../enums/upload_task.dart';
-import '../../../service/favorites_service.dart';
-import '../../../service/media/file_url_service.dart';
+import '../../../service/post/favorites_service.dart';
+import '../../../service/post/file_url_service.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
 
@@ -38,7 +37,7 @@ class _FavoritesEditPageState extends State<FavoritesEditPage> {
       titleController.text = widget.favorites!.title ?? "";
       introductionController.text = widget.favorites!.introduction ?? "";
       coverUploadImage.status = UploadTaskStatus.finished;
-      coverUploadImage.mediaType = MediaType.gallery;
+      coverUploadImage.mediaType = SourceType.gallery;
     }
   }
 

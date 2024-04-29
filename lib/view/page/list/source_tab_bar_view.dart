@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:post_client/model/post/feedback.dart' as post_feedback;
 
-import '../../../model/media/album.dart';
-import '../../../model/media/article.dart';
-import '../../../model/media/audio.dart';
-import '../../../model/media/gallery.dart';
-import '../../../model/media/media.dart';
-import '../../../model/media/video.dart';
-import '../../../model/message/feed_feedback.dart';
-import '../../../model/message/post.dart';
+import '../../../model/post/album.dart';
+import '../../../model/post/article.dart';
+import '../../../model/post/audio.dart';
+import '../../../model/post/gallery.dart';
+import '../../../model/post/media.dart';
+import '../../../model/post/post.dart';
+import '../../../model/post/video.dart';
 import '../../../model/user/user.dart';
 import '../../component/media/list/album_list_tile.dart';
 import '../../component/media/list/article_list_tile.dart';
@@ -67,7 +67,7 @@ class _SourceTabBarViewState extends State<SourceTabBarView> {
                     setState(() {});
                   }
                 },
-                feedback: post.feedback ?? FeedFeedback(),
+                feedback: post.feedback ?? post_feedback.Feedback(),
               );
             },
           ),

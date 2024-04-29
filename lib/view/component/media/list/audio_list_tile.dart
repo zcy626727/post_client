@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/view/page/audio/audio_detail_page.dart';
 
-import '../../../../model/media/audio.dart';
+import '../../../../model/post/audio.dart';
 
 class AudioListTile extends StatefulWidget {
   const AudioListTile({super.key, required this.audio, this.isInner = false, this.onDeleteMedia, this.onUpdateMedia});

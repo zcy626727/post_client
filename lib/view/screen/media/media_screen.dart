@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/model/media/album.dart';
+import 'package:post_client/model/post/album.dart';
 import 'package:post_client/model/user/user.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
@@ -133,7 +133,7 @@ class _MediaScreenState extends State<MediaScreen> {
                     onPress: () {
                       if (Global.user.id == null) {
                         //显示登录页
-                        Navigator.pushNamed(context, "followAlbum");
+                        Navigator.pushNamed(context, "login");
                       } else {
                         Navigator.push(
                           context,

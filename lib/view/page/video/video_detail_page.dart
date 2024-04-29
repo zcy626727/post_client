@@ -3,14 +3,14 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:post_client/model/media/history.dart';
-import 'package:post_client/service/media/file_url_service.dart';
+import 'package:post_client/model/post/history.dart';
+import 'package:post_client/service/post/file_url_service.dart';
 import 'package:post_client/view/widget/player/common_video_player.dart';
 
-import '../../../constant/media.dart';
-import '../../../model/media/video.dart';
-import '../../../model/message/comment.dart';
-import '../../../service/media/history_service.dart';
+import '../../../constant/source.dart';
+import '../../../model/post/comment.dart';
+import '../../../model/post/video.dart';
+import '../../../service/post/history_service.dart';
 import '../../component/feedback/media_feedback_bar.dart';
 import '../../component/media/media_more_button.dart';
 import '../album/album_in_media.dart';
@@ -58,7 +58,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
   Future<void> getHistory() async {
     try {
       //获取或创建历史
-      history = await HistoryService.getOrCreateHistoryByMedia(widget.video.id!, MediaType.video);
+      history = await HistoryService.getOrCreateHistoryByMedia(widget.video.id!, SourceType.video);
     } on DioException catch (e) {
       log(e.toString());
     } catch (e) {
@@ -171,7 +171,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                       },
                     ),
                   MediaFeedbackBar(
-                    mediaType: MediaType.video,
+                    mediaType: SourceType.video,
                     mediaId: video.id!,
                     media: video,
                   ),

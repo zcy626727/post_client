@@ -6,8 +6,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/model/user/user.dart';
-import 'package:post_client/service/user/follow_service.dart';
 import 'package:post_client/service/user/user_service.dart';
+
+import '../../../service/post/follow_service.dart';
 
 class MentionSelectorPage extends StatefulWidget {
   const MentionSelectorPage({Key? key}) : super(key: key);

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:post_client/constant/media.dart';
-import 'package:post_client/model/favorites.dart';
-import 'package:post_client/model/media/album.dart';
+import 'package:post_client/model/post/album.dart';
+import 'package:post_client/model/post/favorites.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 
 import '../../../config/page_config.dart';
-import '../../../model/media/article.dart';
-import '../../../model/media/audio.dart';
-import '../../../model/media/gallery.dart';
-import '../../../model/media/media.dart';
-import '../../../model/media/video.dart';
-import '../../../service/media/article_service.dart';
-import '../../../service/media/audio_service.dart';
-import '../../../service/media/gallery_service.dart';
-import '../../../service/media/video_service.dart';
+import '../../../constant/source.dart';
+import '../../../model/post/article.dart';
+import '../../../model/post/audio.dart';
+import '../../../model/post/gallery.dart';
+import '../../../model/post/media.dart';
+import '../../../model/post/video.dart';
+import '../../../service/post/article_service.dart';
+import '../../../service/post/audio_service.dart';
+import '../../../service/post/gallery_service.dart';
+import '../../../service/post/video_service.dart';
 import '../../widget/button/common_action_one_button.dart';
 
 class AlbumMediaListDialog extends StatefulWidget {
@@ -76,7 +76,7 @@ class _AlbumMediaListDialogState extends State<AlbumMediaListDialog> {
       titlePadding: const EdgeInsets.only(top: 15.0, left: 10.0),
       content: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
         return switch (widget.album.mediaType) {
-          MediaType.article => SizedBox(
+          SourceType.article => SizedBox(
               width: 250,
               height: 200,
               child: CommonItemList<Article>(
@@ -103,7 +103,7 @@ class _AlbumMediaListDialogState extends State<AlbumMediaListDialog> {
                   );
                 },
               )),
-          MediaType.video => SizedBox(
+          SourceType.video => SizedBox(
               width: 250,
               height: 200,
               child: CommonItemList<Video>(
@@ -131,7 +131,7 @@ class _AlbumMediaListDialogState extends State<AlbumMediaListDialog> {
                   );
                 },
               )),
-          MediaType.audio => SizedBox(
+          SourceType.audio => SizedBox(
               width: 250,
               height: 200,
               child: CommonItemList<Audio>(
@@ -158,7 +158,7 @@ class _AlbumMediaListDialogState extends State<AlbumMediaListDialog> {
                   );
                 },
               )),
-          MediaType.gallery => SizedBox(
+          SourceType.gallery => SizedBox(
               width: 250,
               height: 200,
               child: CommonItemList<Gallery>(

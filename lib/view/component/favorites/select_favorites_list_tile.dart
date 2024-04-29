@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:post_client/model/favorites.dart';
+import 'package:post_client/model/post/favorites.dart';
 
 class SelectFavoritesListTile extends StatefulWidget {
   const SelectFavoritesListTile({

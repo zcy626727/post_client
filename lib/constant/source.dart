@@ -11,6 +11,12 @@ class SourceType {
   static const post = 6;
 
   static const album = 7;
+  static const mediaOption = [
+    (SourceType.audio, "音频"),
+    (SourceType.video, "视频"),
+    (SourceType.gallery, "图片"),
+    (SourceType.article, "文章"),
+  ];
 
   static const favoritesSourceOption = [
     (SourceType.post, "动态"),

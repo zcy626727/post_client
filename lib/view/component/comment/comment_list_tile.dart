@@ -4,11 +4,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:post_client/config/global.dart';
-import 'package:post_client/model/message/comment.dart';
-import 'package:post_client/model/message/feed_feedback.dart';
+import 'package:post_client/constant/source.dart';
+import 'package:post_client/model/post/comment.dart';
+import 'package:post_client/model/post/feedback.dart' as post_feedback;
 
-import '../../../constant/feed.dart';
-import '../../../service/message/comment_service.dart';
+import '../../../service/post/comment_service.dart';
 import '../../widget/dialog/confirm_alert_dialog.dart';
 import '../feedback/feed_feedback_bar.dart';
 import '../quill/quill_editor.dart';
@@ -91,9 +91,9 @@ class _CommentListTileState extends State<CommentListTile> {
                     children: [
                       FeedFeedbackBar(
                         iconSize: 18,
-                        feedType: FeedType.comment,
+                        feedType: SourceType.comment,
                         feed: widget.comment,
-                        feedFeedback: widget.comment.feedback ?? FeedFeedback(),
+                        feedFeedback: widget.comment.feedback ?? post_feedback.Feedback(),
                         feedId: widget.comment.id!,
                       ),
                       if (Global.user.id != null) buildMoreOpera(),
@@ -169,9 +169,13 @@ class _CommentListTileState extends State<CommentListTile> {
                       await CommentService.deleteComment(widget.comment.id!);
                       setState(() {});
                     } on DioException catch (e) {
-                      ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
+                      if (mounted) {
+                        ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
+                      }
                     } finally {
-                      Navigator.pop(context);
+                      if (mounted) {
+                        Navigator.pop(context);
+                      }
                     }
                   },
                   onCancel: () {

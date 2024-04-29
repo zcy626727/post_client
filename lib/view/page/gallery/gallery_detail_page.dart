@@ -3,14 +3,14 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:post_client/constant/media.dart';
-import 'package:post_client/model/media/gallery.dart';
-import 'package:post_client/service/media/gallery_service.dart';
+import 'package:post_client/model/post/gallery.dart';
+import 'package:post_client/service/post/gallery_service.dart';
 import 'package:post_client/view/page/comment/comment_page.dart';
 
-import '../../../model/media/history.dart';
-import '../../../model/message/comment.dart';
-import '../../../service/media/history_service.dart';
+import '../../../constant/source.dart';
+import '../../../model/post/comment.dart';
+import '../../../model/post/history.dart';
+import '../../../service/post/history_service.dart';
 import '../../component/feedback/media_feedback_bar.dart';
 import '../../component/media/media_more_button.dart';
 import '../album/album_in_media.dart';
@@ -55,7 +55,7 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
   Future<void> getHistory() async {
     try {
       //获取或创建历史
-      history = await HistoryService.getOrCreateHistoryByMedia(widget.gallery.id!, MediaType.gallery);
+      history = await HistoryService.getOrCreateHistoryByMedia(widget.gallery.id!, SourceType.gallery);
     } on DioException catch (e) {
       log(e.toString());
     } catch (e) {
@@ -161,7 +161,7 @@ class _GalleryDetailPageState extends State<GalleryDetailPage> {
                       },
                     ),
                   MediaFeedbackBar(
-                    mediaType: MediaType.gallery,
+                    mediaType: SourceType.gallery,
                     mediaId: gallery.id!,
                     media: gallery,
                   ),

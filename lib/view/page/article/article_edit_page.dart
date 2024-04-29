@@ -4,15 +4,15 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
-import 'package:post_client/model/media/album.dart';
-import 'package:post_client/model/media/article.dart';
-import 'package:post_client/service/media/album_service.dart';
+import 'package:post_client/model/post/album.dart';
+import 'package:post_client/model/post/article.dart';
 import 'package:post_client/view/component/input/media_info_card.dart';
 
-import '../../../constant/media.dart';
+import '../../../constant/source.dart';
 import '../../../domain/task/single_upload_task.dart';
 import '../../../enums/upload_task.dart';
-import '../../../service/media/article_service.dart';
+import '../../../service/post/album_service.dart';
+import '../../../service/post/article_service.dart';
 import '../../component/quill/quill_editor.dart';
 import '../../component/quill/quill_tool_bar.dart';
 import '../../component/show/show_snack_bar.dart';
@@ -48,7 +48,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
       titleController.text = widget.article!.title ?? "";
       introductionController.text = widget.article!.introduction ?? "";
       coverUploadImage.status = UploadTaskStatus.finished;
-      coverUploadImage.mediaType = MediaType.gallery;
+      coverUploadImage.mediaType = SourceType.gallery;
       coverUploadImage.coverUrl = widget.article!.coverUrl;
       if (widget.article!.content != null && widget.article!.content!.isNotEmpty) {
         _contentController.document = Document.fromJson(json.decode(widget.article!.content!));
@@ -218,7 +218,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                           onClearAlbum: () {
                             _selectedAlbum = null;
                           },
-                          mediaType: MediaType.article,
+                          mediaType: SourceType.article,
                           initAlbum: _selectedAlbum,
                         ),
                       ),

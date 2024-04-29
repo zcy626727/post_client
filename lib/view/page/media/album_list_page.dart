@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
-import 'package:post_client/model/media/album.dart';
-import 'package:post_client/service/media/album_service.dart';
+import 'package:post_client/model/post/album.dart';
+import 'package:post_client/service/post/album_service.dart';
 import 'package:post_client/view/component/media/list/album_list_tile.dart';
 import 'package:post_client/view/page/album/album_edit_page.dart';
 
-import '../../../constant/media.dart';
+import '../../../constant/source.dart';
 import '../../widget/common_item_list.dart';
 
 class AlbumListPage extends StatefulWidget {
@@ -122,13 +122,13 @@ class _AlbumListPageState extends State<AlbumListPage> {
                       children: [
                         buildSourceTypeItem("全部", 0),
                         const SizedBox(width: 5),
-                        buildSourceTypeItem("音频", MediaType.audio),
+                        buildSourceTypeItem("音频", SourceType.audio),
                         const SizedBox(width: 5),
-                        buildSourceTypeItem("文章", MediaType.article),
+                        buildSourceTypeItem("文章", SourceType.article),
                         const SizedBox(width: 5),
-                        buildSourceTypeItem("视频", MediaType.video),
+                        buildSourceTypeItem("视频", SourceType.video),
                         const SizedBox(width: 5),
-                        buildSourceTypeItem("图片", MediaType.gallery),
+                        buildSourceTypeItem("图片", SourceType.gallery),
                       ],
                     ),
                   ),

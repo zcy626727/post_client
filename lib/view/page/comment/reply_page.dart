@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:post_client/model/message/comment.dart';
-import 'package:post_client/service/message/comment_service.dart';
+import 'package:post_client/model/post/comment.dart';
+import 'package:post_client/service/post/comment_service.dart';
 import 'package:post_client/view/component/comment/comment_list.dart';
 
 import '../../component/comment/comment_list_tile.dart';

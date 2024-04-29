@@ -4,19 +4,19 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:post_client/config/page_config.dart';
-import 'package:post_client/model/media/album.dart';
-import 'package:post_client/model/media/follow_album.dart';
-import 'package:post_client/service/media/album_service.dart';
-import 'package:post_client/service/media/article_service.dart';
-import 'package:post_client/service/media/audio_service.dart';
-import 'package:post_client/service/media/follow_album_service.dart';
-import 'package:post_client/service/media/gallery_service.dart';
-import 'package:post_client/service/media/video_service.dart';
+import 'package:post_client/model/post/album.dart';
+import 'package:post_client/model/post/follow_album.dart';
 import 'package:post_client/util/entity_utils.dart';
 import 'package:post_client/view/page/album/album_edit_page.dart';
 import 'package:post_client/view/page/list/common_source_list.dart';
 
 import '../../../config/global.dart';
+import '../../../service/post/album_service.dart';
+import '../../../service/post/article_service.dart';
+import '../../../service/post/audio_service.dart';
+import '../../../service/post/follow_album_service.dart';
+import '../../../service/post/gallery_service.dart';
+import '../../../service/post/video_service.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/dialog/confirm_alert_dialog.dart';
 

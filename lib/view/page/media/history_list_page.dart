@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/constant/media.dart';
-import 'package:post_client/model/media/history.dart';
-import 'package:post_client/service/media/history_service.dart';
+import 'package:post_client/model/post/history.dart';
+import 'package:post_client/service/post/history_service.dart';
 import 'package:post_client/view/component/history/history_list_tile.dart';
 
+import '../../../constant/source.dart';
 import '../../widget/common_item_list.dart';
 
 class HistoryListPage extends StatefulWidget {
@@ -127,7 +127,7 @@ class _HistoryListPageState extends State<HistoryListPage> {
         children: [
           CommonItemList<History>(
             onLoad: (int page) async {
-              var galleryList = await HistoryService.getUserHistoryList(MediaType.gallery, page, 20);
+              var galleryList = await HistoryService.getUserHistoryList(SourceType.gallery, page, 20);
               return galleryList;
             },
             itemName: "历史",
@@ -148,7 +148,7 @@ class _HistoryListPageState extends State<HistoryListPage> {
           ),
           CommonItemList<History>(
             onLoad: (int page) async {
-              var galleryList = await HistoryService.getUserHistoryList(MediaType.video, page, 20);
+              var galleryList = await HistoryService.getUserHistoryList(SourceType.video, page, 20);
               return galleryList;
             },
             itemName: "历史",
@@ -169,7 +169,7 @@ class _HistoryListPageState extends State<HistoryListPage> {
           ),
           CommonItemList<History>(
             onLoad: (int page) async {
-              var galleryList = await HistoryService.getUserHistoryList(MediaType.audio, page, 20);
+              var galleryList = await HistoryService.getUserHistoryList(SourceType.audio, page, 20);
               return galleryList;
             },
             itemName: "历史",
@@ -190,7 +190,7 @@ class _HistoryListPageState extends State<HistoryListPage> {
           ),
           CommonItemList<History>(
             onLoad: (int page) async {
-              var galleryList = await HistoryService.getUserHistoryList(MediaType.article, page, 20);
+              var galleryList = await HistoryService.getUserHistoryList(SourceType.article, page, 20);
               return galleryList;
             },
             itemName: "历史",

@@ -2,11 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:post_client/config/constants.dart';
-import 'package:post_client/service/media/video_service.dart';
 import 'package:post_client/view/page/video/video_detail_page.dart';
 
 import '../../../../config/global.dart';
-import '../../../../model/media/video.dart';
+import '../../../../model/post/video.dart';
+import '../../../../service/post/video_service.dart';
 import '../../../widget/dialog/confirm_alert_dialog.dart';
 import '../../show/show_snack_bar.dart';
 
@@ -142,9 +142,13 @@ class _VideoListTileState extends State<VideoListTile> {
                                     widget.onDeleteMedia!(widget.video);
                                   }
                                 } on DioException catch (e) {
-                                  ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
+                                  if (mounted) {
+                                    ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
+                                  }
                                 } finally {
-                                  Navigator.pop(context);
+                                  if (mounted) {
+                                    Navigator.pop(context);
+                                  }
                                 }
                               },
                               onCancel: () {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:post_client/model/media/gallery.dart';
+import 'package:post_client/model/post/gallery.dart';
 import 'package:post_client/view/page/gallery/gallery_detail_page.dart';
 
 import '../../../../config/constants.dart';

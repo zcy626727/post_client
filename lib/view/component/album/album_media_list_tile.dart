@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:post_client/model/media/media.dart';
+import 'package:post_client/model/post/media.dart';
 
-import '../../../model/favorites_source.dart';
+import '../../../model/post/favorites_source.dart';
 
 class AlbumMediaListTile extends StatelessWidget {
   const AlbumMediaListTile({super.key, required this.favoritesSource, required this.media});

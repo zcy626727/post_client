@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/view/page/favorites/favorites_source_list_page.dart';
 
-import '../../../model/favorites.dart';
+import '../../../model/post/favorites.dart';
 
 class FavoritesListTile extends StatefulWidget {
   const FavoritesListTile({super.key, required this.favorites, this.onDeleteFavorites, this.onUpdateFavorites});

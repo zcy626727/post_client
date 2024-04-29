@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/service/media/album_service.dart';
 import 'package:post_client/view/component/album/album_media_list_dialog.dart';
 
-import '../../../model/media/album.dart';
-import '../../../model/media/media.dart';
+import '../../../model/post/album.dart';
+import '../../../model/post/media.dart';
+import '../../../service/post/album_service.dart';
 
 class AlbumInMedia extends StatefulWidget {
   const AlbumInMedia({super.key, required this.albumId, required this.onChangeMedia});

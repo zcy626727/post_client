@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
-import 'package:post_client/model/favorites.dart';
-import 'package:post_client/model/media/album.dart';
-import 'package:post_client/service/favorites_service.dart';
-import 'package:post_client/service/media/album_service.dart';
-import 'package:post_client/view/component/favorites/select_favorites_list_tile.dart';
-import 'package:post_client/view/widget/button/common_action_one_button.dart';
+import 'package:post_client/model/post/album.dart';
+import 'package:post_client/model/post/favorites.dart';
 import 'package:post_client/view/widget/common_item_list.dart';
 
+import '../../../service/post/album_service.dart';
 import '../../widget/button/common_action_two_button.dart';
 
 class SelectAlbumDialog extends StatefulWidget {

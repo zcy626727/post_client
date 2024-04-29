@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/constant/source.dart';
-import 'package:post_client/model/follow_favorites.dart';
-import 'package:post_client/service/user/follow_favorites_service.dart';
+import 'package:post_client/service/post/follow_favorites_service.dart';
 import 'package:post_client/view/component/favorites/favorites_list_tile.dart';
 
-import '../../../model/favorites.dart';
+import '../../../model/post/favorites.dart';
+import '../../../model/post/follow_favorites.dart';
 import '../../../util/entity_utils.dart';
 import '../../widget/common_item_list.dart';
 

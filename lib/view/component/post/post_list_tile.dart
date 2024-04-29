@@ -6,19 +6,19 @@ import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:intl/intl.dart';
 import 'package:post_client/config/constants.dart';
 import 'package:post_client/config/global.dart';
-import 'package:post_client/model/media/gallery.dart';
-import 'package:post_client/model/message/feed_feedback.dart';
+import 'package:post_client/constant/source.dart';
+import 'package:post_client/model/post/feedback.dart' as post_feedback;
+import 'package:post_client/model/post/gallery.dart';
 import 'package:post_client/view/component/feedback/feed_feedback_bar.dart';
 import 'package:post_client/view/component/media/list/video_list_tile.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
 
-import '../../../constant/feed.dart';
-import '../../../model/media/article.dart';
-import '../../../model/media/audio.dart';
-import '../../../model/media/video.dart';
-import '../../../model/message/comment.dart';
-import '../../../model/message/post.dart';
-import '../../../service/message/post_service.dart';
+import '../../../model/post/article.dart';
+import '../../../model/post/audio.dart';
+import '../../../model/post/comment.dart';
+import '../../../model/post/post.dart';
+import '../../../model/post/video.dart';
+import '../../../service/post/post_service.dart';
 import '../../page/account/user_details_page.dart';
 import '../../page/comment/comment_page.dart';
 import '../../widget/dialog/confirm_alert_dialog.dart';
@@ -29,7 +29,7 @@ import '../show/show_snack_bar.dart';
 
 class PostListTile extends StatefulWidget {
   final Post post;
-  final FeedFeedback feedback;
+  final post_feedback.Feedback feedback;
   final Function(Post) onDeletePost;
 
   const PostListTile({
@@ -156,9 +156,13 @@ class _PostListTileState extends State<PostListTile> {
                           await PostService.deletePost(widget.post.id!);
                           widget.onDeletePost(widget.post);
                         } on DioException catch (e) {
-                          ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
+                          if (mounted) {
+                            ShowSnackBar.exception(context: context, e: e, defaultValue: "删除失败");
+                          }
                         } finally {
-                          Navigator.pop(context);
+                          if (mounted) {
+                            Navigator.pop(context);
+                          }
                         }
                       },
                       onCancel: () {
@@ -318,7 +322,7 @@ class _PostListTileState extends State<PostListTile> {
             ),
           ],
         ),
-        FeedFeedbackBar(feedType: FeedType.post, feed: widget.post, feedFeedback: widget.feedback, feedId: widget.post.id!)
+        FeedFeedbackBar(feedType: SourceType.post, feed: widget.post, feedFeedback: widget.feedback, feedId: widget.post.id!)
       ],
     );
   }

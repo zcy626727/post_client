@@ -3,14 +3,11 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
-import 'package:post_client/constant/media.dart';
-import 'package:post_client/model/media/media.dart';
-import 'package:post_client/state/user_state.dart';
-import 'package:provider/provider.dart';
+import 'package:post_client/model/post/feedback.dart' as post_feedback;
+import 'package:post_client/model/post/media.dart';
 
 import '../../../constant/source.dart';
-import '../../../model/media/media_feedback.dart';
-import '../../../service/media/media_feedback_service.dart';
+import '../../../service/post/feedback_service.dart';
 import '../favorites/select_favorites_dialog.dart';
 import '../show/show_snack_bar.dart';
 import 'media_feedback_button.dart';
@@ -33,7 +30,7 @@ class MediaFeedbackBar extends StatefulWidget {
 
 class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
   late Future _futureBuilderFuture;
-  MediaFeedback _mediaFeedback = MediaFeedback();
+  post_feedback.Feedback _mediaFeedback = post_feedback.Feedback();
 
   @override
   void initState() {
@@ -47,7 +44,7 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
 
   Future<void> getMediaFeedback() async {
     try {
-      _mediaFeedback = (await MediaFeedbackService.getMediaFeedback(widget.mediaType, widget.mediaId)) ?? MediaFeedback();
+      _mediaFeedback = (await FeedbackService.getFeedback(widget.mediaType, widget.mediaId)) ?? post_feedback.Feedback();
       //获取下载信息
     } on DioException catch (e) {
       log(e.toString());
@@ -94,10 +91,10 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
                         Navigator.pushNamed(context, "login");
                       } else {
                         if (_mediaFeedback.like == true) {
-                          _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, like: -1);
+                          _mediaFeedback = await FeedbackService.uploadFeedback(sourceType: widget.mediaType, sourceId: widget.mediaId, like: -1);
                           widget.media.likeNum = (widget.media.likeNum ?? 0) - 1;
                         } else {
-                          _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, like: 1);
+                          _mediaFeedback = await FeedbackService.uploadFeedback(sourceType: widget.mediaType, sourceId: widget.mediaId, like: 1);
                           widget.media.likeNum = (widget.media.likeNum ?? 0) + 1;
                         }
                         setState(() {});
@@ -114,10 +111,10 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
                         Navigator.pushNamed(context, "login");
                       } else {
                         if (_mediaFeedback.dislike == true) {
-                          _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, dislike: -1);
+                          _mediaFeedback = await FeedbackService.uploadFeedback(sourceType: widget.mediaType, sourceId: widget.mediaId, dislike: -1);
                           widget.media.dislikeNum = (widget.media.dislikeNum ?? 0) - 1;
                         } else {
-                          _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, dislike: 1);
+                          _mediaFeedback = await FeedbackService.uploadFeedback(sourceType: widget.mediaType, sourceId: widget.mediaId, dislike: 1);
                           widget.media.dislikeNum = (widget.media.dislikeNum ?? 0) + 1;
                         }
                       }
@@ -141,11 +138,11 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
                             var sourceType = SourceType.gallery;
 
                             switch (widget.mediaType) {
-                              case MediaType.article:
+                              case SourceType.article:
                                 sourceType = SourceType.article;
-                              case MediaType.audio:
+                              case SourceType.audio:
                                 sourceType = SourceType.audio;
-                              case MediaType.video:
+                              case SourceType.video:
                                 sourceType = SourceType.video;
                             }
                             return SelectFavoritesDialog(
@@ -188,7 +185,7 @@ class _MediaFeedbackBarState extends State<MediaFeedbackBar> {
                         //todo 显示登录页
                       } else {
                         if (_mediaFeedback.share != true) {
-                          _mediaFeedback = await MediaFeedbackService.uploadMediaFeedback(mediaType: widget.mediaType, mediaId: widget.mediaId, share: 1);
+                          _mediaFeedback = await FeedbackService.uploadFeedback(sourceType: widget.mediaType, sourceId: widget.mediaId, share: 1);
                           widget.media.shareNum = (widget.media.shareNum ?? 0) + 1;
                         }
                       }

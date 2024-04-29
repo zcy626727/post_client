@@ -2,16 +2,16 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/model/media/audio.dart';
+import 'package:post_client/model/post/audio.dart';
 import 'package:post_client/view/component/media/upload/audio_upload_card.dart';
 
-import '../../../constant/media.dart';
+import '../../../constant/source.dart';
 import '../../../domain/task/multipart_upload_task.dart';
 import '../../../domain/task/single_upload_task.dart';
 import '../../../enums/upload_task.dart';
-import '../../../model/media/album.dart';
-import '../../../service/media/album_service.dart';
-import '../../../service/media/audio_service.dart';
+import '../../../model/post/album.dart';
+import '../../../service/post/album_service.dart';
+import '../../../service/post/audio_service.dart';
 import '../../component/input/media_info_card.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/button/common_action_one_button.dart';
@@ -44,7 +44,7 @@ class _AudioEditPageState extends State<AudioEditPage> {
 
     if (widget.audio != null && widget.audio!.id != null) {
       coverUploadImage.status = UploadTaskStatus.finished;
-      coverUploadImage.mediaType = MediaType.gallery;
+      coverUploadImage.mediaType = SourceType.gallery;
       coverUploadImage.coverUrl = widget.audio!.coverUrl;
       audioUploadTask.fileId = widget.audio!.fileId;
       audioUploadTask.status = UploadTaskStatus.finished;
@@ -214,7 +214,7 @@ class _AudioEditPageState extends State<AudioEditPage> {
                       onClearAlbum: () {
                         _selectedAlbum = null;
                       },
-                      mediaType: MediaType.audio,
+                      mediaType: SourceType.audio,
                       initAlbum: _selectedAlbum,
                     ),
                   ],

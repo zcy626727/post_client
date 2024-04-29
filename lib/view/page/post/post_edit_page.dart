@@ -11,11 +11,10 @@ import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
 
-import '../../../constant/media.dart';
 import '../../../enums/upload_task.dart';
 import '../../../model/user/user.dart';
-import '../../../service/media/file_url_service.dart';
-import '../../../service/message/post_service.dart';
+import '../../../service/post/file_url_service.dart';
+import '../../../service/post/post_service.dart';
 import '../../component/quill/quill_editor.dart';
 
 class PostEditPage extends StatefulWidget {

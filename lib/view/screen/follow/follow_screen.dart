@@ -2,17 +2,17 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:post_client/model/post/feedback.dart' as post_feedback;
 import 'package:post_client/model/user/user.dart';
-import 'package:post_client/service/user/follow_service.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/page/account/user_details_page.dart';
 import 'package:provider/provider.dart';
 
-import '../../../constant/post.dart';
-import '../../../model/message/feed_feedback.dart';
-import '../../../model/message/post.dart';
-import '../../../service/message/post_service.dart';
+import '../../../constant/source.dart';
+import '../../../model/post/post.dart';
+import '../../../service/post/follow_service.dart';
+import '../../../service/post/post_service.dart';
 import '../../component/post/post_list_tile.dart';
 import '../../widget/common_item_list.dart';
 
@@ -116,13 +116,13 @@ class _FollowScreenState extends State<FollowScreen> {
                     children: [
                       buildSourceTypeItem("全部", 0),
                       const SizedBox(width: 5),
-                      buildSourceTypeItem("音频", PostSourceType.audio),
+                      buildSourceTypeItem("音频", SourceType.audio),
                       const SizedBox(width: 5),
-                      buildSourceTypeItem("文章", PostSourceType.article),
+                      buildSourceTypeItem("文章", SourceType.article),
                       const SizedBox(width: 5),
-                      buildSourceTypeItem("视频", PostSourceType.video),
+                      buildSourceTypeItem("视频", SourceType.video),
                       const SizedBox(width: 5),
-                      buildSourceTypeItem("图片", PostSourceType.gallery),
+                      buildSourceTypeItem("图片", SourceType.gallery),
                     ],
                   ),
                 ),
@@ -148,7 +148,7 @@ class _FollowScreenState extends State<FollowScreen> {
                             setState(() {});
                           }
                         },
-                        feedback: post.feedback ?? FeedFeedback(),
+                        feedback: post.feedback ?? post_feedback.Feedback(),
                       );
                     },
                   ),

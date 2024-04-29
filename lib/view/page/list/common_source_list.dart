@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:post_client/constant/media.dart';
 import 'package:post_client/constant/source.dart';
+import 'package:post_client/model/post/feedback.dart' as post_feedback;
 import 'package:post_client/view/component/comment/comment_list_tile.dart';
 import 'package:post_client/view/component/post/post_list_tile.dart';
 
-import '../../../model/media/album.dart';
-import '../../../model/media/article.dart';
-import '../../../model/media/audio.dart';
-import '../../../model/media/gallery.dart';
-import '../../../model/media/media.dart';
-import '../../../model/media/video.dart';
-import '../../../model/message/comment.dart';
-import '../../../model/message/feed_feedback.dart';
-import '../../../model/message/post.dart';
+import '../../../model/post/album.dart';
+import '../../../model/post/article.dart';
+import '../../../model/post/audio.dart';
+import '../../../model/post/comment.dart';
+import '../../../model/post/gallery.dart';
+import '../../../model/post/media.dart';
+import '../../../model/post/post.dart';
+import '../../../model/post/video.dart';
 import '../../../model/user/user.dart';
 import '../../component/media/list/album_list_tile.dart';
 import '../../component/media/list/article_list_tile.dart';
@@ -61,13 +60,13 @@ class _CommonSourceListState extends State<CommonSourceList> {
     sourceType = widget.sourceType ?? -1;
     if (widget.mediaType != null) {
       switch (widget.mediaType) {
-        case MediaType.article:
+        case SourceType.article:
           sourceType = SourceType.article;
-        case MediaType.video:
+        case SourceType.video:
           sourceType = SourceType.video;
-        case MediaType.audio:
+        case SourceType.audio:
           sourceType = SourceType.audio;
-        case MediaType.gallery:
+        case SourceType.gallery:
           sourceType = SourceType.gallery;
       }
     }
@@ -93,7 +92,7 @@ class _CommonSourceListState extends State<CommonSourceList> {
                 postList?.remove(post);
                 setState(() {});
               },
-              feedback: post.feedback ?? FeedFeedback(),
+              feedback: post.feedback ?? post_feedback.Feedback(),
             );
           },
         ),

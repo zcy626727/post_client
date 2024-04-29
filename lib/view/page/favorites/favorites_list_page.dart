@@ -3,8 +3,8 @@ import 'package:post_client/constant/source.dart';
 import 'package:post_client/view/component/favorites/favorites_list_tile.dart';
 import 'package:post_client/view/page/favorites/favorites_edit_page.dart';
 
-import '../../../model/favorites.dart';
-import '../../../service/favorites_service.dart';
+import '../../../model/post/favorites.dart';
+import '../../../service/post/favorites_service.dart';
 import '../../widget/common_item_list.dart';
 
 class FavoritesListPage extends StatefulWidget {

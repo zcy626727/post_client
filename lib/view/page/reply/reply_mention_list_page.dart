@@ -1,12 +1,8 @@
-import 'dart:convert';
-import 'dart:developer';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/model/message/mention.dart';
+import 'package:post_client/model/post/mention.dart';
 import 'package:post_client/view/component/reply/reply_mention_list_tile.dart';
 
-import '../../../service/message/mention_service.dart';
+import '../../../service/post/mention_service.dart';
 import '../../widget/common_item_list.dart';
 
 class ReplyMentionListPage extends StatefulWidget {

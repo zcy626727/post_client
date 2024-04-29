@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:post_client/model/favorites.dart';
-import 'package:post_client/service/favorites_service.dart';
-import 'package:post_client/service/user/favorites_source_service.dart';
+import 'package:post_client/model/post/favorites.dart';
+import 'package:post_client/service/post/favorites_service.dart';
+import 'package:post_client/service/post/favorites_source_service.dart';
 import 'package:post_client/util/entity_utils.dart';
 import 'package:post_client/view/component/favorites/select_favorites_list_tile.dart';
 import 'package:post_client/view/widget/common_item_list.dart';

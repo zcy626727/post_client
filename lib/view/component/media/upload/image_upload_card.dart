@@ -1,19 +1,16 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
-import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/config/global.dart';
 import 'package:post_client/domain/task/single_upload_task.dart';
-import 'package:post_client/service/media/file_url_service.dart';
-import 'package:image/image.dart' as img;
-import 'package:post_client/service/media/upload_service.dart';
 
-import '../../../../constant/media.dart';
+import '../../../../constant/source.dart';
 import '../../../../enums/upload_task.dart';
+import '../../../../service/post/file_url_service.dart';
+import '../../../../service/post/upload_service.dart';
 import '../../../widget/dialog/confirm_alert_dialog.dart';
 import '../../show/show_snack_bar.dart';
 
@@ -109,7 +106,7 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
                     widget.task.totalSize = file.size;
                     widget.task.private = false;
                     widget.task.status = UploadTaskStatus.uploading;
-                    widget.task.mediaType = MediaType.gallery;
+                    widget.task.mediaType = SourceType.gallery;
                     uploadImage(widget.task);
                   } catch (e) {
                     widget.task.clear();

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:post_client/constant/feed.dart';
 import 'package:post_client/constant/source.dart';
-import 'package:post_client/model/message/feed.dart';
-import 'package:post_client/model/message/feed_feedback.dart';
+import 'package:post_client/model/post/feedback.dart' as post_feedback;
+import 'package:post_client/model/post/source.dart';
 
 import '../../../config/global.dart';
-import '../../../service/message/feed_feedback_service.dart';
+import '../../../service/post/feedback_service.dart';
 import '../favorites/select_favorites_dialog.dart';
 import '../show/show_snack_bar.dart';
 import 'feed_feedback_button.dart';
@@ -20,8 +19,8 @@ class FeedFeedbackBar extends StatefulWidget {
     this.iconSize,
   });
 
-  final Feed feed;
-  final FeedFeedback feedFeedback;
+  final Source feed;
+  final post_feedback.Feedback feedFeedback;
   final int feedType;
   final String feedId;
   final double? iconSize;
@@ -60,12 +59,12 @@ class _FeedFeedbackBarState extends State<FeedFeedbackBar> {
                   //显示登录页
                   Navigator.pushNamed(context, "login");
                 } else {
-                  FeedFeedback? feedFeedback;
+                  post_feedback.Feedback? feedFeedback;
                   if (widget.feedFeedback.like == true) {
-                    feedFeedback = await FeedFeedbackService.uploadFeedFeedback(mediaType: widget.feedType, mediaId: widget.feedId, like: -1);
+                    feedFeedback = await FeedbackService.uploadFeedback(sourceType: widget.feedType, sourceId: widget.feedId, like: -1);
                     widget.feed.likeNum = (widget.feed.likeNum ?? 0) - 1;
                   } else {
-                    feedFeedback = await FeedFeedbackService.uploadFeedFeedback(mediaType: widget.feedType, mediaId: widget.feedId, like: 1);
+                    feedFeedback = await FeedbackService.uploadFeedback(sourceType: widget.feedType, sourceId: widget.feedId, like: 1);
                     widget.feed.likeNum = (widget.feed.likeNum ?? 0) + 1;
                   }
                   widget.feedFeedback.copy(feedFeedback);
@@ -92,7 +91,7 @@ class _FeedFeedbackBarState extends State<FeedFeedbackBar> {
                       var sourceType = SourceType.comment;
 
                       switch (widget.feedType) {
-                        case FeedType.post:
+                        case SourceType.post:
                           sourceType = SourceType.post;
                       }
                       return SelectFavoritesDialog(

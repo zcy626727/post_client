@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/config/page_config.dart';
-import 'package:post_client/service/media/album_service.dart';
-import 'package:post_client/service/media/gallery_service.dart';
-import 'package:post_client/service/media/video_service.dart';
+import 'package:post_client/service/post/album_service.dart';
+import 'package:post_client/service/post/gallery_service.dart';
+import 'package:post_client/service/post/video_service.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/widget/player/common_video_player.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/user/user.dart';
-import '../../../service/media/article_service.dart';
-import '../../../service/media/audio_service.dart';
-import '../../../service/message/post_service.dart';
+import '../../../service/post/article_service.dart';
+import '../../../service/post/audio_service.dart';
+import '../../../service/post/post_service.dart';
 import '../../../state/user_state.dart';
 import '../../page/list/source_tab_bar_view.dart';
 import '../../page/search/search_page.dart';
@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget buildDesktop() {
     return Container(
-      child: CommonVideoPlayer(videoUrl: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"),
+      child: const CommonVideoPlayer(videoUrl: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"),
       // child: CommonAudioPlayerMini(audioUrl: "http://downsc.chinaz.net/Files/DownLoad/sound1/201906/11582.mp3"),
       // child: CommonAudioPlayerMini2(audioUrl: "http://archlinux:9000/file/public/3d234c392d1a5100214dcebf97c3991b"),
       // child: CommonAudioPlayerMini2(audioUrl: "http://192.168.239.148:9000/file/public/4444"),

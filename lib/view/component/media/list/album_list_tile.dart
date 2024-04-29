@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:post_client/model/media/album.dart';
+import 'package:post_client/model/post/album.dart';
 import 'package:post_client/util/entity_utils.dart';
 import 'package:post_client/util/time.dart';
 import 'package:post_client/view/page/album/album_source_list_page.dart';

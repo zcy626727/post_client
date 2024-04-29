@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:post_client/constant/media.dart';
-import 'package:post_client/model/media/album.dart';
-import 'package:post_client/service/media/album_service.dart';
+import 'package:post_client/model/post/album.dart';
 
+import '../../../constant/source.dart';
 import '../../../domain/task/single_upload_task.dart';
 import '../../../enums/upload_task.dart';
+import '../../../service/post/album_service.dart';
 import '../../component/input/common_dropdown.dart';
 import '../../component/input/common_info_card.dart';
 import '../../component/show/show_snack_bar.dart';
@@ -25,14 +25,14 @@ class _AlbumEditPageState extends State<AlbumEditPage> {
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final introductionController = TextEditingController(text: "");
-  (int, String) _selectedMedia = MediaType.option[0];
+  (int, String) _selectedMedia = SourceType.mediaOption[0];
 
   @override
   void initState() {
     super.initState();
     if (widget.album != null && widget.album!.id != null) {
       coverUploadImage.status = UploadTaskStatus.finished;
-      coverUploadImage.mediaType = MediaType.gallery;
+      coverUploadImage.mediaType = SourceType.gallery;
       coverUploadImage.coverUrl = widget.album!.coverUrl;
       titleController.text = widget.album!.title ?? "";
       introductionController.text = widget.album!.introduction ?? "";
@@ -161,7 +161,7 @@ class _AlbumEditPageState extends State<AlbumEditPage> {
                   _selectedMedia = value;
                 });
               },
-              options: MediaType.option,
+              options: SourceType.mediaOption,
             ),
           ],
         ),

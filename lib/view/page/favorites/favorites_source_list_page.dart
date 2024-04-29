@@ -3,13 +3,13 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/page_config.dart';
-import 'package:post_client/model/favorites.dart';
-import 'package:post_client/model/follow_favorites.dart';
-import 'package:post_client/service/favorites_service.dart';
-import 'package:post_client/service/user/follow_favorites_service.dart';
+import 'package:post_client/model/post/favorites.dart';
+import 'package:post_client/service/post/favorites_service.dart';
+import 'package:post_client/service/post/follow_favorites_service.dart';
 import 'package:post_client/view/page/favorites/favorites_edit_page.dart';
 
 import '../../../config/global.dart';
+import '../../../model/post/follow_favorites.dart';
 import '../../../util/entity_utils.dart';
 import '../../component/show/show_snack_bar.dart';
 import '../../widget/dialog/confirm_alert_dialog.dart';
@@ -265,28 +265,28 @@ class _FavoritesSourceListPageState extends State<FavoritesSourceListPage> {
                     child: CommonSourceList(
                       sourceType: widget.favorites.sourceType,
                       onLoadPost: (pageIndex) async {
-                        var result = await FavoritesService.getFeedListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
+                        var result = await FavoritesService.getSourceListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$1;
                       },
                       onLoadComment: (pageIndex) async {
-                        var result = await FavoritesService.getFeedListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
+                        var result = await FavoritesService.getSourceListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$2;
                       },
                       onLoadAudio: (pageIndex) async {
-                        var result = await FavoritesService.getMediaListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
-                        return result.$2;
-                      },
-                      onLoadVideo: (pageIndex) async {
-                        var result = await FavoritesService.getMediaListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
+                        var result = await FavoritesService.getSourceListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
                         return result.$4;
                       },
+                      onLoadVideo: (pageIndex) async {
+                        var result = await FavoritesService.getSourceListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
+                        return result.$6;
+                      },
                       onLoadGallery: (pageIndex) async {
-                        var result = await FavoritesService.getMediaListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
-                        return result.$3;
+                        var result = await FavoritesService.getSourceListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
+                        return result.$5;
                       },
                       onLoadArticle: (pageIndex) async {
-                        var result = await FavoritesService.getMediaListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
-                        return result.$1;
+                        var result = await FavoritesService.getSourceListByFavoritesId(favoritesId: widget.favorites.id!, pageIndex: pageIndex, pageSize: PageConfig.commonPageSize);
+                        return result.$3;
                       },
                     ),
                   ),

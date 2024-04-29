@@ -5,7 +5,7 @@ import 'package:post_client/view/component/media/upload/image_upload_card.dart';
 import 'package:post_client/view/page/account/reset_password_page.dart';
 import 'package:provider/provider.dart';
 
-import '../../../api/client/media/file_api.dart';
+import '../../../api/client/post/file_api.dart';
 import '../../../domain/task/single_upload_task.dart';
 import '../../../enums/upload_task.dart';
 import '../../../state/screen_state.dart';

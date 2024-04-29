@@ -8,8 +8,8 @@ import 'package:post_client/util/unit.dart';
 
 import '../../../../domain/task/multipart_upload_task.dart';
 import '../../../../enums/upload_task.dart';
-import '../../../../service/media/file_url_service.dart';
-import '../../../../service/media/upload_service.dart';
+import '../../../../service/post/file_url_service.dart';
+import '../../../../service/post/upload_service.dart';
 import '../../../widget/button/common_action_one_button.dart';
 import '../../../widget/player/common_video_player.dart';
 

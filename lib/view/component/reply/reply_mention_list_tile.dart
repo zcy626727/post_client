@@ -2,12 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
-import 'package:post_client/constant/source.dart';
-import 'package:post_client/model/message/comment.dart';
-import 'package:post_client/model/message/mention.dart';
-import 'package:post_client/view/widget/quill_text.dart';
+import 'package:post_client/model/post/comment.dart';
+import 'package:post_client/model/post/mention.dart';
 
-import '../../../model/message/post.dart';
+import '../../../model/post/post.dart';
 import '../../page/comment/reply_page.dart';
 import '../quill/quill_editor.dart';
 

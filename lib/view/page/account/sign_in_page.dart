@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +22,8 @@ class _SignInPageState extends State<SignInPage> {
 
   RegExp phoneExp = RegExp(r'^((13\d)|(14\d)|(15\d)|(16\d)|(17\d)|(18\d)|(19\d))\d{8}$');
 
-  String _phoneNumber = "18348542615";
-  String _password = "123456789";
+  String _phoneNumber = "";
+  String _password = "";
   bool _signInIng = false;
 
   @override

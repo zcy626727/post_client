@@ -1,16 +1,13 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:post_client/constant/media.dart';
-import 'package:post_client/model/media/article.dart';
-import 'package:post_client/model/media/audio.dart';
-import 'package:post_client/model/media/gallery.dart';
-import 'package:post_client/model/media/history.dart';
-import 'package:post_client/model/media/media.dart';
-import 'package:post_client/model/media/video.dart';
-import 'package:post_client/service/media/history_service.dart';
+import 'package:post_client/model/post/article.dart';
+import 'package:post_client/model/post/audio.dart';
+import 'package:post_client/model/post/gallery.dart';
+import 'package:post_client/model/post/history.dart';
+import 'package:post_client/model/post/media.dart';
+import 'package:post_client/model/post/video.dart';
 
+import '../../../service/post/history_service.dart';
 import '../../page/article/article_detail_page.dart';
 import '../../page/audio/audio_detail_page.dart';
 import '../../page/gallery/gallery_detail_page.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../model/media/article.dart';
+import '../../../../model/post/article.dart';
 import '../../../page/article/article_detail_page.dart';
 
 class ArticleListTile extends StatefulWidget {

@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:post_client/service/media/album_service.dart';
-import 'package:post_client/service/message/post_service.dart';
+import 'package:post_client/service/post/album_service.dart';
+import 'package:post_client/service/post/post_service.dart';
 import 'package:post_client/service/user/user_service.dart';
 
-import '../../../service/media/article_service.dart';
-import '../../../service/media/audio_service.dart';
-import '../../../service/media/gallery_service.dart';
-import '../../../service/media/video_service.dart';
+import '../../../service/post/article_service.dart';
+import '../../../service/post/audio_service.dart';
+import '../../../service/post/gallery_service.dart';
+import '../../../service/post/video_service.dart';
 import '../list/source_tab_bar_view.dart';
 
 class SearchPage extends StatefulWidget {

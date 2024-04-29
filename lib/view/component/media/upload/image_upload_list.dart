@@ -1,14 +1,10 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../constant/media.dart';
-import '../../../../domain/task/multipart_upload_task.dart';
 import '../../../../domain/task/single_upload_task.dart';
 import '../../../../enums/upload_task.dart';
-import '../../../widget/dialog/confirm_alert_dialog.dart';
 import '../../show/show_snack_bar.dart';
 import 'image_upload_card.dart';
 

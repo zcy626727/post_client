@@ -3,14 +3,14 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/media_config.dart';
-import 'package:post_client/model/media/gallery.dart';
-import 'package:post_client/service/media/gallery_service.dart';
+import 'package:post_client/model/post/gallery.dart';
+import 'package:post_client/service/post/gallery_service.dart';
 
-import '../../../constant/media.dart';
+import '../../../constant/source.dart';
 import '../../../domain/task/single_upload_task.dart';
 import '../../../enums/upload_task.dart';
-import '../../../model/media/album.dart';
-import '../../../service/media/album_service.dart';
+import '../../../model/post/album.dart';
+import '../../../service/post/album_service.dart';
 import '../../component/input/media_info_card.dart';
 import '../../component/media/upload/image_upload_list.dart';
 import '../../component/show/show_snack_bar.dart';
@@ -48,7 +48,7 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
       titleController.text = widget.gallery!.title ?? "";
       introductionController.text = widget.gallery!.introduction ?? "";
       coverUploadImage.status = UploadTaskStatus.finished;
-      coverUploadImage.mediaType = MediaType.gallery;
+      coverUploadImage.mediaType = SourceType.gallery;
       coverUploadImage.coverUrl = widget.gallery!.coverUrl;
       if (widget.gallery!.thumbnailUrlList != null) {
         var len = widget.gallery!.thumbnailUrlList!.length;
@@ -253,7 +253,7 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                       onClearAlbum: () {
                         _selectedAlbum = null;
                       },
-                      mediaType: MediaType.gallery,
+                      mediaType: SourceType.gallery,
                       initAlbum: _selectedAlbum,
                     ),
                   ],
