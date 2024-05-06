@@ -53,6 +53,7 @@ class _PostListTileState extends State<PostListTile> {
     super.initState();
     if (!widget.post.isSourceMode()) {
       controller.document = Document.fromJson(json.decode(widget.post.content ?? ""));
+      controller.readOnly = true;
     }
   }
 
@@ -187,7 +188,6 @@ class _PostListTileState extends State<PostListTile> {
             child: PostQuillEditor(
               controller: controller,
               focusNode: FocusNode(),
-              readOnly: true,
             ),
           )
         : widget.post.content != null && widget.post.content!.isNotEmpty

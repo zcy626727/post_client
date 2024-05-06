@@ -62,7 +62,7 @@ class _PostEditPageState extends State<PostEditPage> {
             child: Center(
               child: CommonActionOneButton(
                 title: "发布",
-                height: 30,
+                height: 35,
                 onTap: () async {
                   try {
                     var content = jsonEncode(_controller.document.toDelta().toJson());
@@ -133,7 +133,7 @@ class _PostEditPageState extends State<PostEditPage> {
                 ),
               ),
             ),
-            PostQuillToolBar(controller: _controller),
+            CommonQuillToolBar(controller: _controller),
             const SizedBox(height: 5),
           ],
         ),

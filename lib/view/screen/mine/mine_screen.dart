@@ -15,14 +15,14 @@ import '../../page/favorites/favorites_list_page.dart';
 import '../../page/favorites/follow_favorites_list_page.dart';
 import '../../page/media/follow_album_list_page.dart';
 
-class MediaScreen extends StatefulWidget {
-  const MediaScreen({super.key});
+class MineScreen extends StatefulWidget {
+  const MineScreen({super.key});
 
   @override
-  State<MediaScreen> createState() => _MediaScreenState();
+  State<MineScreen> createState() => _MineScreenState();
 }
 
-class _MediaScreenState extends State<MediaScreen> {
+class _MineScreenState extends State<MineScreen> {
   late Future _futureBuilderFuture;
 
   List<Album> _albumList = <Album>[];
@@ -213,9 +213,14 @@ class _MediaScreenState extends State<MediaScreen> {
     var colorScheme = Theme.of(context).colorScheme;
     return Expanded(
       child: Container(
-        // padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 5),
         height: 85,
         child: TextButton(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            )),
+          ),
           onPressed: onPress,
           child: Container(
             width: double.infinity,

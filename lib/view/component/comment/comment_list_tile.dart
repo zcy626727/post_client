@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:post_client/config/global.dart';
 import 'package:post_client/constant/source.dart';
 import 'package:post_client/model/post/comment.dart';
@@ -49,6 +49,7 @@ class _CommentListTileState extends State<CommentListTile> {
   void initState() {
     super.initState();
     controller.document = Document.fromJson(json.decode(widget.comment.content ?? ""));
+    controller.readOnly = true;
   }
 
   @override
@@ -118,7 +119,6 @@ class _CommentListTileState extends State<CommentListTile> {
         autoFocus: false,
         controller: controller,
         focusNode: FocusNode(),
-        readOnly: true,
         onTap: widget.onTap,
       ),
     );

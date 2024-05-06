@@ -100,12 +100,12 @@ class _AudioEditPageState extends State<AudioEditPage> {
               actions: [
                 Container(
                   margin: const EdgeInsets.only(right: 5),
-                  height: 30,
-                  width: 70,
+                  height: 40,
+                  width: 80,
                   child: Center(
                     child: CommonActionOneButton(
                       title: widget.audio != null ? "保存" : "发布",
-                      height: 30,
+                      height: 35,
                       onTap: () async {
                         formKey.currentState?.save();
                         if (audioUploadTask.fileId == null) {

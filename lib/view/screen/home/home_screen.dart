@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: Center(
                       child: SizedBox(
-                        width: 50,
+                        width: 55,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -88,8 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               actions: [
                 Container(
-                  width: 50.0,
-                  height: 50.0,
                   margin: const EdgeInsets.only(left: 5),
                   child: TextButton(
                     onPressed: () {
@@ -97,6 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     child: CircleAvatar(
                       radius: 16.0,
+                      backgroundColor: colorScheme.primaryContainer,
                       backgroundImage: user.avatarUrl == null ? null : NetworkImage(user.avatarUrl!),
                     ),
                   ),
@@ -187,23 +186,25 @@ class _HomeScreenTabBarState extends State<HomeScreenTabBar> {
       height: 50,
       width: double.infinity,
       color: colorScheme.surface,
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15.0),
+      padding: const EdgeInsets.only(top: 5, bottom: 5),
       child: TabBar(
           onTap: (index) {
             setState(() {
               _currentPage = index;
             });
           },
+          tabAlignment: TabAlignment.center,
           //指示器大小设置为和label一致
           indicatorSize: TabBarIndicatorSize.label,
           //启动滚动(选项多时启用)
           isScrollable: true,
+          dividerColor: Colors.transparent,
           //未选中内容颜色
           unselectedLabelColor: Colors.grey,
           //选中内容颜色
           labelColor: colorScheme.primary,
           //label间距
-          labelPadding: const EdgeInsets.symmetric(horizontal: 3.0),
+          labelPadding: const EdgeInsets.symmetric(horizontal: 5.0),
           indicator: BoxDecoration(
             color: colorScheme.primaryContainer,
             //形状

@@ -31,16 +31,14 @@ class _SignInOrUpPageState extends State<SignInOrUpPage>
       resizeToAvoidBottomInset: true,
       appBar: Responsive.isSmallWithDevice(context)
           ? CupertinoNavigationBar(
-              border: null,
+              // border: null,
               leading: IconButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
                 icon: const Icon(Icons.navigate_before_outlined),
-                splashRadius: 1,
-                iconSize: 26,
                 color: colorScheme.onSurface,
-                padding: const EdgeInsets.only(top: 4),
+                // padding: const EdgeInsets.only(top: 4),
               ),
               middle: Text(
                 "登录/注册",

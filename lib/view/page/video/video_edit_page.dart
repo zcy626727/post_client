@@ -104,7 +104,7 @@ class _VideoEditPageState extends State<VideoEditPage> {
                   child: Center(
                     child: CommonActionOneButton(
                       title: widget.video != null ? "保存" : "发布",
-                      height: 30,
+                      height: 35,
                       onTap: () async {
                         formKey.currentState?.save();
                         //执行验证

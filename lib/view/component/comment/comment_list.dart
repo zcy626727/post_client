@@ -139,7 +139,7 @@ class _CommentListState extends State<CommentList> {
                   ),
                 ),
               ),
-              if (_focusNode.hasFocus) PostQuillToolBar(controller: _controller),
+              if (_focusNode.hasFocus) CommonQuillToolBar(controller: _controller),
               CommentTextField(
                 controller: _controller,
                 focusNode: _focusNode,

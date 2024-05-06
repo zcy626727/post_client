@@ -109,7 +109,7 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                   child: Center(
                     child: CommonActionOneButton(
                       title: widget.article != null ? "保存" : "发布",
-                      height: 30,
+                      height: 35,
                       onTap: () async {
                         formKey.currentState?.save();
                         //执行验证

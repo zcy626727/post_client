@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/intl.dart';
 import 'package:post_client/view/component/feedback/media_feedback_bar.dart';
 import 'package:post_client/view/component/media/media_more_button.dart';
@@ -53,6 +53,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       article.user = widget.article.user;
       //如果不存在则直接创建
       controller.document = Document.fromJson(json.decode(article.content ?? ""));
+      controller.readOnly = true;
       article.content = article.content;
     } on DioException catch (e) {
       log(e.toString());
@@ -219,7 +220,6 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       child: ArticleQuillEditor(
         controller: controller,
         focusNode: FocusNode(),
-        readOnly: true,
       ),
     );
   }

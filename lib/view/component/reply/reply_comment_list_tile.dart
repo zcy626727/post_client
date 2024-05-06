@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:post_client/model/post/comment.dart';
 
 import '../../page/comment/reply_page.dart';
@@ -19,6 +19,7 @@ class ReplyCommentListTile extends StatelessWidget {
 
     if (comment.content != null) {
       controller.document = Document.fromJson(json.decode(comment.content!));
+      controller.readOnly = true;
     }
     return Container(
       margin: const EdgeInsets.only(top: 2),
@@ -44,7 +45,6 @@ class ReplyCommentListTile extends StatelessWidget {
           autoFocus: false,
           controller: controller,
           focusNode: FocusNode(),
-          readOnly: true,
         ),
         trailing: Container(
           width: 40,

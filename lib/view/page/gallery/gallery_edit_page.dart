@@ -116,7 +116,7 @@ class _GalleryEditPageState extends State<GalleryEditPage> {
                   child: Center(
                     child: CommonActionOneButton(
                       title: widget.gallery != null ? "保存" : "发布",
-                      height: 30,
+                      height: 35,
                       onTap: () async {
                         formKey.currentState?.save();
                         if (imageUploadTaskList.isEmpty) {

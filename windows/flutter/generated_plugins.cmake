@@ -3,16 +3,18 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  audioplayers_windows
-  file_selector_windows
-  gal
-  just_audio_windows
-  media_kit_libs_windows_video
-  media_kit_video
-  pasteboard
-  screen_brightness_windows
-  url_launcher_windows
-)
+        audioplayers_windows
+        file_selector_windows
+        gal
+        irondash_engine_context
+        just_audio_windows
+        media_kit_libs_windows_audio
+        media_kit_libs_windows_video
+        media_kit_video
+        screen_brightness_windows
+        super_native_extensions
+        url_launcher_windows
+        )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
   media_kit_native_event_loop

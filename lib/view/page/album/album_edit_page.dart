@@ -72,7 +72,7 @@ class _AlbumEditPageState extends State<AlbumEditPage> {
             child: Center(
               child: CommonActionOneButton(
                 title: "发布",
-                height: 30,
+                height: 35,
                 onTap: () async {
                   formKey.currentState?.save();
                   //执行验证

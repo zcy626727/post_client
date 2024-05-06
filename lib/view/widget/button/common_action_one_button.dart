@@ -9,7 +9,7 @@ class CommonActionOneButton extends StatefulWidget {
     this.backgroundColor,
     this.textColor,
     this.height = 40,
-    this.radius = 0,
+    this.radius = 10,
   }) : super(key: key);
 
   //返回值代表是否调用pop
@@ -37,7 +37,7 @@ class _CommonActionOneButtonState extends State<CommonActionOneButton> {
     return SizedBox(
       height: widget.height,
       width: double.infinity,
-      child: OutlinedButton(
+      child: TextButton(
         style: ButtonStyle(
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(widget.radius),
@@ -63,11 +63,7 @@ class _CommonActionOneButtonState extends State<CommonActionOneButton> {
                   _leftLoading = false;
                 });
               },
-        child: _leftLoading
-            ? CupertinoActivityIndicator(
-                color: widget.textColor ?? colorScheme.onPrimary,
-              )
-            : Text(widget.title, style: TextStyle(color: widget.textColor)),
+        child: _leftLoading ? CupertinoActivityIndicator(color: widget.textColor ?? colorScheme.onPrimary) : Text(widget.title, style: TextStyle(color: widget.textColor)),
       ),
     );
   }

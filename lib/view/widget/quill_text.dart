@@ -3,7 +3,6 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:provider/provider.dart';
 
 import '../../state/user_state.dart';
-import '../component/quill/media_quill_embeds.dart';
 
 class QuillText extends StatelessWidget {
   const QuillText({Key? key, required this.quillController}) : super(key: key);
@@ -21,6 +20,7 @@ class QuillText extends StatelessWidget {
         } else {
           quillController.formatText(1, 3, const ColorAttribute("black"));
         }
+        quillController.readOnly = true;
         return Column(
           children: [
             DefaultTextStyle(
@@ -28,18 +28,19 @@ class QuillText extends StatelessWidget {
                 color: colorScheme.onSurface,
               ),
               child: QuillEditor(
-                controller: quillController,
                 focusNode: FocusNode(),
                 scrollController: ScrollController(),
-                scrollable: true,
-                padding: EdgeInsets.zero,
-                autoFocus: false,
-                showCursor: false,
-                readOnly: true,
-                expands: false,
-                // customStyles:
-                //     DefaultStyles(small: const TextStyle(color: )),
-                embedBuilders: ArticleQuillEmbeds.builders(),
+                configurations: QuillEditorConfigurations(
+                  scrollable: true,
+                  padding: EdgeInsets.zero,
+                  autoFocus: false,
+                  showCursor: false,
+                  expands: false,
+                  // embedBuilders: ArticleQuillEmbeds.builders(),
+                  controller: quillController,
+                  // customStyles:
+                  //     DefaultStyles(small: const TextStyle(color: )),
+                ),
               ),
             ),
           ],

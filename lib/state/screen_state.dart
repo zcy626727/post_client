@@ -18,7 +18,7 @@ class ScreenNavigatorState extends ChangeNotifier {
 class FirstNav {
   static const int home = 0;
   static const int follow = 1;
-  static const int notice = 3;
-  static const int media = 4;
+  static const int live = 3;
+  static const int mine = 4;
   static const int account = 5;
 }

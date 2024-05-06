@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/view/screen/follow/follow_screen.dart';
 import 'package:post_client/view/screen/home/home_screen.dart';
-import 'package:post_client/view/screen/media/media_screen.dart';
-import 'package:post_client/view/screen/notion/notion_screen.dart';
+import 'package:post_client/view/screen/live/live_screen.dart';
+import 'package:post_client/view/screen/mine/mine_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../state/screen_state.dart';
@@ -73,10 +73,10 @@ class MainScreenState extends State<MainScreen> {
         return const HomeScreen();
       case FirstNav.follow:
         return const FollowScreen();
-      case FirstNav.notice:
-        return const NotionScreen();
-      case FirstNav.media:
-        return const MediaScreen();
+      case FirstNav.live:
+        return const LiveScreen();
+      case FirstNav.mine:
+        return const MineScreen();
       default:
         return Container();
     }

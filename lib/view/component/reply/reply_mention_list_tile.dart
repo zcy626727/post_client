@@ -30,6 +30,7 @@ class ReplyMentionListTile extends StatelessWidget {
         controller.document = Document.fromJson(json.decode(source.content!));
       }
     }
+    controller.readOnly = true;
     return Container(
       margin: const EdgeInsets.only(top: 2),
       color: colorScheme.surface,
@@ -55,7 +56,6 @@ class ReplyMentionListTile extends StatelessWidget {
           autoFocus: false,
           controller: controller,
           focusNode: FocusNode(),
-          readOnly: true,
         ),
         trailing: mention.sourceType == MentionSourceType.comment
             ? Container(

@@ -22,6 +22,8 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     var navState = Provider.of<ScreenNavigatorState>(context);
     return BottomAppBar(
+      padding: EdgeInsets.zero,
+      height: 55,
       color: colorScheme.surface,
       child: Material(
         color: colorScheme.surface,
@@ -40,16 +42,16 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                 },
               ),
               MobileBottomNavigationItem(
-                iconData: Icons.rss_feed,
+                iconData: Icons.live_tv,
                 selectedIndex: navState.firstNavIndex,
-                index: FirstNav.follow,
-                label: "关注",
+                index: FirstNav.live,
+                label: "直播",
                 press: () {
-                  navState.firstNavIndex = FirstNav.follow;
+                  navState.firstNavIndex = FirstNav.live;
                 },
               ),
               Container(
-                width: 45,
+                width: 50,
                 height: 40,
                 margin: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextButton(
@@ -83,22 +85,28 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(builder: (context) => const GalleryEditPage()),
-                                        );
-                                      }),
-                                      buildUploadItem(title: "视频", iconData: Icons.video_file_outlined, onTap: () {
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const VideoEditPage()),
-                                        );
-                                      }),
-                                      buildUploadItem(title: "音频", iconData: Icons.audio_file_outlined, onTap: () {
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const AudioEditPage()),
-                                        );
-                                      }),
+                                            );
+                                          }),
+                                      buildUploadItem(
+                                          title: "视频",
+                                          iconData: Icons.video_file_outlined,
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => const VideoEditPage()),
+                                            );
+                                          }),
+                                      buildUploadItem(
+                                          title: "音频",
+                                          iconData: Icons.audio_file_outlined,
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => const AudioEditPage()),
+                                            );
+                                          }),
                                       buildUploadItem(
                                         title: "文章",
                                         iconData: Icons.article_outlined,
@@ -137,6 +145,7 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                                     height: 40,
                                     child: Center(
                                       child: CommonActionOneButton(
+                                        backgroundColor: colorScheme.primaryContainer,
                                         onTap: () {
                                           Navigator.of(context).pop();
                                         },
@@ -151,28 +160,30 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                       },
                     );
                   },
-                  child: Icon(
-                    Icons.add,
-                    color: colorScheme.onSecondary,
+                  child: Center(
+                    child: Icon(
+                      Icons.add,
+                      color: colorScheme.onSecondary,
+                    ),
                   ),
                 ),
               ),
               MobileBottomNavigationItem(
-                iconData: Icons.notifications_on,
+                iconData: Icons.rss_feed,
                 selectedIndex: navState.firstNavIndex,
-                index: FirstNav.notice,
-                label: "通知",
+                index: FirstNav.follow,
+                label: "动态",
                 press: () {
-                  navState.firstNavIndex = FirstNav.notice;
+                  navState.firstNavIndex = FirstNav.follow;
                 },
               ),
               MobileBottomNavigationItem(
                 iconData: Icons.view_stream,
                 selectedIndex: navState.firstNavIndex,
-                index: FirstNav.media,
-                label: "媒体",
+                index: FirstNav.mine,
+                label: "我的",
                 press: () {
-                  navState.firstNavIndex = FirstNav.media;
+                  navState.firstNavIndex = FirstNav.mine;
                 },
               ),
             ],
