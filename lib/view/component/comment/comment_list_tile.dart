@@ -115,7 +115,7 @@ class _CommentListTileState extends State<CommentListTile> {
       margin: const EdgeInsets.only(left: 13),
       padding: const EdgeInsets.only(top: 2.0, right: 5.0),
       width: double.infinity,
-      child: CommentQuillEditor(
+      child: CommonQuillEditor(
         autoFocus: false,
         controller: controller,
         focusNode: FocusNode(),

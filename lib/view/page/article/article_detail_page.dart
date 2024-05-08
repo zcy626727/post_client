@@ -217,7 +217,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     return Container(
       margin: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
       width: double.infinity,
-      child: ArticleQuillEditor(
+      child: CommonQuillEditor(
         controller: controller,
         focusNode: FocusNode(),
       ),

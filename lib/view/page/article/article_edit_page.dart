@@ -232,13 +232,13 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
                         child: Container(
                           color: colorScheme.surface,
                           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                          child: ArticleQuillEditor(
+                          child: CommonQuillEditor(
                             controller: _contentController,
                             focusNode: focusNode,
                           ),
                         ),
                       ),
-                      ArticleQuillToolBar(controller: _contentController),
+                      CommonQuillToolBar(controller: _contentController),
                     ],
                   ),
                 ),

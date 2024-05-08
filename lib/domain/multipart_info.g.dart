@@ -9,12 +9,12 @@ part of 'multipart_info.dart';
 MultipartInfo _$MultipartInfoFromJson(Map<String, dynamic> json) =>
     MultipartInfo(
       json['md5'] as String?,
-      json['file_id'] as int?,
+      (json['file_id'] as num?)?.toInt(),
       json['finished'] as bool?,
-      json['total_part_num'] as int?,
-      json['uploaded_part_num'] as int?,
-      json['file_size'] as int?,
-      json['part_size'] as int?,
+      (json['total_part_num'] as num?)?.toInt(),
+      (json['uploaded_part_num'] as num?)?.toInt(),
+      (json['file_size'] as num?)?.toInt(),
+      (json['part_size'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$MultipartInfoToJson(MultipartInfo instance) =>

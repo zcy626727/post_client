@@ -8,7 +8,7 @@ part of 'message_notion.dart';
 
 MessageNotion _$MessageNotionFromJson(Map<String, dynamic> json) =>
     MessageNotion(
-      json['type'] as int,
+      (json['type'] as num).toInt(),
       json['message'] as String,
     );
 

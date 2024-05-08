@@ -127,7 +127,7 @@ class _PostEditPageState extends State<PostEditPage> {
             Expanded(
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                child: PostQuillEditor(
+                child: CommonQuillEditor(
                   controller: _controller,
                   focusNode: focusNode,
                 ),

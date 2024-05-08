@@ -185,7 +185,7 @@ class _PostListTileState extends State<PostListTile> {
         ? Container(
             margin: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
             width: double.infinity,
-            child: PostQuillEditor(
+            child: CommonQuillEditor(
               controller: controller,
               focusNode: FocusNode(),
             ),

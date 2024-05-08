@@ -31,7 +31,7 @@ class _CommentTextFieldState extends State<CommentTextField> {
                 color: colorScheme.background,
                 borderRadius: const BorderRadius.all(Radius.circular(5)),
               ),
-              child: CommentQuillEditor(
+              child: CommonQuillEditor(
                 controller: widget.controller,
                 focusNode: widget.focusNode,
                 maxHeight: 150,

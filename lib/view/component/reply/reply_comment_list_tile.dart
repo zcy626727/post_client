@@ -41,7 +41,7 @@ class ReplyCommentListTile extends StatelessWidget {
             style: TextStyle(color: colorScheme.onSurface),
           ),
         ),
-        subtitle: CommentQuillEditor(
+        subtitle: CommonQuillEditor(
           autoFocus: false,
           controller: controller,
           focusNode: FocusNode(),

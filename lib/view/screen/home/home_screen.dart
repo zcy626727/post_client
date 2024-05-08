@@ -88,18 +88,34 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               actions: [
                 Container(
+                  height: 40,
+                  width: 40,
                   margin: const EdgeInsets.only(left: 5),
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.notifications_on,
+                      size: 30,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 40,
+                  height: 40,
+                  margin: const EdgeInsets.only(right: 5),
                   child: TextButton(
+                    style: ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.zero)),
                     onPressed: () {
                       Scaffold.of(context).openDrawer();
                     },
                     child: CircleAvatar(
-                      radius: 16.0,
+                      radius: 14.0,
                       backgroundColor: colorScheme.primaryContainer,
                       backgroundImage: user.avatarUrl == null ? null : NetworkImage(user.avatarUrl!),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ];

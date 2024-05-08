@@ -3,10 +3,9 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:post_client/model/user/user.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
-import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 import 'package:provider/provider.dart';
 
-import '../../component/quill/quill_editor.dart';
+import '../../../model/live/live_category.dart';
 
 class LiveScreen extends StatefulWidget {
   const LiveScreen({super.key});
@@ -16,6 +15,9 @@ class LiveScreen extends StatefulWidget {
 }
 
 class _LiveScreenState extends State<LiveScreen> {
+  List<LiveCategory> liveCategoryList = <LiveCategory>[];
+  int _currentCategoryIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Selector<UserState, User>(
@@ -41,13 +43,50 @@ class _LiveScreenState extends State<LiveScreen> {
         padding: const EdgeInsets.only(left: 2, right: 2, bottom: 2),
         child: Column(
           children: [
-            // 直播界面
-            CommonQuillToolBar(controller: c),
+            // 轮播图，
+            // 直播分类
+            Container(
+              padding: const EdgeInsets.only(left: 2),
+              height: 45,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // 收藏的分类
+                  Expanded(
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 10,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          padding: const EdgeInsets.only(right: 2),
+                          child: buildCategoryItem("黄播", index),
+                        );
+                      },
+                    ),
+                  ),
+
+                  // 展开分类和主题的按钮
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.format_align_right))
+                ],
+              ),
+            ),
+            // 推荐直播间
             Expanded(
-              child: CommonQuillEditor(
-                controller: c,
-                focusNode: FocusNode(),
-                autoFocus: false,
+              child: GridView.builder(
+                controller: ScrollController(),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200,
+                  mainAxisSpacing: 5,
+                  crossAxisSpacing: 5,
+                ),
+                itemCount: 11,
+                itemBuilder: (context, index) {
+                  return Container(
+                    width: 100,
+                    height: 300,
+                    color: colorScheme.primaryContainer,
+                  );
+                },
               ),
             )
           ],
@@ -56,43 +95,34 @@ class _LiveScreenState extends State<LiveScreen> {
     );
   }
 
-  Widget buildChatList() {
+  Widget buildCategoryItem(String title, int categoryIndex) {
     var colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      child: ListView.builder(
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
-            elevation: 0,
-            color: colorScheme.surface,
-            margin: const EdgeInsets.only(bottom: 2.0),
-            child: ListTile(
-              leading: const CircleAvatar(backgroundImage: NetworkImage('https://pic1.zhimg.com/80/v2-64803cb7928272745eb2bb0203e03648_1440w.webp')),
-              title: Text(
-                "路由器",
-                style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-              ),
-              subtitle: const Text(
-                "你瞅啥",
-                style: TextStyle(color: Colors.grey),
-              ),
-              onTap: () {
-                //如果是移动端则点击后弹出路由
-                if (Responsive.isSmall(context)) {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) {
-                  //       return const CommonChatPage();
-                  //     },
-                  //   ),
-                  // );
-                }
-              },
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        child: TextButton(
+          onPressed: () {
+            if (_currentCategoryIndex == categoryIndex) {
+              return;
+            }
+            setState(() {
+              _currentCategoryIndex = categoryIndex;
+            });
+          },
+          style: ButtonStyle(
+            elevation: const MaterialStatePropertyAll(0),
+            backgroundColor: MaterialStatePropertyAll(
+              _currentCategoryIndex == categoryIndex ? colorScheme.inverseSurface : colorScheme.surfaceVariant,
             ),
-          );
-        },
-        itemCount: 5,
+          ),
+          child: Text(
+            title,
+            style: TextStyle(
+              color: categoryIndex == _currentCategoryIndex ? colorScheme.onInverseSurface : colorScheme.onSurface,
+            ),
+          ),
+        ),
       ),
     );
   }
