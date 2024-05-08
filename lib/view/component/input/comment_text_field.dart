@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
-import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 
 class CommentTextField extends StatefulWidget {
   const CommentTextField({Key? key, required this.controller, required this.focusNode, required this.onSubmit}) : super(key: key);

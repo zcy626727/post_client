@@ -67,8 +67,8 @@ class _AlbumEditPageState extends State<AlbumEditPage> {
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 5),
-            height: 30,
-            width: 70,
+            height: 40,
+            width: 80,
             child: Center(
               child: CommonActionOneButton(
                 title: "发布",

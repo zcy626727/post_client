@@ -104,8 +104,8 @@ class _ArticleEditPageState extends State<ArticleEditPage> {
               actions: [
                 Container(
                   margin: const EdgeInsets.only(right: 5),
-                  height: 30,
-                  width: 70,
+                  height: 40,
+                  width: 80,
                   child: Center(
                     child: CommonActionOneButton(
                       title: widget.article != null ? "保存" : "发布",

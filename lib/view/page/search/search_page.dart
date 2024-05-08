@@ -4,6 +4,7 @@ import 'package:post_client/service/post/album_service.dart';
 import 'package:post_client/service/post/post_service.dart';
 import 'package:post_client/service/user/user_service.dart';
 
+import '../../../config/constants.dart';
 import '../../../service/post/article_service.dart';
 import '../../../service/post/audio_service.dart';
 import '../../../service/post/gallery_service.dart';
@@ -71,9 +72,13 @@ class _SearchPageState extends State<SearchPage> {
           Center(
             child: Container(
               margin: const EdgeInsets.only(left: 5, right: 5),
-              width: 50,
-              height: 34,
+              width: 60,
+              height: 35,
               child: TextButton(
+                style: ButtonStyle(
+                  shape: commonButtonShape,
+                  backgroundColor: MaterialStateProperty.all(colorScheme.primaryContainer),
+                ),
                 onPressed: () {
                   if (!showSearchResult) showSearchResult = true;
                   setState(() {});

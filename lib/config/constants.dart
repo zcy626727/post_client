@@ -1,6 +1,6 @@
 //常量
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 
 //login
 const double loginInputWidth = 420;
@@ -12,6 +12,9 @@ const int initPageIndex = 0;
 //容器间距
 const double desktopContainerMargin = 5;
 
+var commonButtonShape = MaterialStateProperty.all(RoundedRectangleBorder(
+  borderRadius: BorderRadius.circular(10),
+));
 
 const String testImageUrl = "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg";
 

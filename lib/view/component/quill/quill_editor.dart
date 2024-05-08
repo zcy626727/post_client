@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_extensions/flutter_quill_embeds.dart';
+import 'package:post_client/view/component/quill/embed/mention_embed.dart';
 
 class CommonQuillEditor extends StatelessWidget {
   const CommonQuillEditor({
@@ -24,9 +25,6 @@ class CommonQuillEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
-    // 设置DefaultTextStyle，调整亮暗模式
-    // var builders = PostQuillEmbeds.builders();
-    // builders.addAll(FlutterQuillEmbeds.editorWebBuilders());
     return DefaultTextStyle(
       style: TextStyle(color: colorScheme.onSurface),
       child: QuillEditor(
@@ -41,8 +39,7 @@ class CommonQuillEditor extends StatelessWidget {
           autoFocus: autoFocus,
           expands: false,
           placeholder: placeholder,
-          // embedBuilders: PostQuillEmbeds.builders(),
-          embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(),
+          embedBuilders: [...(kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders()), MyMentionEmbedBuilder()],
           sharedConfigurations: const QuillSharedConfigurations(
             locale: Locale('en'),
           ),

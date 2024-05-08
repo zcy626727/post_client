@@ -99,12 +99,12 @@ class _VideoEditPageState extends State<VideoEditPage> {
               actions: [
                 Container(
                   margin: const EdgeInsets.only(right: 5),
-                  height: 30,
-                  width: 70,
+                  height: 40,
+                  width: 80,
                   child: Center(
                     child: CommonActionOneButton(
                       title: widget.video != null ? "保存" : "发布",
-                      height: 35,
+                      height: 40,
                       onTap: () async {
                         formKey.currentState?.save();
                         //执行验证

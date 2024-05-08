@@ -34,17 +34,17 @@ class CommonQuillToolBar extends StatelessWidget {
           sharedConfigurations: const QuillSharedConfigurations(
             locale: Locale('en'),
           ),
+          // embedButtons: FlutterQuillEmbeds.toolbarButtons(),
+          embedButtons: FlutterQuillEmbeds.toolbarButtons(),
+          // 自定义按钮
           customButtons: [
+            // @ 按钮
             QuillToolbarCustomButtonOptions(
-                icon: SvgPicture.asset(
-                  "assets/icons/aite.svg",
-                  height: 20,
-                  width: 20,
-                ),
-                onPressed: () async {
-                  //调用submitted()方法
-                  await _mentionHandler(context);
-                })
+              icon: SvgPicture.asset("assets/icons/aite.svg", height: 25, width: 25),
+              onPressed: () async {
+                await _mentionHandler(context);
+              },
+            ),
           ]),
     );
   }
@@ -74,14 +74,17 @@ class CommonQuillToolBar extends StatelessWidget {
       );
     }
     if (userJson != null) {
-      final index = controller.selection.baseOffset;
-      final end = controller.selection.extentOffset;
+      controller.document.insert(
+        controller.selection.extentOffset,
+        MyAtBlockEmbed(userJson),
+      );
 
-      var block = MyAtBlockEmbed(userJson);
-      //添加at
-      controller.replaceText(index, 0, block, null);
-      //移动光标
-      controller.moveCursorToPosition(index + 1);
+      controller.updateSelection(
+        TextSelection.collapsed(
+          offset: controller.selection.extentOffset + 1,
+        ),
+        ChangeSource.local,
+      );
     }
   }
 }

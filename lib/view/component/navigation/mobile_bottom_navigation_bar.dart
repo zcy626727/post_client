@@ -200,6 +200,11 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
       child: SizedBox(
         height: 80,
         child: TextButton(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            )),
+          ),
           onPressed: onTap,
           child: Column(
             children: [

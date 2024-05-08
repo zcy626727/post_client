@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../config/constants.dart';
+
 class CommonActionOneButton extends StatefulWidget {
   const CommonActionOneButton({
     Key? key,
@@ -39,9 +41,7 @@ class _CommonActionOneButtonState extends State<CommonActionOneButton> {
       width: double.infinity,
       child: TextButton(
         style: ButtonStyle(
-          shape: MaterialStateProperty.all(RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(widget.radius),
-          )),
+          shape: commonButtonShape,
           backgroundColor: widget.backgroundColor == null ? null : MaterialStateProperty.all(widget.backgroundColor!),
         ),
         onPressed: _leftLoading

@@ -62,7 +62,7 @@ class _PostEditPageState extends State<PostEditPage> {
             child: Center(
               child: CommonActionOneButton(
                 title: "发布",
-                height: 35,
+                height: 40,
                 onTap: () async {
                   try {
                     var content = jsonEncode(_controller.document.toDelta().toJson());
