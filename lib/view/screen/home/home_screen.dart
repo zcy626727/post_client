@@ -97,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: const Icon(
                       Icons.notifications_on,
                       size: 30,
+                      color: Colors.grey,
                     ),
                   ),
                 ),

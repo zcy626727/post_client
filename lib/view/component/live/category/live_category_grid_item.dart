@@ -1,0 +1,32 @@
+import 'package:flutter/material.dart';
+import 'package:post_client/config/constants.dart';
+import 'package:post_client/view/page/live/room/live_room_list_page.dart';
+
+class LiveCategoryGridItem extends StatelessWidget {
+  const LiveCategoryGridItem({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+
+    return TextButton(
+      style: ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.zero), shape: commonButtonShape),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LiveRoomListPage()),
+        );
+      },
+      child: Column(
+        children: [
+          SizedBox(
+            height: 50,
+            width: 50,
+            child: Image(image: NetworkImage(testImageUrl)),
+          ),
+          Text("英雄联盟", style: TextStyle(fontSize: 10, color: colorScheme.onSurface))
+        ],
+      ),
+    );
+  }
+}

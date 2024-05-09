@@ -3,6 +3,8 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:post_client/model/user/user.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
+import 'package:post_client/view/component/live/room/live_room_grid_item.dart';
+import 'package:post_client/view/page/live/category/live_category_list_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/live/live_category.dart';
@@ -66,27 +68,33 @@ class _LiveScreenState extends State<LiveScreen> {
                   ),
 
                   // 展开分类和主题的按钮
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.format_align_right))
+                  IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LiveCategoryListPage()),
+                        );
+                      },
+                      icon: const Icon(Icons.format_align_right))
                 ],
               ),
             ),
             // 推荐直播间
             Expanded(
-              child: GridView.builder(
-                controller: ScrollController(),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  mainAxisSpacing: 5,
-                  crossAxisSpacing: 5,
+              child: Container(
+                color: colorScheme.background,
+                child: GridView.builder(
+                  controller: ScrollController(),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    mainAxisSpacing: 5,
+                    crossAxisSpacing: 5,
+                  ),
+                  itemCount: 11,
+                  itemBuilder: (context, index) {
+                    return LiveRoomGridItem();
+                  },
                 ),
-                itemCount: 11,
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: 100,
-                    height: 300,
-                    color: colorScheme.primaryContainer,
-                  );
-                },
               ),
             )
           ],
