@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/config/constants.dart';
 
-import 'live_room_page.dart';
+import '../../../page/live/room/live_room_page.dart';
 
 class LiveRoomGridItem extends StatelessWidget {
   const LiveRoomGridItem({super.key});
@@ -11,6 +11,7 @@ class LiveRoomGridItem extends StatelessWidget {
     var colorScheme = Theme.of(context).colorScheme;
 
     return Container(
+      clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
         color: colorScheme.surface,

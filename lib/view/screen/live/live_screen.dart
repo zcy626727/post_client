@@ -82,6 +82,7 @@ class _LiveScreenState extends State<LiveScreen> {
             // 推荐直播间
             Expanded(
               child: Container(
+                margin: const EdgeInsets.only(left: 5, right: 5),
                 color: colorScheme.background,
                 child: GridView.builder(
                   controller: ScrollController(),

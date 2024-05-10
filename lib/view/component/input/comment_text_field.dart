@@ -40,14 +40,19 @@ class _CommentTextFieldState extends State<CommentTextField> {
             ),
           ),
           SizedBox(
-            width: 70,
+            width: 80,
             height: 30,
             child: ElevatedButton(
               onPressed: () {
                 widget.onSubmit();
               },
-              style: const ButtonStyle(elevation: MaterialStatePropertyAll(0)),
-              child: const Text("发布"),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(colorScheme.primary),
+              ),
+              child: Text(
+                "发布",
+                style: TextStyle(color: colorScheme.onPrimary),
+              ),
             ),
           ),
         ],

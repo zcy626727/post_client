@@ -4,6 +4,7 @@ import 'package:post_client/service/post/album_service.dart';
 import 'package:post_client/service/post/gallery_service.dart';
 import 'package:post_client/service/post/video_service.dart';
 import 'package:post_client/util/responsive.dart';
+import 'package:post_client/view/component/message/message_page.dart';
 import 'package:post_client/view/widget/player/common_video_player.dart';
 import 'package:provider/provider.dart';
 
@@ -93,7 +94,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   margin: const EdgeInsets.only(left: 5),
                   child: IconButton(
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MessagePage()),
+                      );
+                    },
                     icon: const Icon(
                       Icons.notifications_on,
                       size: 30,

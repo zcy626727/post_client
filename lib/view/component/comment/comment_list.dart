@@ -237,4 +237,19 @@ class _CommentListState extends State<CommentList> {
           : card,
     );
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        if (MediaQuery.of(context).viewInsets.bottom == 0) {
+          // 关闭键盘
+          _focusNode.unfocus();
+        } else {
+          // 显示键盘
+        }
+      }
+    });
+  }
 }
