@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/view/page/article/article_edit_page.dart';
 import 'package:post_client/view/page/audio/audio_edit_page.dart';
+import 'package:post_client/view/page/live/room/create_live_page.dart';
 import 'package:post_client/view/page/post/post_edit_page.dart';
 import 'package:post_client/view/page/video/video_edit_page.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
@@ -134,9 +135,17 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                                           );
                                         },
                                       ), //推文
-                                      // buildUploadItem(title: "投票", iconData: Icons.how_to_vote_outlined, onTap: () {}), //动态投票
-                                      // buildUploadItem(title: "问答", iconData: Icons.question_answer_outlined, onTap: () {}), //帖子
-                                      const Expanded(child: SizedBox()),
+                                      buildUploadItem(
+                                        title: "直播",
+                                        iconData: Icons.live_tv,
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => const CreateLivePage()),
+                                          );
+                                        },
+                                      ),
                                       const Expanded(child: SizedBox()),
                                       const Expanded(child: SizedBox()),
                                     ],

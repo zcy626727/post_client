@@ -4,10 +4,13 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
         audioplayers_windows
+        connectivity_plus
         file_selector_windows
+        flutter_webrtc
         gal
         irondash_engine_context
         just_audio_windows
+        livekit_client
         media_kit_libs_windows_video
         media_kit_video
         screen_brightness_windows

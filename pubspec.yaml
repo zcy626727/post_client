@@ -68,6 +68,10 @@ dependencies:
   flutter_staggered_grid_view:
   #图片操作工具
   image: ^4.0.17
+  #  flutter_webrtc: ^0.10.4
+  livekit_client: 2.1.4
+  flutter_background: ^1.0.0
+
 
   cupertino_icons: ^1.0.6
 

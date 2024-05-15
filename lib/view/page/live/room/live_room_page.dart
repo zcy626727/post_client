@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:livekit_client/livekit_client.dart' as livekit;
 
 import '../../../../constant/ui.dart';
 import '../../../component/input/comment_text_field.dart';
@@ -20,10 +21,17 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
 
   final FocusNode _focusNode = FocusNode();
 
+  livekit.TrackPublication? videoPub;
+
   @override
   void initState() {
     super.initState();
     _futureBuilderFuture = getData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   Future getData() async {
@@ -41,6 +49,8 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
+    var videoPub = this.videoPub;
+    print(videoPub);
     return FutureBuilder(
       future: _futureBuilderFuture,
       builder: (BuildContext context, AsyncSnapshot snapShot) {
@@ -81,8 +91,8 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
                     AspectRatio(
                       aspectRatio: 2,
                       child: Container(
-                        height: 300,
                         color: colorScheme.primaryContainer,
+                        child: videoPub == null ? null : livekit.VideoTrackRenderer(videoPub.track as livekit.VideoTrack),
                       ),
                     ),
 
