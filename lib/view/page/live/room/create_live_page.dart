@@ -91,14 +91,13 @@ class _CreateLivePageState extends State<CreateLivePage> {
               right: 0,
               child: Container(
                 height: 50,
-                color: colorScheme.primaryContainer,
+                color: colorScheme.surface,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     if (!started)
                       IconButton(
                         tooltip: "离开",
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(colorScheme.primaryContainer)),
                         icon: const Icon(Icons.exit_to_app),
                         iconSize: 30,
                         onPressed: () {
@@ -108,7 +107,6 @@ class _CreateLivePageState extends State<CreateLivePage> {
                     if (started)
                       IconButton(
                         tooltip: "关闭直播",
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(colorScheme.primaryContainer)),
                         icon: const Icon(Icons.stop_circle),
                         iconSize: 30,
                         onPressed: () {
@@ -121,7 +119,6 @@ class _CreateLivePageState extends State<CreateLivePage> {
                     if (liveMediaMode != LiveMediaMode.screenShare)
                       IconButton(
                         tooltip: "翻转摄像头",
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(colorScheme.primaryContainer)),
                         icon: const Icon(Icons.cameraswitch),
                         iconSize: 30,
                         onPressed: () {
@@ -138,7 +135,6 @@ class _CreateLivePageState extends State<CreateLivePage> {
                     if (liveMediaMode != LiveMediaMode.screenShare)
                       IconButton(
                         tooltip: "分享屏幕",
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(colorScheme.primaryContainer)),
                         icon: const Icon(Icons.screen_share),
                         iconSize: 30,
                         onPressed: () {
@@ -149,7 +145,6 @@ class _CreateLivePageState extends State<CreateLivePage> {
                     if (liveMediaMode == LiveMediaMode.screenShare)
                       IconButton(
                         tooltip: "摄像头",
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(colorScheme.primaryContainer)),
                         icon: const Icon(Icons.camera),
                         iconSize: 30,
                         onPressed: () {

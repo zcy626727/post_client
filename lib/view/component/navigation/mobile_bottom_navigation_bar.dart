@@ -8,6 +8,7 @@ import 'package:post_client/view/widget/button/common_action_one_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../../state/screen_state.dart';
+import '../../../util/webrtc.dart';
 import '../../page/gallery/gallery_edit_page.dart';
 
 class MobileBottomNavigationBar extends StatefulWidget {
@@ -140,10 +141,15 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                                         iconData: Icons.live_tv,
                                         onTap: () {
                                           Navigator.pop(context);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => const CreateLivePage()),
-                                          );
+                                          enableRTC(onEnable: () {
+                                            //确保RTC正常使用
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => const CreateLivePage()),
+                                            );
+                                          }, onError: () {
+                                            // ShowSnackBar.error(context: this.context, message: "直播功能需要开启权限");
+                                          });
                                         },
                                       ),
                                       const Expanded(child: SizedBox()),
