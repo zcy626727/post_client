@@ -44,7 +44,8 @@ dependencies:
   flutter_quill_test: ^9.3.4
   quill_html_converter: ^9.3.4
   quill_pdf_converter: ^9.3.4
-
+  # websocket
+  web_socket_channel: ^2.4.4
   audioplayers:
   audio_video_progress_bar:
   just_audio:

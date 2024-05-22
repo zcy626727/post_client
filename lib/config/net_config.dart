@@ -13,7 +13,9 @@ class NetConfig {
   //用户服务
   static String userApiUrl = 'http://192.168.150.148:26101';
 
-  // static String messageApiUrl = 'http://192.168.150.148:26111';
+  static String messageApiUrl = 'http://192.168.150.148:26121';
+  static String liveChatUrl = 'ws://192.168.150.148:26121/ws';
+  static String liveKitUrl = 'ws://192.168.150.148:7880/ws';
 
-  static String postApiUrl = 'http://192.168.150.148:26131';
+  static String postApiUrl = 'http://192.168.150.148:26111';
 }

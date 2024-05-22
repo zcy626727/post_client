@@ -28,3 +28,12 @@ class LiveMediaMode {
     }
   }
 }
+
+// 媒体方向
+class LiveMediaDirection {
+  // 横屏
+  static const int landscape = 1;
+
+  // 竖屏
+  static const int portrait = 2;
+}

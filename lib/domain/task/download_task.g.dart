@@ -17,7 +17,9 @@ DownloadTask _$DownloadTaskFromJson(Map<String, dynamic> json) => DownloadTask()
   ..downloadedSize = (json['downloadedSize'] as num).toInt()
   ..statusMessage = json['statusMessage'] as String?
   ..status = (json['status'] as num?)?.toInt()
-  ..createTime = json['createTime'] == null ? null : DateTime.parse(json['createTime'] as String);
+  ..createTime = json['createTime'] == null
+      ? null
+      : DateTime.parse(json['createTime'] as String);
 
 Map<String, dynamic> _$DownloadTaskToJson(DownloadTask instance) =>
     <String, dynamic>{
