@@ -2,9 +2,12 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:post_client/model/live/live_category.dart';
 
 import '../../../../constant/ui.dart';
+import '../../../../model/live/live_topic.dart';
 import '../../../component/live/category/live_category_grid_item.dart';
+import '../../../widget/common_item_list.dart';
 
 class LiveCategoryListPage extends StatefulWidget {
   const LiveCategoryListPage({super.key});
@@ -16,6 +19,8 @@ class LiveCategoryListPage extends StatefulWidget {
 class _LiveCategoryListPageState extends State<LiveCategoryListPage> {
   late Future _futureBuilderFuture;
 
+  List<LiveTopic> topicList = <LiveTopic>[];
+
   @override
   void initState() {
     super.initState();
@@ -23,10 +28,11 @@ class _LiveCategoryListPageState extends State<LiveCategoryListPage> {
   }
 
   Future getData() async {
-    return Future.wait([getFolloweeList()]);
+    return Future.wait([getTopicList()]);
   }
 
-  Future<void> getFolloweeList() async {
+  Future<void> getTopicList() async {
+    // 查找topic列表
     try {} on DioException catch (e) {
       log(e.toString());
     } catch (e) {
@@ -67,7 +73,7 @@ class _LiveCategoryListPageState extends State<LiveCategoryListPage> {
             body: Container(
               color: colorScheme.background,
               child: DefaultTabController(
-                length: 3,
+                length: topicList.length,
                 child: Column(
                   children: [
                     Container(
@@ -77,6 +83,9 @@ class _LiveCategoryListPageState extends State<LiveCategoryListPage> {
                       child: TabBar(
                         tabAlignment: TabAlignment.start,
                         isScrollable: true,
+                        onTap: (index) {
+                          // 获取主题的分类列表
+                        },
                         tabs: [
                           SizedBox(height: double.infinity, child: Center(child: Text("推荐"))),
                           SizedBox(height: double.infinity, child: Center(child: Text("游戏"))),
@@ -87,28 +96,24 @@ class _LiveCategoryListPageState extends State<LiveCategoryListPage> {
                     Expanded(
                       child: Container(
                         color: colorScheme.surface,
-                        child: TabBarView(
-                          children: [
-                            //
-                            Container(
-                              margin: EdgeInsets.only(left: 5, right: 5),
-                              child: GridView.builder(
-                                controller: ScrollController(),
-                                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                                  maxCrossAxisExtent: 90,
-                                  childAspectRatio: 1.2,
-                                  mainAxisSpacing: 5,
-                                  crossAxisSpacing: 5,
-                                ),
-                                itemCount: 11,
-                                itemBuilder: (context, index) {
-                                  return LiveCategoryGridItem();
-                                },
-                              ),
-                            ),
-                            Icon(Icons.directions_transit),
-                            Icon(Icons.directions_bike),
-                          ],
+                        child: CommonItemList<LiveCategory>(
+                          onLoad: (int page) async {
+                            // todo 根据topicId查找对应的categoryList
+                            return [];
+                          },
+                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 90,
+                            childAspectRatio: 1.2,
+                            mainAxisSpacing: 5,
+                            crossAxisSpacing: 5,
+                          ),
+                          itemName: "直播间",
+                          itemHeight: null,
+                          isGrip: true,
+                          enableScrollbar: true,
+                          itemBuilder: (ctx, item, itemList, onFresh) {
+                            return LiveCategoryGridItem(category: item);
+                          },
                         ),
                       ),
                     ),

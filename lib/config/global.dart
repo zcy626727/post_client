@@ -8,6 +8,7 @@ import 'package:path/path.dart';
 import 'package:post_client/api/client/post_http_config.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+import '../api/client/message_http_config.dart';
 import '../api/client/user_http_config.dart';
 import '../api/net_cache_interceptor.dart';
 import '../api/net_common_interceptor.dart';
@@ -63,6 +64,7 @@ class Global {
     //初始化api
     UserHttpConfig.init();
     PostHttpConfig.init();
+    MessageHttpConfig.init();
   }
 
   //初始化相关数据数据（应用启动后调用）

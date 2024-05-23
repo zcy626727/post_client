@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
-import 'package:post_client/api/client/post_http_config.dart';
+import 'package:post_client/api/client/message_http_config.dart';
 import 'package:post_client/model/live/live_room.dart';
 
 class LiveRoomApi {
   static Future<(String, LiveRoom)> openRoom() async {
-    var r = await PostHttpConfig.dio.post(
+    var r = await MessageHttpConfig.dio.post(
       "/liveRoom/openRoom",
       data: {},
-      options: PostHttpConfig.options.copyWith(extra: {
+      options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
       }),
@@ -16,10 +16,10 @@ class LiveRoomApi {
   }
 
   static Future<void> closeRoom() async {
-    var r = await PostHttpConfig.dio.post(
+    var r = await MessageHttpConfig.dio.post(
       "/liveRoom/closeRoom",
       data: {},
-      options: PostHttpConfig.options.copyWith(extra: {
+      options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
       }),
@@ -27,10 +27,10 @@ class LiveRoomApi {
   }
 
   static Future<String> getJoinRoomToken({required int roomId}) async {
-    var r = await PostHttpConfig.dio.get(
+    var r = await MessageHttpConfig.dio.get(
       "/liveRoom/getJoinRoomToken",
       data: {"roomId": roomId},
-      options: PostHttpConfig.options.copyWith(extra: {
+      options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
       }),
@@ -42,10 +42,10 @@ class LiveRoomApi {
     required int categoryId,
     required String name,
   }) async {
-    var r = await PostHttpConfig.dio.post(
+    var r = await MessageHttpConfig.dio.post(
       "/liveRoom/saveRoom",
       data: {"categoryId": categoryId, "name": name},
-      options: PostHttpConfig.options.copyWith(extra: {
+      options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
       }),
@@ -57,13 +57,13 @@ class LiveRoomApi {
     required int pageIndex,
     required int pageSize,
   }) async {
-    var r = await PostHttpConfig.dio.get(
+    var r = await MessageHttpConfig.dio.get(
       "/liveRoom/getRoomListRandom",
       data: {
         "pageIndex": pageIndex,
         "pageSize": pageSize,
       },
-      options: PostHttpConfig.options.copyWith(extra: {
+      options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
       }),
@@ -76,14 +76,14 @@ class LiveRoomApi {
     required int pageIndex,
     required int pageSize,
   }) async {
-    var r = await PostHttpConfig.dio.get(
+    var r = await MessageHttpConfig.dio.get(
       "/liveRoom/getRoomListByCategory",
       data: {
         "pageIndex": pageIndex,
         "categoryId": categoryId,
         "pageSize": pageSize,
       },
-      options: PostHttpConfig.options.copyWith(extra: {
+      options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
       }),
@@ -95,10 +95,10 @@ class LiveRoomApi {
     int pageIndex = 0,
     int pageSize = 20,
   }) async {
-    var r = await PostHttpConfig.dio.get(
+    var r = await MessageHttpConfig.dio.get(
       "/liveRoom/getRoomByAnchor",
       data: {},
-      options: PostHttpConfig.options.copyWith(extra: {
+      options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,
       }),

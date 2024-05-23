@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/config/constants.dart';
-import 'package:post_client/view/page/live/room/live_room_list_page.dart';
+import 'package:post_client/model/live/live_category.dart';
+import 'package:post_client/view/page/live/room/live_room_list_of_category_page.dart';
 
 class LiveCategoryGridItem extends StatelessWidget {
-  const LiveCategoryGridItem({super.key});
+  const LiveCategoryGridItem({super.key, required this.category});
+
+  final LiveCategory category;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,7 @@ class LiveCategoryGridItem extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const LiveRoomListPage()),
+          MaterialPageRoute(builder: (context) => LiveRoomListOfCategoryPage(category: category)),
         );
       },
       child: Column(

@@ -80,8 +80,6 @@ class _SelectFavoritesDialogState extends State<SelectFavoritesDialog> {
               },
               itemName: "收藏夹",
               itemHeight: null,
-              isGrip: false,
-              gripAspectRatio: 1,
               enableScrollbar: true,
               itemBuilder: (ctx, favorites, favoritesList, onFresh) {
                 return SelectFavoritesListTile(

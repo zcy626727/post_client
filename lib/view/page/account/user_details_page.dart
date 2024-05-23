@@ -194,7 +194,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                 Container(
                   margin: const EdgeInsets.only(top: 40),
                   height: 30,
-                  width: 100,
+                  width: 120,
                   child: widget.user.id != null && widget.user.id == Global.user.id
                       ? OutlinedButton(
                           onPressed: () async {

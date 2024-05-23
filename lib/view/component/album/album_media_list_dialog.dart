@@ -86,8 +86,6 @@ class _AlbumMediaListDialogState extends State<AlbumMediaListDialog> {
                 },
                 itemName: "文章",
                 itemHeight: null,
-                isGrip: false,
-                gripAspectRatio: 1,
                 enableScrollbar: true,
                 itemBuilder: (ctx, article, articleList, onFresh) {
                   return TextButton(
@@ -113,8 +111,6 @@ class _AlbumMediaListDialogState extends State<AlbumMediaListDialog> {
                 },
                 itemName: "视频",
                 itemHeight: null,
-                isGrip: false,
-                gripAspectRatio: 1,
                 enableScrollbar: true,
                 itemBuilder: (ctx, video, videoList, onFresh) {
                   return TextButton(
@@ -141,8 +137,6 @@ class _AlbumMediaListDialogState extends State<AlbumMediaListDialog> {
                 },
                 itemName: "音频",
                 itemHeight: null,
-                isGrip: false,
-                gripAspectRatio: 1,
                 enableScrollbar: true,
                 itemBuilder: (ctx, audio, audioList, onFresh) {
                   return TextButton(
@@ -168,8 +162,6 @@ class _AlbumMediaListDialogState extends State<AlbumMediaListDialog> {
                 },
                 itemName: "图集",
                 itemHeight: null,
-                isGrip: false,
-                gripAspectRatio: 1,
                 enableScrollbar: true,
                 itemBuilder: (ctx, gallery, galleryList, onFresh) {
                   return TextButton(

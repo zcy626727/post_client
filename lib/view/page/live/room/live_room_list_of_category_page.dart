@@ -4,16 +4,22 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../constant/ui.dart';
+import '../../../../model/live/live_category.dart';
+import '../../../../model/live/live_room.dart';
+import '../../../../service/live/live_room_service.dart';
 import '../../../component/live/room/live_room_grid_item.dart';
+import '../../../widget/common_item_list.dart';
 
-class LiveRoomListPage extends StatefulWidget {
-  const LiveRoomListPage({super.key});
+class LiveRoomListOfCategoryPage extends StatefulWidget {
+  const LiveRoomListOfCategoryPage({super.key, required this.category});
+
+  final LiveCategory category;
 
   @override
-  State<LiveRoomListPage> createState() => _LiveRoomListPageState();
+  State<LiveRoomListOfCategoryPage> createState() => _LiveRoomListOfCategoryPageState();
 }
 
-class _LiveRoomListPageState extends State<LiveRoomListPage> {
+class _LiveRoomListOfCategoryPageState extends State<LiveRoomListOfCategoryPage> {
   late Future _futureBuilderFuture;
 
   @override
@@ -66,16 +72,23 @@ class _LiveRoomListPageState extends State<LiveRoomListPage> {
             ),
             body: Container(
               color: colorScheme.background,
-              child: GridView.builder(
-                controller: ScrollController(),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  mainAxisSpacing: 5,
-                  crossAxisSpacing: 5,
-                ),
-                itemCount: 11,
-                itemBuilder: (context, index) {
-                  return LiveRoomGridItem();
+              child: CommonItemList<LiveRoom>(
+                onLoad: (int page) async {
+                  if (widget.category.id == null) {
+                    return [];
+                  }
+                  var itemList = await LiveRoomService.getRoomListByCategory(categoryId: widget.category.id!);
+                  return itemList;
+                },
+                itemName: "直播间",
+                isGrip: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(childAspectRatio: 1, crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
+                enableScrollbar: true,
+                itemBuilder: (ctx, item, itemList, onFresh) {
+                  return Container(
+                    padding: const EdgeInsets.only(top: 2, left: 2, right: 2),
+                    child: LiveRoomGridItem(liveRoom: item),
+                  );
                 },
               ),
             ),

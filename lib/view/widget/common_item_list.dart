@@ -4,8 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 
-import '../../../util/responsive.dart';
-
 class CommonItemList<T> extends StatefulWidget {
   const CommonItemList({
     Key? key,
@@ -14,11 +12,10 @@ class CommonItemList<T> extends StatefulWidget {
     required this.itemName,
     this.itemHeight,
     this.enableRefresh = true,
-    this.isGrip = true,
+    this.isGrip = false,
     this.enableScrollbar = false,
     this.enableLoad = true,
-    this.gripCount = 2,
-    this.gripAspectRatio = 1.5,
+    this.gridDelegate,
   }) : super(key: key);
 
   final Future<List<T>> Function(int) onLoad;
@@ -31,12 +28,7 @@ class CommonItemList<T> extends StatefulWidget {
 
   //是否为网格
   final bool isGrip;
-
-  //网格横向数量
-  final int gripCount;
-
-  //长宽比例
-  final double gripAspectRatio;
+  final SliverGridDelegate? gridDelegate;
 
   @override
   State<CommonItemList> createState() => _CommonItemListState<T>();
@@ -158,17 +150,18 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
       onLoad: widget.enableLoad ? (noData ? null : _onLoading) : null,
       child: GridView.builder(
         controller: ScrollController(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: widget.gripCount,
-          //长宽比例
-          childAspectRatio: widget.gripAspectRatio,
-          //主轴高度
-          mainAxisExtent: widget.itemHeight,
-          //主轴距离
-          mainAxisSpacing: 5.0,
-          //辅轴距离
-          crossAxisSpacing: 5.0,
-        ),
+        gridDelegate: widget.gridDelegate ??
+            SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              //长宽比例
+              childAspectRatio: 1.5,
+              //主轴高度
+              mainAxisExtent: widget.itemHeight,
+              //主轴距离
+              mainAxisSpacing: 5.0,
+              //辅轴距离
+              crossAxisSpacing: 5.0,
+            ),
         itemCount: _itemList!.length,
         itemBuilder: (context, index) {
           return widget.itemBuilder(context, _itemList![index], _itemList, () {

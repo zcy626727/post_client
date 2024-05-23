@@ -20,6 +20,14 @@ class LiveRoom {
     name = category.name;
   }
 
+  LiveRoom.one() {
+    id = 1;
+    anchorId = 1;
+    categoryId = 1;
+    status = 1;
+    name = "name";
+  }
+
   factory LiveRoom.fromJson(Map<String, dynamic> json) => _$LiveRoomFromJson(json);
 
   Map<String, dynamic> toJson() => _$LiveRoomToJson(this);

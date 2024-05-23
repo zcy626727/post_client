@@ -132,8 +132,6 @@ class _HistoryListPageState extends State<HistoryListPage> {
             },
             itemName: "历史",
             itemHeight: null,
-            isGrip: false,
-            gripAspectRatio: 1,
             enableScrollbar: true,
             itemBuilder: (ctx, history, historyList, onFresh) {
               return HistoryListTile(
@@ -153,8 +151,6 @@ class _HistoryListPageState extends State<HistoryListPage> {
             },
             itemName: "历史",
             itemHeight: null,
-            isGrip: false,
-            gripAspectRatio: 1,
             enableScrollbar: true,
             itemBuilder: (ctx, history, historyList, onFresh) {
               return HistoryListTile(
@@ -174,8 +170,6 @@ class _HistoryListPageState extends State<HistoryListPage> {
             },
             itemName: "历史",
             itemHeight: null,
-            isGrip: false,
-            gripAspectRatio: 1,
             enableScrollbar: true,
             itemBuilder: (ctx, history, historyList, onFresh) {
               return HistoryListTile(
@@ -195,8 +189,6 @@ class _HistoryListPageState extends State<HistoryListPage> {
             },
             itemName: "历史",
             itemHeight: null,
-            isGrip: false,
-            gripAspectRatio: 1,
             enableScrollbar: true,
             itemBuilder: (ctx, history, historyList, onFresh) {
               return HistoryListTile(

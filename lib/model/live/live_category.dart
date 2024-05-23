@@ -4,7 +4,9 @@ part 'live_category.g.dart';
 
 @JsonSerializable()
 class LiveCategory {
-  String? id;
+  int? id;
+  int? name;
+  int? avatarUrl;
 
   LiveCategory();
 

@@ -81,8 +81,6 @@ class _CommonSourceListState extends State<CommonSourceList> {
           onLoad: widget.onLoadPost!,
           itemName: "动态",
           itemHeight: null,
-          isGrip: false,
-          gripAspectRatio: 1,
           enableScrollbar: true,
           itemBuilder: (ctx, post, postList, onFresh) {
             return PostListTile(
@@ -97,11 +95,9 @@ class _CommonSourceListState extends State<CommonSourceList> {
           },
         ),
       SourceType.comment => CommonItemList<Comment>(
-        onLoad: widget.onLoadComment!,
+          onLoad: widget.onLoadComment!,
           itemName: "评论",
           itemHeight: null,
-          isGrip: false,
-          gripAspectRatio: 1,
           enableScrollbar: true,
           itemBuilder: (ctx, comment, commentList, onFresh) {
             return CommentListTile(
@@ -185,11 +181,11 @@ class _CommonSourceListState extends State<CommonSourceList> {
           },
         ),
       SourceType.gallery => CommonItemList<Gallery>(
-          onLoad: widget.onLoadGallery!,
+        onLoad: widget.onLoadGallery!,
           itemName: "图片",
           itemHeight: null,
           isGrip: true,
-          gripAspectRatio: 1,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(childAspectRatio: 1, crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
           enableScrollbar: true,
           itemBuilder: (ctx, gallery, galleryList, onFresh) {
             return GalleryListTile(

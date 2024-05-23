@@ -68,8 +68,6 @@ class _SelectAlbumDialogState extends State<SelectAlbumDialog> {
               },
               itemName: "合集",
               itemHeight: null,
-              isGrip: false,
-              gripAspectRatio: 1,
               enableScrollbar: true,
               itemBuilder: (ctx, album, albumList, onFresh) {
                 return TextButton(

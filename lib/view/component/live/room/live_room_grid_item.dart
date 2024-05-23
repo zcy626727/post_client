@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/config/constants.dart';
+import 'package:post_client/model/live/live_room.dart';
 
 import '../../../page/live/room/live_room_page.dart';
 
 class LiveRoomGridItem extends StatelessWidget {
-  const LiveRoomGridItem({super.key});
+  const LiveRoomGridItem({super.key, required this.liveRoom});
+
+  final LiveRoom liveRoom;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class LiveRoomGridItem extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const LiveRoomPage()),
+              MaterialPageRoute(builder: (context) => LiveRoomPage(liveRoom: LiveRoom.one())),
             );
           },
           child: Column(

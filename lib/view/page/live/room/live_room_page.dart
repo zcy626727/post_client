@@ -1,15 +1,17 @@
-import 'dart:developer';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:livekit_client/livekit_client.dart' as livekit;
+import 'package:post_client/config/net_config.dart';
+import 'package:post_client/model/live/live_room.dart';
+import 'package:post_client/service/live/live_room_service.dart';
 
 import '../../../../constant/ui.dart';
 import '../../../component/input/comment_text_field.dart';
 
 class LiveRoomPage extends StatefulWidget {
-  const LiveRoomPage({super.key});
+  const LiveRoomPage({super.key, required this.liveRoom});
+
+  final LiveRoom liveRoom;
 
   @override
   State<LiveRoomPage> createState() => _LiveRoomPageState();
@@ -17,11 +19,17 @@ class LiveRoomPage extends StatefulWidget {
 
 class _LiveRoomPageState extends State<LiveRoomPage> {
   late Future _futureBuilderFuture;
+
   final QuillController _controller = QuillController.basic();
 
   final FocusNode _focusNode = FocusNode();
 
   livekit.TrackPublication? videoPub;
+
+  livekit.Room? room;
+
+  // 主播参与者，如果为null说明主播已经离开
+  livekit.Participant? anchorParticipant;
 
   @override
   void initState() {
@@ -32,25 +40,57 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
   @override
   void dispose() {
     super.dispose();
+    _listener.dispose();
   }
 
   Future getData() async {
-    return Future.wait([getFolloweeList()]);
+    return Future.wait([joinRoom()]);
   }
 
-  Future<void> getFolloweeList() async {
-    try {} on DioException catch (e) {
-      log(e.toString());
-    } catch (e) {
-      log(e.toString());
+  late final livekit.EventsListener<livekit.RoomEvent> _listener;
+
+  Future<void> joinRoom() async {
+    // 获取加入room的token
+    var roomToken = await LiveRoomService.getJoinRoomToken(roomId: widget.liveRoom.id!);
+    // 连接房间
+    room = livekit.Room(connectOptions: const livekit.ConnectOptions(autoSubscribe: false));
+
+    await room!.connect(NetConfig.liveKitUrl, roomToken);
+    // 找到主播
+    room?.remoteParticipants.forEach((key, value) {
+      if (key == widget.liveRoom.anchorId.toString()) {
+        //是主播
+        anchorParticipant = value;
+      }
+    });
+    // 添加监听
+    room?.addListener(_onChange);
+  }
+
+  // livekit 中 room 改变
+  void _onChange() {
+    // 重新找主播
+    if (anchorParticipant == null) {
+      room?.remoteParticipants.forEach((key, value) {
+        if (key == widget.liveRoom.anchorId.toString()) {
+          //是主播
+          anchorParticipant = value;
+        }
+      });
     }
+    // 获取视频track
+    var visibleVideos = anchorParticipant!.videoTrackPublications;
+    if (visibleVideos.isNotEmpty) {
+      videoPub = visibleVideos.first;
+    }
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
     var videoPub = this.videoPub;
-    print(videoPub);
+
     return FutureBuilder(
       future: _futureBuilderFuture,
       builder: (BuildContext context, AsyncSnapshot snapShot) {
@@ -95,7 +135,6 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
                         child: videoPub == null ? null : livekit.VideoTrackRenderer(videoPub.track as livekit.VideoTrack),
                       ),
                     ),
-
                     Expanded(
                       flex: 2,
                       child: Column(

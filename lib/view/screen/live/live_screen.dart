@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:post_client/model/live/live_room.dart';
 import 'package:post_client/model/user/user.dart';
+import 'package:post_client/service/live/live_room_service.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/component/live/room/live_room_grid_item.dart';
@@ -8,6 +10,7 @@ import 'package:post_client/view/page/live/category/live_category_list_page.dart
 import 'package:provider/provider.dart';
 
 import '../../../model/live/live_category.dart';
+import '../../widget/common_item_list.dart';
 
 class LiveScreen extends StatefulWidget {
   const LiveScreen({super.key});
@@ -66,7 +69,6 @@ class _LiveScreenState extends State<LiveScreen> {
                       },
                     ),
                   ),
-
                   // 展开分类和主题的按钮
                   IconButton(
                       onPressed: () {
@@ -82,18 +84,28 @@ class _LiveScreenState extends State<LiveScreen> {
             // 推荐直播间
             Expanded(
               child: Container(
-                margin: const EdgeInsets.only(left: 5, right: 5),
                 color: colorScheme.background,
-                child: GridView.builder(
-                  controller: ScrollController(),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    mainAxisSpacing: 5,
-                    crossAxisSpacing: 5,
-                  ),
-                  itemCount: 11,
-                  itemBuilder: (context, index) {
-                    return LiveRoomGridItem();
+                child: CommonItemList<LiveRoom>(
+                  key: ValueKey(_currentCategoryIndex),
+                  onLoad: (int page) async {
+                    if (_currentCategoryIndex == 0) {
+                      var itemList = await LiveRoomService.getRoomListRandom(pageIndex: page, pageSize: 20);
+                      return itemList;
+                    } else {
+                      int id = liveCategoryList[_currentCategoryIndex].id!;
+                      var itemList = LiveRoomService.getRoomListByCategory(categoryId: id);
+                      return itemList;
+                    }
+                  },
+                  itemName: "直播间",
+                  isGrip: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(childAspectRatio: 1, crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
+                  enableScrollbar: true,
+                  itemBuilder: (ctx, item, itemList, onFresh) {
+                    return Container(
+                      padding: const EdgeInsets.only(top: 2, left: 2, right: 2),
+                      child: LiveRoomGridItem(liveRoom: item),
+                    );
                   },
                 ),
               ),

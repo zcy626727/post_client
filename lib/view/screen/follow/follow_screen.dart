@@ -135,8 +135,6 @@ class _FollowScreenState extends State<FollowScreen> {
                     },
                     itemName: "动态",
                     itemHeight: null,
-                    isGrip: false,
-                    gripAspectRatio: 1,
                     enableScrollbar: true,
                     itemBuilder: (ctx, post, postList, onFresh) {
                       return PostListTile(

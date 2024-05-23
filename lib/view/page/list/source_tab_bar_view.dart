@@ -54,8 +54,6 @@ class _SourceTabBarViewState extends State<SourceTabBarView> {
             onLoad: widget.onLoadPost!,
             itemName: "动态",
             itemHeight: null,
-            isGrip: false,
-            gripAspectRatio: 1,
             enableScrollbar: true,
             itemBuilder: (ctx, post, postList, onFresh) {
               return PostListTile(
@@ -77,7 +75,7 @@ class _SourceTabBarViewState extends State<SourceTabBarView> {
             itemName: "图片",
             itemHeight: null,
             isGrip: true,
-            gripAspectRatio: 1,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(childAspectRatio: 1, crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
             enableScrollbar: true,
             itemBuilder: (ctx, gallery, galleryList, onFresh) {
               return GalleryListTile(

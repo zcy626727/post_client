@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import '../../config/global.dart';
 import '../../config/net_config.dart';
 
-class PostHttpConfig {
+class MessageHttpConfig {
   static Options options = Options();
 
   static Dio dio = Dio(BaseOptions(

@@ -136,10 +136,10 @@ class _CreateLivePageState extends State<CreateLivePage> {
                               tooltip: "关闭直播",
                               icon: const Icon(Icons.stop_circle),
                               iconSize: 30,
-                              onPressed: () {
-                                setState(() {
-                                  started = false;
-                                });
+                              onPressed: () async {
+                                await stopLive();
+                                started = false;
+                                setState(() {});
                               },
                             ),
                           //翻转屏幕
@@ -219,30 +219,9 @@ class _CreateLivePageState extends State<CreateLivePage> {
     liveRoom = lr;
     // 创建房间
     room = Room(
-      roomOptions: RoomOptions(
-          defaultCameraCaptureOptions: const CameraCaptureOptions(
-            deviceId: '',
-            cameraPosition: CameraPosition.front,
-            params: VideoParametersPresets.h720_169,
-          ),
-          defaultAudioCaptureOptions: const AudioCaptureOptions(
-            deviceId: '',
-            noiseSuppression: true,
-            echoCancellation: true,
-            autoGainControl: true,
-            highPassFilter: true,
-            typingNoiseDetection: true,
-          ),
-          defaultVideoPublishOptions: VideoPublishOptions(
-            videoEncoding: VideoParametersPresets.h720_169.encoding,
-            videoSimulcastLayers: [
-              VideoParametersPresets.h180_169,
-              VideoParametersPresets.h360_169,
-            ],
-          ),
-          defaultAudioPublishOptions: const AudioPublishOptions(
-            dtx: true,
-          )),
+      roomOptions: const RoomOptions(),
+      // 关闭自动订阅，主播不需要订阅任何其他track
+      connectOptions: const ConnectOptions(autoSubscribe: false),
     );
 
     // 连接
@@ -250,6 +229,7 @@ class _CreateLivePageState extends State<CreateLivePage> {
 
     // 获取本地track
     await setLocalTrack();
+
     // 推流
     await room!.localParticipant?.publishVideoTrack(localVideo!);
   }
@@ -284,5 +264,11 @@ class _CreateLivePageState extends State<CreateLivePage> {
     } catch (e) {}
   }
 
-  Future<void> stopLive() async {}
+  Future<void> stopLive() async {
+    // 停止推流断开连接
+    room?.disconnect();
+    // 停止推送
+    // room?.localParticipant?.setScreenShareEnabled(false);
+    // room?.localParticipant?.setCameraEnabled(false);
+  }
 }
