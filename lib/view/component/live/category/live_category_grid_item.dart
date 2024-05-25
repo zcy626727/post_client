@@ -22,12 +22,13 @@ class LiveCategoryGridItem extends StatelessWidget {
       },
       child: Column(
         children: [
-          SizedBox(
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 5),
             height: 50,
             width: 50,
-            child: Image(image: NetworkImage(testImageUrl)),
+            child: Image(image: NetworkImage(category.avatarUrl ?? testImageUrl), fit: BoxFit.cover),
           ),
-          Text("英雄联盟", style: TextStyle(fontSize: 10, color: colorScheme.onSurface))
+          Text(category.name ?? "未知", style: TextStyle(fontSize: 10, color: colorScheme.onSurface))
         ],
       ),
     );

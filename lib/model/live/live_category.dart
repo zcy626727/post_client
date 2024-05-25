@@ -5,8 +5,8 @@ part 'live_category.g.dart';
 @JsonSerializable()
 class LiveCategory {
   int? id;
-  int? name;
-  int? avatarUrl;
+  String? name;
+  String? avatarUrl;
 
   LiveCategory();
 
@@ -17,4 +17,6 @@ class LiveCategory {
   factory LiveCategory.fromJson(Map<String, dynamic> json) => _$LiveCategoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$LiveCategoryToJson(this);
+
+  LiveCategory.all({this.id, this.name, this.avatarUrl});
 }

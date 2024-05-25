@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../constant/ui.dart';
@@ -29,15 +26,7 @@ class _LiveRoomListOfCategoryPageState extends State<LiveRoomListOfCategoryPage>
   }
 
   Future getData() async {
-    return Future.wait([getFolloweeList()]);
-  }
-
-  Future<void> getFolloweeList() async {
-    try {} on DioException catch (e) {
-      log(e.toString());
-    } catch (e) {
-      log(e.toString());
-    }
+    return Future.wait([]);
   }
 
   @override

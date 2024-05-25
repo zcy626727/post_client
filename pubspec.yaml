@@ -33,6 +33,7 @@ dependencies:
   sqflite:
   #sqlite(支持windows，linux)
   sqflite_common_ffi:
+  sqflite_common_ffi_web:
   #列表刷新
   easy_refresh: 3.3.2+1
   #文件选择

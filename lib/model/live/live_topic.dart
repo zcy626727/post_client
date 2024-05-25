@@ -5,7 +5,7 @@ part 'live_topic.g.dart';
 @JsonSerializable()
 class LiveTopic {
   int? id;
-  int? name;
+  String? name;
 
   LiveTopic();
 

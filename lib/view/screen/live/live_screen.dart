@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:post_client/config/constants.dart';
 import 'package:post_client/model/live/live_room.dart';
 import 'package:post_client/model/user/user.dart';
 import 'package:post_client/service/live/live_room_service.dart';
@@ -20,7 +21,7 @@ class LiveScreen extends StatefulWidget {
 }
 
 class _LiveScreenState extends State<LiveScreen> {
-  List<LiveCategory> liveCategoryList = <LiveCategory>[];
+  List<LiveCategory> liveCategoryList = <LiveCategory>[LiveCategory.all(id: 0, avatarUrl: testImageUrl, name: "推荐")];
   int _currentCategoryIndex = 0;
 
   @override
@@ -42,15 +43,13 @@ class _LiveScreenState extends State<LiveScreen> {
       height: double.infinity,
       color: colorScheme.background,
       child: Container(
-        color: colorScheme.surface,
-        height: 70,
         margin: const EdgeInsets.only(bottom: 2),
         padding: const EdgeInsets.only(left: 2, right: 2, bottom: 2),
         child: Column(
           children: [
-            // 轮播图，
             // 直播分类
             Container(
+              color: colorScheme.surface,
               padding: const EdgeInsets.only(left: 2),
               height: 45,
               child: Row(
@@ -60,11 +59,11 @@ class _LiveScreenState extends State<LiveScreen> {
                   Expanded(
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: 10,
+                      itemCount: liveCategoryList.length,
                       itemBuilder: (context, index) {
                         return Container(
                           padding: const EdgeInsets.only(right: 2),
-                          child: buildCategoryItem("黄播", index),
+                          child: buildCategoryItem(liveCategoryList[index].name ?? "未知", index),
                         );
                       },
                     ),
