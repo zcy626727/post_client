@@ -35,60 +35,58 @@ class _LiveRoomListOfCategoryPageState extends State<LiveRoomListOfCategoryPage>
     return FutureBuilder(
       future: _futureBuilderFuture,
       builder: (BuildContext context, AsyncSnapshot snapShot) {
-        if (snapShot.connectionState == ConnectionState.done) {
-          return Scaffold(
-            backgroundColor: colorScheme.background,
-            appBar: AppBar(
-              toolbarHeight: 50,
-              centerTitle: true,
-              elevation: 0,
-              backgroundColor: colorScheme.surface,
-              leading: IconButton(
-                splashRadius: 20,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: colorScheme.onBackground,
+        return Scaffold(
+          backgroundColor: colorScheme.background,
+          appBar: AppBar(
+            toolbarHeight: 50,
+            centerTitle: true,
+            elevation: 0,
+            backgroundColor: colorScheme.surface,
+            leading: IconButton(
+              splashRadius: 20,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(
+                Icons.arrow_back,
+                color: colorScheme.onBackground,
+              ),
+            ),
+            title: Text(
+              "英雄联盟",
+              style: TextStyle(color: colorScheme.onSurface, fontSize: appbarTitleFontSize),
+            ),
+            actions: [],
+          ),
+          body: snapShot.connectionState == ConnectionState.done
+              ? Container(
+                  color: colorScheme.background,
+                  child: CommonItemList<LiveRoom>(
+                    onLoad: (int page) async {
+                      if (widget.category.id == null) {
+                        return [];
+                      }
+                      var itemList = await LiveRoomService.getRoomListByCategory(categoryId: widget.category.id!);
+                      return itemList;
+                    },
+                    itemName: "直播间",
+                    isGrip: true,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(childAspectRatio: 1, crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
+                    enableScrollbar: true,
+                    itemBuilder: (ctx, item, itemList, onFresh) {
+                      return Container(
+                        padding: const EdgeInsets.only(top: 2, left: 2, right: 2),
+                        child: LiveRoomGridItem(liveRoom: item),
+                      );
+                    },
+                  ),
+                )
+              : Center(
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
-              ),
-              title: Text(
-                "英雄联盟",
-                style: TextStyle(color: colorScheme.onSurface, fontSize: appbarTitleFontSize),
-              ),
-              actions: [],
-            ),
-            body: Container(
-              color: colorScheme.background,
-              child: CommonItemList<LiveRoom>(
-                onLoad: (int page) async {
-                  if (widget.category.id == null) {
-                    return [];
-                  }
-                  var itemList = await LiveRoomService.getRoomListByCategory(categoryId: widget.category.id!);
-                  return itemList;
-                },
-                itemName: "直播间",
-                isGrip: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(childAspectRatio: 1, crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
-                enableScrollbar: true,
-                itemBuilder: (ctx, item, itemList, onFresh) {
-                  return Container(
-                    padding: const EdgeInsets.only(top: 2, left: 2, right: 2),
-                    child: LiveRoomGridItem(liveRoom: item),
-                  );
-                },
-              ),
-            ),
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          );
-        }
+        );
       },
     );
   }

@@ -24,7 +24,7 @@ class LiveRoomGridItem extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => LiveRoomPage(liveRoom: LiveRoom.one())),
+              MaterialPageRoute(builder: (context) => LiveRoomPage(liveRoom: liveRoom)),
             );
           },
           child: Column(

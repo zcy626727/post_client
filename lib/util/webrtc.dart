@@ -7,6 +7,8 @@ Future<void> enableRTC({required Function onEnable, required Function onError}) 
   // 屏幕录制需要，允许前台服务，安卓屏幕录制使用
   if (WebRTC.platformIsAndroid) {
     enable = await startForegroundService();
+  } else {
+    enable = true;
   }
   if (enable) {
     onEnable();

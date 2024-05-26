@@ -56,8 +56,8 @@
     </dict>
 
     <key>NSCameraUsageDescription</key>
-    <string>$(PRODUCT_NAME) Camera Usage!</string>
+    <string>$(PRODUCT_NAME) uses your camera</string>
     <key>NSMicrophoneUsageDescription</key>
-    <string>$(PRODUCT_NAME) Microphone Usage!</string>
+    <string>$(PRODUCT_NAME) uses your microphone</string>
 </dict>
 </plist>

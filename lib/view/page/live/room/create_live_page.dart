@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -105,8 +107,7 @@ class _CreateLivePageState extends State<CreateLivePage> {
                           backgroundColor: colorScheme.primaryContainer,
                           title: '开启直播',
                           onTap: () async {
-                            started = true;
-                            await startLive();
+                            started = await startLive();
                             setState(() {});
                           },
                         ),
@@ -214,24 +215,30 @@ class _CreateLivePageState extends State<CreateLivePage> {
   Room? room;
   LocalVideoTrack? localVideo;
 
-  Future<void> startLive() async {
-    var (token, lr) = await LiveRoomService.openRoom();
-    liveRoom = lr;
-    // 创建房间
-    room = Room(
-      roomOptions: const RoomOptions(),
-      // 关闭自动订阅，主播不需要订阅任何其他track
-      connectOptions: const ConnectOptions(autoSubscribe: false),
-    );
+  Future<bool> startLive() async {
+    try {
+      var (token, lr) = await LiveRoomService.openRoom();
+      liveRoom = lr;
+      // 创建房间
+      room = Room(
+        roomOptions: const RoomOptions(),
+        // 关闭自动订阅，主播不需要订阅任何其他track
+        connectOptions: const ConnectOptions(autoSubscribe: false),
+      );
 
-    // 连接
-    await room!.connect(NetConfig.liveKitUrl, token);
+      // 连接
+      await room!.connect(NetConfig.liveKitUrl, token);
 
-    // 获取本地track
-    await setLocalTrack();
+      // 获取本地track
+      await setLocalTrack();
 
-    // 推流
-    await room!.localParticipant?.publishVideoTrack(localVideo!);
+      // 推流
+      await room!.localParticipant?.publishVideoTrack(localVideo!);
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
+    return true;
   }
 
   Future<void> setLocalTrack({int? newLiveMediaMode}) async {
@@ -261,7 +268,9 @@ class _CreateLivePageState extends State<CreateLivePage> {
           localVideo = await LocalVideoTrack.createScreenShareTrack(const ScreenShareCaptureOptions());
           break;
       }
-    } catch (e) {}
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   Future<void> stopLive() async {

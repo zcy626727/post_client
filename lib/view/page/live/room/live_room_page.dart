@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:livekit_client/livekit_client.dart' as livekit;
 import 'package:post_client/config/net_config.dart';
 import 'package:post_client/model/live/live_room.dart';
@@ -40,31 +43,27 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
   @override
   void dispose() {
     super.dispose();
-    _listener.dispose();
+    room?.disconnect();
   }
 
   Future getData() async {
     return Future.wait([joinRoom()]);
   }
 
-  late final livekit.EventsListener<livekit.RoomEvent> _listener;
-
   Future<void> joinRoom() async {
-    // 获取加入room的token
-    var roomToken = await LiveRoomService.getJoinRoomToken(roomId: widget.liveRoom.id!);
-    // 连接房间
-    room = livekit.Room(connectOptions: const livekit.ConnectOptions(autoSubscribe: false));
+    try {
+      // 获取加入room的token
+      var roomToken = await LiveRoomService.getJoinRoomToken(roomId: widget.liveRoom.id!);
+      // 连接房间
+      room = livekit.Room(connectOptions: const livekit.ConnectOptions(autoSubscribe: true));
 
-    await room!.connect(NetConfig.liveKitUrl, roomToken);
-    // 找到主播
-    room?.remoteParticipants.forEach((key, value) {
-      if (key == widget.liveRoom.anchorId.toString()) {
-        //是主播
-        anchorParticipant = value;
-      }
-    });
-    // 添加监听
-    room?.addListener(_onChange);
+      await room!.connect(NetConfig.liveKitUrl, roomToken);
+
+      // 添加监听
+      room?.addListener(_onChange);
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   // livekit 中 room 改变
@@ -79,18 +78,15 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
       });
     }
     // 获取视频track
-    var visibleVideos = anchorParticipant!.videoTrackPublications;
-    if (visibleVideos.isNotEmpty) {
-      videoPub = visibleVideos.first;
+    if (anchorParticipant != null && videoPub == null) {
+      videoPub = anchorParticipant!.videoTrackPublications.firstOrNull;
+      setState(() {});
     }
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
-    var videoPub = this.videoPub;
-
     return FutureBuilder(
       future: _futureBuilderFuture,
       builder: (BuildContext context, AsyncSnapshot snapShot) {
@@ -99,7 +95,8 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
             onTap: () {
               _focusNode.unfocus();
             },
-            child: Scaffold(
+            child: SafeArea(
+                child: Scaffold(
               resizeToAvoidBottomInset: true,
               backgroundColor: colorScheme.background,
               appBar: AppBar(
@@ -123,54 +120,49 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
                 ),
                 actions: [],
               ),
-              body: Container(
-                color: colorScheme.background,
-                child: Column(
-                  children: [
-                    // 视频
+              body: Column(
+                children: [
+                  // 直播视频播放
+                  if (videoPub != null && videoPub!.track != null)
                     AspectRatio(
                       aspectRatio: 2,
                       child: Container(
                         color: colorScheme.primaryContainer,
-                        child: videoPub == null ? null : livekit.VideoTrackRenderer(videoPub.track as livekit.VideoTrack),
+                        child: livekit.VideoTrackRenderer(
+                          key: ValueKey(videoPub),
+                          videoPub!.track as livekit.VideoTrack,
+                          fit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                        ),
                       ),
                     ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              color: colorScheme.surface,
-                              margin: const EdgeInsets.only(top: 1, bottom: 1),
-                              child: ListView(
-                                scrollDirection: Axis.vertical,
-                                reverse: true,
-                                children: [
-                                  Text("张三：我要吃饭"),
-                                ],
-                              ),
-                            ),
-                          ),
-                          // 评论
-                          Container(
-                            padding: const EdgeInsets.only(top: 5, bottom: 5),
-                            color: colorScheme.surface,
-                            child: CommentTextField(
-                              controller: _controller,
-                              focusNode: _focusNode,
-                              onSubmit: () async {
-                                _focusNode.unfocus();
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
+                  // 聊天内容
+                  Expanded(
+                      child: Container(
+                    color: colorScheme.surface,
+                    margin: const EdgeInsets.only(top: 1, bottom: 1),
+                    child: ListView(
+                      scrollDirection: Axis.vertical,
+                      reverse: true,
+                      children: [
+                        Text("张三：我要吃饭"),
+                      ],
                     ),
-                  ],
-                ),
+                  )),
+                  // 评论
+                  Container(
+                    padding: const EdgeInsets.only(top: 5, bottom: 5),
+                    color: colorScheme.surface,
+                    child: CommentTextField(
+                      controller: _controller,
+                      focusNode: _focusNode,
+                      onSubmit: () async {
+                        _focusNode.unfocus();
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
+            )),
           );
         } else {
           return Center(
