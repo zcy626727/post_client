@@ -1,10 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:livekit_client/livekit_client.dart' hide ConnectionState;
-import 'package:post_client/config/global.dart';
 import 'package:post_client/domain/live/live_message.dart';
 import 'package:post_client/model/live/live_room.dart';
 import 'package:post_client/service/live/live_room_service.dart';
@@ -13,6 +13,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../../config/net_config.dart';
 import '../../../../constant/live.dart';
+import '../../../component/input/common_text_comment_input.dart';
 
 class CreateLivePage extends StatefulWidget {
   const CreateLivePage({super.key});
@@ -34,6 +35,9 @@ class _CreateLivePageState extends State<CreateLivePage> {
 
   LiveRoom? liveRoom;
   bool started = false;
+  String? joinToken;
+
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -42,36 +46,40 @@ class _CreateLivePageState extends State<CreateLivePage> {
   }
 
   Future getData() async {
-    return Future.wait([
-      initLocalMedia(),
-      initLiveChat(),
-    ]);
+    return Future.wait([initLocalMedia(), connectLiveChat()]);
   }
 
   Future<void> initLocalMedia() async {
     await setLocalTrack();
   }
 
-  Future<void> initLiveChat() async {
-    // 获取room基本信息
-    liveRoom = await LiveRoomService.getRoomByAnchor();
+  Future<void> connectLiveChat() async {
+    var (token, lr) = await LiveRoomService.openRoom();
+    liveRoom = lr;
+    joinToken = token;
     // 注册到聊天室
-    var joinMsg = LiveMessage(Global.user.id!, liveRoom!.id!, "加入", LiveMessageType.join);
-    chatChannel.sink.add(joinMsg);
+    var joinMsg = LiveMessage.joinRoom(roomId: liveRoom!.id!);
+    chatChannel.sink.add(json.encode(joinMsg.toJson()));
     // 监听消息
     chatChannel.stream.listen((message) {
-      print("收到消息:$message");
-      var liveMsg = LiveMessage.fromJson(message);
-      if (msgList.length > 100) msgList.removeAt(1);
-      msgList.add(liveMsg);
+      log("接收到消息: $message");
+      var liveMsg = LiveMessage.fromJson(json.decode(message));
+      if (msgList.length > 100) msgList.removeLast();
+      msgList.insert(0, liveMsg);
+      setState(() {});
     });
+  }
+
+  void stopLiveChat() async {
+    chatChannel.sink.close();
+    msgList.clear();
   }
 
   @override
   void dispose() {
     super.dispose();
     // 关闭ws chat 连接
-    chatChannel.sink.close();
+    stopLiveChat();
     // 离开并关闭room
     LiveRoomService.closeRoom();
     room?.disconnect();
@@ -87,38 +95,93 @@ class _CreateLivePageState extends State<CreateLivePage> {
       builder: (BuildContext context, AsyncSnapshot snapShot) {
         if (snapShot.connectionState == ConnectionState.done) {
           return Scaffold(
+            //防止键盘越界
+            resizeToAvoidBottomInset: true,
             backgroundColor: Theme.of(context).colorScheme.background,
             body: SafeArea(
               child: Stack(
                 children: [
                   if (localVideo != null)
-                    VideoTrackRenderer(
-                      key: ValueKey(localVideo),
-                      localVideo!,
-                      fit: RTCVideoViewObjectFit.RTCVideoViewObjectFitContain,
+                    Column(
+                      children: [
+                        const SizedBox(height: 50),
+                        Expanded(
+                          child: VideoTrackRenderer(
+                            key: ValueKey(localVideo),
+                            localVideo!,
+                            fit: RTCVideoViewObjectFit.RTCVideoViewObjectFitContain,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                      ],
+                    ),
+                  if (started && liveRoom != null)
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 300,
+                            margin: const EdgeInsets.only(top: 1, bottom: 1),
+                            child: ListView.builder(
+                              controller: _scrollController,
+                              reverse: true,
+                              itemBuilder: (BuildContext context, int index) {
+                                var msg = msgList[index];
+                                return Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                                      margin: const EdgeInsets.only(top: 2),
+                                      decoration: BoxDecoration(
+                                        color: colorScheme.primaryContainer.withAlpha(220),
+                                        borderRadius: const BorderRadius.all(Radius.circular(30)),
+                                      ),
+                                      child: Text("${msg.username}: ${msg.content}"),
+                                    )
+                                  ],
+                                );
+                              },
+                              itemCount: msgList.length,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(top: 5, bottom: 5),
+                            color: colorScheme.surface,
+                            child: CommentTextCommentInput(
+                              onSubmit: (value) {
+                                var msg = LiveMessage.roomMessage(content: value, roomId: liveRoom!.id!);
+                                chatChannel?.sink.add(json.encode(msg.toJson()));
+                              },
+                              controller: TextEditingController(),
+                              focusNode: FocusNode(),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   if (!started)
                     Positioned(
-                      bottom: 80,
+                      bottom: 20,
                       left: 50,
                       right: 50,
-                      child: Container(
-                        child: CommonActionOneButton(
-                          backgroundColor: colorScheme.primaryContainer,
-                          title: '开启直播',
-                          onTap: () async {
-                            started = await startLive();
-                            setState(() {});
-                          },
-                        ),
+                      child: CommonActionOneButton(
+                        backgroundColor: colorScheme.primaryContainer,
+                        title: '开启直播',
+                        onTap: () async {
+                          started = await startLive();
+                          setState(() {});
+                        },
                       ),
                     ),
                   Positioned(
-                    bottom: 0,
+                    top: 0,
                     left: 0,
                     right: 0,
                     child: Container(
-                      height: 50,
+                      height: 45,
                       color: colorScheme.surface,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -144,7 +207,7 @@ class _CreateLivePageState extends State<CreateLivePage> {
                               },
                             ),
                           //翻转屏幕
-                          if (liveMediaMode != LiveMediaMode.screenShare)
+                          if (!started && liveMediaMode != LiveMediaMode.screenShare)
                             IconButton(
                               tooltip: "翻转摄像头",
                               icon: const Icon(Icons.cameraswitch),
@@ -160,7 +223,7 @@ class _CreateLivePageState extends State<CreateLivePage> {
                               },
                             ),
                           //屏幕分享
-                          if (liveMediaMode != LiveMediaMode.screenShare)
+                          if (!started && liveMediaMode != LiveMediaMode.screenShare)
                             IconButton(
                               tooltip: "分享屏幕",
                               icon: const Icon(Icons.screen_share),
@@ -180,19 +243,20 @@ class _CreateLivePageState extends State<CreateLivePage> {
                                 setState(() {});
                               },
                             ),
-                          IconButton(
-                            tooltip: "屏幕方向",
-                            icon: const Icon(Icons.change_circle),
-                            iconSize: 30,
-                            onPressed: () {
-                              if (MediaQuery.of(context).orientation == Orientation.landscape) {
-                                SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-                              } else if (MediaQuery.of(context).orientation == Orientation.portrait) {
-                                SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
-                              }
-                              setState(() {});
-                            },
-                          ),
+                          if (!started)
+                            IconButton(
+                              tooltip: "屏幕方向",
+                              icon: const Icon(Icons.change_circle),
+                              iconSize: 30,
+                              onPressed: () {
+                                if (MediaQuery.of(context).orientation == Orientation.landscape) {
+                                  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+                                } else if (MediaQuery.of(context).orientation == Orientation.portrait) {
+                                  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
+                                }
+                                setState(() {});
+                              },
+                            ),
                         ],
                       ),
                     ),
@@ -216,9 +280,8 @@ class _CreateLivePageState extends State<CreateLivePage> {
   LocalVideoTrack? localVideo;
 
   Future<bool> startLive() async {
+    if (joinToken == null) return false;
     try {
-      var (token, lr) = await LiveRoomService.openRoom();
-      liveRoom = lr;
       // 创建房间
       room = Room(
         roomOptions: const RoomOptions(),
@@ -227,7 +290,7 @@ class _CreateLivePageState extends State<CreateLivePage> {
       );
 
       // 连接
-      await room!.connect(NetConfig.liveKitUrl, token);
+      await room!.connect(NetConfig.liveKitUrl, joinToken!);
 
       // 获取本地track
       await setLocalTrack();

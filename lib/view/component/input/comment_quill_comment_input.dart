@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:post_client/view/component/quill/quill_editor.dart';
 
-class CommentTextField extends StatefulWidget {
-  const CommentTextField({Key? key, required this.controller, required this.focusNode, required this.onSubmit}) : super(key: key);
+class CommentQuillCommentInput extends StatefulWidget {
+  const CommentQuillCommentInput({Key? key, required this.controller, required this.focusNode, required this.onSubmit}) : super(key: key);
   final QuillController controller;
   final FocusNode focusNode;
   final Function onSubmit;
 
   @override
-  State<CommentTextField> createState() => _CommentTextFieldState();
+  State<CommentQuillCommentInput> createState() => _CommentQuillCommentInputState();
 }
 
-class _CommentTextFieldState extends State<CommentTextField> {
+class _CommentQuillCommentInputState extends State<CommentQuillCommentInput> {
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;

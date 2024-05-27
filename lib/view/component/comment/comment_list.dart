@@ -8,7 +8,7 @@ import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:post_client/config/global.dart';
 import 'package:post_client/model/post/comment.dart';
 import 'package:post_client/service/post/comment_service.dart';
-import 'package:post_client/view/component/input/comment_text_field.dart';
+import 'package:post_client/view/component/input/comment_quill_comment_input.dart';
 import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/page/comment/reply_page.dart';
@@ -140,7 +140,7 @@ class _CommentListState extends State<CommentList> {
                 ),
               ),
               if (_focusNode.hasFocus) CommonQuillToolBar(controller: _controller),
-              CommentTextField(
+              CommentQuillCommentInput(
                 controller: _controller,
                 focusNode: _focusNode,
                 onSubmit: () async {

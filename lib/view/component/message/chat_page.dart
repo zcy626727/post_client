@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 
 import '../../../constant/ui.dart';
-import '../input/comment_text_field.dart';
+import '../input/comment_quill_comment_input.dart';
 import 'chat_bubble.dart';
 
 class ChatPage extends StatefulWidget {
@@ -86,7 +86,7 @@ class _ChatPageState extends State<ChatPage> {
                   Container(
                     padding: const EdgeInsets.only(top: 5, bottom: 5),
                     color: colorScheme.surface,
-                    child: CommentTextField(
+                    child: CommentQuillCommentInput(
                       controller: _controller,
                       focusNode: _focusNode,
                       onSubmit: () async {

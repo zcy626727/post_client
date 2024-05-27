@@ -1,15 +1,17 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:livekit_client/livekit_client.dart' as livekit;
 import 'package:post_client/config/net_config.dart';
 import 'package:post_client/model/live/live_room.dart';
 import 'package:post_client/service/live/live_room_service.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../../constant/ui.dart';
-import '../../../component/input/comment_text_field.dart';
+import '../../../../domain/live/live_message.dart';
+import '../../../component/input/common_text_comment_input.dart';
 
 class LiveRoomPage extends StatefulWidget {
   const LiveRoomPage({super.key, required this.liveRoom});
@@ -23,7 +25,7 @@ class LiveRoomPage extends StatefulWidget {
 class _LiveRoomPageState extends State<LiveRoomPage> {
   late Future _futureBuilderFuture;
 
-  final QuillController _controller = QuillController.basic();
+  final ScrollController _scrollController = ScrollController();
 
   final FocusNode _focusNode = FocusNode();
 
@@ -33,6 +35,12 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
 
   // 主播参与者，如果为null说明主播已经离开
   livekit.Participant? anchorParticipant;
+
+  final chatChannel = WebSocketChannel.connect(
+    Uri.parse(NetConfig.liveChatUrl),
+  );
+
+  List<LiveMessage> msgList = <LiveMessage>[];
 
   @override
   void initState() {
@@ -44,10 +52,11 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
   void dispose() {
     super.dispose();
     room?.disconnect();
+    chatChannel.sink.close();
   }
 
   Future getData() async {
-    return Future.wait([joinRoom()]);
+    return Future.wait([joinRoom(), initLiveChat()]);
   }
 
   Future<void> joinRoom() async {
@@ -64,6 +73,20 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
     } catch (e) {
       log(e.toString());
     }
+  }
+
+  Future<void> initLiveChat() async {
+    // 注册到聊天室
+    var joinMsg = LiveMessage.joinRoom(roomId: widget.liveRoom.id!);
+    chatChannel.sink.add(json.encode(joinMsg.toJson()));
+    // 监听消息
+    chatChannel.stream.listen((message) {
+      log("接收到消息: $message");
+      var liveMsg = LiveMessage.fromJson(json.decode(message));
+      if (msgList.length > 100) msgList.removeLast();
+      msgList.insert(0, liveMsg);
+      setState(() {});
+    });
   }
 
   // livekit 中 room 改变
@@ -96,73 +119,78 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
               _focusNode.unfocus();
             },
             child: SafeArea(
-                child: Scaffold(
-              resizeToAvoidBottomInset: true,
-              backgroundColor: colorScheme.background,
-              appBar: AppBar(
-                toolbarHeight: 50,
-                centerTitle: true,
-                elevation: 0,
-                backgroundColor: colorScheme.surface,
-                leading: IconButton(
-                  splashRadius: 20,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: colorScheme.onBackground,
+              child: Scaffold(
+                resizeToAvoidBottomInset: true,
+                backgroundColor: colorScheme.background,
+                appBar: AppBar(
+                  toolbarHeight: 50,
+                  centerTitle: true,
+                  elevation: 0,
+                  backgroundColor: colorScheme.surface,
+                  leading: IconButton(
+                    splashRadius: 20,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: colorScheme.onBackground,
+                    ),
                   ),
+                  title: Text(
+                    "直播间",
+                    style: TextStyle(color: colorScheme.onSurface, fontSize: appbarTitleFontSize),
+                  ),
+                  actions: [],
                 ),
-                title: Text(
-                  "直播间",
-                  style: TextStyle(color: colorScheme.onSurface, fontSize: appbarTitleFontSize),
-                ),
-                actions: [],
-              ),
-              body: Column(
-                children: [
-                  // 直播视频播放
-                  if (videoPub != null && videoPub!.track != null)
-                    AspectRatio(
-                      aspectRatio: 2,
+                body: Column(
+                  children: [
+                    // 直播视频播放
+                    if (videoPub != null && videoPub!.track != null)
+                      AspectRatio(
+                        aspectRatio: 2,
+                        child: Container(
+                          color: colorScheme.primaryContainer,
+                          child: livekit.VideoTrackRenderer(
+                            key: ValueKey(videoPub),
+                            videoPub!.track as livekit.VideoTrack,
+                            fit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                          ),
+                        ),
+                      ),
+                    // 聊天内容
+                    Expanded(
                       child: Container(
-                        color: colorScheme.primaryContainer,
-                        child: livekit.VideoTrackRenderer(
-                          key: ValueKey(videoPub),
-                          videoPub!.track as livekit.VideoTrack,
-                          fit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                        color: colorScheme.surface,
+                        margin: const EdgeInsets.only(top: 1, bottom: 1),
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          reverse: true,
+                          itemBuilder: (BuildContext context, int index) {
+                            var msg = msgList[index];
+                            return Text("${msg.username}: ${msg.content}");
+                          },
+                          itemCount: msgList.length,
                         ),
                       ),
                     ),
-                  // 聊天内容
-                  Expanded(
-                      child: Container(
-                    color: colorScheme.surface,
-                    margin: const EdgeInsets.only(top: 1, bottom: 1),
-                    child: ListView(
-                      scrollDirection: Axis.vertical,
-                      reverse: true,
-                      children: [
-                        Text("张三：我要吃饭"),
-                      ],
+                    // 评论
+                    Container(
+                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      color: colorScheme.surface,
+                      child: CommentTextCommentInput(
+                        onSubmit: (value) {
+                          var msg = LiveMessage.roomMessage(content: value, roomId: widget.liveRoom.id!);
+                          chatChannel.sink.add(json.encode(msg.toJson()));
+                        },
+                        controller: TextEditingController(),
+                        focusNode: FocusNode(),
+                      ),
                     ),
-                  )),
-                  // 评论
-                  Container(
-                    padding: const EdgeInsets.only(top: 5, bottom: 5),
-                    color: colorScheme.surface,
-                    child: CommentTextField(
-                      controller: _controller,
-                      focusNode: _focusNode,
-                      onSubmit: () async {
-                        _focusNode.unfocus();
-                      },
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            )),
+            ),
           );
         } else {
           return Center(
