@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/config/constants.dart';
-import 'package:post_client/model/live/live_category.dart';
 import 'package:post_client/view/page/live/room/live_room_list_of_category_page.dart';
+
+import '../../../../model/message/live_category.dart';
 
 class LiveCategoryGridItem extends StatelessWidget {
   const LiveCategoryGridItem({super.key, required this.category});

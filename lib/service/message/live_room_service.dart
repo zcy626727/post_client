@@ -1,5 +1,5 @@
 import '../../api/client/message/live_room_api.dart';
-import '../../model/live/live_room.dart';
+import '../../model/message/live_room.dart';
 
 class LiveRoomService {
   static Future<(String, LiveRoom)> openRoom() async {

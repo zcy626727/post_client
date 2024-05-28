@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:post_client/model/live/live_topic.dart';
 
+import '../../../model/message/live_topic.dart';
 import '../message_http_config.dart';
 
 class LiveTopicApi {

@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/page_config.dart';
-import 'package:post_client/model/live/live_category.dart';
-import 'package:post_client/service/live/live_category_service.dart';
-import 'package:post_client/service/live/live_topic_service.dart';
 
 import '../../../../constant/ui.dart';
-import '../../../../model/live/live_topic.dart';
+import '../../../../model/message/live_category.dart';
+import '../../../../model/message/live_topic.dart';
+import '../../../../service/message/live_category_service.dart';
+import '../../../../service/message/live_topic_service.dart';
 import '../../../component/live/category/live_category_grid_item.dart';
 import '../../../widget/common_item_list.dart';
 

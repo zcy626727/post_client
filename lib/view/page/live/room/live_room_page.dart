@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:livekit_client/livekit_client.dart' as livekit;
 import 'package:post_client/config/net_config.dart';
-import 'package:post_client/model/live/live_room.dart';
-import 'package:post_client/service/live/live_room_service.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../../constant/ui.dart';
 import '../../../../domain/live/live_message.dart';
+import '../../../../model/message/live_room.dart';
+import '../../../../service/message/live_room_service.dart';
 import '../../../component/input/common_text_comment_input.dart';
 
 class LiveRoomPage extends StatefulWidget {

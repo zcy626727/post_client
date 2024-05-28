@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:post_client/config/constants.dart';
-import 'package:post_client/model/live/live_room.dart';
 import 'package:post_client/model/user/user.dart';
-import 'package:post_client/service/live/live_room_service.dart';
 import 'package:post_client/state/user_state.dart';
 import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/component/live/room/live_room_grid_item.dart';
 import 'package:post_client/view/page/live/category/live_category_list_page.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/live/live_category.dart';
+import '../../../model/message/live_category.dart';
+import '../../../model/message/live_room.dart';
+import '../../../service/message/live_room_service.dart';
 import '../../widget/common_item_list.dart';
 
 class LiveScreen extends StatefulWidget {

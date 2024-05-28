@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:post_client/api/client/message_http_config.dart';
-import 'package:post_client/model/live/live_room.dart';
+
+import '../../../model/message/live_room.dart';
 
 class LiveRoomApi {
   static Future<(String, LiveRoom)> openRoom() async {

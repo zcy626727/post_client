@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../constant/ui.dart';
-import '../../../../model/live/live_category.dart';
-import '../../../../model/live/live_room.dart';
-import '../../../../service/live/live_room_service.dart';
+import '../../../../model/message/live_category.dart';
+import '../../../../model/message/live_room.dart';
+import '../../../../service/message/live_room_service.dart';
 import '../../../component/live/room/live_room_grid_item.dart';
 import '../../../widget/common_item_list.dart';
 

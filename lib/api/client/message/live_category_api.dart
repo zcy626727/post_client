@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import '../../../model/live/live_category.dart';
+import '../../../model/message/live_category.dart';
 import '../message_http_config.dart';
 
 class LiveCategoryApi {

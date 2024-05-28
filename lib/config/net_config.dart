@@ -14,8 +14,9 @@ class NetConfig {
   static String userApiUrl = 'http://192.168.150.148:26101';
 
   static String messageApiUrl = 'http://192.168.150.148:26121';
-  static String liveChatUrl = 'ws://192.168.150.148:26121/liveRoom/chat';
+  static String liveChatUrl = 'ws://192.168.150.148:26121/chat/liveRoom';
   static String liveKitUrl = 'ws://192.168.150.148:7880';
+  static String userChatUrl = 'ws://192.168.150.148:26121/chat/user';
 
   static String postApiUrl = 'http://192.168.150.148:26111';
 }

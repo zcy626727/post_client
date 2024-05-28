@@ -1,6 +1,6 @@
 import 'package:post_client/api/client/message/live_category_api.dart';
 
-import '../../model/live/live_category.dart';
+import '../../model/message/live_category.dart';
 
 class LiveCategoryService {
   static Future<List<LiveCategory>> getCategoryListByTopic({

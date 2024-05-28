@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/config/constants.dart';
-import 'package:post_client/model/live/live_room.dart';
 
+import '../../../../model/message/live_room.dart';
 import '../../../page/live/room/live_room_page.dart';
 
 class LiveRoomGridItem extends StatelessWidget {
