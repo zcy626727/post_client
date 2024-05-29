@@ -11,8 +11,10 @@ class UserInteraction {
   int? secondId;
   int? unreadCount;
   DateTime? updateTime;
+
+  // 除了自己外另一个人的信息
   @JsonKey(includeFromJson: false, includeToJson: false)
-  User? user;
+  User? otherUser;
 
   UserInteraction();
 
@@ -20,10 +22,9 @@ class UserInteraction {
     id = i.id;
     firstId = i.firstId;
     secondId = i.secondId;
-    id = i.id;
     unreadCount = i.unreadCount;
     updateTime = i.updateTime;
-    user = i.user;
+    otherUser = i.otherUser;
   }
 
   factory UserInteraction.fromJson(Map<String, dynamic> json) => _$UserInteractionFromJson(json);

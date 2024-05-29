@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:post_client/config/constants.dart';
+import 'package:post_client/model/user/user.dart';
 
 class ChatBubble extends StatelessWidget {
-  const ChatBubble({Key? key, required this.message, required this.isMe}) : super(key: key);
+  const ChatBubble({Key? key, required this.message, required this.isMe, required this.user}) : super(key: key);
 
   final String message;
 
   //为true则为右边
   final bool isMe;
+
+  final User user;
 
   static const Radius _borderRadius = Radius.circular(15);
 
@@ -21,7 +25,7 @@ class ChatBubble extends StatelessWidget {
         //竖向
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          if (!isMe) avatarBuild('assets/images/bai.png'),
+          if (!isMe) avatarBuild(user.avatarUrl ?? testImageUrl),
           Flexible(
             child: Container(
               margin: const EdgeInsets.only(left: 5, right: 5, bottom: 10),
@@ -35,19 +39,13 @@ class ChatBubble extends StatelessWidget {
                   topRight: _borderRadius,
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (!isMe) Text("名字", style: TextStyle(color: colorScheme.primary, fontSize: 12)),
-                  Text(
-                    message,
-                    style: TextStyle(color: colorScheme.onPrimaryContainer),
-                  )
-                ],
+              child: Text(
+                message,
+                style: TextStyle(color: colorScheme.onPrimaryContainer),
               ),
             ),
           ),
-          if (isMe) avatarBuild('assets/images/hei.jpg'),
+          if (isMe) avatarBuild(user.avatarUrl ?? testImageUrl),
         ],
       ),
     );
@@ -57,7 +55,7 @@ class ChatBubble extends StatelessWidget {
     return CircleAvatar(
       //头像半径
       radius: 20,
-      backgroundImage: AssetImage(imageUrl),
+      backgroundImage: NetworkImage(imageUrl),
     );
   }
 }

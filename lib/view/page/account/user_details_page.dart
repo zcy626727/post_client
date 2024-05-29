@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
 import 'package:post_client/model/user/follow.dart';
+import 'package:post_client/service/message/user_message_service.dart';
+import 'package:post_client/view/component/message/chat_page.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/page/account/user_profile_page.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
@@ -192,48 +194,78 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   backgroundImage: NetworkImage(user.avatarUrl!),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 40),
-                  height: 30,
-                  width: 120,
-                  child: widget.user.id != null && widget.user.id == Global.user.id
-                      ? OutlinedButton(
-                          onPressed: () async {
-                            await Navigator.push(context, MaterialPageRoute(builder: (context) => const UserProfilePage()));
-                          },
-                          child: const Text("编辑资料"))
-                      : _follow == null
-                          ? CommonActionOneButton(
-                              title: "关注",
-                              backgroundColor: colorScheme.primary,
-                              textColor: colorScheme.onPrimary,
-                              onTap: () async {
-                                try {
-                                  _follow = await FollowService.followUser(widget.user.id!);
-                                  setState(() {});
-                                } on Exception catch (e) {
-                                  if (mounted) ShowSnackBar.exception(context: context, e: e);
-                                }
-                                return false;
+                    margin: const EdgeInsets.only(top: 40),
+                    height: 35,
+                    child: Row(
+                      children: [
+                        if (widget.user.id != null && widget.user.id != Global.user.id)
+                          Container(
+                            margin: const EdgeInsets.only(right: 5),
+                            width: 35,
+                            child: OutlinedButton(
+                              style: ButtonStyle(
+                                padding: MaterialStateProperty.all(EdgeInsets.zero),
+                                shape: MaterialStateProperty.all(
+                                  const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                                  ),
+                                ),
+                              ),
+                              onPressed: () async {
+                                if (widget.user.id == null) return;
+
+                                var inter = await UserMessageService.getInteraction(targetUserId: widget.user.id!);
+                                inter.otherUser = widget.user;
+                                await Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(userInteraction: inter)));
                               },
-                            )
-                          : CommonActionOneButton(
-                              title: "取消关注",
-                              textColor: colorScheme.onSurface,
-                              onTap: () async {
-                                try {
-                                  await FollowService.unfollowUser(
-                                    followerId: Global.user.id!,
-                                    followeeId: widget.user.id!,
-                                  );
-                                  _follow = null;
-                                  setState(() {});
-                                } on Exception catch (e) {
-                                  ShowSnackBar.exception(context: context, e: e);
-                                }
-                                return false;
-                              },
+                              child: Icon(
+                                Icons.chat_bubble,
+                                size: 20,
+                                color: colorScheme.primary,
+                              ),
                             ),
-                ),
+                          ),
+                        widget.user.id != null && widget.user.id == Global.user.id
+                            ? OutlinedButton(
+                                onPressed: () async {
+                                  await Navigator.push(context, MaterialPageRoute(builder: (context) => const UserProfilePage()));
+                                },
+                                child: const Text("编辑资料"),
+                              )
+                            : _follow == null
+                                ? CommonActionOneButton(
+                                    title: "关注",
+                                    backgroundColor: colorScheme.primary,
+                                    textColor: colorScheme.onPrimary,
+                                    onTap: () async {
+                                      try {
+                                        _follow = await FollowService.followUser(widget.user.id!);
+                                        setState(() {});
+                                      } on Exception catch (e) {
+                                        if (mounted) ShowSnackBar.exception(context: context, e: e);
+                                      }
+                                      return false;
+                                    },
+                                  )
+                                : CommonActionOneButton(
+                                    title: "取消关注",
+                                    textColor: colorScheme.onSurface,
+                                    onTap: () async {
+                                      try {
+                                        await FollowService.unfollowUser(
+                                          followerId: Global.user.id!,
+                                          followeeId: widget.user.id!,
+                                        );
+                                        _follow = null;
+                                        setState(() {});
+                                      } on Exception catch (e) {
+                                        ShowSnackBar.exception(context: context, e: e);
+                                      }
+                                      return false;
+                                    },
+                                  ),
+                      ],
+                    )),
               ],
             ),
           ),

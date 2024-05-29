@@ -4,12 +4,12 @@ class CommentTextCommentInput extends StatefulWidget {
   const CommentTextCommentInput({
     Key? key,
     required this.controller,
-    required this.focusNode,
+    this.focusNode,
     this.onSubmit,
   }) : super(key: key);
   final TextEditingController controller;
   final Function? onSubmit;
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
 
   @override
   State<CommentTextCommentInput> createState() => _CommentQuillCommentInputState();
@@ -40,8 +40,9 @@ class _CommentQuillCommentInputState extends State<CommentTextCommentInput> {
                 onSubmitted: (v) async {
                   await _onSubmit();
                 },
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.only(left: 12.0, right: 2, bottom: -3, top: 10),
+                style: TextStyle(color: colorScheme.onBackground),
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.only(left: 5.0, right: 5, bottom: -3, top: 10),
                   border: OutlineInputBorder(
                     //添加边框
                     borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -52,11 +53,12 @@ class _CommentQuillCommentInputState extends State<CommentTextCommentInput> {
           ),
           SizedBox(
             width: 80,
-            height: 30,
-            child: ElevatedButton(
+            height: 35,
+            child: MaterialButton(
               onPressed: _onSubmit,
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(colorScheme.primary),
+              color: colorScheme.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
               ),
               child: Text(
                 "发布",
@@ -74,6 +76,6 @@ class _CommentQuillCommentInputState extends State<CommentTextCommentInput> {
       await widget.onSubmit!(widget.controller.text);
     }
     widget.controller.clear();
-    widget.focusNode.unfocus();
+    widget.focusNode?.unfocus();
   }
 }

@@ -6,27 +6,35 @@ import '../../constant/chat_message.dart';
 part 'live_message.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class LiveMessage {
+class ChatMessage {
   int? userId;
-  int roomId;
+  int? roomId;
+  int? targetUserId;
   String? username;
   String content;
   int type;
 
-  LiveMessage.joinRoom({this.userId, required this.roomId, this.username, this.content = "加入房间", this.type = ChatMessageType.joinRoom}) {
+  ChatMessage.joinRoom({this.userId, required this.roomId, this.username, this.content = "加入房间", this.type = ChatMessageType.joinRoom}) {
     userId = Global.user.id!;
     username = Global.user.name!;
   }
 
-  LiveMessage.roomMessage({this.userId, required this.roomId, this.username, required this.content, this.type = ChatMessageType.roomMessage}) {
+  ChatMessage.userJoin({this.userId, this.content = "", this.type = ChatMessageType.userJoin}) {
+    userId = Global.user.id!;
+  }
+
+  ChatMessage.userMessage({this.userId, required this.targetUserId, required this.content, this.type = ChatMessageType.userMessage}) {
+    userId = Global.user.id!;
+  }
+
+  ChatMessage.roomMessage({this.userId, required this.roomId, this.username, required this.content, this.type = ChatMessageType.roomMessage}) {
     userId = Global.user.id!;
     username = Global.user.name!;
   }
 
-  factory LiveMessage.fromJson(Map<String, dynamic> json) => _$LiveMessageFromJson(json);
+  factory ChatMessage.fromJson(Map<String, dynamic> json) => _$ChatMessageFromJson(json);
 
-  Map<String, dynamic> toJson() => _$LiveMessageToJson(this);
+  Map<String, dynamic> toJson() => _$ChatMessageToJson(this);
 
-  LiveMessage(this.userId, this.roomId, this.username, this.content, this.type);
+  ChatMessage(this.userId, this.roomId, this.username, this.content, this.type);
 }
-

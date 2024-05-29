@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class DateTimeUtil {
   //时间格式化
   static String durationTimeFormat(Duration d) {
@@ -28,5 +30,17 @@ class DateTimeUtil {
 
   static String unknownTimeFormat() {
     return "--";
+  }
+
+  static String formatDateTime(DateTime dateTime) {
+    return DateFormat("yyyy-MM-ddTHH:mm:ss").format(dateTime);
+  }
+
+  static String formatDate(DateTime dateTime) {
+    return DateFormat("yyyy-MM-dd").format(dateTime);
+  }
+
+  static String formatRFC3339(DateTime date) {
+    return DateFormat("yyyy-MM-ddTHH:mm:ss.SSSSSSSSS+00:00").format(DateTime.parse(date.toString()).toUtc());
   }
 }

@@ -42,12 +42,13 @@ class _CommentQuillCommentInputState extends State<CommentQuillCommentInput> {
           SizedBox(
             width: 80,
             height: 30,
-            child: ElevatedButton(
+            child: MaterialButton(
               onPressed: () {
                 widget.onSubmit();
               },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(colorScheme.primary),
+              color: colorScheme.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
               ),
               child: Text(
                 "发布",

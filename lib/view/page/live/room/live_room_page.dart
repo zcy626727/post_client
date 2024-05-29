@@ -40,7 +40,7 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
     Uri.parse(NetConfig.liveChatUrl),
   );
 
-  List<LiveMessage> msgList = <LiveMessage>[];
+  List<ChatMessage> msgList = <ChatMessage>[];
 
   @override
   void initState() {
@@ -77,12 +77,12 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
 
   Future<void> initLiveChat() async {
     // 注册到聊天室
-    var joinMsg = LiveMessage.joinRoom(roomId: widget.liveRoom.id!);
+    var joinMsg = ChatMessage.joinRoom(roomId: widget.liveRoom.id!);
     chatChannel.sink.add(json.encode(joinMsg.toJson()));
     // 监听消息
     chatChannel.stream.listen((message) {
       log("接收到消息: $message");
-      var liveMsg = LiveMessage.fromJson(json.decode(message));
+      var liveMsg = ChatMessage.fromJson(json.decode(message));
       if (msgList.length > 100) msgList.removeLast();
       msgList.insert(0, liveMsg);
       setState(() {});
@@ -180,7 +180,7 @@ class _LiveRoomPageState extends State<LiveRoomPage> {
                       color: colorScheme.surface,
                       child: CommentTextCommentInput(
                         onSubmit: (value) {
-                          var msg = LiveMessage.roomMessage(content: value, roomId: widget.liveRoom.id!);
+                          var msg = ChatMessage.roomMessage(content: value, roomId: widget.liveRoom.id!);
                           chatChannel.sink.add(json.encode(msg.toJson()));
                         },
                         controller: TextEditingController(),
