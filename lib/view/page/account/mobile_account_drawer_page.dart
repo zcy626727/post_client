@@ -29,7 +29,6 @@ class MobileAccountDrawerPage extends StatelessWidget {
           builder: (context, userState, index) {
             User user = userState.user;
             bool isLogin = user.token != null;
-            isLogin = true;
             log("移动端抽屉栏构建");
             return Column(
               children: [
@@ -45,26 +44,6 @@ class MobileAccountDrawerPage extends StatelessWidget {
                     children: [
                       if (isLogin)
                         MobileDrawerItem(
-                          // leading: Icon(
-                          //   Icons.comment,
-                          //   color: colorScheme.onBackground,
-                          //   size: 23,
-                          // ),
-                          trailing: Icon(
-                            Icons.arrow_right,
-                            color: colorScheme.onBackground,
-                          ),
-                          title: "我的评论",
-                          onPress: () {},
-                        ),
-                      if (isLogin)
-                        MobileDrawerItem(
-                          // leading: SvgPicture.asset(
-                          //   "assets/icons/aite.svg",
-                          //   height: 20,
-                          //   width: 20,
-                          //   colorFilter: ColorFilter.mode(colorScheme.onBackground, BlendMode.srcIn),
-                          // ),
                           trailing: Icon(
                             Icons.arrow_right,
                             color: colorScheme.onBackground,
@@ -84,11 +63,6 @@ class MobileAccountDrawerPage extends StatelessWidget {
                         ),
                       if (isLogin)
                         MobileDrawerItem(
-                          // leading: Icon(
-                          //   Icons.reply,
-                          //   color: colorScheme.onBackground,
-                          //   size: 23,
-                          // ),
                           trailing: Icon(
                             Icons.arrow_right,
                             color: colorScheme.onBackground,
@@ -108,11 +82,6 @@ class MobileAccountDrawerPage extends StatelessWidget {
                         ),
                       if (isLogin)
                         MobileDrawerItem(
-                          // leading: Icon(
-                          //   Icons.insert_comment_outlined,
-                          //   color: colorScheme.onBackground,
-                          //   size: 23,
-                          // ),
                           trailing: Icon(
                             Icons.arrow_right,
                             color: colorScheme.onBackground,
@@ -126,24 +95,17 @@ class MobileAccountDrawerPage extends StatelessWidget {
                           },
                         ),
                       if (isLogin)
-                        if (isLogin)
-                          MobileDrawerItem(
-                            // leading: Icon(
-                            //   Icons.logout,
-                            //   color: colorScheme.onBackground,
-                            //   size: 23,
-                            // ),
+                        MobileDrawerItem(
                             title: "注销",
                             onPress: () {
+                              // 清空用户信息
+                              deleteUser();
                               //清空token
                               user.clearUserInfo();
                               userState.user = user;
                               //不能在updateUserOfDB后面
                               Navigator.pop(context);
-                              //持久化用户信息
-                              updateUserOfDB(user);
-                            },
-                          ),
+                            }),
                     ],
                   ),
                 ),
@@ -241,9 +203,10 @@ class MobileAccountDrawerPage extends StatelessWidget {
     );
   }
 
-  updateUserOfDB(User user) async {
+  deleteUser() async {
     try {
-      await Global.userProvider.update(user);
+      if (Global.user.id == null) return;
+      await Global.userProvider.delete(Global.user.id!);
     } catch (e) {
       log("清除数据库登录信息失败");
     }

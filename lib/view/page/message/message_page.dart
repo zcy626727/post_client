@@ -5,7 +5,7 @@ import 'package:post_client/model/message/user_interaction.dart';
 import '../../../constant/ui.dart';
 import '../../../service/message/user_message_service.dart';
 import '../../../util/responsive.dart';
-import 'chat_page.dart';
+import '../chat/chat_page.dart';
 
 class MessagePage extends StatefulWidget {
   const MessagePage({super.key});

@@ -7,6 +7,7 @@ import 'package:post_client/view/page/video/video_edit_page.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
 import 'package:provider/provider.dart';
 
+import '../../../config/global.dart';
 import '../../../state/screen_state.dart';
 import '../../../util/webrtc.dart';
 import '../../page/gallery/gallery_edit_page.dart';
@@ -62,118 +63,123 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                     splashFactory: NoSplash.splashFactory,
                   ),
                   onPressed: () async {
-                    //弹出底部栏
-                    await showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Container(
-                          color: colorScheme.surface,
-                          child: SafeArea(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                              color: colorScheme.surface,
-                              height: 220,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      buildUploadItem(
-                                          title: "图片",
-                                          iconData: Icons.image_outlined,
+                    if (Global.user.token == null) {
+                      // 未登录不能发布
+                      Navigator.pushNamed(context, "login");
+                    } else {
+                      //弹出底部栏
+                      await showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            color: colorScheme.surface,
+                            child: SafeArea(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                                color: colorScheme.surface,
+                                height: 220,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        buildUploadItem(
+                                            title: "图片",
+                                            iconData: Icons.image_outlined,
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => const GalleryEditPage()),
+                                              );
+                                            }),
+                                        buildUploadItem(
+                                            title: "视频",
+                                            iconData: Icons.video_file_outlined,
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => const VideoEditPage()),
+                                              );
+                                            }),
+                                        buildUploadItem(
+                                            title: "音频",
+                                            iconData: Icons.audio_file_outlined,
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => const AudioEditPage()),
+                                              );
+                                            }),
+                                        buildUploadItem(
+                                          title: "文章",
+                                          iconData: Icons.article_outlined,
                                           onTap: () {
                                             Navigator.pop(context);
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) => const GalleryEditPage()),
+                                              MaterialPageRoute(builder: (context) => const ArticleEditPage()),
                                             );
-                                          }),
-                                      buildUploadItem(
-                                          title: "视频",
-                                          iconData: Icons.video_file_outlined,
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => const VideoEditPage()),
-                                            );
-                                          }),
-                                      buildUploadItem(
-                                          title: "音频",
-                                          iconData: Icons.audio_file_outlined,
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => const AudioEditPage()),
-                                            );
-                                          }),
-                                      buildUploadItem(
-                                        title: "文章",
-                                        iconData: Icons.article_outlined,
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => const ArticleEditPage()),
-                                          );
-                                        },
-                                      ), //文章
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      buildUploadItem(
-                                        title: "动态",
-                                        iconData: Icons.post_add,
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => const PostEditPage()),
-                                          );
-                                        },
-                                      ), //推文
-                                      buildUploadItem(
-                                        title: "直播",
-                                        iconData: Icons.live_tv,
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                          enableRTC(onEnable: () {
-                                            //确保RTC正常使用
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => const CreateLivePage()),
-                                            );
-                                          }, onError: () {
-                                            // ShowSnackBar.error(context: this.context, message: "直播功能需要开启权限");
-                                          });
-                                        },
-                                      ),
-                                      const Expanded(child: SizedBox()),
-                                      const Expanded(child: SizedBox()),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 40,
-                                    child: Center(
-                                      child: CommonActionOneButton(
-                                        backgroundColor: colorScheme.primaryContainer,
-                                        onTap: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
+                                          },
+                                        ), //文章
+                                      ],
                                     ),
-                                  )
-                                ],
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        buildUploadItem(
+                                          title: "动态",
+                                          iconData: Icons.post_add,
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => const PostEditPage()),
+                                            );
+                                          },
+                                        ), //推文
+                                        buildUploadItem(
+                                          title: "直播",
+                                          iconData: Icons.live_tv,
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            enableRTC(onEnable: () {
+                                              //确保RTC正常使用
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => const CreateLivePage()),
+                                              );
+                                            }, onError: () {
+                                              // ShowSnackBar.error(context: this.context, message: "直播功能需要开启权限");
+                                            });
+                                          },
+                                        ),
+                                        const Expanded(child: SizedBox()),
+                                        const Expanded(child: SizedBox()),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 40,
+                                      child: Center(
+                                        child: CommonActionOneButton(
+                                          backgroundColor: colorScheme.primaryContainer,
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    );
+                          );
+                        },
+                      );
+                    }
                   },
                   child: Center(
                     child: Icon(
@@ -189,16 +195,26 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                 index: FirstNav.follow,
                 label: "动态",
                 press: () {
-                  navState.firstNavIndex = FirstNav.follow;
+                  if (Global.user.id == null) {
+                    // 未登录不能发布
+                    Navigator.pushNamed(context, "login");
+                  } else {
+                    navState.firstNavIndex = FirstNav.follow;
+                  }
                 },
               ),
               MobileBottomNavigationItem(
-                iconData: Icons.view_stream,
+                iconData: Icons.person,
                 selectedIndex: navState.firstNavIndex,
                 index: FirstNav.mine,
                 label: "我的",
                 press: () {
-                  navState.firstNavIndex = FirstNav.mine;
+                  if (Global.user.id == null) {
+                    // 未登录不能发布
+                    Navigator.pushNamed(context, "login");
+                  } else {
+                    navState.firstNavIndex = FirstNav.mine;
+                  }
                 },
               ),
             ],

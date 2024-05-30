@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../model/message/live_category.dart';
+import '../../../model/message/live_topic.dart';
 import '../message_http_config.dart';
 
 class LiveCategoryApi {
@@ -65,6 +66,22 @@ class LiveCategoryApi {
       }),
     );
     return _parseLiveCategoryList(r);
+  }
+
+  static Future<(LiveCategory, LiveTopic)> getCategoryWithTopic({
+    required int categoryId,
+  }) async {
+    var r = await MessageHttpConfig.dio.get(
+      "/liveCategory/getCategoryWithTopic",
+      queryParameters: {"categoryId": categoryId},
+      options: MessageHttpConfig.options.copyWith(extra: {
+        "noCache": true,
+        "withToken": true,
+      }),
+    );
+    var category = LiveCategory.fromJson(r.data['category']);
+    var topic = LiveTopic.fromJson(r.data['topic']);
+    return (category, topic);
   }
 
   static List<LiveCategory> _parseLiveCategoryList(Response<dynamic> r) {

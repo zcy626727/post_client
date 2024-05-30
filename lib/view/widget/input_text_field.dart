@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class InputTextField extends StatelessWidget {
-  const InputTextField({Key? key, required this.controller, this.iconData, required this.title, required this.enable, this.maxLength, this.hintText}) : super(key: key);
+  const InputTextField({Key? key, required this.controller, this.iconData, required this.title, required this.enable, this.maxLength, this.hintText, this.showCounter = true}) : super(key: key);
   final TextEditingController controller;
   final String title;
   final IconData? iconData;
   final String? hintText;
   final int? maxLength;
   final bool enable;
+  final bool showCounter;
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +23,10 @@ class InputTextField extends StatelessWidget {
       ),
       strutStyle: const StrutStyle(fontSize: 21),
       decoration: InputDecoration(
+        counter: showCounter ? null : Container(),
         isCollapsed: true,
         //防止文本溢出时被白边覆盖
-        contentPadding: const EdgeInsets.only(left: 12.0, right: 2, bottom: -3, top: 10),
+        contentPadding: const EdgeInsets.only(left: 12.0, right: 10, top: 7),
         border: OutlineInputBorder(
           //添加边框
           borderRadius: BorderRadius.circular(5.0),

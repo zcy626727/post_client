@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:post_client/config/global.dart';
 import 'package:post_client/config/page_config.dart';
 import 'package:post_client/service/post/album_service.dart';
 import 'package:post_client/service/post/gallery_service.dart';
 import 'package:post_client/service/post/video_service.dart';
 import 'package:post_client/util/responsive.dart';
-import 'package:post_client/view/component/message/message_page.dart';
+import 'package:post_client/view/page/message/message_page.dart';
 import 'package:post_client/view/widget/player/common_video_player.dart';
 import 'package:provider/provider.dart';
 
@@ -95,10 +96,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: IconButton(
                     padding: EdgeInsets.zero,
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const MessagePage()),
-                      );
+                      if (Global.user.token == null) {
+                        Navigator.pushNamed(context, "login");
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const MessagePage()),
+                        );
+                      }
                     },
                     icon: const Icon(
                       Icons.notifications_on,

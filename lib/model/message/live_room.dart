@@ -12,12 +12,12 @@ class LiveRoom {
 
   LiveRoom();
 
-  void copyLiveCategory(LiveRoom category) {
-    id = category.id;
-    anchorId = category.anchorId;
-    categoryId = category.categoryId;
-    status = category.status;
-    name = category.name;
+  void copyLiveCategory(LiveRoom room) {
+    id = room.id;
+    anchorId = room.anchorId;
+    categoryId = room.categoryId;
+    status = room.status;
+    name = room.name;
   }
 
   LiveRoom.one() {

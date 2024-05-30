@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:livekit_client/livekit_client.dart' hide ConnectionState;
 import 'package:post_client/domain/live/live_message.dart';
+import 'package:post_client/view/component/live/room/room_info_dialog.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -153,7 +154,7 @@ class _CreateLivePageState extends State<CreateLivePage> {
                             child: CommentTextCommentInput(
                               onSubmit: (value) {
                                 var msg = ChatMessage.roomMessage(content: value, roomId: liveRoom!.id!);
-                                chatChannel?.sink.add(json.encode(msg.toJson()));
+                                chatChannel.sink.add(json.encode(msg.toJson()));
                               },
                               controller: TextEditingController(),
                               focusNode: FocusNode(),
@@ -243,6 +244,7 @@ class _CreateLivePageState extends State<CreateLivePage> {
                                 setState(() {});
                               },
                             ),
+
                           if (!started)
                             IconButton(
                               tooltip: "屏幕方向",
@@ -255,6 +257,26 @@ class _CreateLivePageState extends State<CreateLivePage> {
                                   SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
                                 }
                                 setState(() {});
+                              },
+                            ),
+                          if (!started)
+                            IconButton(
+                              tooltip: "摄像头",
+                              icon: const Icon(Icons.edit),
+                              iconSize: 30,
+                              onPressed: () async {
+                                showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return RoomInfoDialog(
+                                      liveRoom: liveRoom,
+                                      onSaved: (newRoom) {
+                                        liveRoom?.copyLiveCategory(newRoom);
+                                      },
+                                    );
+                                  },
+                                );
                               },
                             ),
                         ],

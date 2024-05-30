@@ -37,7 +37,7 @@ class _LiveCategoryListPageState extends State<LiveCategoryListPage> {
   Future<void> getTopicList() async {
     // 查找topic列表
     try {
-      topicList = await LiveTopicService.getCategoryListByTopic();
+      topicList = await LiveTopicService.getLiveTopicList();
     } on DioException catch (e) {
       log(e.toString());
     } catch (e) {

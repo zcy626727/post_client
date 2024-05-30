@@ -13,8 +13,8 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import '../../../config/net_config.dart';
 import '../../../constant/ui.dart';
 import '../../../domain/live/live_message.dart';
-import '../input/common_text_comment_input.dart';
-import 'chat_bubble.dart';
+import '../../component/input/common_text_comment_input.dart';
+import '../../component/message/chat_bubble.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key, required this.userInteraction});

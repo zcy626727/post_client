@@ -16,7 +16,6 @@ class LiveRoomService {
 
   static Future<LiveRoom> saveRoom({
     required int categoryId,
-    required int roomId,
     required String name,
   }) async {
     return await LiveRoomApi.saveRoom(categoryId: categoryId, name: name);

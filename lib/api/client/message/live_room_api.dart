@@ -45,7 +45,7 @@ class LiveRoomApi {
   }) async {
     var r = await MessageHttpConfig.dio.post(
       "/liveRoom/saveRoom",
-      data: {"categoryId": categoryId, "name": name},
+      data: {"categoryId": categoryId, "roomName": name},
       options: MessageHttpConfig.options.copyWith(extra: {
         "noCache": true,
         "withToken": true,

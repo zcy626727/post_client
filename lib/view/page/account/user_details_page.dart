@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
 import 'package:post_client/model/user/follow.dart';
 import 'package:post_client/service/message/user_message_service.dart';
-import 'package:post_client/view/component/message/chat_page.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/page/account/user_profile_page.dart';
+import 'package:post_client/view/page/chat/chat_page.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
 
 import '../../../config/page_config.dart';
