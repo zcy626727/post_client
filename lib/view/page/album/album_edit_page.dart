@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/model/post/album.dart';
 
+import '../../../constant/file/upload.dart';
 import '../../../constant/source.dart';
 import '../../../domain/task/single_upload_task.dart';
-import '../../../enums/upload_task.dart';
 import '../../../service/post/album_service.dart';
 import '../../component/input/common_dropdown.dart';
 import '../../component/input/common_info_card.dart';

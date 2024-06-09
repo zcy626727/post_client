@@ -4,6 +4,7 @@ import 'package:post_client/model/post/feedback.dart' as post_feedback;
 import 'package:post_client/view/component/comment/comment_list_tile.dart';
 import 'package:post_client/view/component/post/post_list_tile.dart';
 
+import '../../../common/list/common_item_list.dart';
 import '../../../model/post/album.dart';
 import '../../../model/post/article.dart';
 import '../../../model/post/audio.dart';
@@ -18,7 +19,6 @@ import '../../component/media/list/article_list_tile.dart';
 import '../../component/media/list/audio_list_tile.dart';
 import '../../component/media/list/gallery_list_tile.dart';
 import '../../component/media/list/video_list_tile.dart';
-import '../../widget/common_item_list.dart';
 import '../comment/reply_page.dart';
 
 class CommonSourceList extends StatefulWidget {

@@ -31,10 +31,10 @@ class CommonItemList<T> extends StatefulWidget {
   final SliverGridDelegate? gridDelegate;
 
   @override
-  State<CommonItemList> createState() => _CommonItemListState<T>();
+  State<CommonItemList> createState() => CommonItemListState<T>();
 }
 
-class _CommonItemListState<T> extends State<CommonItemList<T>> {
+class CommonItemListState<T> extends State<CommonItemList<T>> {
   final EasyRefreshController _refreshController = EasyRefreshController(
     controlFinishRefresh: true,
     controlFinishLoad: true,
@@ -109,6 +109,21 @@ class _CommonItemListState<T> extends State<CommonItemList<T>> {
       //获取失败
       log(e.toString());
       // _refreshController.loadFailed();
+    }
+  }
+
+  //用于从外部更新内部的list数据
+  void addItem(T t) async {
+    if (_itemList == null) {
+      _itemList = <T>[t];
+    } else {
+      _itemList!.insert(0, t);
+    }
+  }
+
+  void removeItem(T t) async {
+    if (_itemList != null) {
+      _itemList!.remove(t);
     }
   }
 

@@ -1,12 +1,11 @@
-import '../../api/client/post/file_api.dart';
-
 // var (getUrl, staticUrl) = await FileApi.genGetFileUrl(task.fileId!);
 // task.getUrl = getUrl;
 // task.staticUrl = staticUrl;
 // sendPort.send([1, task.toJson()]);
 
-class FileUrlService {
+import '../../api/client/common/file_api.dart';
 
+class FileUrlService {
   static Future<(String, String)> genGetFileUrl(int fileId) async {
     var t = await FileApi.genGetFileUrl(fileId);
     return t;

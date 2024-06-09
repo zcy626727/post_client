@@ -4,8 +4,8 @@ import 'package:post_client/service/post/favorites_service.dart';
 import 'package:post_client/service/post/favorites_source_service.dart';
 import 'package:post_client/util/entity_utils.dart';
 import 'package:post_client/view/component/favorites/select_favorites_list_tile.dart';
-import 'package:post_client/view/widget/common_item_list.dart';
 
+import '../../../common/list/common_item_list.dart';
 import '../../widget/button/common_action_two_button.dart';
 
 class SelectFavoritesDialog extends StatefulWidget {

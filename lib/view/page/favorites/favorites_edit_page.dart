@@ -4,8 +4,8 @@ import 'package:post_client/model/post/favorites.dart';
 import 'package:post_client/view/component/input/common_dropdown.dart';
 import 'package:post_client/view/component/input/common_info_card.dart';
 
+import '../../../constant/file/upload.dart';
 import '../../../domain/task/single_upload_task.dart';
-import '../../../enums/upload_task.dart';
 import '../../../service/post/favorites_service.dart';
 import '../../../service/post/file_url_service.dart';
 import '../../component/show/show_snack_bar.dart';

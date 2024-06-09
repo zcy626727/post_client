@@ -9,12 +9,12 @@ import 'package:post_client/util/responsive.dart';
 import 'package:post_client/view/page/account/user_details_page.dart';
 import 'package:provider/provider.dart';
 
+import '../../../common/list/common_item_list.dart';
 import '../../../constant/source.dart';
 import '../../../model/post/post.dart';
 import '../../../service/post/follow_service.dart';
 import '../../../service/post/post_service.dart';
 import '../../component/post/post_list_tile.dart';
-import '../../widget/common_item_list.dart';
 
 class FollowScreen extends StatefulWidget {
   const FollowScreen({super.key});

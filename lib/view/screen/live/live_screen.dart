@@ -8,10 +8,10 @@ import 'package:post_client/view/component/live/room/live_room_grid_item.dart';
 import 'package:post_client/view/page/live/category/live_category_list_page.dart';
 import 'package:provider/provider.dart';
 
+import '../../../common/list/common_item_list.dart';
 import '../../../model/message/live_category.dart';
 import '../../../model/message/live_room.dart';
 import '../../../service/message/live_room_service.dart';
-import '../../widget/common_item_list.dart';
 
 class LiveScreen extends StatefulWidget {
   const LiveScreen({super.key});

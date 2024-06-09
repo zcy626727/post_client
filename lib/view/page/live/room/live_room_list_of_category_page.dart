@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../../../common/list/common_item_list.dart';
 import '../../../../constant/ui.dart';
 import '../../../../model/message/live_category.dart';
 import '../../../../model/message/live_room.dart';
 import '../../../../service/message/live_room_service.dart';
 import '../../../component/live/room/live_room_grid_item.dart';
-import '../../../widget/common_item_list.dart';
 
 class LiveRoomListOfCategoryPage extends StatefulWidget {
   const LiveRoomListOfCategoryPage({super.key, required this.category});

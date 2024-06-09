@@ -8,9 +8,9 @@ import 'package:post_client/model/post/video.dart';
 import 'package:post_client/service/post/video_service.dart';
 import 'package:post_client/view/component/media/upload/video_upload_card.dart';
 
+import '../../../constant/file/upload.dart';
 import '../../../constant/source.dart';
 import '../../../domain/task/multipart_upload_task.dart';
-import '../../../enums/upload_task.dart';
 import '../../../service/post/album_service.dart';
 import '../../component/input/media_info_card.dart';
 import '../../component/show/show_snack_bar.dart';

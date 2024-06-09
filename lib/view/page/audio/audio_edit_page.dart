@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:post_client/model/post/audio.dart';
 import 'package:post_client/view/component/media/upload/audio_upload_card.dart';
 
+import '../../../constant/file/upload.dart';
 import '../../../constant/source.dart';
 import '../../../domain/task/multipart_upload_task.dart';
 import '../../../domain/task/single_upload_task.dart';
-import '../../../enums/upload_task.dart';
 import '../../../model/post/album.dart';
 import '../../../service/post/album_service.dart';
 import '../../../service/post/audio_service.dart';

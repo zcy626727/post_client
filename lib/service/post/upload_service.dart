@@ -4,13 +4,13 @@ import 'dart:isolate';
 
 import 'package:flutter/services.dart';
 
-import '../../api/client/post/file_api.dart';
-import '../../api/client/post/multipart_api.dart';
+import '../../api/client/common/file_api.dart';
+import '../../api/client/common/multipart_api.dart';
 import '../../config/file_config.dart';
 import '../../config/global.dart';
+import '../../constant/file/upload.dart';
 import '../../domain/task/multipart_upload_task.dart';
 import '../../domain/task/single_upload_task.dart';
-import '../../enums/upload_task.dart';
 import '../../util/file_util.dart';
 
 class MultipartUploadService {

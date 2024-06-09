@@ -7,10 +7,10 @@ import 'package:post_client/model/post/follow_album.dart';
 import 'package:post_client/service/post/follow_album_service.dart';
 import 'package:post_client/util/entity_utils.dart';
 
+import '../../../common/list/common_item_list.dart';
 import '../../../constant/source.dart';
 import '../../../model/post/album.dart';
 import '../../component/media/list/album_list_tile.dart';
-import '../../widget/common_item_list.dart';
 
 class FollowAlbumListPage extends StatefulWidget {
   const FollowAlbumListPage({super.key});

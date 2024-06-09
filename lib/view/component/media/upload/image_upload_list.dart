@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../constant/file/upload.dart';
 import '../../../../domain/task/single_upload_task.dart';
-import '../../../../enums/upload_task.dart';
 import '../../show/show_snack_bar.dart';
 import 'image_upload_card.dart';
 

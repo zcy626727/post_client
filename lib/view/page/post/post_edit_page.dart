@@ -11,7 +11,7 @@ import 'package:post_client/view/component/quill/quill_tool_bar.dart';
 import 'package:post_client/view/component/show/show_snack_bar.dart';
 import 'package:post_client/view/widget/button/common_action_one_button.dart';
 
-import '../../../enums/upload_task.dart';
+import '../../../constant/file/upload.dart';
 import '../../../model/user/user.dart';
 import '../../../service/post/file_url_service.dart';
 import '../../../service/post/post_service.dart';

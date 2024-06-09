@@ -3,7 +3,7 @@ import 'package:post_client/model/post/comment.dart';
 import 'package:post_client/service/post/comment_service.dart';
 import 'package:post_client/view/component/reply/reply_comment_list_tile.dart';
 
-import '../../widget/common_item_list.dart';
+import '../../../common/list/common_item_list.dart';
 
 class ReplyCommentListPage extends StatefulWidget {
   const ReplyCommentListPage({super.key});

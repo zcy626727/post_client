@@ -6,8 +6,8 @@ import 'package:post_client/model/post/history.dart';
 import 'package:post_client/service/post/history_service.dart';
 import 'package:post_client/view/component/history/history_list_tile.dart';
 
+import '../../../common/list/common_item_list.dart';
 import '../../../constant/source.dart';
-import '../../widget/common_item_list.dart';
 
 class HistoryListPage extends StatefulWidget {
   const HistoryListPage({super.key});

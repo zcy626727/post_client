@@ -8,8 +8,8 @@ import 'package:post_client/service/post/album_service.dart';
 import 'package:post_client/view/component/media/list/album_list_tile.dart';
 import 'package:post_client/view/page/album/album_edit_page.dart';
 
+import '../../../common/list/common_item_list.dart';
 import '../../../constant/source.dart';
-import '../../widget/common_item_list.dart';
 
 class AlbumListPage extends StatefulWidget {
   const AlbumListPage({super.key});

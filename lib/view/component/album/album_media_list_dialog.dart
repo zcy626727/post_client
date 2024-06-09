@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/model/post/album.dart';
 import 'package:post_client/model/post/favorites.dart';
-import 'package:post_client/view/widget/common_item_list.dart';
 
+import '../../../common/list/common_item_list.dart';
 import '../../../config/page_config.dart';
 import '../../../constant/source.dart';
 import '../../../model/post/article.dart';

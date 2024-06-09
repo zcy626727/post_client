@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:post_client/model/post/mention.dart';
 import 'package:post_client/view/component/reply/reply_mention_list_tile.dart';
 
+import '../../../common/list/common_item_list.dart';
 import '../../../service/post/mention_service.dart';
-import '../../widget/common_item_list.dart';
 
 class ReplyMentionListPage extends StatefulWidget {
   const ReplyMentionListPage({super.key});

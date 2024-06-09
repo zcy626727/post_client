@@ -7,8 +7,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/domain/task/single_upload_task.dart';
 
+import '../../../../constant/file/upload.dart';
 import '../../../../constant/source.dart';
-import '../../../../enums/upload_task.dart';
 import '../../../../service/post/file_url_service.dart';
 import '../../../../service/post/upload_service.dart';
 import '../../../widget/dialog/confirm_alert_dialog.dart';

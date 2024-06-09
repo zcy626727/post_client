@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:post_client/config/global.dart';
 import 'package:post_client/model/post/album.dart';
 import 'package:post_client/model/post/favorites.dart';
-import 'package:post_client/view/widget/common_item_list.dart';
 
+import '../../../common/list/common_item_list.dart';
 import '../../../service/post/album_service.dart';
 import '../../widget/button/common_action_two_button.dart';
 

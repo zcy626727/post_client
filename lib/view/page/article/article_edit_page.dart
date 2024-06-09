@@ -8,9 +8,9 @@ import 'package:post_client/model/post/album.dart';
 import 'package:post_client/model/post/article.dart';
 import 'package:post_client/view/component/input/media_info_card.dart';
 
+import '../../../constant/file/upload.dart';
 import '../../../constant/source.dart';
 import '../../../domain/task/single_upload_task.dart';
-import '../../../enums/upload_task.dart';
 import '../../../service/post/album_service.dart';
 import '../../../service/post/article_service.dart';
 import '../../component/quill/quill_editor.dart';

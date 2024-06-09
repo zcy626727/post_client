@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:post_client/model/post/feedback.dart' as post_feedback;
 
+import '../../../common/list/common_item_list.dart';
 import '../../../model/post/album.dart';
 import '../../../model/post/article.dart';
 import '../../../model/post/audio.dart';
@@ -15,7 +16,6 @@ import '../../component/media/list/audio_list_tile.dart';
 import '../../component/media/list/gallery_list_tile.dart';
 import '../../component/media/list/video_list_tile.dart';
 import '../../component/post/post_list_tile.dart';
-import '../../widget/common_item_list.dart';
 
 class SourceTabBarView extends StatefulWidget {
   const SourceTabBarView({

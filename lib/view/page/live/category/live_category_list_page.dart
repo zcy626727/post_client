@@ -4,13 +4,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:post_client/config/page_config.dart';
 
+import '../../../../common/list/common_item_list.dart';
 import '../../../../constant/ui.dart';
 import '../../../../model/message/live_category.dart';
 import '../../../../model/message/live_topic.dart';
 import '../../../../service/message/live_category_service.dart';
 import '../../../../service/message/live_topic_service.dart';
 import '../../../component/live/category/live_category_grid_item.dart';
-import '../../../widget/common_item_list.dart';
 
 class LiveCategoryListPage extends StatefulWidget {
   const LiveCategoryListPage({super.key});
